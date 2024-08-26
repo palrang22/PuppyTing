@@ -1,11 +1,3 @@
----
-name: "Pull Request"
-about: "PR 내용을 입력해주세요"
-title: "[PR] 제목을 입력해주세요"
-labels: "pull request"
-assignees: "담당자"
----
-
 ## 📝 개요
 
 변경 사항에 대한 간단한 설명을 작성해주세요.
