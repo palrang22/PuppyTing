@@ -1,0 +1,71 @@
+### macOS ###
+# General macOS system files
+*.DS_Store
+.AppleDouble
+.LSOverride
+
+# Icon file
+Icon
+
+# Thumbnails
+._*
+
+# Files that might appear in the root of a volume
+.DocumentRevisions-V100
+.fseventsd
+.Spotlight-V100
+.TemporaryItems
+.Trashes
+.VolumeIcon.icns
+.com.apple.timemachine.donotpresent
+
+# Directories potentially created on remote AFP share
+.AppleDB
+.AppleDesktop
+Network Trash Folder
+Temporary Items
+.apdisk
+
+### Xcode ###
+# Xcode user settings and build files
+xcuserdata/
+
+# Compatibility with older versions of Xcode
+*.xcscmblueprint
+*.xccheckout
+build/
+DerivedData/
+*.moved-aside
+*.pbxuser
+!default.pbxuser
+*.mode1v3
+!default.mode1v3
+*.mode2v3
+!default.mode2v3
+*.perspectivev3
+!default.perspectivev3
+
+### Xcode Patch ###
+*.xcodeproj/*
+!*.xcodeproj/project.pbxproj
+!*.xcodeproj/xcshareddata/
+!*.xcworkspace/contents.xcworkspacedata
+/*.gcno
+
+### Projects ###
+# Xcode project and workspace files
+*.xcodeproj
+*.xcworkspace
+
+### Tuist ###
+# Tuist derived files
+graph.dot
+Derived/
+
+# Tuist managed dependencies
+Tuist/Dependencies
+
+### XCConfig ###
+# Xcode configuration files
+*.xcconfig
+
