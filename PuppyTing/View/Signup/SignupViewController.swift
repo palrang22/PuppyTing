@@ -147,7 +147,7 @@ class SignupViewController: UIViewController {
     let signUpButton: UIButton = {
         let button = UIButton(type: .system)
         button.setTitle("회원가입", for: .normal)
-        button.backgroundColor = UIColor(red: 165/255, green: 147/255, blue: 224/255, alpha: 1.0)
+        button.backgroundColor = UIColor.puppyPurple
         button.setTitleColor(.white, for: .normal)
         button.layer.cornerRadius = 5
         return button
@@ -177,7 +177,7 @@ class SignupViewController: UIViewController {
         }
         
         emailTextField.snp.makeConstraints {
-            $0.top.equalTo(view.safeAreaLayoutGuide).offset(160)
+            $0.bottom.equalTo(pwTextField.snp.top).offset(-50)
             $0.leading.equalTo(view.safeAreaLayoutGuide).offset(20)
             $0.trailing.equalTo(view.safeAreaLayoutGuide).offset(-20)
             $0.height.equalTo(40)
@@ -189,7 +189,7 @@ class SignupViewController: UIViewController {
         }
         
         pwTextField.snp.makeConstraints {
-            $0.top.equalTo(emailTextField.snp.bottom).offset(50)
+            $0.bottom.equalTo(confirmPwTextField.snp.top).offset(-50)
             $0.leading.equalTo(emailTextField.snp.leading)
             $0.height.equalTo(40)
             $0.centerX.equalToSuperview()
@@ -226,7 +226,7 @@ class SignupViewController: UIViewController {
         }
         
         confirmPwTextField.snp.makeConstraints {
-            $0.top.equalTo(pwTextField.snp.bottom).offset(50)
+            $0.bottom.equalTo(nickTextField.snp.top).offset(-50)
             $0.leading.equalTo(emailTextField.snp.leading)
             $0.height.equalTo(40)
             $0.centerX.equalToSuperview()
@@ -251,7 +251,7 @@ class SignupViewController: UIViewController {
         }
         
         nickTextField.snp.makeConstraints {
-            $0.top.equalTo(confirmPwTextField.snp.bottom).offset(50)
+            $0.bottom.equalTo(signUpButton.snp.top).offset(-100)
             $0.leading.equalTo(emailTextField.snp.leading)
             $0.height.equalTo(40)
             $0.centerX.equalToSuperview()
@@ -271,7 +271,7 @@ class SignupViewController: UIViewController {
         }
         
         signUpButton.snp.makeConstraints {
-            $0.top.equalTo(nickTextField.snp.bottom).offset(90)
+            $0.bottom.equalTo(view.safeAreaLayoutGuide).offset(-130)
             $0.centerX.equalTo(view.safeAreaLayoutGuide)
             $0.leading.equalTo(view.safeAreaLayoutGuide).offset(20)
             $0.trailing.equalTo(view.safeAreaLayoutGuide).offset(-20)
