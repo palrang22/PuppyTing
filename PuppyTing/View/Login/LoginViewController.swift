@@ -46,6 +46,7 @@ class LoginViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = .white
         setupUI()
+        setButtonAction()
     }
     
     func setupUI() {
@@ -79,6 +80,18 @@ class LoginViewController: UIViewController {
             $0.height.equalTo(appleLogButton)
         }
     }
+    
+    private func setButtonAction() {
+        pptLogButton.addTarget(self, action: #selector(didTapPuppytingLogin), for: .touchUpInside)
+    }
+    
+    @objc
+    private func didTapPuppytingLogin() {
+        // 로그인 화면으로 전환해야됨
+        let signUpViewController = SignupViewController()
+        navigationController?.pushViewController(signUpViewController, animated: true)
+    }
+    
 }
 
 
