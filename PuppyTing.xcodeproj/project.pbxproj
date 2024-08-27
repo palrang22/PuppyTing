@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		A2085D9E2C7D62F000698923 /* LoginManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2085D9D2C7D62F000698923 /* LoginManager.swift */; };
+		A2085DA02C7D66FC00698923 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = A2085D9F2C7D66FC00698923 /* GoogleService-Info.plist */; };
+		A2085DA32C7D678400698923 /* GoogleSignIn in Frameworks */ = {isa = PBXBuildFile; productRef = A2085DA22C7D678400698923 /* GoogleSignIn */; };
+		A2085DA52C7D678400698923 /* GoogleSignInSwift in Frameworks */ = {isa = PBXBuildFile; productRef = A2085DA42C7D678400698923 /* GoogleSignInSwift */; };
 		E738FB772C7C62EE004696BD /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E738FB762C7C62EE004696BD /* AppDelegate.swift */; };
 		E738FB792C7C62EE004696BD /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E738FB782C7C62EE004696BD /* SceneDelegate.swift */; };
 		E738FB802C7C62F0004696BD /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E738FB7F2C7C62F0004696BD /* Assets.xcassets */; };
@@ -33,6 +37,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		A2085D9D2C7D62F000698923 /* LoginManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginManager.swift; sourceTree = "<group>"; };
+		A2085D9F2C7D66FC00698923 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		E738FB732C7C62EE004696BD /* PuppyTing.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PuppyTing.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E738FB762C7C62EE004696BD /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		E738FB782C7C62EE004696BD /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -59,7 +65,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A2085DA52C7D678400698923 /* GoogleSignInSwift in Frameworks */,
 				E738FBBC2C7C72CB004696BD /* FirebaseDatabase in Frameworks */,
+				A2085DA32C7D678400698923 /* GoogleSignIn in Frameworks */,
 				E738FBB42C7C7074004696BD /* RxSwift in Frameworks */,
 				E738FBBA2C7C72CB004696BD /* FirebaseAuth in Frameworks */,
 				E738FBB72C7C7215004696BD /* SnapKit in Frameworks */,
@@ -101,6 +109,7 @@
 				E738FBA72C7C696C004696BD /* Assets */,
 				E738FB812C7C62F0004696BD /* LaunchScreen.storyboard */,
 				E738FB842C7C62F0004696BD /* Info.plist */,
+				A2085D9F2C7D66FC00698923 /* GoogleService-Info.plist */,
 			);
 			path = PuppyTing;
 			sourceTree = "<group>";
@@ -163,6 +172,7 @@
 			isa = PBXGroup;
 			children = (
 				E738FB942C7C64BA004696BD /* UIColor.swift */,
+				A2085D9D2C7D62F000698923 /* LoginManager.swift */,
 			);
 			path = Common;
 			sourceTree = "<group>";
@@ -241,6 +251,8 @@
 				E738FBB92C7C72CB004696BD /* FirebaseAuth */,
 				E738FBBB2C7C72CB004696BD /* FirebaseDatabase */,
 				E738FBBD2C7C72CB004696BD /* FirebaseFirestore */,
+				A2085DA22C7D678400698923 /* GoogleSignIn */,
+				A2085DA42C7D678400698923 /* GoogleSignInSwift */,
 			);
 			productName = PuppyTing;
 			productReference = E738FB732C7C62EE004696BD /* PuppyTing.app */;
@@ -274,6 +286,7 @@
 				E738FBAE2C7C7074004696BD /* XCRemoteSwiftPackageReference "RxSwift" */,
 				E738FBB52C7C7215004696BD /* XCRemoteSwiftPackageReference "SnapKit" */,
 				E738FBB82C7C72CB004696BD /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+				A2085DA12C7D678400698923 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */,
 			);
 			productRefGroup = E738FB742C7C62EE004696BD /* Products */;
 			projectDirPath = "";
@@ -290,6 +303,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				E738FB802C7C62F0004696BD /* Assets.xcassets in Resources */,
+				A2085DA02C7D66FC00698923 /* GoogleService-Info.plist in Resources */,
 				E738FBAA2C7C6BB3004696BD /* .gitignore in Resources */,
 				E738FB832C7C62F0004696BD /* Base in Resources */,
 			);
@@ -309,6 +323,7 @@
 				E738FBAD2C7C6D2E004696BD /* TabBarController.swift in Sources */,
 				E738FB952C7C64BA004696BD /* UIColor.swift in Sources */,
 				E738FB9E2C7C668D004696BD /* MypageViewController.swift in Sources */,
+				A2085D9E2C7D62F000698923 /* LoginManager.swift in Sources */,
 				E738FBA22C7C66AC004696BD /* TingViewModel.swift in Sources */,
 				E738FB9C2C7C653C004696BD /* ChatViewController.swift in Sources */,
 				E738FBA02C7C669D004696BD /* SampleModel.swift in Sources */,
@@ -458,7 +473,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 5RULM9TM7R;
+				DEVELOPMENT_TEAM = 4AW33HG75T;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = PuppyTing/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -486,7 +501,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 5RULM9TM7R;
+				DEVELOPMENT_TEAM = 4AW33HG75T;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = PuppyTing/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -531,6 +546,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		A2085DA12C7D678400698923 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/google/GoogleSignIn-iOS";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 8.0.0;
+			};
+		};
 		E738FBAE2C7C7074004696BD /* XCRemoteSwiftPackageReference "RxSwift" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/ReactiveX/RxSwift";
@@ -558,6 +581,16 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		A2085DA22C7D678400698923 /* GoogleSignIn */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A2085DA12C7D678400698923 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */;
+			productName = GoogleSignIn;
+		};
+		A2085DA42C7D678400698923 /* GoogleSignInSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A2085DA12C7D678400698923 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */;
+			productName = GoogleSignInSwift;
+		};
 		E738FBAF2C7C7074004696BD /* RxCocoa */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = E738FBAE2C7C7074004696BD /* XCRemoteSwiftPackageReference "RxSwift" */;

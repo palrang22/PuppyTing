@@ -9,7 +9,6 @@ import UIKit
 import SnapKit
 
 class TingViewController: UIViewController {
-    
     private lazy var feedCollectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .vertical
