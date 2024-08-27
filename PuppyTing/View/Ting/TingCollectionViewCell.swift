@@ -20,7 +20,7 @@ class TingCollectionViewCell: UICollectionViewCell {
         let label = UILabel()
         label.text = "이름"
         label.textColor = .black
-        label.font = .systemFont(ofSize: 16, weight: .semibold)
+        label.font = .systemFont(ofSize: 16, weight: .medium)
         return label
     }()
     
@@ -28,7 +28,7 @@ class TingCollectionViewCell: UICollectionViewCell {
         let label = UILabel()
         label.text = "n분 전"
         label.textColor = .gray
-        label.font = .systemFont(ofSize: 16, weight: .semibold)
+        label.font = .systemFont(ofSize: 14, weight: .medium)
         return label
     }()
     
@@ -42,15 +42,21 @@ class TingCollectionViewCell: UICollectionViewCell {
     private let infoStack: UIStackView = {
         let stack = UIStackView()
         stack.axis = .vertical
+        stack.spacing = 3
         return stack
     }()
     
     private let content: UILabel = {
         let label = UILabel()
-        label.text = "오늘 어디어디에서 산책하실 분 있나요?\n 경로는 ~~~~~ 생각중이고\n 산책시간은 ~~ 이에요!"
-        label.font = .systemFont(ofSize: 14, weight: .medium)
+        let style = NSMutableParagraphStyle()
+        style.lineSpacing = 4
+        let styleText = NSAttributedString(string:
+                                            "오늘 어디어디에서 산책하실 분 있나요? 경로는 아직 구체적으로 정해지지 않았지만 대략적인 방향은 잡아두었습니다. 산책시간은 오후 늦게쯤을 생각하고 있어요. 함께 산책하면 더욱 즐거운 시간이 될 것 같아요! 강아지와 함께 가볍게 산책하며 좋은 시간을 보내고 싶다면 꼭 함께해 주세요. 이따가 만나서 즐거운 시간을 보내면 좋겠습니다! 날씨도 좋으니, 산책 후에는 근처 카페에서 차 한 잔 하며 쉬어가도 좋을 것 같아요."
+                                           , attributes: [
+            .font: UIFont.systemFont(ofSize: 14, weight: .medium),
+            .paragraphStyle: style])
+        label.attributedText = styleText
         label.numberOfLines = 0
-        label.lineBreakMode = .byWordWrapping
         label.textAlignment = .left
         return label
     }()
