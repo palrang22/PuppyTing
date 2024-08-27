@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		56D686C52C7DA88500B00880 /* SignupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56D686C42C7DA88500B00880 /* SignupViewController.swift */; };
 		E738FB772C7C62EE004696BD /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E738FB762C7C62EE004696BD /* AppDelegate.swift */; };
 		E738FB792C7C62EE004696BD /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E738FB782C7C62EE004696BD /* SceneDelegate.swift */; };
 		E738FB802C7C62F0004696BD /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E738FB7F2C7C62F0004696BD /* Assets.xcassets */; };
@@ -31,6 +32,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		56D686C42C7DA88500B00880 /* SignupViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignupViewController.swift; sourceTree = "<group>"; };
 		E738FB732C7C62EE004696BD /* PuppyTing.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PuppyTing.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E738FB762C7C62EE004696BD /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		E738FB782C7C62EE004696BD /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -68,6 +70,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		56D686C32C7DA81700B00880 /* Signup */ = {
+			isa = PBXGroup;
+			children = (
+				56D686C42C7DA88500B00880 /* SignupViewController.swift */,
+			);
+			path = Signup;
+			sourceTree = "<group>";
+		};
 		E738FB6A2C7C62EE004696BD = {
 			isa = PBXGroup;
 			children = (
@@ -138,6 +148,7 @@
 		E738FB902C7C6460004696BD /* View */ = {
 			isa = PBXGroup;
 			children = (
+				56D686C32C7DA81700B00880 /* Signup */,
 				E738FBAB2C7C6CFB004696BD /* Tabbar */,
 				E738FB982C7C651D004696BD /* Ting */,
 				E738FB972C7C6518004696BD /* Chat */,
@@ -302,6 +313,7 @@
 				E738FB952C7C64BA004696BD /* UIColor.swift in Sources */,
 				E738FB9E2C7C668D004696BD /* MypageViewController.swift in Sources */,
 				E738FBA22C7C66AC004696BD /* TingViewModel.swift in Sources */,
+				56D686C52C7DA88500B00880 /* SignupViewController.swift in Sources */,
 				E738FB9C2C7C653C004696BD /* ChatViewController.swift in Sources */,
 				E738FBA02C7C669D004696BD /* SampleModel.swift in Sources */,
 				E738FBA62C7C66C9004696BD /* MyPageViewModel.swift in Sources */,
