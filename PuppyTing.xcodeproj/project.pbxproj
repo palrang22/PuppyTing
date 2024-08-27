@@ -11,6 +11,7 @@
 		A2085DA02C7D66FC00698923 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = A2085D9F2C7D66FC00698923 /* GoogleService-Info.plist */; };
 		A2085DA32C7D678400698923 /* GoogleSignIn in Frameworks */ = {isa = PBXBuildFile; productRef = A2085DA22C7D678400698923 /* GoogleSignIn */; };
 		A2085DA52C7D678400698923 /* GoogleSignInSwift in Frameworks */ = {isa = PBXBuildFile; productRef = A2085DA42C7D678400698923 /* GoogleSignInSwift */; };
+		E72575F62C7DDC0C00903DF8 /* FindTingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E72575F52C7DDC0C00903DF8 /* FindTingViewController.swift */; };
 		E738FB772C7C62EE004696BD /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E738FB762C7C62EE004696BD /* AppDelegate.swift */; };
 		E738FB792C7C62EE004696BD /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E738FB782C7C62EE004696BD /* SceneDelegate.swift */; };
 		E738FB802C7C62F0004696BD /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E738FB7F2C7C62F0004696BD /* Assets.xcassets */; };
@@ -39,6 +40,7 @@
 /* Begin PBXFileReference section */
 		A2085D9D2C7D62F000698923 /* LoginManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginManager.swift; sourceTree = "<group>"; };
 		A2085D9F2C7D66FC00698923 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		E72575F52C7DDC0C00903DF8 /* FindTingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FindTingViewController.swift; sourceTree = "<group>"; };
 		E738FB732C7C62EE004696BD /* PuppyTing.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PuppyTing.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E738FB762C7C62EE004696BD /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		E738FB782C7C62EE004696BD /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -207,6 +209,7 @@
 			children = (
 				E738FB992C7C6532004696BD /* TingViewController.swift */,
 				E738FBC22C7D8019004696BD /* TingCollectionViewCell.swift */,
+				E72575F52C7DDC0C00903DF8 /* FindTingViewController.swift */,
 			);
 			path = Ting;
 			sourceTree = "<group>";
@@ -329,6 +332,7 @@
 				E738FBA02C7C669D004696BD /* SampleModel.swift in Sources */,
 				E738FBA62C7C66C9004696BD /* MyPageViewModel.swift in Sources */,
 				E738FBA42C7C66BA004696BD /* ChatViewModel.swift in Sources */,
+				E72575F62C7DDC0C00903DF8 /* FindTingViewController.swift in Sources */,
 				E738FB792C7C62EE004696BD /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

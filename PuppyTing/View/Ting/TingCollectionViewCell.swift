@@ -10,6 +10,18 @@ import UIKit
 class TingCollectionViewCell: UICollectionViewCell {
     static let id = "tingCollectionViewCell"
     
+    private let shadowContainerView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .white
+        view.layer.shadowColor = UIColor.black.cgColor
+        view.layer.shadowOpacity = 0.2
+        view.layer.shadowOffset = CGSize(width: 0, height: 2)
+        view.layer.shadowRadius = 4
+        view.layer.cornerRadius = 10
+        view.layer.masksToBounds = false
+        return view
+    }()
+    
     private let profilePic: UIImageView = {
         let imageView = UIImageView()
         imageView.image = UIImage(named: "defaultProfileImage")
@@ -27,7 +39,7 @@ class TingCollectionViewCell: UICollectionViewCell {
     private let timeLabel: UILabel = {
         let label = UILabel()
         label.text = "n분 전"
-        label.textColor = .gray
+        label.textColor = .puppyPurple
         label.font = .systemFont(ofSize: 14, weight: .medium)
         return label
     }()
@@ -56,8 +68,9 @@ class TingCollectionViewCell: UICollectionViewCell {
             .font: UIFont.systemFont(ofSize: 14, weight: .medium),
             .paragraphStyle: style])
         label.attributedText = styleText
-        label.numberOfLines = 0
+        label.numberOfLines = 3
         label.textAlignment = .left
+        label.lineBreakMode = .byTruncatingTail
         return label
     }()
     
@@ -77,6 +90,10 @@ class TingCollectionViewCell: UICollectionViewCell {
         button.layer.borderColor = UIColor.gray.cgColor
         button.layer.borderWidth = 1
         button.layer.cornerRadius = 10
+        button.layer.shadowColor = UIColor.black.cgColor
+        button.layer.shadowOpacity = 0.3
+        button.layer.shadowOffset = CGSize(width: 2, height: 2)
+        button.layer.shadowRadius = 4
         return button
     }()
     
@@ -91,8 +108,6 @@ class TingCollectionViewCell: UICollectionViewCell {
     }
     
     private func setLayout() {
-        self.contentView.layer.borderWidth = 1
-        self.contentView.layer.borderColor = UIColor.black.cgColor
         self.contentView.layer.cornerRadius = 10
         self.contentView.layer.masksToBounds = true
     }
@@ -100,12 +115,16 @@ class TingCollectionViewCell: UICollectionViewCell {
     private func setConstraints() {
         [nameLabel,
          timeLabel].forEach { infoStack.addArrangedSubview($0) }
-        [profilePic,
+        [shadowContainerView, profilePic,
          infoStack,
          footPrintLabel,
          content,
          mapView,
          messageSendButton].forEach { contentView.addSubview($0) }
+        
+        shadowContainerView.snp.makeConstraints {
+            $0.edges.equalToSuperview().inset(5)
+        }
         
         profilePic.snp.makeConstraints {
             $0.top.equalToSuperview().offset(30)
