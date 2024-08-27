@@ -28,6 +28,7 @@
 		E738FBBA2C7C72CB004696BD /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = E738FBB92C7C72CB004696BD /* FirebaseAuth */; };
 		E738FBBC2C7C72CB004696BD /* FirebaseDatabase in Frameworks */ = {isa = PBXBuildFile; productRef = E738FBBB2C7C72CB004696BD /* FirebaseDatabase */; };
 		E738FBBE2C7C72CB004696BD /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = E738FBBD2C7C72CB004696BD /* FirebaseFirestore */; };
+		E738FBC32C7D8019004696BD /* TingCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E738FBC22C7D8019004696BD /* TingCollectionViewCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -48,6 +49,7 @@
 		E738FBA52C7C66C9004696BD /* MyPageViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyPageViewModel.swift; sourceTree = "<group>"; };
 		E738FBA92C7C6BB3004696BD /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
 		E738FBAC2C7C6D2E004696BD /* TabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarController.swift; sourceTree = "<group>"; };
+		E738FBC22C7D8019004696BD /* TingCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TingCollectionViewCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -191,6 +193,7 @@
 			isa = PBXGroup;
 			children = (
 				E738FB992C7C6532004696BD /* TingViewController.swift */,
+				E738FBC22C7D8019004696BD /* TingCollectionViewCell.swift */,
 			);
 			path = Ting;
 			sourceTree = "<group>";
@@ -296,6 +299,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E738FBC32C7D8019004696BD /* TingCollectionViewCell.swift in Sources */,
 				E738FB9A2C7C6532004696BD /* TingViewController.swift in Sources */,
 				E738FB772C7C62EE004696BD /* AppDelegate.swift in Sources */,
 				E738FBAD2C7C6D2E004696BD /* TabBarController.swift in Sources */,
