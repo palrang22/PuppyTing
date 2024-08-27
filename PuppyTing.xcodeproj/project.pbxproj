@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		56D686C52C7DA88500B00880 /* SignupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56D686C42C7DA88500B00880 /* SignupViewController.swift */; };
+		56D686C82C7DB09600B00880 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56D686C72C7DB09600B00880 /* LoginViewController.swift */; };
 		A2085D9E2C7D62F000698923 /* LoginManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2085D9D2C7D62F000698923 /* LoginManager.swift */; };
 		A2085DA02C7D66FC00698923 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = A2085D9F2C7D66FC00698923 /* GoogleService-Info.plist */; };
 		A2085DA32C7D678400698923 /* GoogleSignIn in Frameworks */ = {isa = PBXBuildFile; productRef = A2085DA22C7D678400698923 /* GoogleSignIn */; };
@@ -38,6 +40,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		56D686C42C7DA88500B00880 /* SignupViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignupViewController.swift; sourceTree = "<group>"; };
+		56D686C72C7DB09600B00880 /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 		A2085D9D2C7D62F000698923 /* LoginManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginManager.swift; sourceTree = "<group>"; };
 		A2085D9F2C7D66FC00698923 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		E72575F52C7DDC0C00903DF8 /* FindTingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FindTingViewController.swift; sourceTree = "<group>"; };
@@ -82,6 +86,22 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		56D686C32C7DA81700B00880 /* Signup */ = {
+			isa = PBXGroup;
+			children = (
+				56D686C42C7DA88500B00880 /* SignupViewController.swift */,
+			);
+			path = Signup;
+			sourceTree = "<group>";
+		};
+		56D686C62C7DB08500B00880 /* Login */ = {
+			isa = PBXGroup;
+			children = (
+				56D686C72C7DB09600B00880 /* LoginViewController.swift */,
+			);
+			path = Login;
+			sourceTree = "<group>";
+		};
 		E738FB6A2C7C62EE004696BD = {
 			isa = PBXGroup;
 			children = (
@@ -153,6 +173,8 @@
 		E738FB902C7C6460004696BD /* View */ = {
 			isa = PBXGroup;
 			children = (
+				56D686C62C7DB08500B00880 /* Login */,
+				56D686C32C7DA81700B00880 /* Signup */,
 				E738FBAB2C7C6CFB004696BD /* Tabbar */,
 				E738FB982C7C651D004696BD /* Ting */,
 				E738FB972C7C6518004696BD /* Chat */,
@@ -320,6 +342,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				E738FBC32C7D8019004696BD /* TingCollectionViewCell.swift in Sources */,
+				56D686C82C7DB09600B00880 /* LoginViewController.swift in Sources */,
 				E738FB9A2C7C6532004696BD /* TingViewController.swift in Sources */,
 				E738FB772C7C62EE004696BD /* AppDelegate.swift in Sources */,
 				E738FBC52C7DB85A004696BD /* TingFeedModel.swift in Sources */,
@@ -328,6 +351,7 @@
 				E738FB9E2C7C668D004696BD /* MypageViewController.swift in Sources */,
 				A2085D9E2C7D62F000698923 /* LoginManager.swift in Sources */,
 				E738FBA22C7C66AC004696BD /* TingViewModel.swift in Sources */,
+				56D686C52C7DA88500B00880 /* SignupViewController.swift in Sources */,
 				E738FB9C2C7C653C004696BD /* ChatViewController.swift in Sources */,
 				E738FBA02C7C669D004696BD /* SampleModel.swift in Sources */,
 				E738FBA62C7C66C9004696BD /* MyPageViewModel.swift in Sources */,
