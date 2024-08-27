@@ -13,6 +13,7 @@
 		A2085DA02C7D66FC00698923 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = A2085D9F2C7D66FC00698923 /* GoogleService-Info.plist */; };
 		A2085DA32C7D678400698923 /* GoogleSignIn in Frameworks */ = {isa = PBXBuildFile; productRef = A2085DA22C7D678400698923 /* GoogleSignIn */; };
 		A2085DA52C7D678400698923 /* GoogleSignInSwift in Frameworks */ = {isa = PBXBuildFile; productRef = A2085DA42C7D678400698923 /* GoogleSignInSwift */; };
+		E72575F62C7DDC0C00903DF8 /* FindTingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E72575F52C7DDC0C00903DF8 /* FindTingViewController.swift */; };
 		E738FB772C7C62EE004696BD /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E738FB762C7C62EE004696BD /* AppDelegate.swift */; };
 		E738FB792C7C62EE004696BD /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E738FB782C7C62EE004696BD /* SceneDelegate.swift */; };
 		E738FB802C7C62F0004696BD /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E738FB7F2C7C62F0004696BD /* Assets.xcassets */; };
@@ -34,6 +35,8 @@
 		E738FBBA2C7C72CB004696BD /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = E738FBB92C7C72CB004696BD /* FirebaseAuth */; };
 		E738FBBC2C7C72CB004696BD /* FirebaseDatabase in Frameworks */ = {isa = PBXBuildFile; productRef = E738FBBB2C7C72CB004696BD /* FirebaseDatabase */; };
 		E738FBBE2C7C72CB004696BD /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = E738FBBD2C7C72CB004696BD /* FirebaseFirestore */; };
+		E738FBC32C7D8019004696BD /* TingCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E738FBC22C7D8019004696BD /* TingCollectionViewCell.swift */; };
+		E738FBC52C7DB85A004696BD /* TingFeedModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E738FBC42C7DB85A004696BD /* TingFeedModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -41,6 +44,7 @@
 		56D686C72C7DB09600B00880 /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 		A2085D9D2C7D62F000698923 /* LoginManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginManager.swift; sourceTree = "<group>"; };
 		A2085D9F2C7D66FC00698923 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		E72575F52C7DDC0C00903DF8 /* FindTingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FindTingViewController.swift; sourceTree = "<group>"; };
 		E738FB732C7C62EE004696BD /* PuppyTing.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PuppyTing.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E738FB762C7C62EE004696BD /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		E738FB782C7C62EE004696BD /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -58,6 +62,8 @@
 		E738FBA52C7C66C9004696BD /* MyPageViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyPageViewModel.swift; sourceTree = "<group>"; };
 		E738FBA92C7C6BB3004696BD /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
 		E738FBAC2C7C6D2E004696BD /* TabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarController.swift; sourceTree = "<group>"; };
+		E738FBC22C7D8019004696BD /* TingCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TingCollectionViewCell.swift; sourceTree = "<group>"; };
+		E738FBC42C7DB85A004696BD /* TingFeedModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TingFeedModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -181,6 +187,7 @@
 			isa = PBXGroup;
 			children = (
 				E738FB9F2C7C669D004696BD /* SampleModel.swift */,
+				E738FBC42C7DB85A004696BD /* TingFeedModel.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -223,6 +230,8 @@
 			isa = PBXGroup;
 			children = (
 				E738FB992C7C6532004696BD /* TingViewController.swift */,
+				E738FBC22C7D8019004696BD /* TingCollectionViewCell.swift */,
+				E72575F52C7DDC0C00903DF8 /* FindTingViewController.swift */,
 			);
 			path = Ting;
 			sourceTree = "<group>";
@@ -332,9 +341,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E738FBC32C7D8019004696BD /* TingCollectionViewCell.swift in Sources */,
 				56D686C82C7DB09600B00880 /* LoginViewController.swift in Sources */,
 				E738FB9A2C7C6532004696BD /* TingViewController.swift in Sources */,
 				E738FB772C7C62EE004696BD /* AppDelegate.swift in Sources */,
+				E738FBC52C7DB85A004696BD /* TingFeedModel.swift in Sources */,
 				E738FBAD2C7C6D2E004696BD /* TabBarController.swift in Sources */,
 				E738FB952C7C64BA004696BD /* UIColor.swift in Sources */,
 				E738FB9E2C7C668D004696BD /* MypageViewController.swift in Sources */,
@@ -345,6 +356,7 @@
 				E738FBA02C7C669D004696BD /* SampleModel.swift in Sources */,
 				E738FBA62C7C66C9004696BD /* MyPageViewModel.swift in Sources */,
 				E738FBA42C7C66BA004696BD /* ChatViewModel.swift in Sources */,
+				E72575F62C7DDC0C00903DF8 /* FindTingViewController.swift in Sources */,
 				E738FB792C7C62EE004696BD /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
