@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		C29FCF662C7DB37E00F8951D /* PuppyCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C29FCF652C7DB37E00F8951D /* PuppyCollectionViewCell.swift */; };
+		C29FCF682C7DBA4F00F8951D /* PuppyRegistrationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C29FCF672C7DBA4F00F8951D /* PuppyRegistrationViewController.swift */; };
 		E738FB772C7C62EE004696BD /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E738FB762C7C62EE004696BD /* AppDelegate.swift */; };
 		E738FB792C7C62EE004696BD /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E738FB782C7C62EE004696BD /* SceneDelegate.swift */; };
 		E738FB802C7C62F0004696BD /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E738FB7F2C7C62F0004696BD /* Assets.xcassets */; };
@@ -31,6 +33,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		C29FCF652C7DB37E00F8951D /* PuppyCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PuppyCollectionViewCell.swift; sourceTree = "<group>"; };
+		C29FCF672C7DBA4F00F8951D /* PuppyRegistrationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PuppyRegistrationViewController.swift; sourceTree = "<group>"; };
 		E738FB732C7C62EE004696BD /* PuppyTing.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PuppyTing.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E738FB762C7C62EE004696BD /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		E738FB782C7C62EE004696BD /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -175,6 +179,8 @@
 			isa = PBXGroup;
 			children = (
 				E738FB9D2C7C668D004696BD /* MypageViewController.swift */,
+				C29FCF652C7DB37E00F8951D /* PuppyCollectionViewCell.swift */,
+				C29FCF672C7DBA4F00F8951D /* PuppyRegistrationViewController.swift */,
 			);
 			path = Mypage;
 			sourceTree = "<group>";
@@ -297,8 +303,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				E738FB9A2C7C6532004696BD /* TingViewController.swift in Sources */,
+				C29FCF662C7DB37E00F8951D /* PuppyCollectionViewCell.swift in Sources */,
 				E738FB772C7C62EE004696BD /* AppDelegate.swift in Sources */,
 				E738FBAD2C7C6D2E004696BD /* TabBarController.swift in Sources */,
+				C29FCF682C7DBA4F00F8951D /* PuppyRegistrationViewController.swift in Sources */,
 				E738FB952C7C64BA004696BD /* UIColor.swift in Sources */,
 				E738FB9E2C7C668D004696BD /* MypageViewController.swift in Sources */,
 				E738FBA22C7C66AC004696BD /* TingViewModel.swift in Sources */,
