@@ -6,12 +6,12 @@
 //
 
 import UIKit
- import SnapKit
- import RxSwift
- import RxCocoa
+
+import RxCocoa
+import RxSwift
+import SnapKit
 
 class LoginViewController: UIViewController {
-    
     
     let logoImageView: UIImageView = {
         let imageView = UIImageView()
@@ -41,11 +41,11 @@ class LoginViewController: UIViewController {
         return button
     }()
     
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
         setupUI()
+        setButtonAction()
     }
     
     func setupUI() {
@@ -79,6 +79,16 @@ class LoginViewController: UIViewController {
             $0.height.equalTo(appleLogButton)
         }
     }
+    
+    private func setButtonAction() {
+        pptLogButton.addTarget(self, action: #selector(didTapPuppytingLogin), for: .touchUpInside)
+    }
+    
+    @objc
+    private func didTapPuppytingLogin() {
+        let pptLoginViewController = PptLoginViewController()
+        pptLoginViewController.modalPresentationStyle = .fullScreen
+        present(pptLoginViewController, animated: true)
+    }
+    
 }
-
-
