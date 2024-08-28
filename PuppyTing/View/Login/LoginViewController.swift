@@ -86,9 +86,9 @@ class LoginViewController: UIViewController {
     
     @objc
     private func didTapPuppytingLogin() {
-        // 로그인 화면으로 전환해야됨
-        let signUpViewController = SignupViewController()
-        navigationController?.pushViewController(signUpViewController, animated: true)
+        let pptLoginViewController = PptLoginViewController()
+        pptLoginViewController.modalPresentationStyle = .fullScreen
+        present(pptLoginViewController, animated: true)
     }
     
 }

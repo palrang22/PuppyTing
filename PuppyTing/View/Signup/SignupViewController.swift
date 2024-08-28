@@ -149,6 +149,7 @@ class SignupViewController: UIViewController {
         view.backgroundColor = .white
         configureUI()
         bindUI()
+        setButtonAction()
     }
     
     private func configureUI() {
@@ -349,6 +350,15 @@ class SignupViewController: UIViewController {
     // 닉네임 유효성 검사
     private func checNickNameValid(_ nickName: String) -> Bool {
         return nickName.count > 1 && nickName.count < 11
+    }
+    
+    private func setButtonAction() {
+        cancleButton.addTarget(self, action: #selector(didTapCloseButton), for: .touchUpInside)
+    }
+    
+    @objc
+    private func didTapCloseButton() {
+        dismiss(animated: true)
     }
 }
 
