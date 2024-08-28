@@ -10,6 +10,7 @@ import UIKit
 class TingCollectionViewCell: UICollectionViewCell {
     static let id = "tingCollectionViewCell"
     
+    //MARK: 컴포넌트 선언
     private let shadowContainerView: UIView = {
         let view = UIView()
         view.backgroundColor = .white
@@ -97,6 +98,7 @@ class TingCollectionViewCell: UICollectionViewCell {
         return button
     }()
     
+    //MARK: View 생명주기
     override init(frame: CGRect) {
         super.init(frame: frame)
         setConstraints()
@@ -107,6 +109,7 @@ class TingCollectionViewCell: UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
+    //MARK: UI 및 제약조건
     private func setLayout() {
         self.contentView.layer.cornerRadius = 10
         self.contentView.layer.masksToBounds = true
