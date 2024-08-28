@@ -60,7 +60,7 @@ class TingViewController: UIViewController {
             .disposed(by: disposeBag)
     }
     
-    //MARK: Layout
+    //MARK: UI 설정 및 제약조건 등
     private func setUI() {
         view.backgroundColor = .white
         self.navigationItem.leftBarButtonItem = UIBarButtonItem(customView: addressLabel)
