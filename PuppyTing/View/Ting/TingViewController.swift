@@ -28,6 +28,12 @@ class TingViewController: UIViewController {
         return label
     }()
     
+    private let postButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.setImage(UIImage(named: "postButton"), for: .normal)
+        return button
+    }()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         setUI()
@@ -40,12 +46,17 @@ class TingViewController: UIViewController {
     }
     
     private func setLayout() {
-        view.addSubview(feedCollectionView)
+        [feedCollectionView, postButton].forEach { view.addSubview($0) }
         feedCollectionView.snp.makeConstraints {
             $0.top.equalTo(view.safeAreaLayoutGuide.snp.top).offset(20)
             $0.centerX.equalToSuperview()
             $0.leading.trailing.equalTo(view.safeAreaLayoutGuide).inset(20)
             $0.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom)
+        }
+        postButton.snp.makeConstraints {
+            $0.trailing.equalTo(view.safeAreaLayoutGuide.snp.trailing).offset(-20)
+            $0.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom).offset(-20)
+            $0.width.height.equalTo(64)
         }
     }
 }
