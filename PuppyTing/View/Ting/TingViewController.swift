@@ -35,9 +35,10 @@ class TingViewController: UIViewController {
         return label
     }()
     
-    private let postButton: UIButton = {
+    private lazy var postButton: UIButton = {
         let button = UIButton(type: .system)
         button.setImage(UIImage(named: "postButton"), for: .normal)
+        button.addTarget(self, action: #selector(postButtonTapped), for: .touchUpInside)
         return button
     }()
     
@@ -46,24 +47,30 @@ class TingViewController: UIViewController {
         super.viewDidLoad()
         setUI()
         setLayout()
-        bind()
     }
     
-    //MARK: Rx 관련 - 로직 수정예정
-    private func bind() {
-        postButton.rx.tap
-            .bind(to: viewModel.postButtonTapped)
-            .disposed(by: disposeBag)
-        
-        feedCollectionView.rx.itemSelected
-            .bind(to: viewModel.cellTapped)
-            .disposed(by: disposeBag)
+//    //MARK: Rx 관련 - 로직 수정예정
+//    private func bind() {
+//        postButton.rx.tap
+//            .bind(to: viewModel.postButtonTapped)
+//            .disposed(by: disposeBag)
+//        
+//        feedCollectionView.rx.itemSelected
+//            .bind(to: viewModel.cellTapped)
+//            .disposed(by: disposeBag)
+//    }
+    
+    //MARK: 임시 - button 및 CollectionView 이동 로직
+    @objc
+    private func postButtonTapped() {
+        navigationController?.pushViewController(PostTingViewController(), animated: true)
     }
     
     //MARK: UI 설정 및 제약조건 등
     private func setUI() {
         view.backgroundColor = .white
         self.navigationItem.leftBarButtonItem = UIBarButtonItem(customView: addressLabel)
+        navigationController?.navigationBar.tintColor = .puppyPurple
     }
     
     private func setLayout() {
@@ -105,5 +112,11 @@ extension TingViewController: UICollectionViewDataSource {
             return UICollectionViewCell()
         }
         return cell
+    }
+}
+
+extension TingViewController: UICollectionViewDelegate {
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        navigationController?.pushViewController(DetailTingViewController(), animated: true)
     }
 }
