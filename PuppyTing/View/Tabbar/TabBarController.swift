@@ -13,7 +13,7 @@ class TabBarController: UITabBarController {
         super.viewDidLoad()
         self.tabBar.tintColor = .puppyPurple
         
-        let tingVC = UINavigationController(rootViewController: TingViewController())
+        let tingVC = UINavigationController(rootViewController: DetailTingViewController())
         tingVC.tabBarItem = UITabBarItem(
             title: "퍼피팅",
             image: UIImage(systemName: "dog"),

@@ -6,9 +6,16 @@
 //
 
 import UIKit
+
+import RxCocoa
+import RxSwift
 import SnapKit
 
 class TingViewController: UIViewController {
+    private let viewModel = TingViewModel()
+    private let disposeBag = DisposeBag()
+    
+    //MARK: Component 선언
     private lazy var feedCollectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .vertical
@@ -34,12 +41,26 @@ class TingViewController: UIViewController {
         return button
     }()
     
+    //MARK: View 생명주기
     override func viewDidLoad() {
         super.viewDidLoad()
         setUI()
         setLayout()
+        bind()
     }
     
+    //MARK: Rx 관련 - 로직 수정예정
+    private func bind() {
+        postButton.rx.tap
+            .bind(to: viewModel.postButtonTapped)
+            .disposed(by: disposeBag)
+        
+        feedCollectionView.rx.itemSelected
+            .bind(to: viewModel.cellTapped)
+            .disposed(by: disposeBag)
+    }
+    
+    //MARK: Layout
     private func setUI() {
         view.backgroundColor = .white
         self.navigationItem.leftBarButtonItem = UIBarButtonItem(customView: addressLabel)
@@ -61,6 +82,8 @@ class TingViewController: UIViewController {
     }
 }
 
+
+//MARK: CollectionView
 extension TingViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         return CGSize(width: collectionView.frame.width, height: 350)

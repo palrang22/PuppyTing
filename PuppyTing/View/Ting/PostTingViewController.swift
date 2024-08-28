@@ -1,13 +1,13 @@
 //
-//  FindTingViewController.swift
+//  PostTingViewController.swift
 //  PuppyTing
 //
-//  Created by 김승희 on 8/27/24.
+//  Created by 김승희 on 8/28/24.
 //
 
 import UIKit
 
-class FindTingViewController: UIViewController {
+class PostTingViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
