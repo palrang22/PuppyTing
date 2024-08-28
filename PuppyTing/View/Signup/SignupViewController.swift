@@ -6,18 +6,18 @@
 //
 
 import UIKit
- import SnapKit
- import RxSwift
- import RxCocoa
+
+import RxCocoa
+import RxSwift
+import SnapKit
 
 class SignupViewController: UIViewController {
+    
     var disposeBag = DisposeBag()
     
     let regex = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,64}"
     let pwRegex = "^(?=.*[A-Za-z])(?=.*[0-9])(?=.*[!@#$%^&*()_+=-]).{8,50}" // 8자리 ~ 50자리 영어+숫자+특수문자
-    
-    // MARK: - UI Components
-    
+
     let cancleButton: UIButton = {
         let button = UIButton(type: .system)
         button.setTitle("✕", for: .normal)
@@ -37,15 +37,6 @@ class SignupViewController: UIViewController {
         let textField = UITextField()
         textField.borderStyle = .roundedRect
         return textField
-    }()
-    
-    let verifyButton: UIButton = {
-        let button = UIButton(type: .system)
-        button.setTitle("   인증하기   ", for: .normal)
-        button.backgroundColor = UIColor(red: 165/255, green: 147/255, blue: 224/255, alpha: 1.0)
-        button.setTitleColor(.white, for: .normal)
-        button.layer.cornerRadius = 5
-        return button
     }()
     
     let pwLabel: UILabel = {
@@ -161,7 +152,7 @@ class SignupViewController: UIViewController {
     }
     
     private func configureUI() {
-        [cancleButton, emailLabel, emailTextField, verifyButton, pwLabel, pwTextField, eTrueLable, eFalseLable, pTrueLable, pFalseLable, confirmLabel, confirmPwTextField, cTrueLable, cFalseLable, nickLabel, nickTextField, nTrueLable, nFalseLable, signUpButton].forEach {
+        [cancleButton, emailLabel, emailTextField, pwLabel, pwTextField, eTrueLable, eFalseLable, pTrueLable, pFalseLable, confirmLabel, confirmPwTextField, cTrueLable, cFalseLable, nickLabel, nickTextField, nTrueLable, nFalseLable, signUpButton].forEach {
             view.addSubview($0)
         }
         
