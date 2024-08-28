@@ -37,6 +37,9 @@ class PptLoginViewController: UIViewController {
         let textField = UITextField()
         textField.placeholder = "이메일을 입력하세요."
         textField.borderStyle = .roundedRect
+        textField.layer.borderColor = UIColor.darkGray.cgColor
+        textField.layer.borderWidth = 1.0
+        textField.layer.cornerRadius = 5
         return textField
     }()
     
@@ -44,6 +47,9 @@ class PptLoginViewController: UIViewController {
         let textField = UITextField()
         textField.placeholder = "비밀번호를 입력하세요."
         textField.borderStyle = .roundedRect
+        textField.layer.borderColor = UIColor.darkGray.cgColor
+        textField.layer.borderWidth = 1.0
+        textField.layer.cornerRadius = 5
         return textField
     }()
     

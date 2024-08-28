@@ -33,9 +33,20 @@ class SignupViewController: UIViewController {
         return label
     }()
     
+    let emailCheck: UILabel = {
+        let label = UILabel()
+        label.text = "(필수)"
+        label.textColor = .red
+        label.font = UIFont.boldSystemFont(ofSize: 17)
+        return label
+    }()
+    
     let emailTextField: UITextField = {
         let textField = UITextField()
         textField.borderStyle = .roundedRect
+        textField.layer.borderColor = UIColor.darkGray.cgColor
+        textField.layer.borderWidth = 1.0
+        textField.layer.cornerRadius = 5
         return textField
     }()
     
@@ -46,10 +57,31 @@ class SignupViewController: UIViewController {
         return label
     }()
     
+    let pwCheck: UILabel = {
+        let label = UILabel()
+        label.text = "(필수)"
+        label.textColor = .red
+        label.font = UIFont.boldSystemFont(ofSize: 17)
+        return label
+    }()
+    
     let pwTextField: UITextField = {
         let textField = UITextField()
         textField.borderStyle = .roundedRect
+        textField.layer.borderColor = UIColor.darkGray.cgColor
+        textField.layer.borderWidth = 1.0
+        textField.layer.cornerRadius = 5
         return textField
+    }()
+    
+    let guideLine: UILabel = {
+        let label = UILabel()
+        label.text = "대소문자, 특수문자를 포함하여\n8자 이상으로 작성"
+        label.numberOfLines = 0
+        label.textAlignment = .left
+        label.textColor = .gray
+        label.font = UIFont.systemFont(ofSize: 14)
+        return label
     }()
     
     let eTrueLable: UILabel = {
@@ -87,9 +119,20 @@ class SignupViewController: UIViewController {
         return label
     }()
     
+    let confirmCheck: UILabel = {
+        let label = UILabel()
+        label.text = "(필수)"
+        label.textColor = .red
+        label.font = UIFont.boldSystemFont(ofSize: 17)
+        return label
+    }()
+    
     let confirmPwTextField: UITextField = {
         let textField = UITextField()
         textField.borderStyle = .roundedRect
+        textField.layer.borderColor = UIColor.darkGray.cgColor
+        textField.layer.borderWidth = 1.0
+        textField.layer.cornerRadius = 5
         return textField
     }()
     
@@ -114,10 +157,21 @@ class SignupViewController: UIViewController {
         return label
     }()
     
+    let nickCheck: UILabel = {
+        let label = UILabel()
+        label.text = "(필수)"
+        label.textColor = .red
+        label.font = UIFont.boldSystemFont(ofSize: 17)
+        return label
+    }()
+    
     let nickTextField: UITextField = {
         let textField = UITextField()
         textField.placeholder = "2~10자 이내로 입력해주세요."
         textField.borderStyle = .roundedRect
+        textField.layer.borderColor = UIColor.darkGray.cgColor
+        textField.layer.borderWidth = 1.0
+        textField.layer.cornerRadius = 5
         return textField
     }()
     
@@ -153,7 +207,7 @@ class SignupViewController: UIViewController {
     }
     
     private func configureUI() {
-        [cancleButton, emailLabel, emailTextField, pwLabel, pwTextField, eTrueLable, eFalseLable, pTrueLable, pFalseLable, confirmLabel, confirmPwTextField, cTrueLable, cFalseLable, nickLabel, nickTextField, nTrueLable, nFalseLable, signUpButton].forEach {
+        [cancleButton, emailLabel, emailCheck, emailTextField, pwLabel, pwCheck, pwTextField, guideLine, eTrueLable, eFalseLable, pTrueLable, pFalseLable, confirmLabel, confirmCheck, confirmPwTextField, cTrueLable, cFalseLable, nickLabel, nickCheck, nickTextField, nTrueLable, nFalseLable, signUpButton].forEach {
             view.addSubview($0)
         }
         
@@ -164,28 +218,43 @@ class SignupViewController: UIViewController {
         }
         
         emailLabel.snp.makeConstraints {
-            $0.bottom.equalTo(emailTextField.snp.top).offset(-6)
+            $0.bottom.equalTo(emailTextField.snp.top).offset(-7)
             $0.leading.equalTo(emailTextField.snp.leading)
         }
         
+        emailCheck.snp.makeConstraints {
+            $0.centerY.equalTo(emailLabel.snp.centerY)
+            $0.leading.equalTo(emailLabel.snp.trailing).offset(5)
+        }
+        
         emailTextField.snp.makeConstraints {
-            $0.bottom.equalTo(pwTextField.snp.top).offset(-50)
+            $0.bottom.equalTo(pwTextField.snp.top).offset(-60)
             $0.leading.equalTo(view.safeAreaLayoutGuide).offset(20)
             $0.trailing.equalTo(view.safeAreaLayoutGuide).offset(-20)
             $0.height.equalTo(40)
         }
         
         pwLabel.snp.makeConstraints {
-            $0.bottom.equalTo(pwTextField.snp.top).offset(-6)
+            $0.bottom.equalTo(pwTextField.snp.top).offset(-7)
             $0.leading.equalTo(pwTextField)
         }
         
+        pwCheck.snp.makeConstraints {
+            $0.centerY.equalTo(pwLabel.snp.centerY)
+            $0.leading.equalTo(pwLabel.snp.trailing).offset(5)
+        }
+        
         pwTextField.snp.makeConstraints {
-            $0.bottom.equalTo(confirmPwTextField.snp.top).offset(-50)
+            $0.bottom.equalTo(confirmPwTextField.snp.top).offset(-90)
             $0.leading.equalTo(emailTextField.snp.leading)
             $0.height.equalTo(40)
             $0.centerX.equalToSuperview()
             $0.trailing.equalTo(emailTextField.snp.trailing)
+        }
+        
+        guideLine.snp.makeConstraints {
+            $0.top.equalTo(pwTextField.snp.bottom).offset(10)
+            $0.leading.equalTo(pwTextField.snp.leading).offset(3)
         }
         
         eTrueLable.snp.makeConstraints {
@@ -213,12 +282,17 @@ class SignupViewController: UIViewController {
         }
         
         confirmLabel.snp.makeConstraints {
-            $0.bottom.equalTo(confirmPwTextField.snp.top).offset(-6)
+            $0.bottom.equalTo(confirmPwTextField.snp.top).offset(-7)
             $0.leading.equalTo(pwTextField)
         }
         
+        confirmCheck.snp.makeConstraints {
+            $0.centerY.equalTo(confirmLabel.snp.centerY)
+            $0.leading.equalTo(confirmLabel.snp.trailing).offset(5)
+        }
+        
         confirmPwTextField.snp.makeConstraints {
-            $0.bottom.equalTo(nickTextField.snp.top).offset(-50)
+            $0.bottom.equalTo(nickTextField.snp.top).offset(-60)
             $0.leading.equalTo(emailTextField.snp.leading)
             $0.height.equalTo(40)
             $0.centerX.equalToSuperview()
@@ -238,12 +312,17 @@ class SignupViewController: UIViewController {
         }
         
         nickLabel.snp.makeConstraints {
-            $0.bottom.equalTo(nickTextField.snp.top).offset(-6)
+            $0.bottom.equalTo(nickTextField.snp.top).offset(-7)
             $0.leading.equalTo(pwTextField)
         }
         
+        nickCheck.snp.makeConstraints {
+            $0.centerY.equalTo(nickLabel.snp.centerY)
+            $0.leading.equalTo(nickLabel.snp.trailing).offset(5)
+        }
+        
         nickTextField.snp.makeConstraints {
-            $0.bottom.equalTo(signUpButton.snp.top).offset(-100)
+            $0.bottom.equalTo(signUpButton.snp.top).offset(-70)
             $0.leading.equalTo(emailTextField.snp.leading)
             $0.height.equalTo(40)
             $0.centerX.equalToSuperview()
@@ -267,7 +346,7 @@ class SignupViewController: UIViewController {
             $0.centerX.equalTo(view.safeAreaLayoutGuide)
             $0.leading.equalTo(view.safeAreaLayoutGuide).offset(20)
             $0.trailing.equalTo(view.safeAreaLayoutGuide).offset(-20)
-            $0.height.equalTo(50)
+            $0.height.equalTo(44)
         }
     }
     
