@@ -70,6 +70,7 @@ class PptLoginViewController: UIViewController {
         view.backgroundColor = .white
         settingUI()
         bind()
+        setButtonAction()
     }
     
     private func settingUI() {
@@ -145,5 +146,22 @@ class PptLoginViewController: UIViewController {
     private func checkPasswordValid(_ password: String) -> Bool {
         let predicate = NSPredicate(format: "SELF MATCHES %@", pRegex)
         return predicate.evaluate(with: password)
+    }
+    
+    private func setButtonAction() {
+        closeButton.addTarget(self, action: #selector(didTapCloseButton), for: .touchUpInside)
+        signupButton.addTarget(self, action: #selector(didTapSignUpButton), for: .touchUpInside)
+    }
+    
+    @objc
+    private func didTapSignUpButton() {
+        let SignupViewController = SignupViewController()
+        SignupViewController.modalPresentationStyle = .fullScreen
+        present(SignupViewController, animated: true)
+    }
+    
+    @objc
+    private func didTapCloseButton() {
+        dismiss(animated: true)
     }
 }
