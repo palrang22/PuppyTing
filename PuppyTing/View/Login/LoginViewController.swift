@@ -6,12 +6,12 @@
 //
 
 import UIKit
- import SnapKit
- import RxSwift
- import RxCocoa
+
+import RxCocoa
+import RxSwift
+import SnapKit
 
 class LoginViewController: UIViewController {
-    
     
     let logoImageView: UIImageView = {
         let imageView = UIImageView()
@@ -40,7 +40,6 @@ class LoginViewController: UIViewController {
         button.layer.cornerRadius = 5
         return button
     }()
-    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -93,5 +92,3 @@ class LoginViewController: UIViewController {
     }
     
 }
-
-
