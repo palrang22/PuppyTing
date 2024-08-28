@@ -291,7 +291,7 @@ class MypageViewController: UIViewController, UICollectionViewDataSource, UIColl
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        view.backgroundColor = .white
         setupUI() // UI 설정
         setupBindings() // 바인딩 설정
     }
