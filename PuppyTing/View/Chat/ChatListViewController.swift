@@ -79,6 +79,10 @@ class ChatListViewController: UIViewController, UITableViewDelegate, UISearchBar
         100
     }
     
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        navigationController?.pushViewController(ChatViewController(), animated: true)
+    }
+    
     @objc func showSearchBar() {
         // 타이틀과 버튼 숨기기
         navigationItem.title = nil
