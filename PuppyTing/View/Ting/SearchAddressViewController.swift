@@ -10,7 +10,7 @@ import UIKit
 
 import SnapKit
 
-class SearchAddressViewController: UIViewController, UISearchBarDelegate {
+class SearchAddressViewController: UIViewController {
     
     private let locationManager = CLLocationManager()
     private var searchResult = [MKMapItem]()
@@ -38,6 +38,7 @@ class SearchAddressViewController: UIViewController, UISearchBarDelegate {
         tableView.register(SearchedAddressTableViewCell.self, forCellReuseIdentifier: SearchedAddressTableViewCell.id)
         tableView.delegate = self
         tableView.dataSource = self
+        tableView.isHidden = true
         return tableView
     }()
 
@@ -46,6 +47,10 @@ class SearchAddressViewController: UIViewController, UISearchBarDelegate {
         super.viewDidLoad()
         setUI()
         setConstraints()
+        
+        locationManager.requestWhenInUseAuthorization()
+        locationManager.startUpdatingLocation()
+
     }
     
     //MARK: Mapkit Search 관련 메서드
@@ -68,8 +73,10 @@ class SearchAddressViewController: UIViewController, UISearchBarDelegate {
                 print("에러")
                 return
             }
-            self.searchResult = response.mapItems.prefix(20).map { $0 }
-            self.tableView.reloadData()
+            searchResult = response.mapItems.prefix(20).map { $0 }
+            setVisibility()
+            tableView.reloadData()
+            print(searchResult)
         }
     }
     
@@ -78,8 +85,17 @@ class SearchAddressViewController: UIViewController, UISearchBarDelegate {
         view.backgroundColor = .white
     }
     
+    private func setVisibility() {
+        if searchResult.isEmpty {
+            tableView.isHidden = true
+        } else {
+            tableView.isHidden = false
+            findLabel.isHidden = true
+        }
+    }
+    
     private func setConstraints() {
-        [searchBar, findLabel]
+        [searchBar, findLabel, tableView]
             .forEach { view.addSubview($0) }
         
         searchBar.snp.makeConstraints {
@@ -91,6 +107,18 @@ class SearchAddressViewController: UIViewController, UISearchBarDelegate {
             $0.centerX.equalToSuperview()
             $0.centerY.equalToSuperview()
         }
+        
+        tableView.snp.makeConstraints {
+            $0.top.equalTo(searchBar)
+            $0.bottom.equalTo(view.safeAreaLayoutGuide)
+        }
+    }
+}
+
+extension SearchAddressViewController: UISearchBarDelegate {
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        searchButtonTapped(searchBar: searchBar)
+        searchBar.resignFirstResponder()
     }
 }
 
@@ -100,7 +128,11 @@ extension SearchAddressViewController: UITableViewDelegate {
 
 extension SearchAddressViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: SearchedAddressTableViewCell.id, for: indexPath)
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: SearchedAddressTableViewCell.id, for: indexPath) as? SearchedAddressTableViewCell else {
+            return UITableViewCell()
+        }
+        let item = searchResult[indexPath.row]
+        cell.config(spot: item.name ?? "장소", address: item.placemark.title ?? "주소주소주소주소")
         return cell
     }
     
