@@ -10,10 +10,26 @@ import UIKit
 import RxCocoa
 import RxSwift
 import SnapKit
+import FirebaseAuth
 
 class PptLoginViewController: UIViewController {
     
     var disposeBag = DisposeBag()
+    
+    private let pptLoginViewModel = PptLoginViewModel()
+    
+    var user: User? = nil {
+        didSet {
+            // 데이터가 들어오면 로그인이 완료된 거임
+            print(user?.email)
+        }
+    }
+    
+    var error: Error? = nil {
+        didSet {
+            print(error)
+        }
+    }
     
     let eRegex = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,64}"
     let pRegex = "^(?=.*[A-Za-z])(?=.*[0-9])(?=.*[!@#$%^&*()_+=-]).{8,50}" // 8자리 ~ 50자리 영어+숫자+특수문자
@@ -76,6 +92,7 @@ class PptLoginViewController: UIViewController {
         view.backgroundColor = .white
         settingUI()
         bind()
+        bindData()
         setButtonAction()
     }
     
@@ -141,6 +158,15 @@ class PptLoginViewController: UIViewController {
             .disposed(by: disposeBag)
 
     }
+    
+    private func bindData() {
+        pptLoginViewModel.userSubject.observe(on: MainScheduler.instance).subscribe(onNext: { [weak self] user in
+            self?.user = user
+        }).disposed(by: disposeBag)
+        pptLoginViewModel.errorSubject.observe(on: MainScheduler.instance).subscribe(onNext: { [weak self] error in
+            self?.error = error
+        }).disposed(by: disposeBag)
+    }
 
     // 이메일 유효성 검사
     private func checkEmailValid(_ email: String) -> Bool {
@@ -157,6 +183,7 @@ class PptLoginViewController: UIViewController {
     private func setButtonAction() {
         closeButton.addTarget(self, action: #selector(didTapCloseButton), for: .touchUpInside)
         signupButton.addTarget(self, action: #selector(didTapSignUpButton), for: .touchUpInside)
+        loginButton.addTarget(self, action: #selector(didTapLoginButton), for: .touchUpInside)
     }
     
     @objc
@@ -169,5 +196,11 @@ class PptLoginViewController: UIViewController {
     @objc
     private func didTapCloseButton() {
         dismiss(animated: true)
+    }
+    
+    @objc
+    private func didTapLoginButton() {
+        guard let email = emailfield.text, let pw = pwfield.text else { return }
+        pptLoginViewModel.emailSignIn(email: email, pw: pw)
     }
 }
