@@ -10,8 +10,20 @@ import UIKit
 import RxCocoa
 import RxSwift
 import SnapKit
+import FirebaseAuth
 
 class LoginViewController: UIViewController {
+    
+    let disposeBag = DisposeBag()
+    
+    private let loginViewModel = LoginViewModel()
+    
+    var user: User? = nil {
+        didSet {
+            // 소셜 로그인 완료
+            print(user?.email)
+        }
+    }
     
     let logoImageView: UIImageView = {
         let imageView = UIImageView()
@@ -45,6 +57,7 @@ class LoginViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = .white
         setupUI()
+        bindData()
         setButtonAction()
     }
     
@@ -80,8 +93,15 @@ class LoginViewController: UIViewController {
         }
     }
     
+    private func bindData() {
+        loginViewModel.userSubject.observe(on: MainScheduler.instance).subscribe(onNext: { [weak self] user in
+            self?.user = user
+        }).disposed(by: disposeBag)
+    }
+    
     private func setButtonAction() {
         pptLogButton.addTarget(self, action: #selector(didTapPuppytingLogin), for: .touchUpInside)
+        ggLogButton.addTarget(self, action: #selector(didTapGoogleLoginButton), for: .touchUpInside)
     }
     
     @objc
@@ -89,6 +109,11 @@ class LoginViewController: UIViewController {
         let pptLoginViewController = PptLoginViewController()
         pptLoginViewController.modalPresentationStyle = .fullScreen
         present(pptLoginViewController, animated: true)
+    }
+    
+    @objc
+    private func didTapGoogleLoginButton() {
+        loginViewModel.googleSignIn(viewController: self)
     }
     
 }
