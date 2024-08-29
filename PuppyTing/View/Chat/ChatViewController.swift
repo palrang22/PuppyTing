@@ -11,6 +11,8 @@ import SnapKit
 
 class ChatViewController: UIViewController {
     
+    var titleText: String? // 타이틀 저장 변수 ChatListVC에서 가져와야함..
+    
     let chattingTableView: UITableView = {
         let tableView = UITableView()
         tableView.register(MyChattingTableViewCell.self, forCellReuseIdentifier: MyChattingTableViewCell.identifier)
@@ -65,6 +67,9 @@ class ChatViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        // Large Title 해제
+        navigationItem.largeTitleDisplayMode = .never
+        
         view.backgroundColor = .white
         
         view.addSubview(chattingTableView)
@@ -83,7 +88,7 @@ class ChatViewController: UIViewController {
     func setupConstraints() {
         
         navigationController?.navigationBar.tintColor = UIColor.puppyPurple
-        navigationItem.title = "한강산책톡"
+        navigationItem.title = "한강산책톡" // 여기에 가져온 title정보 나오게
         
         chattingTableView.snp.makeConstraints {
             $0.top.leading.trailing.equalTo(view.safeAreaLayoutGuide)
