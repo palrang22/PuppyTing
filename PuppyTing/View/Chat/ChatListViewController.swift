@@ -8,8 +8,9 @@
 import Foundation
 import UIKit
 
-import RxSwift
 import RxCocoa
+import RxSwift
+
 
 class ChatListViewController: UIViewController, UITableViewDelegate, UISearchBarDelegate {
     
