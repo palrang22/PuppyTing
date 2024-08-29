@@ -9,7 +9,7 @@ import UIKit
 
 class PostTingViewController: UIViewController {
     //MARK: UI Component 선언
-    private let addMapButton: UIButton = {
+    private lazy var addMapButton: UIButton = {
         var config = UIButton.Configuration.filled()
         config.title = "장소 추가"
         config.image = UIImage(systemName: "location.fill.viewfinder")
@@ -19,6 +19,7 @@ class PostTingViewController: UIViewController {
         config.cornerStyle = .large
         
         let button = UIButton(configuration: config)
+        button.addTarget(self, action: #selector(addMapButtonTapped), for: .touchUpInside)
         return button
     }()
     
@@ -48,6 +49,11 @@ class PostTingViewController: UIViewController {
     @objc
     private func addButtonTapped() {
         
+    }
+    
+    @objc
+    private func addMapButtonTapped() {
+        navigationController?.pushViewController(SearchAddressViewController(), animated: true)
     }
 
     //MARK: UI 설정 및 제약조건 등
