@@ -7,8 +7,8 @@
 
 import Foundation
 
-import RxSwift
 import FirebaseAuth
+import RxSwift
 
 class SignUpViewModel {
     

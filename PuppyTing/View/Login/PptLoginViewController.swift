@@ -7,10 +7,10 @@
 
 import UIKit
 
+import FirebaseAuth
 import RxCocoa
 import RxSwift
 import SnapKit
-import FirebaseAuth
 
 class PptLoginViewController: UIViewController {
     

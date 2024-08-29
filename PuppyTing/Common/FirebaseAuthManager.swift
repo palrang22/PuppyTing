@@ -10,8 +10,8 @@ import UIKit
 
 import FirebaseAuth
 import FirebaseCore
-import RxSwift
 import GoogleSignIn
+import RxSwift
 
 enum AuthError: Error {
     case CreateFailError

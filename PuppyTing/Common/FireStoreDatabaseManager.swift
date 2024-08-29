@@ -7,9 +7,9 @@
 
 import Foundation
 
-import RxSwift
 import FirebaseCore
 import FirebaseFirestore
+import RxSwift
 
 class FireStoreDatabaseManager {
     

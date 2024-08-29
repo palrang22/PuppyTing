@@ -8,9 +8,9 @@
 import Foundation
 import UIKit
 
-import RxSwift
 import FirebaseAuth
 import GoogleSignIn
+import RxSwift
 
 class LoginViewModel {
     private let disposeBag = DisposeBag()
