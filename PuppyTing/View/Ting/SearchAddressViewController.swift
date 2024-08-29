@@ -32,6 +32,14 @@ class SearchAddressViewController: UIViewController, UISearchBarDelegate {
         label.textColor = .gray
         return label
     }()
+    
+    private lazy var tableView: UITableView = {
+        let tableView = UITableView()
+        tableView.register(SearchedAddressTableViewCell.self, forCellReuseIdentifier: SearchedAddressTableViewCell.id)
+        tableView.delegate = self
+        tableView.dataSource = self
+        return tableView
+    }()
 
     //MARK: View 생명주기
     override func viewDidLoad() {
@@ -56,10 +64,12 @@ class SearchAddressViewController: UIViewController, UISearchBarDelegate {
         let search = MKLocalSearch(request: request)
         search.start { [weak self] response, error in
             guard let self,
-                  let respnse = response else {
+                  let response = response else {
                 print("에러")
                 return
             }
+            self.searchResult = response.mapItems.prefix(20).map { $0 }
+            self.tableView.reloadData()
         }
     }
     
@@ -82,5 +92,19 @@ class SearchAddressViewController: UIViewController, UISearchBarDelegate {
             $0.centerY.equalToSuperview()
         }
     }
+}
 
+extension SearchAddressViewController: UITableViewDelegate {
+    
+}
+
+extension SearchAddressViewController: UITableViewDataSource {
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: SearchedAddressTableViewCell.id, for: indexPath)
+        return cell
+    }
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return searchResult.count
+    }
 }

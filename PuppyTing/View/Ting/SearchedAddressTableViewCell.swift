@@ -8,6 +8,7 @@
 import UIKit
 
 class SearchedAddressTableViewCell: UITableViewCell {
+    static let id = "searchAddressTableViewCell"
 
     override func awakeFromNib() {
         super.awakeFromNib()
