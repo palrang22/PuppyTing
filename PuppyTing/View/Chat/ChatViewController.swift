@@ -72,10 +72,20 @@ class ChatViewController: UIViewController {
         
         view.backgroundColor = .white
         
-        view.addSubview(chattingTableView)
-        view.addSubview(messageInputView)
-        messageInputView.addSubview(messageTextView)
-        messageInputView.addSubview(sendButton)
+        // 키보드 알림 등록
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
+        
+        // 키보드 포커싱 해제 메서드 호출
+        setupKeyboardDismissRecognizer()
+        
+        [chattingTableView, messageInputView].forEach {
+            view.addSubview($0)
+        }
+        
+        [messageTextView, sendButton].forEach {
+            messageInputView.addSubview($0)
+        }
         
         chattingTableView.delegate = self
         chattingTableView.dataSource = self
@@ -83,6 +93,41 @@ class ChatViewController: UIViewController {
         messageTextView.delegate = self
         
         setupConstraints()
+    }
+    
+    // 키보드가 나타날 때 호출되는 메서드
+    @objc func keyboardWillShow(notification: NSNotification) {
+        adjustForKeyboard(notification: notification, show: true)
+    }
+
+    // 키보드가 사라질 때 호출되는 메서드
+    @objc func keyboardWillHide(notification: NSNotification) {
+        adjustForKeyboard(notification: notification, show: false)
+    }
+
+    func adjustForKeyboard(notification: NSNotification, show: Bool) {
+        if let keyboardFrame = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue {
+            let keyboardRectangle = keyboardFrame.cgRectValue
+            let keyboardHeight = keyboardRectangle.height
+            
+            let adjustmentHeight = show ? keyboardHeight : 0
+            
+            // 화면을 키보드 높이에 맞춰서 올리기
+            UIView.animate(withDuration: 0.3) {
+                self.view.frame.origin.y = -adjustmentHeight
+            }
+        }
+    }
+
+    // 메모리 해제를 위해 노티피케이션 제거
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
+    
+    // 제일 밑 채팅 보이기
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        scrollToBottom()
     }
     
     func setupConstraints() {
@@ -111,6 +156,17 @@ class ChatViewController: UIViewController {
             $0.trailing.equalToSuperview().inset(16)
             $0.centerY.equalToSuperview()
             $0.width.height.equalTo(44)
+        }
+    }
+    
+    // 스크롤 제일 밑으로
+    func scrollToBottom() {
+        let lastSectionIndex = chattingTableView.numberOfSections - 1
+        let lastRowIndex = chattingTableView.numberOfRows(inSection: lastSectionIndex) - 1
+        
+        if lastRowIndex >= 0 {
+            let indexPath = IndexPath(row: lastRowIndex, section: lastSectionIndex)
+            chattingTableView.scrollToRow(at: indexPath, at: .bottom, animated: false)
         }
     }
     
