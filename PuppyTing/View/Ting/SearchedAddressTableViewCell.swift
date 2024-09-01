@@ -15,15 +15,15 @@ class SearchedAddressTableViewCell: UITableViewCell {
     private let spotLabel: UILabel = {
         let label = UILabel()
         label.text = "장소"
-        label.font = .systemFont(ofSize: 14, weight: .bold)
-        label.textColor = .white
+        label.font = .systemFont(ofSize: 18, weight: .bold)
+        label.textColor = .black
         return label
     }()
     
     private let addressLabel: UILabel = {
         let label = UILabel()
         label.text = "주소주소주소주소주소주소주소주소주소"
-        label.font = .systemFont(ofSize: 12, weight: .medium)
+        label.font = .systemFont(ofSize: 14, weight: .medium)
         label.textColor = .gray
         return label
     }()
