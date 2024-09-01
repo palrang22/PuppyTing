@@ -12,14 +12,10 @@
 		56D686CC2C7DC88700B00880 /* PptLoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56D686CB2C7DC88600B00880 /* PptLoginViewController.swift */; };
 		56FD048F2C80171100EBCDCD /* MyChattingTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56FD048E2C80171100EBCDCD /* MyChattingTableViewCell.swift */; };
 		56FD04912C80172B00EBCDCD /* ChattingTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56FD04902C80172B00EBCDCD /* ChattingTableViewCell.swift */; };
-		A2085D9E2C7D62F000698923 /* LoginManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2085D9D2C7D62F000698923 /* LoginManager.swift */; };
-		A2085DA02C7D66FC00698923 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = A2085D9F2C7D66FC00698923 /* GoogleService-Info.plist */; };
 		A2085DA32C7D678400698923 /* GoogleSignIn in Frameworks */ = {isa = PBXBuildFile; productRef = A2085DA22C7D678400698923 /* GoogleSignIn */; };
 		A2085DA52C7D678400698923 /* GoogleSignInSwift in Frameworks */ = {isa = PBXBuildFile; productRef = A2085DA42C7D678400698923 /* GoogleSignInSwift */; };
 		A2085DC62C7EB37400698923 /* ChatListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2085DC52C7EB37400698923 /* ChatListViewController.swift */; };
 		A2085DC82C7EB4BA00698923 /* ChatTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2085DC72C7EB4BA00698923 /* ChatTableViewCell.swift */; };
-		A2085DA32C7D678400698923 /* GoogleSignIn in Frameworks */ = {isa = PBXBuildFile; productRef = A2085DA22C7D678400698923 /* GoogleSignIn */; };
-		A2085DA52C7D678400698923 /* GoogleSignInSwift in Frameworks */ = {isa = PBXBuildFile; productRef = A2085DA42C7D678400698923 /* GoogleSignInSwift */; };
 		A2085DCA2C80395B00698923 /* Member.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2085DC92C80395B00698923 /* Member.swift */; };
 		A2085DCD2C804C3600698923 /* SignUpViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2085DCC2C804C3600698923 /* SignUpViewModel.swift */; };
 		A2085DCF2C804C7300698923 /* FirebaseAuthManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2085DCE2C804C7300698923 /* FirebaseAuthManager.swift */; };
@@ -58,6 +54,8 @@
 		E738FBBE2C7C72CB004696BD /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = E738FBBD2C7C72CB004696BD /* FirebaseFirestore */; };
 		E738FBC32C7D8019004696BD /* TingCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E738FBC22C7D8019004696BD /* TingCollectionViewCell.swift */; };
 		E738FBC52C7DB85A004696BD /* TingFeedModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E738FBC42C7DB85A004696BD /* TingFeedModel.swift */; };
+		E7F598322C8475CC00FE8900 /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7F598312C8475CC00FE8900 /* NetworkManager.swift */; };
+		E7F598342C847A7800FE8900 /* Place.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7F598332C847A7800FE8900 /* Place.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -66,8 +64,6 @@
 		56D686CB2C7DC88600B00880 /* PptLoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PptLoginViewController.swift; sourceTree = "<group>"; };
 		56FD048E2C80171100EBCDCD /* MyChattingTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyChattingTableViewCell.swift; sourceTree = "<group>"; };
 		56FD04902C80172B00EBCDCD /* ChattingTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChattingTableViewCell.swift; sourceTree = "<group>"; };
-		A2085D9D2C7D62F000698923 /* LoginManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginManager.swift; sourceTree = "<group>"; };
-		A2085D9F2C7D66FC00698923 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		A2085DC52C7EB37400698923 /* ChatListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatListViewController.swift; sourceTree = "<group>"; };
 		A2085DC72C7EB4BA00698923 /* ChatTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatTableViewCell.swift; sourceTree = "<group>"; };
 		A2085DC92C80395B00698923 /* Member.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Member.swift; sourceTree = "<group>"; };
@@ -104,6 +100,9 @@
 		E738FBAC2C7C6D2E004696BD /* TabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarController.swift; sourceTree = "<group>"; };
 		E738FBC22C7D8019004696BD /* TingCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TingCollectionViewCell.swift; sourceTree = "<group>"; };
 		E738FBC42C7DB85A004696BD /* TingFeedModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TingFeedModel.swift; sourceTree = "<group>"; };
+		E7F598302C84755200FE8900 /* Config.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Config.xcconfig; sourceTree = "<group>"; };
+		E7F598312C8475CC00FE8900 /* NetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkManager.swift; sourceTree = "<group>"; };
+		E7F598332C847A7800FE8900 /* Place.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Place.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -249,6 +248,7 @@
 				E738FB9F2C7C669D004696BD /* SampleModel.swift */,
 				E738FBC42C7DB85A004696BD /* TingFeedModel.swift */,
 				A2085DC92C80395B00698923 /* Member.swift */,
+				E7F598332C847A7800FE8900 /* Place.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -260,6 +260,7 @@
 				E70DB3482C7F3F060073B3F8 /* UIViewController.swift */,
 				A2085DCE2C804C7300698923 /* FirebaseAuthManager.swift */,
 				A2085DD02C8059F400698923 /* FireStoreDatabaseManager.swift */,
+				E7F598312C8475CC00FE8900 /* NetworkManager.swift */,
 			);
 			path = Common;
 			sourceTree = "<group>";
@@ -269,6 +270,7 @@
 			children = (
 				E738FB762C7C62EE004696BD /* AppDelegate.swift */,
 				E738FB782C7C62EE004696BD /* SceneDelegate.swift */,
+				E7F598302C84755200FE8900 /* Config.xcconfig */,
 			);
 			path = App;
 			sourceTree = "<group>";
@@ -427,7 +429,9 @@
 				E738FBC52C7DB85A004696BD /* TingFeedModel.swift in Sources */,
 				A2085DC82C7EB4BA00698923 /* ChatTableViewCell.swift in Sources */,
 				E738FBAD2C7C6D2E004696BD /* TabBarController.swift in Sources */,
+				E7F598322C8475CC00FE8900 /* NetworkManager.swift in Sources */,
 				A2085DC62C7EB37400698923 /* ChatListViewController.swift in Sources */,
+				E7F598342C847A7800FE8900 /* Place.swift in Sources */,
 				C29FCF682C7DBA4F00F8951D /* PuppyRegistrationViewController.swift in Sources */,
 				E738FB952C7C64BA004696BD /* UIColor.swift in Sources */,
 				E738FB9E2C7C668D004696BD /* MypageViewController.swift in Sources */,
@@ -467,6 +471,7 @@
 /* Begin XCBuildConfiguration section */
 		E738FB852C7C62F0004696BD /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = E7F598302C84755200FE8900 /* Config.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
@@ -530,6 +535,7 @@
 		};
 		E738FB862C7C62F0004696BD /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = E7F598302C84755200FE8900 /* Config.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
