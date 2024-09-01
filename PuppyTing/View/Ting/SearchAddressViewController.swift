@@ -116,7 +116,6 @@ class SearchAddressViewController: UIViewController {
 extension SearchAddressViewController: CLLocationManagerDelegate {
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         guard let location = locations.last else { return }
-        print(location.coordinate.latitude, location.coordinate.longitude)
         viewModel.updateLocation(location: location)
     }
     
