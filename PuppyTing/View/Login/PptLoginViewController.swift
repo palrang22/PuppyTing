@@ -22,12 +22,23 @@ class PptLoginViewController: UIViewController {
         didSet {
             // 데이터가 들어오면 로그인이 완료된 거임
             print(user?.email)
+            okAlert(title: "로그인 완료", message: "로그인이 완료되었습니다.", okActionTitle: "OK")
         }
     }
     
     var error: Error? = nil {
         didSet {
             print(error)
+            if let error = error as? AuthError {
+                switch error {
+                case .EmailVerificationFailError:
+                    okAlert(title: "로그인 실패", message: "이메일 인증에 실패했습니다.", okActionTitle: "ok")
+                case .InvalidCredential:
+                    okAlert(title: "로그인 실패", message: "이메일 혹은 비밀번호가 잘못 입력 되었습니다.", okActionTitle: "ok")
+                default:
+                    okAlert(title: "로그인 실패", message: "알 수 없는 이유로 로그인에 실패했습니다.", okActionTitle: "다시 로그인 시도하기")
+                }
+            }
         }
     }
     
