@@ -27,6 +27,7 @@ class ChatListViewController: UIViewController, UITableViewDelegate, UISearchBar
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         setupUI()
         bindTableView()
         
