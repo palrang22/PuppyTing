@@ -17,6 +17,7 @@ class SearchAddressViewController: UIViewController {
     private let locationManager = CLLocationManager()
     private let viewModel = TingViewModel()
     private let disposeBag = DisposeBag()
+    private var ifSearchButtonTapped = false
     
     //MARK: UI Components
     private let searchBar: UISearchBar = {
@@ -27,7 +28,7 @@ class SearchAddressViewController: UIViewController {
     
     private let findLabel: UILabel = {
         let label = UILabel()
-        label.text = "구체적인 단어로 장소를 찾아보세요!\n예) 스타벅스 당산대로점"
+        label.text = "2자 이상의 단어로 장소를 찾아보세요!\n예) 스타벅스 당산대로점"
         label.numberOfLines = 0
         label.font = .systemFont(ofSize: 16, weight: .medium)
         label.textAlignment = .center
@@ -71,6 +72,7 @@ class SearchAddressViewController: UIViewController {
         searchBar.rx.searchButtonClicked
             .withLatestFrom(searchBar.rx.text.orEmpty)
             .subscribe(onNext: { [weak self] keyword in
+                self?.ifSearchButtonTapped = true
                 self?.viewModel.searchPlaces(keyword: keyword)
                 self?.searchBar.resignFirstResponder()
             }).disposed(by: disposeBag)
@@ -81,7 +83,10 @@ class SearchAddressViewController: UIViewController {
                 self.tableView.reloadData()
                 self.tableView.isHidden = items.isEmpty
                 self.findLabel.isHidden = !items.isEmpty
-            
+                
+                if ifSearchButtonTapped && items.isEmpty {
+                    okAlert(title: "검색결과 없음", message: "검색 결과가 없습니다. 2자 이상의 다른 키워드로 검색해보세요.")
+                }
             }).disposed(by: disposeBag)
         
         viewModel.items
