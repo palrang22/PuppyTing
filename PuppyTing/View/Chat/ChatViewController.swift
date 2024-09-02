@@ -7,9 +7,13 @@
 
 import UIKit
 
+import RxCocoa
+import RxSwift
 import SnapKit
 
 class ChatViewController: UIViewController {
+    
+    let disposeBag = DisposeBag()
     
     var titleText: String? // 타이틀 저장 변수 ChatListVC에서 가져와야함..
     
@@ -72,10 +76,6 @@ class ChatViewController: UIViewController {
         
         view.backgroundColor = .white
         
-        // 키보드 알림 등록
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
-        
         // 키보드 포커싱 해제 메서드 호출
         setupKeyboardDismissRecognizer()
         
@@ -93,35 +93,9 @@ class ChatViewController: UIViewController {
         messageTextView.delegate = self
         
         setupConstraints()
-    }
-    
-    // 키보드가 나타날 때 호출되는 메서드
-    @objc func keyboardWillShow(notification: NSNotification) {
-        adjustForKeyboard(notification: notification, show: true)
-    }
-
-    // 키보드가 사라질 때 호출되는 메서드
-    @objc func keyboardWillHide(notification: NSNotification) {
-        adjustForKeyboard(notification: notification, show: false)
-    }
-
-    func adjustForKeyboard(notification: NSNotification, show: Bool) {
-        if let keyboardFrame = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue {
-            let keyboardRectangle = keyboardFrame.cgRectValue
-            let keyboardHeight = keyboardRectangle.height
-            
-            let adjustmentHeight = show ? keyboardHeight : 0
-            
-            // 화면을 키보드 높이에 맞춰서 올리기
-            UIView.animate(withDuration: 0.3) {
-                self.view.frame.origin.y = -adjustmentHeight
-            }
-        }
-    }
-
-    // 메모리 해제를 위해 노티피케이션 제거
-    deinit {
-        NotificationCenter.default.removeObserver(self)
+        
+        // 키보드에 맞게 뷰 조정 메서드 호출
+        bindKeyboardHeightToViewAdjustment(disposeBag: disposeBag)
     }
     
     // 제일 밑 채팅 보이기
