@@ -22,12 +22,23 @@ class PptLoginViewController: UIViewController {
         didSet {
             // 데이터가 들어오면 로그인이 완료된 거임
             print(user?.email)
+            okAlert(title: "로그인 완료", message: "로그인이 완료되었습니다.", okActionTitle: "OK")
         }
     }
     
     var error: Error? = nil {
         didSet {
             print(error)
+            if let error = error as? AuthError {
+                switch error {
+                case .EmailVerificationFailError:
+                    okAlert(title: "로그인 실패", message: "이메일 인증에 실패했습니다.", okActionTitle: "ok")
+                case .InvalidCredential:
+                    okAlert(title: "로그인 실패", message: "이메일 혹은 비밀번호가 잘못 입력 되었습니다.", okActionTitle: "ok")
+                default:
+                    okAlert(title: "로그인 실패", message: "알 수 없는 이유로 로그인에 실패했습니다.", okActionTitle: "다시 로그인 시도하기")
+                }
+            }
         }
     }
     
@@ -87,6 +98,13 @@ class PptLoginViewController: UIViewController {
         return button
     }()
     
+    let findPwButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.setTitle("비밀번호 찾기", for: .normal)
+        button.setTitleColor(.black, for: .normal)
+        return button
+    }()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
@@ -97,7 +115,7 @@ class PptLoginViewController: UIViewController {
     }
     
     private func settingUI() {
-        [closeButton, logoImageView, emailfield, pwfield, loginButton, signupButton].forEach {
+        [closeButton, logoImageView, emailfield, pwfield, loginButton, signupButton, findPwButton].forEach {
             view.addSubview($0)
         }
         
@@ -134,6 +152,12 @@ class PptLoginViewController: UIViewController {
             $0.bottom.equalTo(view.safeAreaLayoutGuide).offset(-130) // 모든화면 맨 밑 버튼 고정 위치
             $0.centerX.equalTo(view.safeAreaLayoutGuide)
             $0.width.equalTo(281)
+            $0.height.equalTo(44)
+        }
+        
+        findPwButton.snp.makeConstraints {
+            $0.bottom.equalTo(view.safeAreaLayoutGuide).offset(-50)
+            $0.centerX.equalTo(view.safeAreaLayoutGuide)
             $0.height.equalTo(44)
         }
     }
@@ -183,6 +207,7 @@ class PptLoginViewController: UIViewController {
     private func setButtonAction() {
         closeButton.addTarget(self, action: #selector(didTapCloseButton), for: .touchUpInside)
         signupButton.addTarget(self, action: #selector(didTapSignUpButton), for: .touchUpInside)
+        findPwButton.addTarget(self, action: #selector(didTapFindPwButton), for: .touchUpInside)
         loginButton.addTarget(self, action: #selector(didTapLoginButton), for: .touchUpInside)
     }
     
@@ -196,6 +221,13 @@ class PptLoginViewController: UIViewController {
     @objc
     private func didTapCloseButton() {
         dismiss(animated: true)
+    }
+    
+    @objc
+    private func didTapFindPwButton() {
+        let FindingPassWordVC = FindingPasswordViewController()
+        FindingPassWordVC.modalPresentationStyle = .fullScreen
+        present(FindingPassWordVC, animated: true)
     }
     
     @objc

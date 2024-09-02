@@ -10,6 +10,10 @@
 		56D686C52C7DA88500B00880 /* SignupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56D686C42C7DA88500B00880 /* SignupViewController.swift */; };
 		56D686C82C7DB09600B00880 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56D686C72C7DB09600B00880 /* LoginViewController.swift */; };
 		56D686CC2C7DC88700B00880 /* PptLoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56D686CB2C7DC88600B00880 /* PptLoginViewController.swift */; };
+		56FD04932C856C4200EBCDCD /* FindingPasswordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56FD04922C856C4200EBCDCD /* FindingPasswordViewController.swift */; };
+		56FD04952C856C6E00EBCDCD /* ChangePasswordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56FD04942C856C6E00EBCDCD /* ChangePasswordViewController.swift */; };
+		A2085D9E2C7D62F000698923 /* LoginManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2085D9D2C7D62F000698923 /* LoginManager.swift */; };
+		A2085DA02C7D66FC00698923 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = A2085D9F2C7D66FC00698923 /* GoogleService-Info.plist */; };
 		56FD048F2C80171100EBCDCD /* MyChattingTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56FD048E2C80171100EBCDCD /* MyChattingTableViewCell.swift */; };
 		56FD04912C80172B00EBCDCD /* ChattingTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56FD04902C80172B00EBCDCD /* ChattingTableViewCell.swift */; };
 		A2085DA32C7D678400698923 /* GoogleSignIn in Frameworks */ = {isa = PBXBuildFile; productRef = A2085DA22C7D678400698923 /* GoogleSignIn */; };
@@ -23,6 +27,7 @@
 		A2085DD42C80622B00698923 /* PptLoginViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2085DD32C80622B00698923 /* PptLoginViewModel.swift */; };
 		A2085DD62C806A4D00698923 /* LoginViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2085DD52C806A4D00698923 /* LoginViewModel.swift */; };
 		A2085DD82C806F8D00698923 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = A2085DD72C806F8D00698923 /* GoogleService-Info.plist */; };
+		A2F9FE1B2C85520F004D7FF6 /* Config.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = A2F9FE1A2C85520F004D7FF6 /* Config.xcconfig */; };
 		C29FCF662C7DB37E00F8951D /* PuppyCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C29FCF652C7DB37E00F8951D /* PuppyCollectionViewCell.swift */; };
 		C29FCF682C7DBA4F00F8951D /* PuppyRegistrationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C29FCF672C7DBA4F00F8951D /* PuppyRegistrationViewController.swift */; };
 		C29FCF772C8171FA00F8951D /* MyInfoEditViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C29FCF762C8171FA00F8951D /* MyInfoEditViewController.swift */; };
@@ -56,12 +61,18 @@
 		E738FBBE2C7C72CB004696BD /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = E738FBBD2C7C72CB004696BD /* FirebaseFirestore */; };
 		E738FBC32C7D8019004696BD /* TingCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E738FBC22C7D8019004696BD /* TingCollectionViewCell.swift */; };
 		E738FBC52C7DB85A004696BD /* TingFeedModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E738FBC42C7DB85A004696BD /* TingFeedModel.swift */; };
+		E7F598322C8475CC00FE8900 /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7F598312C8475CC00FE8900 /* NetworkManager.swift */; };
+		E7F598342C847A7800FE8900 /* Place.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7F598332C847A7800FE8900 /* Place.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		56D686C42C7DA88500B00880 /* SignupViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignupViewController.swift; sourceTree = "<group>"; };
 		56D686C72C7DB09600B00880 /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 		56D686CB2C7DC88600B00880 /* PptLoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PptLoginViewController.swift; sourceTree = "<group>"; };
+		56FD04922C856C4200EBCDCD /* FindingPasswordViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FindingPasswordViewController.swift; sourceTree = "<group>"; };
+		56FD04942C856C6E00EBCDCD /* ChangePasswordViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChangePasswordViewController.swift; sourceTree = "<group>"; };
+		A2085D9D2C7D62F000698923 /* LoginManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginManager.swift; sourceTree = "<group>"; };
+		A2085D9F2C7D66FC00698923 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		56FD048E2C80171100EBCDCD /* MyChattingTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyChattingTableViewCell.swift; sourceTree = "<group>"; };
 		56FD04902C80172B00EBCDCD /* ChattingTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChattingTableViewCell.swift; sourceTree = "<group>"; };
 		A2085DC52C7EB37400698923 /* ChatListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatListViewController.swift; sourceTree = "<group>"; };
@@ -73,6 +84,7 @@
 		A2085DD32C80622B00698923 /* PptLoginViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PptLoginViewModel.swift; sourceTree = "<group>"; };
 		A2085DD52C806A4D00698923 /* LoginViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewModel.swift; sourceTree = "<group>"; };
 		A2085DD72C806F8D00698923 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		A2F9FE1A2C85520F004D7FF6 /* Config.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Config.xcconfig; sourceTree = "<group>"; };
 		C29FCF652C7DB37E00F8951D /* PuppyCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PuppyCollectionViewCell.swift; sourceTree = "<group>"; };
 		C29FCF672C7DBA4F00F8951D /* PuppyRegistrationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PuppyRegistrationViewController.swift; sourceTree = "<group>"; };
 		C29FCF762C8171FA00F8951D /* MyInfoEditViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyInfoEditViewController.swift; sourceTree = "<group>"; };
@@ -102,6 +114,8 @@
 		E738FBAC2C7C6D2E004696BD /* TabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarController.swift; sourceTree = "<group>"; };
 		E738FBC22C7D8019004696BD /* TingCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TingCollectionViewCell.swift; sourceTree = "<group>"; };
 		E738FBC42C7DB85A004696BD /* TingFeedModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TingFeedModel.swift; sourceTree = "<group>"; };
+		E7F598312C8475CC00FE8900 /* NetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkManager.swift; sourceTree = "<group>"; };
+		E7F598332C847A7800FE8900 /* Place.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Place.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -137,6 +151,8 @@
 			children = (
 				56D686C72C7DB09600B00880 /* LoginViewController.swift */,
 				56D686CB2C7DC88600B00880 /* PptLoginViewController.swift */,
+				56FD04922C856C4200EBCDCD /* FindingPasswordViewController.swift */,
+				56FD04942C856C6E00EBCDCD /* ChangePasswordViewController.swift */,
 			);
 			path = Login;
 			sourceTree = "<group>";
@@ -247,6 +263,7 @@
 				E738FB9F2C7C669D004696BD /* SampleModel.swift */,
 				E738FBC42C7DB85A004696BD /* TingFeedModel.swift */,
 				A2085DC92C80395B00698923 /* Member.swift */,
+				E7F598332C847A7800FE8900 /* Place.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -258,6 +275,7 @@
 				E70DB3482C7F3F060073B3F8 /* UIViewController.swift */,
 				A2085DCE2C804C7300698923 /* FirebaseAuthManager.swift */,
 				A2085DD02C8059F400698923 /* FireStoreDatabaseManager.swift */,
+				E7F598312C8475CC00FE8900 /* NetworkManager.swift */,
 			);
 			path = Common;
 			sourceTree = "<group>";
@@ -267,6 +285,7 @@
 			children = (
 				E738FB762C7C62EE004696BD /* AppDelegate.swift */,
 				E738FB782C7C62EE004696BD /* SceneDelegate.swift */,
+				A2F9FE1A2C85520F004D7FF6 /* Config.xcconfig */,
 			);
 			path = App;
 			sourceTree = "<group>";
@@ -401,6 +420,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				E738FB802C7C62F0004696BD /* Assets.xcassets in Resources */,
+				A2F9FE1B2C85520F004D7FF6 /* Config.xcconfig in Resources */,
 				A2085DD82C806F8D00698923 /* GoogleService-Info.plist in Resources */,
 				E738FBAA2C7C6BB3004696BD /* .gitignore in Resources */,
 				E738FB832C7C62F0004696BD /* Base in Resources */,
@@ -414,6 +434,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				56FD04952C856C6E00EBCDCD /* ChangePasswordViewController.swift in Sources */,
 				E738FBC32C7D8019004696BD /* TingCollectionViewCell.swift in Sources */,
 				E70DB3512C8068460073B3F8 /* SearchedMapView.swift in Sources */,
 				E70DB34F2C8068190073B3F8 /* SearchedAddressTableViewCell.swift in Sources */,
@@ -427,7 +448,9 @@
 				E738FBC52C7DB85A004696BD /* TingFeedModel.swift in Sources */,
 				A2085DC82C7EB4BA00698923 /* ChatTableViewCell.swift in Sources */,
 				E738FBAD2C7C6D2E004696BD /* TabBarController.swift in Sources */,
+				E7F598322C8475CC00FE8900 /* NetworkManager.swift in Sources */,
 				A2085DC62C7EB37400698923 /* ChatListViewController.swift in Sources */,
+				E7F598342C847A7800FE8900 /* Place.swift in Sources */,
 				C29FCF682C7DBA4F00F8951D /* PuppyRegistrationViewController.swift in Sources */,
 				E738FB952C7C64BA004696BD /* UIColor.swift in Sources */,
 				C29FCF772C8171FA00F8951D /* MyInfoEditViewController.swift in Sources */,
@@ -439,6 +462,7 @@
 				E738FB9C2C7C653C004696BD /* ChatViewController.swift in Sources */,
 				A2085DCA2C80395B00698923 /* Member.swift in Sources */,
 				E738FBA02C7C669D004696BD /* SampleModel.swift in Sources */,
+				56FD04932C856C4200EBCDCD /* FindingPasswordViewController.swift in Sources */,
 				E738FBA62C7C66C9004696BD /* MyPageViewModel.swift in Sources */,
 				56FD04912C80172B00EBCDCD /* ChattingTableViewCell.swift in Sources */,
 				A2085DD62C806A4D00698923 /* LoginViewModel.swift in Sources */,
@@ -469,6 +493,7 @@
 /* Begin XCBuildConfiguration section */
 		E738FB852C7C62F0004696BD /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = A2F9FE1A2C85520F004D7FF6 /* Config.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
@@ -532,6 +557,7 @@
 		};
 		E738FB862C7C62F0004696BD /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = A2F9FE1A2C85520F004D7FF6 /* Config.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
@@ -588,6 +614,7 @@
 		};
 		E738FB882C7C62F0004696BD /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = A2F9FE1A2C85520F004D7FF6 /* Config.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -616,6 +643,7 @@
 		};
 		E738FB892C7C62F0004696BD /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = A2F9FE1A2C85520F004D7FF6 /* Config.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;

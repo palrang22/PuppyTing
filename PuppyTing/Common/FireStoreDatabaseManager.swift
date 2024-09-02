@@ -35,4 +35,34 @@ class FireStoreDatabaseManager {
         }
     }
     
+    func socialSignUp(uuid: String, email: String) -> Single<Member> {
+        return Single.create { [weak self] single in
+            let member = Member(uuid: uuid, email: email, password: "nil", nickname: "User_\(email.split(separator: "@")[0])", profileImage: "기본 이미지", footPrint: 0, isSocial: true)
+            self?.db.collection("member").document(uuid).setData(member.dictionary) { error in
+                if let error = error {
+                    single(.failure(error))
+                } else {
+                    single(.success(member))
+                }
+            }
+            return Disposables.create()
+        }
+    }
+    
+    func findMemeber(uuid: String) -> Single<Bool> {
+        return Single.create { [weak self] single in
+            let docRef = self?.db.collection("member").document(uuid)
+            docRef?.getDocument(completion: { result, error in
+                if let error = error {
+                    single(.failure(error))
+                } else if let result = result, result.exists {
+                    single(.success(true))
+                } else {
+                    single(.success(false))
+                }
+            })
+            return Disposables.create()
+        }
+    }
+    
 }
