@@ -228,6 +228,9 @@ class PptLoginViewController: UIViewController {
         let FindingPassWordVC = FindingPasswordViewController()
         FindingPassWordVC.modalPresentationStyle = .fullScreen
         present(FindingPassWordVC, animated: true)
+    }
+    
+    @objc
     private func didTapLoginButton() {
         guard let email = emailfield.text, let pw = pwfield.text else { return }
         pptLoginViewModel.emailSignIn(email: email, pw: pw)
