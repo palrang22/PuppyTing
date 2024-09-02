@@ -29,13 +29,11 @@ class TingViewModel {
             print("현재위치 없음")
             return
         }
-        print("검색어: \(keyword)")
         
         guard let request = createSearchUrl(keyword: keyword, location: location) else {
             print("URL 오류")
             return
         }
-        print("생성된 요청: \(request)")
         
         networkManager.fetch(request: request)
             .observe(on: MainScheduler.instance)
@@ -45,9 +43,6 @@ class TingViewModel {
             .subscribe(
                 onSuccess: { [weak self] places in
                     self?.items.accept(places)
-                    print(places)
-                    places.forEach { place in
-                        print(place.placeName, place.roadAddressName)}
                 },
                 onFailure: { [weak self] fetchError in
                     self?.error.accept(fetchError.localizedDescription)
@@ -72,7 +67,6 @@ class TingViewModel {
         guard let url = components?.url, let apiKey = apiKey else { return nil }
         var request = URLRequest(url: url)
         request.addValue("KakaoAK \(apiKey)", forHTTPHeaderField: "Authorization")
-        print("API 키가 포함된 요청 헤더: \(request.allHTTPHeaderFields ?? [:])")
         return request
     }
 }

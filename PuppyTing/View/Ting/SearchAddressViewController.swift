@@ -39,7 +39,14 @@ class SearchAddressViewController: UIViewController {
         let tableView = UITableView()
         tableView.register(SearchedAddressTableViewCell.self, forCellReuseIdentifier: SearchedAddressTableViewCell.id)
         tableView.isHidden = true
+        tableView.isUserInteractionEnabled = true
         return tableView
+    }()
+    
+    private let searchedMapView: UIView = {
+        let view = SearchedMapView()
+        view.isHidden = true
+        return view
     }()
 
     //MARK: View 생명주기
@@ -49,8 +56,10 @@ class SearchAddressViewController: UIViewController {
         setConstraints()
         setupLocationManager()
         bind()
+        setGesture()
     }
     
+    //MARK: Delegate
     private func setupLocationManager() {
         locationManager.delegate = self
         locationManager.requestWhenInUseAuthorization()
@@ -72,6 +81,7 @@ class SearchAddressViewController: UIViewController {
                 self.tableView.reloadData()
                 self.tableView.isHidden = items.isEmpty
                 self.findLabel.isHidden = !items.isEmpty
+            
             }).disposed(by: disposeBag)
         
         viewModel.items
@@ -83,6 +93,27 @@ class SearchAddressViewController: UIViewController {
         
         tableView.rx.setDelegate(self)
             .disposed(by: disposeBag)
+        
+        tableView.rx.modelSelected(Place.self)
+            .subscribe(onNext: { [weak self] place in
+                self?.searchBar.resignFirstResponder()
+                print("셀 터치됨")
+                print("선택된 장소 이름: \(place.placeName)")
+                print("선택된 장소 주소: \(place.roadAddressName)")
+                print("위도: \(place.y), 경도: \(place.x)")
+                self?.searchedMapView.isHidden = false
+            }).disposed(by: disposeBag)
+        
+        searchBar.rx.textDidBeginEditing
+            .subscribe(onNext: { [weak self] in
+                self?.searchedMapView.isHidden = true
+            }).disposed(by: disposeBag)
+    }
+    
+    private func setGesture() {
+        let tapGesture = UITapGestureRecognizer(target: self, action: nil)
+        tapGesture.cancelsTouchesInView = false
+        tableView.addGestureRecognizer(tapGesture)
     }
     
     //MARK: UI 설정 및 레이아웃
@@ -92,7 +123,7 @@ class SearchAddressViewController: UIViewController {
     }
     
     private func setConstraints() {
-        [searchBar, findLabel, tableView]
+        [searchBar, findLabel, tableView, searchedMapView]
             .forEach { view.addSubview($0) }
         
         searchBar.snp.makeConstraints {
@@ -106,6 +137,12 @@ class SearchAddressViewController: UIViewController {
         }
         
         tableView.snp.makeConstraints {
+            $0.top.equalTo(searchBar.snp.bottom)
+            $0.leading.trailing.equalTo(view.safeAreaLayoutGuide).inset(20)
+            $0.bottom.equalTo(view.safeAreaLayoutGuide)
+        }
+        
+        searchedMapView.snp.makeConstraints {
             $0.top.equalTo(searchBar.snp.bottom)
             $0.leading.trailing.equalTo(view.safeAreaLayoutGuide).inset(20)
             $0.bottom.equalTo(view.safeAreaLayoutGuide)
@@ -137,28 +174,8 @@ extension SearchAddressViewController: CLLocationManagerDelegate {
     }
 }
 
-//
-//extension SearchAddressViewController: UISearchBarDelegate {
-//    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-//        
-//    }
-//}
-//
 extension SearchAddressViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 70
     }
 }
-//
-//extension SearchAddressViewController: UITableViewDataSource {
-//    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-//        guard let cell = tableView.dequeueReusableCell(withIdentifier: SearchedAddressTableViewCell.id, for: indexPath) as? SearchedAddressTableViewCell else {
-//            return UITableViewCell()
-//        }
-//        return cell
-//    }
-//    
-//    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-//        return 20
-//    }
-//}

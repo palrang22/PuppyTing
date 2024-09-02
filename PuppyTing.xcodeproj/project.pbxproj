@@ -56,6 +56,7 @@
 		E738FBC52C7DB85A004696BD /* TingFeedModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E738FBC42C7DB85A004696BD /* TingFeedModel.swift */; };
 		E7F598322C8475CC00FE8900 /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7F598312C8475CC00FE8900 /* NetworkManager.swift */; };
 		E7F598342C847A7800FE8900 /* Place.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7F598332C847A7800FE8900 /* Place.swift */; };
+		E7F598372C849E1300FE8900 /* KakaoMapsSDK-SPM in Frameworks */ = {isa = PBXBuildFile; productRef = E7F598362C849E1300FE8900 /* KakaoMapsSDK-SPM */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -117,6 +118,7 @@
 				E738FBBA2C7C72CB004696BD /* FirebaseAuth in Frameworks */,
 				E738FBB72C7C7215004696BD /* SnapKit in Frameworks */,
 				E738FBB22C7C7074004696BD /* RxRelay in Frameworks */,
+				E7F598372C849E1300FE8900 /* KakaoMapsSDK-SPM in Frameworks */,
 				E738FBB02C7C7074004696BD /* RxCocoa in Frameworks */,
 				E738FBBE2C7C72CB004696BD /* FirebaseFirestore in Frameworks */,
 			);
@@ -353,6 +355,7 @@
 				E738FBBD2C7C72CB004696BD /* FirebaseFirestore */,
 				A2085DA22C7D678400698923 /* GoogleSignIn */,
 				A2085DA42C7D678400698923 /* GoogleSignInSwift */,
+				E7F598362C849E1300FE8900 /* KakaoMapsSDK-SPM */,
 			);
 			productName = PuppyTing;
 			productReference = E738FB732C7C62EE004696BD /* PuppyTing.app */;
@@ -387,6 +390,7 @@
 				E738FBB52C7C7215004696BD /* XCRemoteSwiftPackageReference "SnapKit" */,
 				E738FBB82C7C72CB004696BD /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
 				A2085DA12C7D678400698923 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */,
+				E7F598352C849E1300FE8900 /* XCRemoteSwiftPackageReference "KakaoMapsSDK-SPM" */,
 			);
 			productRefGroup = E738FB742C7C62EE004696BD /* Products */;
 			projectDirPath = "";
@@ -597,7 +601,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 4AW33HG75T;
+				DEVELOPMENT_TEAM = 5RULM9TM7R;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = PuppyTing/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -625,7 +629,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 4AW33HG75T;
+				DEVELOPMENT_TEAM = 5RULM9TM7R;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = PuppyTing/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -702,6 +706,14 @@
 				minimumVersion = 11.1.0;
 			};
 		};
+		E7F598352C849E1300FE8900 /* XCRemoteSwiftPackageReference "KakaoMapsSDK-SPM" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/kakao-mapsSDK/KakaoMapsSDK-SPM";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.10.5;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -749,6 +761,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = E738FBB82C7C72CB004696BD /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
 			productName = FirebaseFirestore;
+		};
+		E7F598362C849E1300FE8900 /* KakaoMapsSDK-SPM */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = E7F598352C849E1300FE8900 /* XCRemoteSwiftPackageReference "KakaoMapsSDK-SPM" */;
+			productName = "KakaoMapsSDK-SPM";
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
