@@ -40,6 +40,9 @@ class SignupViewController: UIViewController {
         didSet {
             // 유저 데이터까지 db에 저장 완료
             print(memeber)
+            okAlert(title: "회원가입 완료", message: "회원가입이 완료되었습니다.\n이메일 인증을 하고 로그인을 진행해주세요!") { [weak self] _ in
+                self?.dismiss(animated: true)
+            }
         }
     }
     

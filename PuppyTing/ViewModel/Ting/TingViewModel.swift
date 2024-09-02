@@ -7,8 +7,8 @@
 import CoreLocation
 import UIKit
 
-import RxSwift
 import RxCocoa
+import RxSwift
 
 //MARK: 로직 수정예정
 class TingViewModel {

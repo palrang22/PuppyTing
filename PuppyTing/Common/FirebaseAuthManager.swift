@@ -21,6 +21,7 @@ enum AuthError: Error {
     case ClientIdInvaildError
     case GoogleSignInFailError
     case TokenInvaildError
+    case InvalidCredential // 이메일이나 비밀번호가 틀린지 정확히 알려주지 않기 위해서 유효하지 않은 자격증명 이라는 오류를 반환한다. - 이곳에는 이메일이 잘못되거나 형식에 맞지 않는 경우, 비밀번호가 틀렸을 경우, 사용자가 제공한 인증 토큰이나 자격 증명이 만료되거나 유효하지 않은 경우, 등등 많은 이유를 포함한다.
 }
 
 class FirebaseAuthManager {
@@ -63,9 +64,17 @@ class FirebaseAuthManager {
     func emailSignIn(email: String, pw: String) -> Single<User> {
         return Single<User>.create { [weak self] single in
             Auth.auth().signIn(withEmail: email, password: pw) { [weak self] result, error in
-                if let error = error {
-                    print("에러 발생: \(error)")
-                    single(.failure(AuthError.SignInFailError))
+                if let error = error as NSError? {
+                    if let errorCode = AuthErrorCode(rawValue: error.code) {
+                        switch errorCode {
+                        case .invalidCredential:
+                            single(.failure(AuthError.InvalidCredential))
+                        default:
+                            single(.failure(error))
+                        }
+                    } else {
+                        single(.failure(error))
+                    }
                 }
                 if let result = result {
                     if result.user.isEmailVerified {
