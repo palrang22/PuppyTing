@@ -7,6 +7,7 @@
 
 import UIKit
 
+import FirebaseAuth
 import RxCocoa
 import RxSwift
 import SnapKit
@@ -17,6 +18,39 @@ class SignupViewController: UIViewController {
     
     let regex = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,64}"
     let pwRegex = "^(?=.*[A-Za-z])(?=.*[0-9])(?=.*[!@#$%^&*()_+=-]).{8,50}" // 8자리 ~ 50자리 영어+숫자+특수문자
+    
+    let signUpViewModel = SignUpViewModel()
+    
+    var user: User? = nil {
+        didSet {
+            // user 가 들어왔을 때 다시 데이터베이스에 저장하는 메서드 실행
+            print("test")
+            guard let user = user, let email = user.email, let pw = pwTextField.text, let nickname = nickTextField.text else { return }
+            signUpViewModel.signUp(uuid: user.uid, email: email, pw: pw, nickname: nickname)
+        }
+    }
+    
+    var userError: Error? = nil {
+        didSet {
+            // 인증 실패 error
+        }
+    }
+    
+    var memeber: Member? = nil {
+        didSet {
+            // 유저 데이터까지 db에 저장 완료
+            print(memeber)
+            okAlert(title: "회원가입 완료", message: "회원가입이 완료되었습니다.\n이메일 인증을 하고 로그인을 진행해주세요!") { [weak self] _ in
+                self?.dismiss(animated: true)
+            }
+        }
+    }
+    
+    var memberError: Error? = nil {
+        didSet {
+            // 유저를 db에 생성 하다 발생한 오류
+        }
+    }
 
     let cancleButton: UIButton = {
         let button = UIButton(type: .system)
@@ -204,6 +238,7 @@ class SignupViewController: UIViewController {
         configureUI()
         bindUI()
         setButtonAction()
+        bindData()
     }
     
     private func configureUI() {
@@ -414,6 +449,24 @@ class SignupViewController: UIViewController {
         .disposed(by: disposeBag)
     }
     
+    private func bindData() {
+        signUpViewModel.userSubject.observe(on: MainScheduler.instance).subscribe(onNext: { [weak self] user in
+            self?.user = user
+        }).disposed(by: disposeBag)
+        
+        signUpViewModel.userErrorSubject.observe(on: MainScheduler.instance).subscribe(onNext: { [weak self] error in
+            self?.userError = error
+        }).disposed(by: disposeBag)
+        
+        signUpViewModel.memeberSubject.observe(on: MainScheduler.instance).subscribe(onNext: { [weak self] memeber in
+            self?.memeber = memeber
+        }).disposed(by: disposeBag)
+        
+        signUpViewModel.memberErrorSubject.observe(on: MainScheduler.instance).subscribe(onNext: { [weak self] error in
+            self?.memberError = error
+        }).disposed(by: disposeBag)
+    }
+    
     // 이메일 유효성 검사
     private func checkEmailValid(_ email: String) -> Bool {
         let predicate = NSPredicate(format: "SELF MATCHES %@", regex)
@@ -433,11 +486,18 @@ class SignupViewController: UIViewController {
     
     private func setButtonAction() {
         cancleButton.addTarget(self, action: #selector(didTapCloseButton), for: .touchUpInside)
+        signUpButton.addTarget(self, action: #selector(didTapSignUpButton), for: .touchUpInside)
     }
     
     @objc
     private func didTapCloseButton() {
         dismiss(animated: true)
+    }
+    
+    @objc
+    private func didTapSignUpButton() {
+        guard let email = emailTextField.text, let pw = pwTextField.text else { return }
+        signUpViewModel.authentication(email: email, pw: pw)
     }
 }
 

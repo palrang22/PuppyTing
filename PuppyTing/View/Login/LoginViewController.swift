@@ -7,11 +7,46 @@
 
 import UIKit
 
+import FirebaseAuth
 import RxCocoa
 import RxSwift
 import SnapKit
 
 class LoginViewController: UIViewController {
+    
+    let disposeBag = DisposeBag()
+    
+    private let loginViewModel = LoginViewModel()
+    
+    var user: User? = nil {
+        didSet {
+            // 소셜 로그인 완료
+            print(user?.email)
+            guard let user = user else { return }
+            loginViewModel.isExistsUser(uuid: user.uid)
+        }
+    }
+    
+    var existsUser: Bool = false {
+        didSet {
+            if existsUser {
+                // 데이터가 있음
+                okAlert(title: "소셜 로그인", message: "로그인 성공")
+            } else {
+                // 데이터가 없음
+                guard let user = user, let email = user.email else { return }
+                loginViewModel.signUp(uuid: user.uid, email: email)
+            }
+        }
+    }
+    
+    var member: Member? = nil {
+        didSet {
+            // 소셜 로그인 - 회원가입 성공
+            print(member?.dictionary)
+            okAlert(title: "소셜 로그인", message: "회원가입 성공")
+        }
+    }
     
     let logoImageView: UIImageView = {
         let imageView = UIImageView()
@@ -45,6 +80,7 @@ class LoginViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = .white
         setupUI()
+        bindData()
         setButtonAction()
     }
     
@@ -80,8 +116,21 @@ class LoginViewController: UIViewController {
         }
     }
     
+    private func bindData() {
+        loginViewModel.userSubject.observe(on: MainScheduler.instance).subscribe(onNext: { [weak self] user in
+            self?.user = user
+        }).disposed(by: disposeBag)
+        loginViewModel.userExistsSubject.observe(on: MainScheduler.instance).subscribe(onNext: { [weak self] exists in
+            self?.existsUser = exists
+        }).disposed(by: disposeBag)
+        loginViewModel.memeberSubject.observe(on: MainScheduler.instance).subscribe(onNext: { [weak self] member in
+            self?.member = member
+        }).disposed(by: disposeBag)
+    }
+    
     private func setButtonAction() {
         pptLogButton.addTarget(self, action: #selector(didTapPuppytingLogin), for: .touchUpInside)
+        ggLogButton.addTarget(self, action: #selector(didTapGoogleLoginButton), for: .touchUpInside)
     }
     
     @objc
@@ -89,6 +138,11 @@ class LoginViewController: UIViewController {
         let pptLoginViewController = PptLoginViewController()
         pptLoginViewController.modalPresentationStyle = .fullScreen
         present(pptLoginViewController, animated: true)
+    }
+    
+    @objc
+    private func didTapGoogleLoginButton() {
+        loginViewModel.googleSignIn(viewController: self)
     }
     
 }

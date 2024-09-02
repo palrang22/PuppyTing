@@ -20,7 +20,7 @@ class TabBarController: UITabBarController {
             tag: 0
         )
         
-        let chatVC = UINavigationController(rootViewController: ChatViewController())
+        let chatVC = UINavigationController(rootViewController: ChatListViewController())
         chatVC.tabBarItem = UITabBarItem(
             title: "채팅",
             image: UIImage(systemName: "bubble.left.and.bubble.right"),
