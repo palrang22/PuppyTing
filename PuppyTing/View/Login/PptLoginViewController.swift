@@ -71,6 +71,13 @@ class PptLoginViewController: UIViewController {
         return button
     }()
     
+    let findPwButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.setTitle("비밀번호 찾기", for: .normal)
+        button.setTitleColor(.black, for: .normal)
+        return button
+    }()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
@@ -80,7 +87,7 @@ class PptLoginViewController: UIViewController {
     }
     
     private func settingUI() {
-        [closeButton, logoImageView, emailfield, pwfield, loginButton, signupButton].forEach {
+        [closeButton, logoImageView, emailfield, pwfield, loginButton, signupButton, findPwButton].forEach {
             view.addSubview($0)
         }
         
@@ -117,6 +124,12 @@ class PptLoginViewController: UIViewController {
             $0.bottom.equalTo(view.safeAreaLayoutGuide).offset(-130) // 모든화면 맨 밑 버튼 고정 위치
             $0.centerX.equalTo(view.safeAreaLayoutGuide)
             $0.width.equalTo(281)
+            $0.height.equalTo(44)
+        }
+        
+        findPwButton.snp.makeConstraints {
+            $0.bottom.equalTo(view.safeAreaLayoutGuide).offset(-50)
+            $0.centerX.equalTo(view.safeAreaLayoutGuide)
             $0.height.equalTo(44)
         }
     }
@@ -157,6 +170,7 @@ class PptLoginViewController: UIViewController {
     private func setButtonAction() {
         closeButton.addTarget(self, action: #selector(didTapCloseButton), for: .touchUpInside)
         signupButton.addTarget(self, action: #selector(didTapSignUpButton), for: .touchUpInside)
+        findPwButton.addTarget(self, action: #selector(didTapFindPwButton), for: .touchUpInside)
     }
     
     @objc
@@ -169,5 +183,12 @@ class PptLoginViewController: UIViewController {
     @objc
     private func didTapCloseButton() {
         dismiss(animated: true)
+    }
+    
+    @objc
+    private func didTapFindPwButton() {
+        let FindingPassWordVC = FindingPasswordViewController()
+        FindingPassWordVC.modalPresentationStyle = .fullScreen
+        present(FindingPassWordVC, animated: true)
     }
 }

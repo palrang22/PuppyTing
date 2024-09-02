@@ -57,6 +57,7 @@ class FindingPasswordViewController: UIViewController {
         view.backgroundColor = .white
         
         configUI()
+        setButtonAction()
     }
     
     private func configUI() {
@@ -93,5 +94,14 @@ class FindingPasswordViewController: UIViewController {
             $0.trailing.equalTo(view.safeAreaLayoutGuide).offset(-20)
             $0.height.equalTo(44)
         }
+    }
+    
+    private func setButtonAction() {
+        closeButton.addTarget(self, action: #selector(didTapCloseButton), for: .touchUpInside)
+    }
+    
+    @objc
+    private func didTapCloseButton() {
+        dismiss(animated: true)
     }
 }
