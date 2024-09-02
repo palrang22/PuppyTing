@@ -5,21 +5,23 @@
 //  Created by 김승희 on 8/29/24.
 //
 
-import MapKit
+import CoreLocation
 import UIKit
 
+import RxCocoa
+import RxSwift
 import SnapKit
 
-class SearchAddressViewController: UIViewController, UISearchBarDelegate {
+class SearchAddressViewController: UIViewController {
     
     private let locationManager = CLLocationManager()
-    private var searchResult = [MKMapItem]()
+    private let viewModel = TingViewModel()
+    private let disposeBag = DisposeBag()
     
     //MARK: UI Components
-    private lazy var searchBar: UISearchBar = {
+    private let searchBar: UISearchBar = {
         let searchBar = UISearchBar()
         searchBar.placeholder = "장소명으로 검색"
-        searchBar.delegate = self
         return searchBar
     }()
     
@@ -33,11 +35,10 @@ class SearchAddressViewController: UIViewController, UISearchBarDelegate {
         return label
     }()
     
-    private lazy var tableView: UITableView = {
+    private let tableView: UITableView = {
         let tableView = UITableView()
         tableView.register(SearchedAddressTableViewCell.self, forCellReuseIdentifier: SearchedAddressTableViewCell.id)
-        tableView.delegate = self
-        tableView.dataSource = self
+        tableView.isHidden = true
         return tableView
     }()
 
@@ -46,65 +47,119 @@ class SearchAddressViewController: UIViewController, UISearchBarDelegate {
         super.viewDidLoad()
         setUI()
         setConstraints()
+        setupLocationManager()
+        bind()
     }
     
-    //MARK: Mapkit Search 관련 메서드
-    private func searchButtonTapped(searchBar: UISearchBar) {
-        guard let searchText = searchBar.text,
-              let location = locationManager.location,
-              !searchText.isEmpty else { return }
-        searchPlaces(searchText: searchText, location: location)
+    private func setupLocationManager() {
+        locationManager.delegate = self
+        locationManager.requestWhenInUseAuthorization()
+        locationManager.startUpdatingLocation()
     }
     
-    private func searchPlaces(searchText: String, location: CLLocation) {
-        let request = MKLocalSearch.Request()
-        request.naturalLanguageQuery = searchText
-        request.region = MKCoordinateRegion(center: location.coordinate, latitudinalMeters: 1000, longitudinalMeters: 1000)
+    //MARK: ViewModel bind
+    private func bind() {
+        searchBar.rx.searchButtonClicked
+            .withLatestFrom(searchBar.rx.text.orEmpty)
+            .subscribe(onNext: { [weak self] keyword in
+                self?.viewModel.searchPlaces(keyword: keyword)
+                self?.searchBar.resignFirstResponder()
+            }).disposed(by: disposeBag)
         
-        let search = MKLocalSearch(request: request)
-        search.start { [weak self] response, error in
-            guard let self,
-                  let response = response else {
-                print("에러")
-                return
-            }
-            self.searchResult = response.mapItems.prefix(20).map { $0 }
-            self.tableView.reloadData()
-        }
+        viewModel.items
+            .subscribe(onNext: { [weak self] items in
+                guard let self else { return }
+                self.tableView.reloadData()
+                self.tableView.isHidden = items.isEmpty
+                self.findLabel.isHidden = !items.isEmpty
+            }).disposed(by: disposeBag)
+        
+        viewModel.items
+            .bind(to: tableView.rx.items(cellIdentifier: SearchedAddressTableViewCell.id,
+                                         cellType: SearchedAddressTableViewCell.self)) {
+                index, place, cell in
+                cell.config(spot: place.placeName, address: place.roadAddressName)
+            }.disposed(by: disposeBag)
+        
+        tableView.rx.setDelegate(self)
+            .disposed(by: disposeBag)
     }
     
     //MARK: UI 설정 및 레이아웃
     private func setUI() {
+        setupKeyboardDismissRecognizer()
         view.backgroundColor = .white
     }
     
     private func setConstraints() {
-        [searchBar, findLabel]
+        [searchBar, findLabel, tableView]
             .forEach { view.addSubview($0) }
         
         searchBar.snp.makeConstraints {
             $0.top.equalTo(view.safeAreaLayoutGuide)
-            $0.leading.trailing.equalTo(view.safeAreaLayoutGuide).inset(20)
+            $0.leading.trailing.equalTo(view.safeAreaLayoutGuide)
         }
         
         findLabel.snp.makeConstraints {
             $0.centerX.equalToSuperview()
             $0.centerY.equalToSuperview()
         }
+        
+        tableView.snp.makeConstraints {
+            $0.top.equalTo(searchBar.snp.bottom)
+            $0.leading.trailing.equalTo(view.safeAreaLayoutGuide).inset(20)
+            $0.bottom.equalTo(view.safeAreaLayoutGuide)
+        }
     }
 }
 
+extension SearchAddressViewController: CLLocationManagerDelegate {
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        guard let location = locations.last else { return }
+        print(location.coordinate.latitude, location.coordinate.longitude)
+        viewModel.updateLocation(location: location)
+    }
+    
+    func locationManager(_ manager: CLLocationManager, didFailWithError error: any Error) {
+        print("현재 위치 가져올 수 없음")
+    }
+    
+    func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
+        switch status {
+        case .authorizedWhenInUse, .authorizedAlways:
+            locationManager.startUpdatingLocation()
+        case .denied, .restricted:
+            print("위치 서비스 접근이 제한되었습니다.")
+        case .notDetermined:
+            locationManager.requestWhenInUseAuthorization()
+        @unknown default:
+            fatalError()
+        }
+    }
+}
+
+//
+//extension SearchAddressViewController: UISearchBarDelegate {
+//    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+//        
+//    }
+//}
+//
 extension SearchAddressViewController: UITableViewDelegate {
-    
-}
-
-extension SearchAddressViewController: UITableViewDataSource {
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: SearchedAddressTableViewCell.id, for: indexPath)
-        return cell
-    }
-    
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return searchResult.count
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 70
     }
 }
+//
+//extension SearchAddressViewController: UITableViewDataSource {
+//    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+//        guard let cell = tableView.dequeueReusableCell(withIdentifier: SearchedAddressTableViewCell.id, for: indexPath) as? SearchedAddressTableViewCell else {
+//            return UITableViewCell()
+//        }
+//        return cell
+//    }
+//    
+//    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+//        return 20
+//    }
+//}
