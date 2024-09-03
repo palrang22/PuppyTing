@@ -43,12 +43,6 @@ class SearchAddressViewController: UIViewController {
         tableView.isUserInteractionEnabled = true
         return tableView
     }()
-    
-    private let searchedMapView: UIView = {
-        let view = SearchedMapView()
-        view.isHidden = true
-        return view
-    }()
 
     //MARK: View 생명주기
     override func viewDidLoad() {
@@ -106,12 +100,9 @@ class SearchAddressViewController: UIViewController {
                 print("선택된 장소 이름: \(place.placeName)")
                 print("선택된 장소 주소: \(place.roadAddressName)")
                 print("위도: \(place.y), 경도: \(place.x)")
-                self?.searchedMapView.isHidden = false
-            }).disposed(by: disposeBag)
-        
-        searchBar.rx.textDidBeginEditing
-            .subscribe(onNext: { [weak self] in
-                self?.searchedMapView.isHidden = true
+                let detailVC = SearchedMapViewController()
+                detailVC.modalPresentationStyle = .automatic
+                self?.present(detailVC, animated: true, completion: nil)
             }).disposed(by: disposeBag)
     }
     
@@ -128,7 +119,7 @@ class SearchAddressViewController: UIViewController {
     }
     
     private func setConstraints() {
-        [searchBar, findLabel, tableView, searchedMapView]
+        [searchBar, findLabel, tableView]
             .forEach { view.addSubview($0) }
         
         searchBar.snp.makeConstraints {
@@ -142,12 +133,6 @@ class SearchAddressViewController: UIViewController {
         }
         
         tableView.snp.makeConstraints {
-            $0.top.equalTo(searchBar.snp.bottom)
-            $0.leading.trailing.equalTo(view.safeAreaLayoutGuide).inset(20)
-            $0.bottom.equalTo(view.safeAreaLayoutGuide)
-        }
-        
-        searchedMapView.snp.makeConstraints {
             $0.top.equalTo(searchBar.snp.bottom)
             $0.leading.trailing.equalTo(view.safeAreaLayoutGuide).inset(20)
             $0.bottom.equalTo(view.safeAreaLayoutGuide)

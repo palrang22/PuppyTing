@@ -35,7 +35,7 @@
 		E70DB3492C7F3F060073B3F8 /* UIViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E70DB3482C7F3F060073B3F8 /* UIViewController.swift */; };
 		E70DB34D2C8067B50073B3F8 /* SearchAddressViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E70DB34C2C8067B50073B3F8 /* SearchAddressViewController.swift */; };
 		E70DB34F2C8068190073B3F8 /* SearchedAddressTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E70DB34E2C8068190073B3F8 /* SearchedAddressTableViewCell.swift */; };
-		E70DB3512C8068460073B3F8 /* SearchedMapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E70DB3502C8068460073B3F8 /* SearchedMapView.swift */; };
+		E70DB3512C8068460073B3F8 /* SearchedMapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E70DB3502C8068460073B3F8 /* SearchedMapViewController.swift */; };
 		E738FB772C7C62EE004696BD /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E738FB762C7C62EE004696BD /* AppDelegate.swift */; };
 		E738FB792C7C62EE004696BD /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E738FB782C7C62EE004696BD /* SceneDelegate.swift */; };
 		E738FB802C7C62F0004696BD /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E738FB7F2C7C62F0004696BD /* Assets.xcassets */; };
@@ -91,7 +91,7 @@
 		E70DB3482C7F3F060073B3F8 /* UIViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIViewController.swift; sourceTree = "<group>"; };
 		E70DB34C2C8067B50073B3F8 /* SearchAddressViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchAddressViewController.swift; sourceTree = "<group>"; };
 		E70DB34E2C8068190073B3F8 /* SearchedAddressTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchedAddressTableViewCell.swift; sourceTree = "<group>"; };
-		E70DB3502C8068460073B3F8 /* SearchedMapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchedMapView.swift; sourceTree = "<group>"; };
+		E70DB3502C8068460073B3F8 /* SearchedMapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchedMapViewController.swift; sourceTree = "<group>"; };
 		E738FB732C7C62EE004696BD /* PuppyTing.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PuppyTing.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E738FB762C7C62EE004696BD /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		E738FB782C7C62EE004696BD /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -321,7 +321,7 @@
 				E70DB3442C7F0CB60073B3F8 /* PostTingViewController.swift */,
 				E70DB34C2C8067B50073B3F8 /* SearchAddressViewController.swift */,
 				E70DB34E2C8068190073B3F8 /* SearchedAddressTableViewCell.swift */,
-				E70DB3502C8068460073B3F8 /* SearchedMapView.swift */,
+				E70DB3502C8068460073B3F8 /* SearchedMapViewController.swift */,
 			);
 			path = Ting;
 			sourceTree = "<group>";
@@ -436,7 +436,7 @@
 			files = (
 				56FD04952C856C6E00EBCDCD /* ChangePasswordViewController.swift in Sources */,
 				E738FBC32C7D8019004696BD /* TingCollectionViewCell.swift in Sources */,
-				E70DB3512C8068460073B3F8 /* SearchedMapView.swift in Sources */,
+				E70DB3512C8068460073B3F8 /* SearchedMapViewController.swift in Sources */,
 				E70DB34F2C8068190073B3F8 /* SearchedAddressTableViewCell.swift in Sources */,
 				A2085DD42C80622B00698923 /* PptLoginViewModel.swift in Sources */,
 				56D686C82C7DB09600B00880 /* LoginViewController.swift in Sources */,
