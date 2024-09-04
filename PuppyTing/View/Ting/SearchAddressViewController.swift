@@ -52,6 +52,7 @@ class SearchAddressViewController: UIViewController {
         setupLocationManager()
         bind()
         setGesture()
+        NotificationCenter.default.addObserver(self, selector: #selector(popView), name: Notification.Name("popToPostView"), object: nil)
     }
     
     //MARK: Delegate
@@ -96,12 +97,15 @@ class SearchAddressViewController: UIViewController {
         tableView.rx.modelSelected(Place.self)
             .subscribe(onNext: { [weak self] place in
                 self?.searchBar.resignFirstResponder()
-                print("셀 터치됨")
-                print("선택된 장소 이름: \(place.placeName)")
-                print("선택된 장소 주소: \(place.roadAddressName)")
-                print("위도: \(place.y), 경도: \(place.x)")
+                
                 let detailVC = SearchedMapViewController()
-                detailVC.modalPresentationStyle = .automatic
+                detailVC.placeName = place.placeName
+                detailVC.roadAddressName = place.roadAddressName
+                if let latitude = Double(place.y), let longitude = Double(place.x) {
+                    detailVC.coordinate = CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
+                }
+                
+                detailVC.modalPresentationStyle = .fullScreen
                 self?.present(detailVC, animated: true, completion: nil)
             }).disposed(by: disposeBag)
     }
@@ -110,6 +114,11 @@ class SearchAddressViewController: UIViewController {
         let tapGesture = UITapGestureRecognizer(target: self, action: nil)
         tapGesture.cancelsTouchesInView = false
         tableView.addGestureRecognizer(tapGesture)
+    }
+    
+    @objc
+    func popView() {
+        self.navigationController?.popViewController(animated: false)
     }
     
     //MARK: UI 설정 및 레이아웃

@@ -64,6 +64,8 @@
 		E7F598322C8475CC00FE8900 /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7F598312C8475CC00FE8900 /* NetworkManager.swift */; };
 		E7F598342C847A7800FE8900 /* Place.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7F598332C847A7800FE8900 /* Place.swift */; };
 		E7F598372C849E1300FE8900 /* KakaoMapsSDK-SPM in Frameworks */ = {isa = PBXBuildFile; productRef = E7F598362C849E1300FE8900 /* KakaoMapsSDK-SPM */; };
+		E7F598392C885D5300FE8900 /* KakaoMapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7F598382C885D5300FE8900 /* KakaoMapViewController.swift */; };
+		E7F5983B2C8866CE00FE8900 /* AddressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7F5983A2C8866CE00FE8900 /* AddressView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -117,6 +119,8 @@
 		E738FBC42C7DB85A004696BD /* TingFeedModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TingFeedModel.swift; sourceTree = "<group>"; };
 		E7F598312C8475CC00FE8900 /* NetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkManager.swift; sourceTree = "<group>"; };
 		E7F598332C847A7800FE8900 /* Place.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Place.swift; sourceTree = "<group>"; };
+		E7F598382C885D5300FE8900 /* KakaoMapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KakaoMapViewController.swift; sourceTree = "<group>"; };
+		E7F5983A2C8866CE00FE8900 /* AddressView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddressView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -279,6 +283,7 @@
 				A2085DCE2C804C7300698923 /* FirebaseAuthManager.swift */,
 				A2085DD02C8059F400698923 /* FireStoreDatabaseManager.swift */,
 				E7F598312C8475CC00FE8900 /* NetworkManager.swift */,
+				E7F598382C885D5300FE8900 /* KakaoMapViewController.swift */,
 			);
 			path = Common;
 			sourceTree = "<group>";
@@ -328,6 +333,7 @@
 				E70DB34C2C8067B50073B3F8 /* SearchAddressViewController.swift */,
 				E70DB34E2C8068190073B3F8 /* SearchedAddressTableViewCell.swift */,
 				E70DB3502C8068460073B3F8 /* SearchedMapViewController.swift */,
+				E7F5983A2C8866CE00FE8900 /* AddressView.swift */,
 			);
 			path = Ting;
 			sourceTree = "<group>";
@@ -451,6 +457,7 @@
 				E738FB9A2C7C6532004696BD /* TingViewController.swift in Sources */,
 				56FD048F2C80171100EBCDCD /* MyChattingTableViewCell.swift in Sources */,
 				C29FCF662C7DB37E00F8951D /* PuppyCollectionViewCell.swift in Sources */,
+				E7F5983B2C8866CE00FE8900 /* AddressView.swift in Sources */,
 				A2085DD12C8059F400698923 /* FireStoreDatabaseManager.swift in Sources */,
 				E738FB772C7C62EE004696BD /* AppDelegate.swift in Sources */,
 				E738FBC52C7DB85A004696BD /* TingFeedModel.swift in Sources */,
@@ -478,6 +485,7 @@
 				E738FBA42C7C66BA004696BD /* ChatViewModel.swift in Sources */,
 				E70DB3472C7F0CD00073B3F8 /* DetailTingViewController.swift in Sources */,
 				E70DB3452C7F0CB60073B3F8 /* PostTingViewController.swift in Sources */,
+				E7F598392C885D5300FE8900 /* KakaoMapViewController.swift in Sources */,
 				56D686CC2C7DC88700B00880 /* PptLoginViewController.swift in Sources */,
 				E738FB792C7C62EE004696BD /* SceneDelegate.swift in Sources */,
 				E70DB34D2C8067B50073B3F8 /* SearchAddressViewController.swift in Sources */,
@@ -622,6 +630,7 @@
 		};
 		E738FB882C7C62F0004696BD /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = A2F9FE1A2C85520F004D7FF6 /* Config.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -650,6 +659,7 @@
 		};
 		E738FB892C7C62F0004696BD /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = A2F9FE1A2C85520F004D7FF6 /* Config.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
