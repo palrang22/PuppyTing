@@ -187,9 +187,6 @@ class ChatViewController: UIViewController {
             messageInputViewBottomConstraint = $0.bottom.equalTo(view.safeAreaLayoutGuide).constraint
         }
         
-        messageInputViewBottomConstraint = messageInputView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
-        messageInputViewBottomConstraint.isActive = true
-        
         messageTextView.snp.makeConstraints {
             $0.leading.equalToSuperview().offset(16)
             $0.trailing.equalTo(sendButton.snp.leading).offset(-8)
