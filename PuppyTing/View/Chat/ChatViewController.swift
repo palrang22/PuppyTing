@@ -56,7 +56,7 @@ class ChatViewController: UIViewController {
     // messageTextView 기본 높이
     let messageTextViewDefaultHeight: CGFloat = 35.0
     
-    var messageInputViewBottomConstraint: NSLayoutConstraint!
+    var messageInputViewBottomConstraint: Constraint!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -94,7 +94,7 @@ class ChatViewController: UIViewController {
     @objc func keyboardWillShow(notification: NSNotification) {
         if let keyboardFrame = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue {
             let keyboardHeight = keyboardFrame.cgRectValue.height
-            messageInputViewBottomConstraint.constant = -keyboardHeight + view.safeAreaInsets.bottom
+            messageInputViewBottomConstraint.update(offset: -keyboardHeight + view.safeAreaInsets.bottom)
             UIView.animate(withDuration: 0.3) {
                 self.view.layoutIfNeeded()
             }
@@ -104,7 +104,7 @@ class ChatViewController: UIViewController {
 
     // 키보드가 사라질 때 호출되는 메서드
     @objc func keyboardWillHide(notification: NSNotification) {
-        messageInputViewBottomConstraint.constant = 0
+        messageInputViewBottomConstraint.update(offset: 0)
         UIView.animate(withDuration: 0.3) {
             self.view.layoutIfNeeded()
         }
@@ -182,7 +182,8 @@ class ChatViewController: UIViewController {
         
         messageInputView.snp.makeConstraints {
             $0.leading.trailing.equalTo(view.safeAreaLayoutGuide)
-            $0.bottom.equalTo(view.safeAreaLayoutGuide)
+            // bottom 제약 조건을 설정하고 변수에 저장
+            messageInputViewBottomConstraint = $0.bottom.equalTo(view.safeAreaLayoutGuide).constraint
         }
         
         messageTextView.snp.makeConstraints {
@@ -199,9 +200,6 @@ class ChatViewController: UIViewController {
             $0.width.height.equalTo(44)
         }
         
-        // messageInputViewBottomConstraint 초기화
-         messageInputViewBottomConstraint = messageInputView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
-         messageInputViewBottomConstraint.isActive = true
     }
     
     // 스크롤 제일 밑으로
