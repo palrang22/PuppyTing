@@ -56,6 +56,8 @@ class ChatViewController: UIViewController {
     // messageTextView 기본 높이
     let messageTextViewDefaultHeight: CGFloat = 35.0
     
+    var messageInputViewBottomConstraint: NSLayoutConstraint!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -63,6 +65,10 @@ class ChatViewController: UIViewController {
         navigationItem.largeTitleDisplayMode = .never
         
         view.backgroundColor = .white
+        
+        // 키보드 알림 등록
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
         
         [chattingTableView, messageInputView].forEach {
             view.addSubview($0)
@@ -72,9 +78,6 @@ class ChatViewController: UIViewController {
             messageInputView.addSubview($0)
         }
         
-//        chattingTableView.delegate = self
-//        chattingTableView.dataSource = self
-//
         messageTextView.delegate = self
         
         // 키보드 포커싱 해제 메서드 호출
@@ -85,36 +88,33 @@ class ChatViewController: UIViewController {
         // Rx 바인딩
         setupBindings()
         
-        // 키보드에 맞게 메세지입력뷰 조정 메서드
-        bindKeyboardHeightToInputViewAdjustment(disposeBag: disposeBag)
     }
     
-    // 현 화면에서 키보드 올라가는데 메세지입력뷰만 조정
-    func bindKeyboardHeightToInputViewAdjustment(disposeBag: DisposeBag) {
-        observeKeyboardHeight()
-            .observe(on: MainScheduler.instance)
-            .subscribe(onNext: { [weak self] keyboardHeight in
-                UIView.animate(withDuration: 0.3) {
-                    guard let self = self else { return }
-                    
-                    self.messageInputView.snp.remakeConstraints { make in
-                        make.leading.trailing.equalTo(self.view.safeAreaLayoutGuide)
-                        
-                        // 키보드가 보일 때 키보드 높이만큼 인셋
-                        if keyboardHeight > 0 {
-                            make.bottom.equalTo(self.view.snp.bottom).inset(keyboardHeight)
-                        } else {
-                            // 키보드가 사라질 때는 탭바 바로 위에 위치
-                            make.bottom.equalTo(self.view.safeAreaLayoutGuide.snp.bottom)
-                        }
-                    }
-                    
-                    // 레이아웃 업데이트
-                    self.view.layoutIfNeeded()
-                }
-            })
-            .disposed(by: disposeBag)
+    // 키보드가 나타날 때 호출되는 메서드
+    @objc func keyboardWillShow(notification: NSNotification) {
+        if let keyboardFrame = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue {
+            let keyboardHeight = keyboardFrame.cgRectValue.height
+            messageInputViewBottomConstraint.constant = -keyboardHeight + view.safeAreaInsets.bottom
+            UIView.animate(withDuration: 0.3) {
+                self.view.layoutIfNeeded()
+            }
+        }
+        scrollToBottom() // 키보드가 나타날 때 자동으로 스크롤
     }
+
+    // 키보드가 사라질 때 호출되는 메서드
+    @objc func keyboardWillHide(notification: NSNotification) {
+        messageInputViewBottomConstraint.constant = 0
+        UIView.animate(withDuration: 0.3) {
+            self.view.layoutIfNeeded()
+        }
+    }
+
+    // 메모리 해제를 위해 노티피케이션 제거
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
+
     
     private func setupBindings() {
         viewModel.messages
@@ -198,6 +198,10 @@ class ChatViewController: UIViewController {
             $0.centerY.equalToSuperview()
             $0.width.height.equalTo(44)
         }
+        
+        // messageInputViewBottomConstraint 초기화
+         messageInputViewBottomConstraint = messageInputView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
+         messageInputViewBottomConstraint.isActive = true
     }
     
     // 스크롤 제일 밑으로
