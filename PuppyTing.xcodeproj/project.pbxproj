@@ -26,6 +26,7 @@
 		A2085DD62C806A4D00698923 /* LoginViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2085DD52C806A4D00698923 /* LoginViewModel.swift */; };
 		A2085DD82C806F8D00698923 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = A2085DD72C806F8D00698923 /* GoogleService-Info.plist */; };
 		A2F9FE1B2C85520F004D7FF6 /* Config.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = A2F9FE1A2C85520F004D7FF6 /* Config.xcconfig */; };
+		A2F9FE1D2C859E54004D7FF6 /* FindingPasswordViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2F9FE1C2C859E54004D7FF6 /* FindingPasswordViewModel.swift */; };
 		C29FCF662C7DB37E00F8951D /* PuppyCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C29FCF652C7DB37E00F8951D /* PuppyCollectionViewCell.swift */; };
 		C29FCF682C7DBA4F00F8951D /* PuppyRegistrationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C29FCF672C7DBA4F00F8951D /* PuppyRegistrationViewController.swift */; };
 		C29FCF772C8171FA00F8951D /* MyInfoEditViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C29FCF762C8171FA00F8951D /* MyInfoEditViewController.swift */; };
@@ -36,7 +37,7 @@
 		E70DB3492C7F3F060073B3F8 /* UIViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E70DB3482C7F3F060073B3F8 /* UIViewController.swift */; };
 		E70DB34D2C8067B50073B3F8 /* SearchAddressViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E70DB34C2C8067B50073B3F8 /* SearchAddressViewController.swift */; };
 		E70DB34F2C8068190073B3F8 /* SearchedAddressTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E70DB34E2C8068190073B3F8 /* SearchedAddressTableViewCell.swift */; };
-		E70DB3512C8068460073B3F8 /* SearchedMapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E70DB3502C8068460073B3F8 /* SearchedMapView.swift */; };
+		E70DB3512C8068460073B3F8 /* SearchedMapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E70DB3502C8068460073B3F8 /* SearchedMapViewController.swift */; };
 		E738FB772C7C62EE004696BD /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E738FB762C7C62EE004696BD /* AppDelegate.swift */; };
 		E738FB792C7C62EE004696BD /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E738FB782C7C62EE004696BD /* SceneDelegate.swift */; };
 		E738FB802C7C62F0004696BD /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E738FB7F2C7C62F0004696BD /* Assets.xcassets */; };
@@ -62,6 +63,7 @@
 		E738FBC52C7DB85A004696BD /* TingFeedModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E738FBC42C7DB85A004696BD /* TingFeedModel.swift */; };
 		E7F598322C8475CC00FE8900 /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7F598312C8475CC00FE8900 /* NetworkManager.swift */; };
 		E7F598342C847A7800FE8900 /* Place.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7F598332C847A7800FE8900 /* Place.swift */; };
+		E7F598372C849E1300FE8900 /* KakaoMapsSDK-SPM in Frameworks */ = {isa = PBXBuildFile; productRef = E7F598362C849E1300FE8900 /* KakaoMapsSDK-SPM */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -82,6 +84,7 @@
 		A2085DD52C806A4D00698923 /* LoginViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewModel.swift; sourceTree = "<group>"; };
 		A2085DD72C806F8D00698923 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		A2F9FE1A2C85520F004D7FF6 /* Config.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Config.xcconfig; sourceTree = "<group>"; };
+		A2F9FE1C2C859E54004D7FF6 /* FindingPasswordViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FindingPasswordViewModel.swift; sourceTree = "<group>"; };
 		C29FCF652C7DB37E00F8951D /* PuppyCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PuppyCollectionViewCell.swift; sourceTree = "<group>"; };
 		C29FCF672C7DBA4F00F8951D /* PuppyRegistrationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PuppyRegistrationViewController.swift; sourceTree = "<group>"; };
 		C29FCF762C8171FA00F8951D /* MyInfoEditViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyInfoEditViewController.swift; sourceTree = "<group>"; };
@@ -92,7 +95,7 @@
 		E70DB3482C7F3F060073B3F8 /* UIViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIViewController.swift; sourceTree = "<group>"; };
 		E70DB34C2C8067B50073B3F8 /* SearchAddressViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchAddressViewController.swift; sourceTree = "<group>"; };
 		E70DB34E2C8068190073B3F8 /* SearchedAddressTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchedAddressTableViewCell.swift; sourceTree = "<group>"; };
-		E70DB3502C8068460073B3F8 /* SearchedMapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchedMapView.swift; sourceTree = "<group>"; };
+		E70DB3502C8068460073B3F8 /* SearchedMapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchedMapViewController.swift; sourceTree = "<group>"; };
 		E738FB732C7C62EE004696BD /* PuppyTing.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PuppyTing.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E738FB762C7C62EE004696BD /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		E738FB782C7C62EE004696BD /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -128,6 +131,7 @@
 				E738FBBA2C7C72CB004696BD /* FirebaseAuth in Frameworks */,
 				E738FBB72C7C7215004696BD /* SnapKit in Frameworks */,
 				E738FBB22C7C7074004696BD /* RxRelay in Frameworks */,
+				E7F598372C849E1300FE8900 /* KakaoMapsSDK-SPM in Frameworks */,
 				E738FBB02C7C7074004696BD /* RxCocoa in Frameworks */,
 				E738FBBE2C7C72CB004696BD /* FirebaseFirestore in Frameworks */,
 			);
@@ -168,6 +172,7 @@
 			children = (
 				A2085DD32C80622B00698923 /* PptLoginViewModel.swift */,
 				A2085DD52C806A4D00698923 /* LoginViewModel.swift */,
+				A2F9FE1C2C859E54004D7FF6 /* FindingPasswordViewModel.swift */,
 			);
 			path = Login;
 			sourceTree = "<group>";
@@ -322,7 +327,7 @@
 				E70DB3442C7F0CB60073B3F8 /* PostTingViewController.swift */,
 				E70DB34C2C8067B50073B3F8 /* SearchAddressViewController.swift */,
 				E70DB34E2C8068190073B3F8 /* SearchedAddressTableViewCell.swift */,
-				E70DB3502C8068460073B3F8 /* SearchedMapView.swift */,
+				E70DB3502C8068460073B3F8 /* SearchedMapViewController.swift */,
 			);
 			path = Ting;
 			sourceTree = "<group>";
@@ -369,6 +374,7 @@
 				E738FBBD2C7C72CB004696BD /* FirebaseFirestore */,
 				A2085DA22C7D678400698923 /* GoogleSignIn */,
 				A2085DA42C7D678400698923 /* GoogleSignInSwift */,
+				E7F598362C849E1300FE8900 /* KakaoMapsSDK-SPM */,
 			);
 			productName = PuppyTing;
 			productReference = E738FB732C7C62EE004696BD /* PuppyTing.app */;
@@ -403,6 +409,7 @@
 				E738FBB52C7C7215004696BD /* XCRemoteSwiftPackageReference "SnapKit" */,
 				E738FBB82C7C72CB004696BD /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
 				A2085DA12C7D678400698923 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */,
+				E7F598352C849E1300FE8900 /* XCRemoteSwiftPackageReference "KakaoMapsSDK-SPM" */,
 			);
 			productRefGroup = E738FB742C7C62EE004696BD /* Products */;
 			projectDirPath = "";
@@ -436,7 +443,7 @@
 				C29FCFC12C88566000F8951D /* MyFeedManageViewController.swift in Sources */,
 				56FD04952C856C6E00EBCDCD /* ChangePasswordViewController.swift in Sources */,
 				E738FBC32C7D8019004696BD /* TingCollectionViewCell.swift in Sources */,
-				E70DB3512C8068460073B3F8 /* SearchedMapView.swift in Sources */,
+				E70DB3512C8068460073B3F8 /* SearchedMapViewController.swift in Sources */,
 				E70DB34F2C8068190073B3F8 /* SearchedAddressTableViewCell.swift in Sources */,
 				A2085DD42C80622B00698923 /* PptLoginViewModel.swift in Sources */,
 				56D686C82C7DB09600B00880 /* LoginViewController.swift in Sources */,
@@ -462,6 +469,7 @@
 				E738FB9C2C7C653C004696BD /* ChatViewController.swift in Sources */,
 				A2085DCA2C80395B00698923 /* Member.swift in Sources */,
 				E738FBA02C7C669D004696BD /* SampleModel.swift in Sources */,
+				A2F9FE1D2C859E54004D7FF6 /* FindingPasswordViewModel.swift in Sources */,
 				56FD04932C856C4200EBCDCD /* FindingPasswordViewController.swift in Sources */,
 				E738FBA62C7C66C9004696BD /* MyPageViewModel.swift in Sources */,
 				56FD04912C80172B00EBCDCD /* ChattingTableViewCell.swift in Sources */,
@@ -619,7 +627,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 4AW33HG75T;
+				DEVELOPMENT_TEAM = 5RULM9TM7R;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = PuppyTing/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -647,7 +655,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 4AW33HG75T;
+				DEVELOPMENT_TEAM = 5RULM9TM7R;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = PuppyTing/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -724,6 +732,14 @@
 				minimumVersion = 11.1.0;
 			};
 		};
+		E7F598352C849E1300FE8900 /* XCRemoteSwiftPackageReference "KakaoMapsSDK-SPM" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/kakao-mapsSDK/KakaoMapsSDK-SPM";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.10.5;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -771,6 +787,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = E738FBB82C7C72CB004696BD /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
 			productName = FirebaseFirestore;
+		};
+		E7F598362C849E1300FE8900 /* KakaoMapsSDK-SPM */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = E7F598352C849E1300FE8900 /* XCRemoteSwiftPackageReference "KakaoMapsSDK-SPM" */;
+			productName = "KakaoMapsSDK-SPM";
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

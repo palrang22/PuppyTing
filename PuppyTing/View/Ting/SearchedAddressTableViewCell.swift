@@ -50,6 +50,7 @@ class SearchedAddressTableViewCell: UITableViewCell {
             .forEach { contentView.addSubview($0) }
         
         stackView.snp.makeConstraints {
+            $0.leading.equalToSuperview()
             $0.centerY.equalToSuperview()
         }
     }

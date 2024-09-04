@@ -17,6 +17,7 @@ class SearchAddressViewController: UIViewController {
     private let locationManager = CLLocationManager()
     private let viewModel = TingViewModel()
     private let disposeBag = DisposeBag()
+    private var ifSearchButtonTapped = false
     
     //MARK: UI Components
     private let searchBar: UISearchBar = {
@@ -27,7 +28,7 @@ class SearchAddressViewController: UIViewController {
     
     private let findLabel: UILabel = {
         let label = UILabel()
-        label.text = "구체적인 단어로 장소를 찾아보세요!\n예) 스타벅스 당산대로점"
+        label.text = "2자 이상의 단어로 장소를 찾아보세요!\n예) 스타벅스 당산대로점"
         label.numberOfLines = 0
         label.font = .systemFont(ofSize: 16, weight: .medium)
         label.textAlignment = .center
@@ -39,6 +40,7 @@ class SearchAddressViewController: UIViewController {
         let tableView = UITableView()
         tableView.register(SearchedAddressTableViewCell.self, forCellReuseIdentifier: SearchedAddressTableViewCell.id)
         tableView.isHidden = true
+        tableView.isUserInteractionEnabled = true
         return tableView
     }()
 
@@ -49,8 +51,10 @@ class SearchAddressViewController: UIViewController {
         setConstraints()
         setupLocationManager()
         bind()
+        setGesture()
     }
     
+    //MARK: Delegate
     private func setupLocationManager() {
         locationManager.delegate = self
         locationManager.requestWhenInUseAuthorization()
@@ -62,6 +66,7 @@ class SearchAddressViewController: UIViewController {
         searchBar.rx.searchButtonClicked
             .withLatestFrom(searchBar.rx.text.orEmpty)
             .subscribe(onNext: { [weak self] keyword in
+                self?.ifSearchButtonTapped = true
                 self?.viewModel.searchPlaces(keyword: keyword)
                 self?.searchBar.resignFirstResponder()
             }).disposed(by: disposeBag)
@@ -72,6 +77,10 @@ class SearchAddressViewController: UIViewController {
                 self.tableView.reloadData()
                 self.tableView.isHidden = items.isEmpty
                 self.findLabel.isHidden = !items.isEmpty
+                
+                if ifSearchButtonTapped && items.isEmpty {
+                    okAlert(title: "검색결과 없음", message: "검색 결과가 없습니다. 2자 이상의 다른 키워드로 검색해보세요.")
+                }
             }).disposed(by: disposeBag)
         
         viewModel.items
@@ -83,6 +92,24 @@ class SearchAddressViewController: UIViewController {
         
         tableView.rx.setDelegate(self)
             .disposed(by: disposeBag)
+        
+        tableView.rx.modelSelected(Place.self)
+            .subscribe(onNext: { [weak self] place in
+                self?.searchBar.resignFirstResponder()
+                print("셀 터치됨")
+                print("선택된 장소 이름: \(place.placeName)")
+                print("선택된 장소 주소: \(place.roadAddressName)")
+                print("위도: \(place.y), 경도: \(place.x)")
+                let detailVC = SearchedMapViewController()
+                detailVC.modalPresentationStyle = .automatic
+                self?.present(detailVC, animated: true, completion: nil)
+            }).disposed(by: disposeBag)
+    }
+    
+    private func setGesture() {
+        let tapGesture = UITapGestureRecognizer(target: self, action: nil)
+        tapGesture.cancelsTouchesInView = false
+        tableView.addGestureRecognizer(tapGesture)
     }
     
     //MARK: UI 설정 및 레이아웃
@@ -116,7 +143,6 @@ class SearchAddressViewController: UIViewController {
 extension SearchAddressViewController: CLLocationManagerDelegate {
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         guard let location = locations.last else { return }
-        print(location.coordinate.latitude, location.coordinate.longitude)
         viewModel.updateLocation(location: location)
     }
     
@@ -138,28 +164,8 @@ extension SearchAddressViewController: CLLocationManagerDelegate {
     }
 }
 
-//
-//extension SearchAddressViewController: UISearchBarDelegate {
-//    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-//        
-//    }
-//}
-//
 extension SearchAddressViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 70
     }
 }
-//
-//extension SearchAddressViewController: UITableViewDataSource {
-//    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-//        guard let cell = tableView.dequeueReusableCell(withIdentifier: SearchedAddressTableViewCell.id, for: indexPath) as? SearchedAddressTableViewCell else {
-//            return UITableViewCell()
-//        }
-//        return cell
-//    }
-//    
-//    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-//        return 20
-//    }
-//}

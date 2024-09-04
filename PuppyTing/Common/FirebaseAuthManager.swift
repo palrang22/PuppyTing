@@ -18,10 +18,11 @@ enum AuthError: Error {
     case SendEmailFailError
     case SignInFailError
     case EmailVerificationFailError
-    case ClientIdInvaildError
+    case ClientIdinvalidError
     case GoogleSignInFailError
-    case TokenInvaildError
+    case TokeninvalidError
     case InvalidCredential // 이메일이나 비밀번호가 틀린지 정확히 알려주지 않기 위해서 유효하지 않은 자격증명 이라는 오류를 반환한다. - 이곳에는 이메일이 잘못되거나 형식에 맞지 않는 경우, 비밀번호가 틀렸을 경우, 사용자가 제공한 인증 토큰이나 자격 증명이 만료되거나 유효하지 않은 경우, 등등 많은 이유를 포함한다.
+    case invalidEmailError
 }
 
 class FirebaseAuthManager {
@@ -93,7 +94,7 @@ class FirebaseAuthManager {
     func googleSignIn(viewController: UIViewController) -> Single<User> {
         return Single<User>.create { [weak self] single in
             guard let clientId = FirebaseApp.app()?.options.clientID else { 
-                single(.failure(AuthError.ClientIdInvaildError))
+                single(.failure(AuthError.ClientIdinvalidError))
                 return Disposables.create()
             }
             let config = GIDConfiguration(clientID: clientId)
@@ -107,7 +108,7 @@ class FirebaseAuthManager {
                 }
                 
                 guard let user = result?.user, let idToken = user.idToken?.tokenString else {
-                    single(.failure(AuthError.TokenInvaildError))
+                    single(.failure(AuthError.TokeninvalidError))
                     return
                 }
                 
@@ -121,6 +122,28 @@ class FirebaseAuthManager {
                     if let result = result {
                         single(.success(result.user))
                     }
+                }
+            }
+            return Disposables.create()
+        }
+    }
+    
+    func passwordReset(email: String) -> Single<Bool> {
+        return Single.create { [weak self] single in
+            Auth.auth().sendPasswordReset(withEmail: email) { error in
+                if let error = error as NSError? {
+                    if let errorCode = AuthErrorCode(rawValue: error.code) {
+                        switch errorCode {
+                        case .userNotFound:
+                            single(.failure(AuthError.invalidEmailError))
+                        default:
+                            single(.failure(error))
+                        }
+                    } else {
+                        single(.failure(error))
+                    }
+                } else {
+                    single(.success(true))
                 }
             }
             return Disposables.create()
