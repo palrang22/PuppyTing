@@ -140,6 +140,7 @@ class ChatViewController: UIViewController {
         // sendButton 클릭 시 ViewModel에 메세지 전달
         sendButton.rx.tap
             .withLatestFrom(messageTextView.rx.text.orEmpty) // 버튼 눌렸을 때 텍스트뷰 내용 가져옴
+            .filter { !$0.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty } // 빈 문자열 필터링
             .bind(to: viewModel.messageText) // ViewModel의 MessageText에 바인딩
             .disposed(by: disposeBag)
         
