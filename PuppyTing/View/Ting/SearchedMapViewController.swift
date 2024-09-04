@@ -23,6 +23,13 @@ class SearchedMapViewController: UIViewController, MapControllerDelegate {
     private var _auth: Bool = false
     private var _appear: Bool = false
     
+    private lazy var closeButton: UIButton = {
+        let button = UIButton()
+        button.setImage(UIImage(named: "closeButton"), for: .normal)
+        button.addTarget(self, action: #selector(dismissModal), for: .touchUpInside)
+        return button
+    }()
+    
     private lazy var selectButton: UIButton = {
         let button = UIButton()
         button.backgroundColor = .puppyPurple
@@ -33,10 +40,19 @@ class SearchedMapViewController: UIViewController, MapControllerDelegate {
         return button
     }()
     
+    private let addressView: UIView = {
+        let view = AddressView()
+        return view
+    }()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         setupMapView()
         setConstraints()
+        
+        if let placeName = placeName, let roadAddressName = roadAddressName {
+            (addressView as? AddressView)?.config(placeName: placeName, roadAddressName: roadAddressName)
+        }
     }
     
     deinit {
@@ -127,6 +143,8 @@ class SearchedMapViewController: UIViewController, MapControllerDelegate {
         _observerAdded = false
     }
     
+    // MARK: @objc 관련 메서드
+    
     @objc
     private func willResignActive(){
         mapController?.pauseEngine()
@@ -148,6 +166,11 @@ class SearchedMapViewController: UIViewController, MapControllerDelegate {
         dismiss(animated: true, completion: nil)
         NotificationCenter.default.post(name: Notification.Name("popToPostView"), object: nil, userInfo: mapInfo)
         print("버튼 눌림")
+    }
+    
+    @objc
+    func dismissModal() {
+        dismiss(animated: true, completion: nil)
     }
     
     //MARK: - POI 관련 메서드들
@@ -201,11 +224,21 @@ class SearchedMapViewController: UIViewController, MapControllerDelegate {
     }
     
     private func setConstraints() {
-        [selectButton].forEach { view.addSubview($0) }
+        [closeButton, addressView, selectButton].forEach { view.addSubview($0) }
+        
+        closeButton.snp.makeConstraints {
+            $0.leading.equalTo(view.safeAreaLayoutGuide).offset(20)
+            $0.top.equalTo(view.safeAreaLayoutGuide).offset(20)
+        }
+        
+        addressView.snp.makeConstraints {
+            $0.bottom.equalTo(selectButton.snp.top).offset(-20)
+            $0.leading.trailing.equalToSuperview().inset(20)
+            $0.height.equalTo(100)
+        }
         
         selectButton.snp.makeConstraints {
             $0.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom).offset(-20)
-            $0.centerX.equalToSuperview()
             $0.height.equalTo(44)
             $0.leading.trailing.equalToSuperview().inset(20)
         }
