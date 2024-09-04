@@ -20,7 +20,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // FIrebase 를 사용하기 위한 기본 설정
         FirebaseApp.configure()
         //kakao
-        SDKInitializer.InitSDK(appKey: "KAKAO_APP_API")
+        SDKInitializer.InitSDK(appKey: "")
         return true
     }
     

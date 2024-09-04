@@ -10,6 +10,7 @@ import Foundation
 
 struct TingFeedModel {
     let userid: String
+    let postid: String
     let location: CLLocationCoordinate2D
     let content: String
 }

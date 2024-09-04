@@ -1,57 +1,65 @@
 //
-//  SearchedMapView.swift
+//  SearchedMapViewController.swift
 //  PuppyTing
 //
 //  Created by 김승희 on 8/29/24.
 //
 
+import CoreLocation
 import UIKit
 
 import KakaoMapsSDK
+import SnapKit
 
 class SearchedMapViewController: UIViewController, MapControllerDelegate {
+    
+    var placeName: String?
+    var roadAddressName: String?
+    var coordinate: CLLocationCoordinate2D?
     
     private var mapController: KMController?
     private var mapContainer: KMViewContainer?
     private var _observerAdded: Bool = false
     private var _auth: Bool = false
     private var _appear: Bool = false
-
+    
+    private lazy var selectButton: UIButton = {
+        let button = UIButton()
+        button.backgroundColor = .puppyPurple
+        button.setTitle("여기로 지정", for: .normal)
+        button.setTitleColor(.white, for: .normal)
+        button.titleLabel?.font = .systemFont(ofSize: 14, weight: .semibold)
+        button.addTarget(self, action: #selector(backToPost), for: .touchUpInside)
+        return button
+    }()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         setupMapView()
+        setConstraints()
     }
     
     deinit {
-        // GPU 작업이 완료되기를 대기
+        // 맵 엔진 정지 및 리소스 해제
         mapController?.pauseEngine()
-        DispatchQueue.global().async {
-            // GPU에서 모든 작업이 완료될 때까지 대기
-            self.mapController?.resetEngine()
-            DispatchQueue.main.async {
-                self.mapContainer?.removeFromSuperview()
-                self.mapController = nil
-                self.mapContainer = nil
-            }
-        }
-        print("deinit")
+        mapController?.resetEngine()
     }
-
+    
     private func setupMapView() {
-        // mapContainer를 초기화하고 이를 view에 추가
+        // 맵 컨테이너 초기화 및 추가
         mapContainer = KMViewContainer(frame: self.view.bounds)
         if let mapContainer = mapContainer {
             self.view.addSubview(mapContainer)
         }
-
+        
         // KMController 생성 및 초기화
         mapController = KMController(viewContainer: mapContainer!)
         mapController?.delegate = self
         
-        // Engine 준비
+        // 엔진 준비
         mapController?.prepareEngine()
     }
-
+    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         addObservers()
@@ -61,91 +69,137 @@ class SearchedMapViewController: UIViewController, MapControllerDelegate {
             mapController?.activateEngine()
         }
     }
-
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        if !_appear {
-            addViews()
-        }
-    }
-
+    
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         _appear = false
         mapController?.pauseEngine()
     }
-
+    
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
         removeObservers()
         mapController?.resetEngine()
     }
-
+    
     func addViews() {
-        // 지도 뷰 추가 로직
-        let defaultPosition = MapPoint(longitude: 127.108678, latitude: 37.402001)
-        let mapviewInfo = MapviewInfo(viewName: "mapview", viewInfoName: "map", defaultPosition: defaultPosition, defaultLevel: 7)
+        guard let coordinate = coordinate else {
+            print("좌표값 없음")
+            return
+        }
         
+        let mapPoint = MapPoint(longitude: coordinate.longitude, latitude: coordinate.latitude)
+        let mapviewInfo = MapviewInfo(viewName: "mapview", viewInfoName: "map", defaultPosition: mapPoint, defaultLevel: 17)
         mapController?.addView(mapviewInfo)
     }
     
     func addViewSucceeded(_ viewName: String, viewInfoName: String) {
         print("MapView 추가 성공: \(viewName), \(viewInfoName)")
+        createLabelLayer()
+        createPoiStyle()
+        
+        // 지도 뷰가 성공적으로 로드되었으니 이제 POI를 추가
+        guard let coordinate = coordinate else {
+            print("좌표값 없음")
+            return
+        }
+        
+        let mapPoint = MapPoint(longitude: coordinate.longitude, latitude: coordinate.latitude)
+        addSelectedLocationPoi(at: mapPoint)
     }
 
+    
     func addViewFailed(_ viewName: String, viewInfoName: String) {
         print("MapView 추가 실패: \(viewName), \(viewInfoName)")
     }
-
-    func containerDidResized(_ size: CGSize) {
-        guard let mapView = mapController?.getView("mapview") as? KakaoMap else { return }
-        mapView.viewRect = CGRect(origin: CGPoint(x: 0.0, y: 0.0), size: size)
-    }
-
-    func viewWillDestroyed(_ view: ViewBase) {
-        // 뷰가 삭제될 때 호출
-    }
-
+    
     private func addObservers(){
         NotificationCenter.default.addObserver(self, selector: #selector(willResignActive), name: UIApplication.willResignActiveNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(didBecomeActive), name: UIApplication.didBecomeActiveNotification, object: nil)
         
         _observerAdded = true
     }
-
+    
     private func removeObservers(){
         NotificationCenter.default.removeObserver(self, name: UIApplication.willResignActiveNotification, object: nil)
         NotificationCenter.default.removeObserver(self, name: UIApplication.didBecomeActiveNotification, object: nil)
         
         _observerAdded = false
     }
-
-    @objc private func willResignActive(){
+    
+    @objc
+    private func willResignActive(){
         mapController?.pauseEngine()
     }
-
-    @objc private func didBecomeActive(){
+    
+    @objc
+    private func didBecomeActive(){
         mapController?.activateEngine()
     }
+    
+    @objc
+    private func backToPost() {
 
-    private func showToast(_ view: UIView, message: String, duration: TimeInterval = 2.0) {
-        let toastLabel = UILabel(frame: CGRect(x: view.frame.size.width/2 - 150, y: view.frame.size.height-100, width: 300, height: 35))
-        toastLabel.backgroundColor = UIColor.black
-        toastLabel.textColor = UIColor.white
-        toastLabel.textAlignment = .center
-        view.addSubview(toastLabel)
-        toastLabel.text = message
-        toastLabel.alpha = 1.0
-        toastLabel.layer.cornerRadius = 10
-        toastLabel.clipsToBounds  =  true
+    }
+    
+    //MARK: - POI 관련 메서드들
+    
+    // Poi 생성을 위한 LabelLayer 생성
+    func createLabelLayer() {
+        guard let view = mapController?.getView("mapview") as? KakaoMap else { return }
+        let manager = view.getLabelManager()
+        let layerOption = LabelLayerOptions(layerID: "PoiLayer", competitionType: .none, competitionUnit: .symbolFirst, orderType: .rank, zOrder: 0)
+        _ = manager.addLabelLayer(option: layerOption)
+    }
+    
+    // Poi 표시 스타일 생성
+    func createPoiStyle() {
+        guard let view = mapController?.getView("mapview") as? KakaoMap else { return }
+        let manager = view.getLabelManager()
         
-        UIView.animate(withDuration: 0.4,
-                       delay: duration - 0.4,
-                       options: .curveEaseOut,
-                       animations: {
-            toastLabel.alpha = 0.0
-        }) { _ in
-            toastLabel.removeFromSuperview()
+        // "poiMarker" 이미지가 존재하는지 확인
+        guard let iconImage = UIImage(named: "poiMarker") else {
+            print("poiMarker 이미지가 없습니다.")
+            return
+        }
+        
+        let iconStyle = PoiIconStyle(symbol: iconImage, anchorPoint: CGPoint(x: 0.0, y: 0.5))
+        let poiStyle = PoiStyle(styleID: "DefaultStyle", styles: [
+            PerLevelPoiStyle(iconStyle: iconStyle, level: 5)
+        ])
+        manager.addPoiStyle(poiStyle)
+    }
+    
+    // 선택된 위치에 POI 추가
+    func addSelectedLocationPoi(at mapPoint: MapPoint) {
+        guard let view = mapController?.getView("mapview") as? KakaoMap else {
+            print("MapView가 로드되지 않았습니다.")
+            return
+        }
+        let manager = view.getLabelManager()
+        guard let layer = manager.getLabelLayer(layerID: "PoiLayer") else {
+            print("POI Layer가 생성되지 않았습니다.")
+            return
+        }
+        
+        let poiOption = PoiOptions(styleID: "DefaultStyle")
+        poiOption.rank = 0
+        if let poi = layer.addPoi(option: poiOption, at: mapPoint) {
+            poi.show()
+            print("POI 추가 성공")
+        } else {
+            print("POI 추가 실패")
+        }
+    }
+    
+    private func setConstraints() {
+        [selectButton].forEach { view.addSubview($0) }
+        
+        selectButton.snp.makeConstraints {
+            $0.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom).offset(-20)
+            $0.centerX.equalToSuperview()
+            $0.height.equalTo(44)
+            $0.leading.trailing.equalToSuperview().inset(20)
         }
     }
 }
