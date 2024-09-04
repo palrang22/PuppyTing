@@ -7,9 +7,25 @@
 
 import UIKit
 
+import RxSwift
 import SnapKit
 
 class FindingPasswordViewController: UIViewController {
+    private let disposeBag = DisposeBag()
+    private let findingPasswordViewModel = FindingPasswordViewModel()
+    
+    var error: Error? = nil {
+        didSet {
+            if let error = error as? AuthError {
+                switch error {
+                case .invalidEmailError:
+                    okAlert(title: "로그인 실패", message: "존재하지 않는 이메일 입니다.\n다시 확인해주세요.", okActionTitle: "ok")
+                default:
+                    okAlert(title: "로그인 실패", message: "알 수 없는 이유로 비밀번호 재설정에 실패했습니다.", okActionTitle: "다시 시도하기")
+                }
+            }
+        }
+    }
     
     let closeButton: UIButton = {
         let button = UIButton(type: .system)
@@ -58,6 +74,7 @@ class FindingPasswordViewController: UIViewController {
         
         configUI()
         setButtonAction()
+        bindData()
     }
     
     private func configUI() {
@@ -96,12 +113,30 @@ class FindingPasswordViewController: UIViewController {
         }
     }
     
+    private func bindData() {
+        findingPasswordViewModel.sendEmailSubject.observe(on: MainScheduler.instance).subscribe(onNext: { [weak self] emailSend in
+            // 이메일 전송 완료
+            self?.okAlert(title: "비밀번호 재설정", message: "등록하신 이메일을 확인해주세요.\n이메일을 확인 후 비밀번호 재설정을 진행해주세요.")
+        }).disposed(by: disposeBag)
+        findingPasswordViewModel.errorSubject.observe(on: MainScheduler.instance).subscribe(onNext: { [weak self] error in
+            // 이메일 전송 실패
+            self?.error = error
+        }).disposed(by: disposeBag)
+    }
+    
     private func setButtonAction() {
         closeButton.addTarget(self, action: #selector(didTapCloseButton), for: .touchUpInside)
+        certifyButton.addTarget(self, action: #selector(didTapSendEmailButton), for: .touchUpInside)
     }
     
     @objc
     private func didTapCloseButton() {
         dismiss(animated: true)
+    }
+    
+    @objc
+    private func didTapSendEmailButton() {
+        guard let email = emailTextField.text else { return }
+        findingPasswordViewModel.passwordReset(email: email)
     }
 }
