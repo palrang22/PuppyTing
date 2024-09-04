@@ -139,7 +139,9 @@ class SearchedMapViewController: UIViewController, MapControllerDelegate {
     
     @objc
     private func backToPost() {
-
+        dismiss(animated: true, completion: nil)
+        NotificationCenter.default.post(name: Notification.Name("popToPostView"), object: nil)
+        print("버튼 눌림")
     }
     
     //MARK: - POI 관련 메서드들

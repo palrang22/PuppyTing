@@ -52,6 +52,7 @@ class SearchAddressViewController: UIViewController {
         setupLocationManager()
         bind()
         setGesture()
+        NotificationCenter.default.addObserver(self, selector: #selector(popView), name: Notification.Name("popToPostView"), object: nil)
     }
     
     //MARK: Delegate
@@ -113,6 +114,11 @@ class SearchAddressViewController: UIViewController {
         let tapGesture = UITapGestureRecognizer(target: self, action: nil)
         tapGesture.cancelsTouchesInView = false
         tableView.addGestureRecognizer(tapGesture)
+    }
+    
+    @objc
+    func popView() {
+        self.navigationController?.popViewController(animated: false)
     }
     
     //MARK: UI 설정 및 레이아웃
