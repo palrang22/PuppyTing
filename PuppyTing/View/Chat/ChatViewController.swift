@@ -13,6 +13,7 @@ import SnapKit
 
 class ChatViewController: UIViewController {
     
+    let viewModel = ChatViewModel()
     let disposeBag = DisposeBag()
     
     var titleText: String? // 타이틀 저장 변수 ChatListVC에서 가져와야함..
@@ -52,21 +53,8 @@ class ChatViewController: UIViewController {
         return button
     }()
     
-    // 메세지 예시
-    var messages: [(isMyMessage: Bool, text: String, date: String)] = [
-        (true, "안녕하세요!", "10:00"),
-        (false, "안녕하세요~ 반가워요!", "10:05"),
-        (true, "오늘 산책 가능하신거죠?", "10:20"),
-        (false, "넵! 가능합니다!", "11:00"),
-        (true, "네넹 어디어디에서 산채갛시소 어쩌고저쩌고 블라블라 어디까지 나오고 칸이 넘어가나 블라블라", "11:25"),
-        (false, "djWjdlsjfioefjlskdjksjlfksjdfjsdifjsdlkvjlksdjviosdjklvjeiofjslkdklfjsdjklsfjksdljfsklfjlskdfjklsdfjlksdfjlkdsjflksdjfkldsjflkdsjfkljsdklfmcvklsdjvioerjvklsdvdssfjdiodfjd", "11:50"),
-        (true, "lfjsioeejslkflkdjfskfaslfkdsfsdjfsㄴ런러ㅐㅑㄷ저ㅣㅏ너랴ㅐㅇㄹ니ㅏ런ㅇSDJFOiejlksjdoifjsdklfjsdklfjsdlkfjsdfiosdfjklsfjdklfjsdifjsdfjsjfkld", "10:20"),
-        (false, "넵! 가능합니다!", "11:00"),
-        (true, "네넹 어디어디에서 산채갛시소 어쩌고저쩌고 블라블라 어디까지 나오고 칸이 넘어가나 블라블라", "11:25"),
-        (false, "djWjdlsjfioefjlskdjksjlfksjdfjsdifjsdlkvjlksdjviosdjklvjeiofjslkdklfjsdjklsfjksdljfsklfjlskdfjklsdfjlksdfjlkdsjflksdjfkldsjflkdsjfkljsdklfmcvklsdjvioerjvklsdvdssfjdiodfjd", "11:50"),
-        (true, "lfjsioeejslkflkdjfskfaslfkdsfsdjfsㄴ런러ㅐㅑㄷ저ㅣㅏ너랴ㅐㅇㄹ니ㅏ런ㅇSDJFOiejlksjdoifjsdklfjsdklfjsdlkfjsdfiosdfjklsfjdklfjsdifjsdfjsjfkld", "10:20"),
-        (false, "넵! 가능합니다!", "11:00")
-    ]
+    // messageTextView 기본 높이
+    let messageTextViewDefaultHeight: CGFloat = 35.0
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -76,9 +64,6 @@ class ChatViewController: UIViewController {
         
         view.backgroundColor = .white
         
-        // 키보드 포커싱 해제 메서드 호출
-        setupKeyboardDismissRecognizer()
-        
         [chattingTableView, messageInputView].forEach {
             view.addSubview($0)
         }
@@ -87,15 +72,96 @@ class ChatViewController: UIViewController {
             messageInputView.addSubview($0)
         }
         
-        chattingTableView.delegate = self
-        chattingTableView.dataSource = self
-        
+//        chattingTableView.delegate = self
+//        chattingTableView.dataSource = self
+//
         messageTextView.delegate = self
+        
+        // 키보드 포커싱 해제 메서드 호출
+        setupKeyboardDismissRecognizer()
         
         setupConstraints()
         
-        // 키보드에 맞게 뷰 조정 메서드 호출
-        bindKeyboardHeightToViewAdjustment(disposeBag: disposeBag)
+        // Rx 바인딩
+        setupBindings()
+        
+        // 키보드에 맞게 메세지입력뷰 조정 메서드
+        bindKeyboardHeightToInputViewAdjustment(disposeBag: disposeBag)
+    }
+    
+    // 현 화면에서 키보드 올라가는데 메세지입력뷰만 조정
+    func bindKeyboardHeightToInputViewAdjustment(disposeBag: DisposeBag) {
+        observeKeyboardHeight()
+            .observe(on: MainScheduler.instance)
+            .subscribe(onNext: { [weak self] keyboardHeight in
+                UIView.animate(withDuration: 0.3) {
+                    guard let self = self else { return }
+                    
+                    self.messageInputView.snp.remakeConstraints { make in
+                        make.leading.trailing.equalTo(self.view.safeAreaLayoutGuide)
+                        
+                        // 키보드가 보일 때 키보드 높이만큼 인셋
+                        if keyboardHeight > 0 {
+                            make.bottom.equalTo(self.view.snp.bottom).inset(keyboardHeight)
+                        } else {
+                            // 키보드가 사라질 때는 탭바 바로 위에 위치
+                            make.bottom.equalTo(self.view.safeAreaLayoutGuide.snp.bottom)
+                        }
+                    }
+                    
+                    // 레이아웃 업데이트
+                    self.view.layoutIfNeeded()
+                }
+            })
+            .disposed(by: disposeBag)
+    }
+    
+    private func setupBindings() {
+        viewModel.messages
+            .bind(to: chattingTableView.rx.items) { tableView, row, message in
+                if message.isMyMessage {
+                    guard let cell = tableView.dequeueReusableCell(withIdentifier: MyChattingTableViewCell.identifier, for: IndexPath(row: row, section: 0)) as? MyChattingTableViewCell else {
+                        return UITableViewCell()
+                    }
+                    cell.messageBox.text = message.text
+                    cell.date.text = message.date
+                    return cell
+                } else {
+                    guard let cell = tableView.dequeueReusableCell(withIdentifier: ChattingTableViewCell.identifier, for: IndexPath(row: row, section: 0)) as? ChattingTableViewCell else {
+                        return UITableViewCell()
+                    }
+                    cell.messageBox.text = message.text
+                    cell.date.text = message.date
+                    return cell
+                }
+            }
+            .disposed(by: disposeBag)
+        
+        // sendButton 클릭 시 ViewModel에 메세지 전달
+        sendButton.rx.tap
+            .withLatestFrom(messageTextView.rx.text.orEmpty) // 버튼 눌렸을 때 텍스트뷰 내용 가져옴
+            .bind(to: viewModel.messageText) // ViewModel의 MessageText에 바인딩
+            .disposed(by: disposeBag)
+        
+        // 메세지 전송 후 텍스트뷰 초기화, 크기 초기화
+        viewModel.messageText
+            .map { _ in "" }
+            .bind(to: messageTextView.rx.text)
+            .disposed(by: disposeBag)
+        
+        viewModel.messageText
+            .subscribe(onNext: { [weak self] _ in
+                self?.resetMessageTextViewHeight()
+            })
+            .disposed(by: disposeBag)
+        
+        // 메세지 추가 후 테이블뷰 맨 아래로 스크롤
+        viewModel.messages
+            .skip(1) // 처음 초기화값 건너뛰고 이후 변경될 때 반응
+            .subscribe(onNext: { [weak self] _ in
+                self?.scrollToBottom()
+            })
+            .disposed(by: disposeBag)
     }
     
     // 제일 밑 채팅 보이기
@@ -115,7 +181,8 @@ class ChatViewController: UIViewController {
         }
         
         messageInputView.snp.makeConstraints {
-            $0.leading.trailing.bottom.equalTo(view.safeAreaLayoutGuide)
+            $0.leading.trailing.equalTo(view.safeAreaLayoutGuide)
+            $0.bottom.equalTo(view.safeAreaLayoutGuide)
         }
         
         messageTextView.snp.makeConstraints {
@@ -144,55 +211,15 @@ class ChatViewController: UIViewController {
         }
     }
     
-//    func setupSendButtonAction() {
-//        sendButton.addTarget(self, action: #selector(), for: .touchUpInside)
-//    }
-    
-}
-
-extension ChatViewController: UITableViewDelegate, UITableViewDataSource {
-    
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return messages.count
-    }
-    
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let message = messages[indexPath.row]
-        
-        if message.isMyMessage {
-            // 내 메시지인 경우 MyChattingTableViewCell 사용
-            guard let cell = tableView.dequeueReusableCell(withIdentifier: MyChattingTableViewCell.identifier, for: indexPath) as? MyChattingTableViewCell else {
-                return UITableViewCell()
-            }
-            // 셀의 텍스트와 날짜 설정
-            cell.messageBox.text = message.text
-            cell.date.text = message.date
-            return cell
-        } else {
-            // 상대방의 메시지인 경우 ChattingTableViewCell 사용
-            guard let cell = tableView.dequeueReusableCell(withIdentifier: ChattingTableViewCell.identifier, for: indexPath) as? ChattingTableViewCell else {
-                return UITableViewCell()
-            }
-            // 셀의 텍스트와 날짜 설정
-            cell.messageBox.text = message.text
-            cell.date.text = message.date
-            return cell
+    // 메세지 전송 후 텍스트뷰 높이 초기화
+    func resetMessageTextViewHeight() {
+        messageTextView.snp.updateConstraints {
+            $0.height.equalTo(messageTextViewDefaultHeight)
         }
     }
     
-    func numberOfSections(in tableView: UITableView) -> Int {
-        return 1
-    }
-    
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return UITableView.automaticDimension
-    }
-    
-    func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 60
-    }
-    
 }
+
 
 extension ChatViewController: UITextViewDelegate {
     func textViewDidChange(_ textView: UITextView) {
@@ -204,7 +231,7 @@ extension ChatViewController: UITextViewDelegate {
         textView.snp.remakeConstraints {
             $0.leading.equalToSuperview().offset(16)
             $0.trailing.equalTo(sendButton.snp.leading).offset(-8)
-            $0.top.equalToSuperview().offset(8)
+            $0.centerY.equalToSuperview()
             $0.bottom.equalToSuperview().inset(8)
             $0.height.equalTo(min(estimatedSize.height, 100)) // 기존 높이 또는 100중 작은 값으로 설정
         }

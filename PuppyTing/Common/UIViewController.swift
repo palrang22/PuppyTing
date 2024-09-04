@@ -56,7 +56,7 @@ extension UIViewController {
         return Observable.merge(willShowObservable, willHideObservable)
     }
     
-    // 키보드에 맞게 뷰 위치를 조정하는 메서드
+    // 키보드에 맞게 화면전체뷰 위치를 조정하는 메서드 (뷰 자체를 올려버리는 메서드 각 위치에서 원하는 방식에 따라 내용 수정해서 사용 가능)
     func bindKeyboardHeightToViewAdjustment(disposeBag: DisposeBag) {
         observeKeyboardHeight()
             .observe(on: MainScheduler.instance)
