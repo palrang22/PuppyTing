@@ -220,7 +220,6 @@ class ChatViewController: UIViewController {
             $0.height.equalTo(messageTextViewDefaultHeight)
         }
     }
-    
 }
 
 
