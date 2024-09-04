@@ -6,7 +6,6 @@
 //
 
 import UIKit
-
 import SnapKit
 
 class ChatViewController: UIViewController {
@@ -49,20 +48,22 @@ class ChatViewController: UIViewController {
     }()
     
     // 메세지 예시
-    var messages: [(isMyMessage: Bool, text: String, date: String)] = [
-        (true, "안녕하세요!", "10:00"),
-        (false, "안녕하세요~ 반가워요!", "10:05"),
-        (true, "오늘 산책 가능하신거죠?", "10:20"),
-        (false, "넵! 가능합니다!", "11:00"),
-        (true, "네넹 어디어디에서 산채갛시소 어쩌고저쩌고 블라블라 어디까지 나오고 칸이 넘어가나 블라블라", "11:25"),
-        (false, "djWjdlsjfioefjlskdjksjlfksjdfjsdifjsdlkvjlksdjviosdjklvjeiofjslkdklfjsdjklsfjksdljfsklfjlskdfjklsdfjlksdfjlkdsjflksdjfkldsjflkdsjfkljsdklfmcvklsdjvioerjvklsdvdssfjdiodfjd", "11:50"),
-        (true, "lfjsioeejslkflkdjfskfaslfkdsfsdjfsㄴ런러ㅐㅑㄷ저ㅣㅏ너랴ㅐㅇㄹ니ㅏ런ㅇSDJFOiejlksjdoifjsdklfjsdklfjsdlkfjsdfiosdfjklsfjdklfjsdifjsdfjsjfkld", "10:20"),
-        (false, "넵! 가능합니다!", "11:00"),
-        (true, "네넹 어디어디에서 산채갛시소 어쩌고저쩌고 블라블라 어디까지 나오고 칸이 넘어가나 블라블라", "11:25"),
-        (false, "djWjdlsjfioefjlskdjksjlfksjdfjsdifjsdlkvjlksdjviosdjklvjeiofjslkdklfjsdjklsfjksdljfsklfjlskdfjklsdfjlksdfjlkdsjflksdjfkldsjflkdsjfkljsdklfmcvklsdjvioerjvklsdvdssfjdiodfjd", "11:50"),
-        (true, "lfjsioeejslkflkdjfskfaslfkdsfsdjfsㄴ런러ㅐㅑㄷ저ㅣㅏ너랴ㅐㅇㄹ니ㅏ런ㅇSDJFOiejlksjdoifjsdklfjsdklfjsdlkfjsdfiosdfjklsfjdklfjsdifjsdfjsjfkld", "10:20"),
-        (false, "넵! 가능합니다!", "11:00")
-    ]
+      var messages: [(isMyMessage: Bool, text: String, date: String)] = [
+          (true, "안녕하세요!", "10:00"),
+          (false, "안녕하세요~ 반가워요!", "10:05"),
+          (true, "오늘 산책 가능하신거죠?", "10:20"),
+          (false, "넵! 가능합니다!", "11:00"),
+          (true, "네넹 어디어디에서 산채갛시소 어쩌고저쩌고 블라블라 어디까지 나오고 칸이 넘어가나 블라블라", "11:25"),
+          (false, "djWjdlsjfioefjlskdjksjlfksjdfjsdifjsdlkvjlksdjviosdjklvjeiofjslkdklfjsdjklsfjksdljfsklfjlskdfjklsdfjlksdfjlkdsjflksdjfkldsjflkdsjfkljsdklfmcvklsdjvioerjvklsdvdssfjdiodfjd", "11:50"),
+          (true, "lfjsioeejslkflkdjfskfaslfkdsfsdjfsㄴ런러ㅐㅑㄷ저ㅣㅏ너랴ㅐㅇㄹ니ㅏ런ㅇSDJFOiejlksjdoifjsdklfjsdklfjsdlkfjsdfiosdfjklsfjdklfjsdifjsdfjsjfkld", "10:20"),
+          (false, "넵! 가능합니다!", "11:00"),
+          (true, "네넹 어디어디에서 산채갛시소 어쩌고저쩌고 블라블라 어디까지 나오고 칸이 넘어가나 블라블라", "11:25"),
+          (false, "djWjdlsjfioefjlskdjksjlfksjdfjsdifjsdlkvjlksdjviosdjklvjeiofjslkdklfjsdjklsfjksdljfsklfjlskdfjklsdfjlksdfjlkdsjflksdjfkldsjflkdsjfkljsdklfmcvklsdjvioerjvklsdvdssfjdiodfjd", "11:50"),
+          (true, "lfjsioeejslkflkdjfskfaslfkdsfsdjfsㄴ런러ㅐㅑㄷ저ㅣㅏ너랴ㅐㅇㄹ니ㅏ런ㅇSDJFOiejlksjdoifjsdklfjsdklfjsdlkfjsdfiosdfjklsfjdklfjsdifjsdfjsjfkld", "10:20"),
+          (false, "넵! 가능합니다!", "11:00")
+      ]
+    
+    var messageInputViewBottomConstraint: NSLayoutConstraint!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -97,25 +98,21 @@ class ChatViewController: UIViewController {
     
     // 키보드가 나타날 때 호출되는 메서드
     @objc func keyboardWillShow(notification: NSNotification) {
-        adjustForKeyboard(notification: notification, show: true)
+        if let keyboardFrame = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue {
+            let keyboardHeight = keyboardFrame.cgRectValue.height
+            messageInputViewBottomConstraint.constant = -keyboardHeight + view.safeAreaInsets.bottom
+            UIView.animate(withDuration: 0.3) {
+                self.view.layoutIfNeeded()
+            }
+        }
+        scrollToBottom() // 키보드가 나타날 때 자동으로 스크롤
     }
 
     // 키보드가 사라질 때 호출되는 메서드
     @objc func keyboardWillHide(notification: NSNotification) {
-        adjustForKeyboard(notification: notification, show: false)
-    }
-
-    func adjustForKeyboard(notification: NSNotification, show: Bool) {
-        if let keyboardFrame = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue {
-            let keyboardRectangle = keyboardFrame.cgRectValue
-            let keyboardHeight = keyboardRectangle.height
-            
-            let adjustmentHeight = show ? keyboardHeight : 0
-            
-            // 화면을 키보드 높이에 맞춰서 올리기
-            UIView.animate(withDuration: 0.3) {
-                self.view.frame.origin.y = -adjustmentHeight
-            }
+        messageInputViewBottomConstraint.constant = 0
+        UIView.animate(withDuration: 0.3) {
+            self.view.layoutIfNeeded()
         }
     }
 
@@ -141,8 +138,11 @@ class ChatViewController: UIViewController {
         }
         
         messageInputView.snp.makeConstraints {
-            $0.leading.trailing.bottom.equalTo(view.safeAreaLayoutGuide)
+            $0.leading.trailing.equalTo(view.safeAreaLayoutGuide)
         }
+        
+        messageInputViewBottomConstraint = messageInputView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
+        messageInputViewBottomConstraint.isActive = true
         
         messageTextView.snp.makeConstraints {
             $0.leading.equalToSuperview().offset(16)
@@ -173,7 +173,6 @@ class ChatViewController: UIViewController {
 //    func setupSendButtonAction() {
 //        sendButton.addTarget(self, action: #selector(), for: .touchUpInside)
 //    }
-    
 }
 
 extension ChatViewController: UITableViewDelegate, UITableViewDataSource {
@@ -217,7 +216,6 @@ extension ChatViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
         return 60
     }
-    
 }
 
 extension ChatViewController: UITextViewDelegate {
