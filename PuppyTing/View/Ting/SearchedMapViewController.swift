@@ -139,8 +139,14 @@ class SearchedMapViewController: UIViewController, MapControllerDelegate {
     
     @objc
     private func backToPost() {
+        let mapInfo: [String:Any] = [
+            "placeName": placeName ?? "",
+            "roadAddressName": roadAddressName ?? "",
+            "coordinate": coordinate ?? CLLocationCoordinate2D()
+        ]
+                
         dismiss(animated: true, completion: nil)
-        NotificationCenter.default.post(name: Notification.Name("popToPostView"), object: nil)
+        NotificationCenter.default.post(name: Notification.Name("popToPostView"), object: nil, userInfo: mapInfo)
         print("버튼 눌림")
     }
     
