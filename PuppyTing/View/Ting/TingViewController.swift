@@ -15,7 +15,7 @@ class TingViewController: UIViewController {
     private let viewModel = TingViewModel()
     private let disposeBag = DisposeBag()
     
-    private var tingFeedModels: [TingFeedModel] = []
+   var tingFeedModels: [TingFeedModel] = []
     
     //MARK: Component 선언
     private lazy var feedCollectionView: UICollectionView = {
@@ -49,7 +49,16 @@ class TingViewController: UIViewController {
         super.viewDidLoad()
         setUI()
         setLayout()
-        
+        bind()
+        readFeedData()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        readFeedData()
+    }
+    
+    private func readFeedData() {
         viewModel.readAll(collection: "tingFeeds") { [weak self] data in
             self?.tingFeedModels = data
             DispatchQueue.main.async {
@@ -57,13 +66,20 @@ class TingViewController: UIViewController {
             }}
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        viewModel.readAll(collection: "tingFeeds") { [weak self] data in
-            self?.tingFeedModels = data
-            DispatchQueue.main.async {
-                self?.feedCollectionView.reloadData()
-            }}    
+    //MARK: Rx
+    private func bind() {
+        feedCollectionView.rx.itemSelected
+            .subscribe(onNext: { [weak self] indexPath in
+                guard let self else { return }
+                let selectedFeed = self.tingFeedModels[indexPath.row]
+                navigate(with: selectedFeed)
+            }).disposed(by: disposeBag)
+    }
+    
+    private func navigate(with selectedData: TingFeedModel) {
+        let detailVC = DetailTingViewController()
+        detailVC.tingFeedModels = selectedData
+        navigationController?.pushViewController(detailVC, animated: true)
     }
     
     //MARK: 임시 - button 및 CollectionView 이동 로직
@@ -123,9 +139,9 @@ extension TingViewController: UICollectionViewDataSource {
         return cell
     }
 }
-
-extension TingViewController: UICollectionViewDelegate {
-    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        navigationController?.pushViewController(DetailTingViewController(), animated: true)
-    }
-}
+//
+//extension TingViewController: UICollectionViewDelegate {
+//    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+//        navigationController?.pushViewController(DetailTingViewController(), animated: true)
+//    }
+//}

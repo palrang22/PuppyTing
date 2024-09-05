@@ -7,7 +7,13 @@
 
 import UIKit
 
+import RxSwift
+
 class DetailTingViewController: UIViewController {
+    
+    var tingFeedModels: TingFeedModel?
+    private let disposeBag = DisposeBag()
+    
     //MARK: Component 선언
     private let scrollView: UIScrollView = {
         let scroll = UIScrollView()
@@ -139,6 +145,24 @@ class DetailTingViewController: UIViewController {
         super.viewDidLoad()
         setUI()
         setConstraints()
+        setData()
+    }
+    
+    func setData() {
+        if let model = tingFeedModels {
+            content.text = model.content  // 게시물 내용
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateFormat = "yyyy-MM-dd HH:mm"
+            timeLabel.text = dateFormatter.string(from: model.time)
+            
+            FireStoreDatabaseManager.shared.findMemeber(uuid: model.userid)
+                .subscribe(onSuccess: { [weak self] member in
+                    self?.nameLabel.text = member.nickname
+                    self?.footPrintLabel.text = "🐾 발도장 \(member.footPrint)개"
+                }, onFailure: { error in
+                    print("멤버 찾기 실패: \(error)")
+                }).disposed(by: disposeBag)
+        }
     }
     
     //MARK: 임시 Button 메서드
