@@ -65,4 +65,20 @@ class FireStoreDatabaseManager {
         }
     }
     
+    func findMemeber(uuid: String) -> Single<Member> {
+        return Single.create { [weak self] single in
+            let docRef = self?.db.collection("member").document(uuid)
+            docRef?.getDocument(completion: { result, error in
+                if let error = error {
+                    single(.failure(error))
+                } else if let result = result, result.exists, let data = result.data() {
+                    if let member = Member(dictionary: data) {
+                        single(.success(member))
+                    }
+                }
+            })
+            return Disposables.create()
+        }
+    }
+    
 }

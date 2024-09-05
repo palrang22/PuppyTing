@@ -1,4 +1,6 @@
 import UIKit
+
+import FirebaseAuth
 import RxCocoa
 import RxSwift
 import SnapKit
@@ -10,6 +12,16 @@ class MypageViewController: UIViewController {
     private let scrollView = UIScrollView()
     private let contentView = UIView()
     private var puppies: [(name: String, info: String, tag: String, image: UIImage?)] = [] // 이미지 추가
+    
+    private let viewModel = MyPageViewModel()
+    private var memeber: Member? = nil {
+        didSet {
+            // 데이터가 들어오면유저가 있는거임
+            guard let member = memeber else { return }
+            nickNameLabel.text = member.nickname
+            myFootLabel.text = "내 발도장 \(member.footPrint)개"
+        }
+    }
 
     private let stackView: UIStackView = {
         let stackView = UIStackView()
@@ -464,6 +476,35 @@ class MypageViewController: UIViewController {
         view.backgroundColor = .white
         setupUI()
         setupBindings()
+        findMember()
+        setData()
+        addButtonAction()
+    }
+    
+    private func setData() {
+        viewModel.memberSubject.observe(on: MainScheduler.instance).subscribe(onNext: { [weak self] member in
+            self?.memeber = member
+        }).disposed(by: disposeBag)
+    }
+    
+    private func findMember() {
+        guard let user = Auth.auth().currentUser else { return }
+        viewModel.findMember(uuid: user.uid)
+    }
+    
+    private func addButtonAction() {
+        logOutButton.addTarget(self, action: #selector(logOut), for: .touchUpInside)
+    }
+    
+    @objc
+    private func logOut() {
+        do {
+            try Auth.auth().signOut()
+            AppController.shared.logOut()
+        } catch {
+            print("로그아웃 실패")
+        }
+
     }
 }
 

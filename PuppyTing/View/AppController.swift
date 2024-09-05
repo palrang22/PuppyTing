@@ -44,8 +44,12 @@ final class AppController {
     @objc
     private func checkLogin() {
         if let user = Auth.auth().currentUser {
-            print("user = \(user)")
-            setHome()
+            print("user = \(user.email)")
+            if user.isEmailVerified {
+                setHome()
+            } else {
+                routeToLogin()
+            }
         } else {
             routeToLogin()
         }
@@ -58,6 +62,10 @@ final class AppController {
     
     private func routeToLogin() {
         rootViewController = UINavigationController(rootViewController: LoginViewController())
+    }
+    
+    func logOut() {
+        routeToLogin()
     }
     
 }
