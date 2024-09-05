@@ -5,9 +5,17 @@
 //  Created by 김승희 on 8/28/24.
 //
 
+import CoreLocation
 import UIKit
 
 class PostTingViewController: UIViewController {
+    
+    var placeName: String?
+    var roadAddressName: String?
+    var coordinate: CLLocationCoordinate2D?
+    
+    let mapController = SearchedMapViewController()
+    
     //MARK: UI Component 선언
     private lazy var addMapButton: UIButton = {
         var config = UIButton.Configuration.filled()
@@ -54,6 +62,15 @@ class PostTingViewController: UIViewController {
     @objc
     private func addMapButtonTapped() {
         navigationController?.pushViewController(SearchAddressViewController(), animated: true)
+    }
+    
+    @objc
+    func handleMapInfo(notification: Notification) {
+        guard let userInfo = notification.userInfo else { return }
+        
+        placeName = userInfo["placeName"] as? String
+        roadAddressName = userInfo["roadAddressName"] as? String
+        coordinate = userInfo["coordinate"] as? CLLocationCoordinate2D
     }
 
     //MARK: UI 설정 및 제약조건 등
