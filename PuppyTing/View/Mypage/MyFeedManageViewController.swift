@@ -21,9 +21,9 @@ class MyFeedManageViewController: UIViewController {
 
     private func setupTableView() {
         view.addSubview(tableView)
-        tableView.snp.makeConstraints { make in
-            make.top.equalTo(view.safeAreaLayoutGuide.snp.top)
-            make.leading.trailing.bottom.equalToSuperview()
+        tableView.snp.makeConstraints {
+            $0.top.equalTo(view.safeAreaLayoutGuide.snp.top)
+            $0.leading.trailing.bottom.equalToSuperview()
         }
         
         // 커스텀 셀 등록

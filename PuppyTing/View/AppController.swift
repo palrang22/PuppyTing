@@ -64,4 +64,8 @@ final class AppController {
         rootViewController = UINavigationController(rootViewController: LoginViewController())
     }
     
+    func logOut() {
+        routeToLogin()
+    }
+    
 }
