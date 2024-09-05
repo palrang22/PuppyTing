@@ -27,6 +27,7 @@
 		A2085DD82C806F8D00698923 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = A2085DD72C806F8D00698923 /* GoogleService-Info.plist */; };
 		A2F9FE1B2C85520F004D7FF6 /* Config.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = A2F9FE1A2C85520F004D7FF6 /* Config.xcconfig */; };
 		A2F9FE1D2C859E54004D7FF6 /* FindingPasswordViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2F9FE1C2C859E54004D7FF6 /* FindingPasswordViewModel.swift */; };
+		A2F9FE4D2C896EE0004D7FF6 /* AppController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2F9FE4C2C896EE0004D7FF6 /* AppController.swift */; };
 		C29FCF662C7DB37E00F8951D /* PuppyCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C29FCF652C7DB37E00F8951D /* PuppyCollectionViewCell.swift */; };
 		C29FCF682C7DBA4F00F8951D /* PuppyRegistrationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C29FCF672C7DBA4F00F8951D /* PuppyRegistrationViewController.swift */; };
 		C29FCF772C8171FA00F8951D /* MyInfoEditViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C29FCF762C8171FA00F8951D /* MyInfoEditViewController.swift */; };
@@ -87,6 +88,7 @@
 		A2085DD72C806F8D00698923 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		A2F9FE1A2C85520F004D7FF6 /* Config.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Config.xcconfig; sourceTree = "<group>"; };
 		A2F9FE1C2C859E54004D7FF6 /* FindingPasswordViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FindingPasswordViewModel.swift; sourceTree = "<group>"; };
+		A2F9FE4C2C896EE0004D7FF6 /* AppController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppController.swift; sourceTree = "<group>"; };
 		C29FCF652C7DB37E00F8951D /* PuppyCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PuppyCollectionViewCell.swift; sourceTree = "<group>"; };
 		C29FCF672C7DBA4F00F8951D /* PuppyRegistrationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PuppyRegistrationViewController.swift; sourceTree = "<group>"; };
 		C29FCF762C8171FA00F8951D /* MyInfoEditViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyInfoEditViewController.swift; sourceTree = "<group>"; };
@@ -260,6 +262,7 @@
 				E738FB982C7C651D004696BD /* Ting */,
 				E738FB972C7C6518004696BD /* Chat */,
 				E738FB962C7C6510004696BD /* Mypage */,
+				A2F9FE4C2C896EE0004D7FF6 /* AppController.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -487,6 +490,7 @@
 				E70DB3452C7F0CB60073B3F8 /* PostTingViewController.swift in Sources */,
 				E7F598392C885D5300FE8900 /* KakaoMapViewController.swift in Sources */,
 				56D686CC2C7DC88700B00880 /* PptLoginViewController.swift in Sources */,
+				A2F9FE4D2C896EE0004D7FF6 /* AppController.swift in Sources */,
 				E738FB792C7C62EE004696BD /* SceneDelegate.swift in Sources */,
 				E70DB34D2C8067B50073B3F8 /* SearchAddressViewController.swift in Sources */,
 				A2085DCF2C804C7300698923 /* FirebaseAuthManager.swift in Sources */,
