@@ -1,7 +1,7 @@
 import UIKit
 
-import RxSwift
 import RxCocoa
+import RxSwift
 import SnapKit
 
 class MyInfoEditViewController: UIViewController {

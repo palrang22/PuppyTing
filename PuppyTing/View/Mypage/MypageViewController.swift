@@ -1,18 +1,16 @@
 import UIKit
-
-import RxSwift
 import RxCocoa
+import RxSwift
 import SnapKit
 
 class MypageViewController: UIViewController {
 
     // MARK: - Properties
-
     private let disposeBag = DisposeBag()
     private let scrollView = UIScrollView()
     private let contentView = UIView()
     private var puppies: [(name: String, info: String, tag: String, image: UIImage?)] = [] // 이미지 추가
-    
+
     private let stackView: UIStackView = {
         let stackView = UIStackView()
         stackView.axis = .vertical
@@ -173,7 +171,7 @@ class MypageViewController: UIViewController {
     private func setupUI() {
         view.addSubview(scrollView)
         scrollView.snp.makeConstraints {
-            $0.edges.equalToSuperview() // ScrollView가 전체 화면을 차지하도록 설정
+            $0.edges.equalTo(view.safeAreaLayoutGuide) // 안전 영역을 기준으로 설정
         }
 
         scrollView.addSubview(contentView)
@@ -187,9 +185,13 @@ class MypageViewController: UIViewController {
             $0.edges.equalToSuperview().inset(20)
         }
 
-        [profileContainerView, collectionView, pageControl, addPuppyButton, menuContainerView].forEach {stackView.addArrangedSubview($0)}
+        [profileContainerView, collectionView, pageControl, addPuppyButton, menuContainerView].forEach {
+            stackView.addArrangedSubview($0)
+        }
 
-        [profileImageView, nickNameLabel, profileEditButton, myFootLabel].forEach {profileContainerView.addSubview($0)}
+        [profileImageView, nickNameLabel, profileEditButton, myFootLabel].forEach {
+            profileContainerView.addSubview($0)
+        }
 
         profileContainerView.snp.makeConstraints {
             $0.height.equalTo(150)
@@ -219,7 +221,6 @@ class MypageViewController: UIViewController {
             $0.height.equalTo(44)
         }
 
-        // 처음에 컬렉션뷰를 숨기기 위해 높이를 0으로 설정
         collectionView.snp.makeConstraints {
             $0.height.equalTo(0)
             $0.left.right.equalToSuperview()
@@ -237,11 +238,26 @@ class MypageViewController: UIViewController {
             $0.height.equalTo(250)
         }
 
-        [customerSupportButton, faqButton, noticeButton, logOutButton, memberLeaveButton].forEach {contentView.addSubview($0)}
-        
+        let upperButtonsStackView = UIStackView(arrangedSubviews: [customerSupportButton, faqButton, noticeButton])
+        upperButtonsStackView.axis = .horizontal
+        upperButtonsStackView.spacing = 20
+        upperButtonsStackView.distribution = .equalSpacing
+
+        let lowerButtonsStackView = UIStackView(arrangedSubviews: [logOutButton, memberLeaveButton])
+        lowerButtonsStackView.axis = .horizontal
+        lowerButtonsStackView.spacing = 20
+        lowerButtonsStackView.distribution = .equalSpacing
+
+        let olympicButtonsContainer = UIStackView(arrangedSubviews: [upperButtonsStackView, lowerButtonsStackView])
+        olympicButtonsContainer.axis = .vertical
+        olympicButtonsContainer.spacing = 20
+        olympicButtonsContainer.alignment = .center
+
+        stackView.addArrangedSubview(olympicButtonsContainer)
+
         customerSupportButton.snp.makeConstraints {
             $0.top.equalTo(menuContainerView.snp.bottom).offset(30)
-            $0.left.equalTo(30)
+            $0.right.equalTo(faqButton.snp.left).offset(-20)
             $0.width.equalTo(100)
             $0.height.equalTo(44)
         }
@@ -254,23 +270,23 @@ class MypageViewController: UIViewController {
         
         noticeButton.snp.makeConstraints {
             $0.top.equalTo(customerSupportButton)
-            $0.right.equalTo(-30)
+            $0.left.equalTo(faqButton.snp.right).offset(20)
             $0.width.height.equalTo(customerSupportButton)
         }
         
         logOutButton.snp.makeConstraints {
             $0.top.equalTo(customerSupportButton.snp.bottom).offset(30)
-            $0.left.equalTo(80)
-            $0.width.equalTo(100)
+            $0.left.equalToSuperview().offset(0)
+            $0.width.equalTo(135)
             $0.height.equalTo(44)
         }
         
         memberLeaveButton.snp.makeConstraints {
             $0.top.equalTo(logOutButton)
-            $0.right.equalTo(-80)
+            $0.left.equalTo(logOutButton.snp.right).offset(30)
             $0.width.height.equalTo(logOutButton)
         }
-        
+
         collectionView.dataSource = self
         collectionView.delegate = self
         collectionView.register(PuppyCollectionViewCell.self, forCellWithReuseIdentifier: PuppyCollectionViewCell.identifier)
@@ -282,73 +298,106 @@ class MypageViewController: UIViewController {
     private func setupMenuItems() {
         let menuItems = ["내 피드 관리", "받은 산책 후기", "즐겨 찾는 친구", "차단 목록"]
         var previousItem: UIView? = nil
-        
-        for itemName in menuItems {
+
+        for (index, itemName) in menuItems.enumerated() {
             let menuItem = createMenuItem(title: itemName)
             menuContainerView.addSubview(menuItem)
-            
+
+            // 버튼에 대한 탭 제스처 추가
+            let tapGesture = UITapGestureRecognizer(target: self, action: #selector(menuItemTapped(_:)))
+            menuItem.tag = index // 메뉴 항목에 태그 부여
+            menuItem.addGestureRecognizer(tapGesture)
+
             menuItem.snp.makeConstraints {
                 $0.left.equalToSuperview().offset(10)
                 $0.right.equalToSuperview().offset(-10)
                 $0.height.equalTo(50)
-                
+
                 if let previous = previousItem {
                     $0.top.equalTo(previous.snp.bottom).offset(10)
                 } else {
                     $0.top.equalToSuperview().offset(10)
                 }
             }
-            
+
             previousItem = menuItem
         }
     }
-    
+
+    // MARK: - createMenuItem 함수 추가
     private func createMenuItem(title: String) -> UIView {
         let menuItem = UIView()
-        
+
         let label = UILabel()
         label.text = title
         label.font = UIFont.systemFont(ofSize: 16)
         label.textColor = .black
-        
+
         let chevron = UIImageView()
         chevron.image = UIImage(systemName: "chevron.right")
         chevron.tintColor = .black
-        
+
         menuItem.addSubview(label)
         menuItem.addSubview(chevron)
-        
+
         label.snp.makeConstraints {
             $0.left.equalToSuperview().offset(10)
             $0.centerY.equalToSuperview()
         }
-        
+
         chevron.snp.makeConstraints {
             $0.right.equalToSuperview().offset(-10)
             $0.centerY.equalToSuperview()
         }
-        
+
         return menuItem
+    }
+
+    // MARK: - 메뉴 항목 탭 처리
+    @objc private func menuItemTapped(_ sender: UITapGestureRecognizer) {
+        guard let selectedIndex = sender.view?.tag else { return }
+
+        switch selectedIndex {
+        case 0:
+            navigateToMyFeedManagement() // 내 피드 관리 페이지로 이동
+        case 1:
+            // 다른 페이지로 이동 (받은 산책 후기)
+            break
+        case 2:
+            // 다른 페이지로 이동 (즐겨 찾는 친구)
+            break
+        case 3:
+            // 다른 페이지로 이동 (차단 목록)
+            break
+        default:
+            break
+        }
+    }
+
+    // MARK: - 내 피드 관리 페이지로 이동
+    private func navigateToMyFeedManagement() {
+        let myFeedManageViewController = MyFeedManageViewController()
+        if let navigationController = self.navigationController {
+            navigationController.pushViewController(myFeedManageViewController, animated: true)
+        } else {
+            present(myFeedManageViewController, animated: true, completion: nil)
+        }
     }
     
     // MARK: - Setup Bindings
-    
     private func setupBindings() {
-        // 퍼피 등록하기 버튼을 눌렀을 때
         addPuppyButton.rx.tap
             .bind { [weak self] in
                 self?.navigateToPuppyRegistration()
             }
             .disposed(by: disposeBag)
         
-        // 정보 수정 버튼을 눌렀을 때
         profileEditButton.rx.tap
             .bind { [weak self] in
                 self?.navigateToMyInfoEdit()
             }
             .disposed(by: disposeBag)
         
-        // 컬렉션 뷰 셀이 선택되었을 때
         collectionView.rx.itemSelected
             .bind { [weak self] indexPath in
                 self?.navigateToPuppyEdit(at: indexPath)
@@ -358,12 +407,9 @@ class MypageViewController: UIViewController {
 
     private func navigateToPuppyRegistration() {
         let puppyRegistrationVC = PuppyRegistrationViewController()
-        
-        // 정보 입력 후 데이터를 전달받아 컬렉션 뷰를 업데이트합니다.
         puppyRegistrationVC.completionHandler = { [weak self] name, info, image in
             self?.addPuppy(name: name, info: info, image: image)
         }
-        
         if let navigationController = self.navigationController {
             navigationController.pushViewController(puppyRegistrationVC, animated: true)
         } else {
@@ -384,14 +430,11 @@ class MypageViewController: UIViewController {
         let puppy = puppies[indexPath.row]
         let puppyRegistrationVC = PuppyRegistrationViewController()
         puppyRegistrationVC.isEditMode = true
-        
         puppyRegistrationVC.setupWithPuppy(name: puppy.name, info: puppy.info, tag: puppy.tag)
-        
         puppyRegistrationVC.completionHandler = { [weak self] name, info, image in
             self?.puppies[indexPath.row] = (name: name, info: info, tag: puppy.tag, image: image)
             self?.collectionView.reloadItems(at: [indexPath])
         }
-        
         if let navigationController = self.navigationController {
             navigationController.pushViewController(puppyRegistrationVC, animated: true)
         } else {
@@ -400,17 +443,15 @@ class MypageViewController: UIViewController {
     }
 
     private func addPuppy(name: String, info: String, image: UIImage?) {
-        let tag = "태그 예시" // 태그는 예시로 고정값을 사용, 필요에 따라 수정 가능
+        let tag = "태그 예시" // 태그는 예시로 고정값을 사용
         puppies.append((name: name, info: info, tag: tag, image: image)) // 데이터 추가
         collectionView.reloadData()
         pageControl.numberOfPages = puppies.count // 페이지 수 업데이트
-        
-        // 컬렉션 뷰와 페이지 컨트롤을 보여지게 함
         collectionView.isHidden = false
         pageControl.isHidden = false
 
         collectionView.snp.updateConstraints {
-            $0.height.equalTo(150) // 컬렉션 뷰의 콘텐츠에 맞는 적절한 높이 설정
+            $0.height.equalTo(150) // 컬렉션 뷰의 콘텐츠에 맞는 높이 설정
         }
 
         UIView.animate(withDuration: 0.3) {
@@ -421,8 +462,8 @@ class MypageViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
-        setupUI() // UI 설정
-        setupBindings() // 바인딩 설정
+        setupUI()
+        setupBindings()
     }
 }
 
@@ -440,7 +481,6 @@ extension MypageViewController: UICollectionViewDataSource {
         
         let puppy = puppies[indexPath.row]
         cell.configure(with: puppy)
-        
         return cell
     }
 }
@@ -449,7 +489,6 @@ extension MypageViewController: UICollectionViewDataSource {
 extension MypageViewController: UICollectionViewDelegateFlowLayout {
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        // 셀의 크기를 설정합니다.
         return CGSize(width: collectionView.bounds.width, height: collectionView.bounds.height - 20)
     }
 }

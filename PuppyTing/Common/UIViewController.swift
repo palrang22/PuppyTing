@@ -7,6 +7,9 @@
 
 import UIKit
 
+import RxCocoa
+import RxSwift
+
 extension UIViewController {
 
     // 키보드 포커싱 해제 메서드
@@ -36,4 +39,5 @@ extension UIViewController {
         alertController.addAction(cancelAction)
         self.present(alertController, animated: true, completion: nil)
     }
+
 }
