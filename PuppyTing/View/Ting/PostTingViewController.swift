@@ -8,6 +8,8 @@
 import CoreLocation
 import UIKit
 
+import FirebaseAuth
+
 class PostTingViewController: UIViewController {
     
     var placeName: String?
@@ -56,7 +58,21 @@ class PostTingViewController: UIViewController {
     //MARK: 메서드
     @objc
     private func addButtonTapped() {
+        guard let userID = Auth.auth().currentUser?.uid else {
+            print("유저 정보가 없습니다.")
+            return
+        }
+        let coordinate = self.coordinate ?? CLLocationCoordinate2D(latitude: 0.0, longitude: 0.0)
+        let content = textView.text ?? "내용 없음"
+        let model = TingFeedModel(userid: userID,
+                                  postid: "",
+                                  location: coordinate,
+                                  content: content,
+                                  time: Date())
+        let viewModel = PostingViewModel()
+        viewModel.create(collection: "tingFeeds", model: model)
         
+        self.navigationController?.popViewController(animated: true)
     }
     
     @objc
