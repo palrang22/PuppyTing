@@ -77,7 +77,7 @@ class TingViewModel {
     
     func readAll(collection: String, completion: @escaping ([TingFeedModel]) -> Void) {
         var dataList: [TingFeedModel] = []
-        
+
         db.collection(collection).getDocuments(source: .server) { querySnapshot, error in
             if let error = error {
                 print("Error fetching documents: \(error)")
