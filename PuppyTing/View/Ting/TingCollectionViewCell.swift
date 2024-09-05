@@ -109,6 +109,16 @@ class TingCollectionViewCell: UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
+    //MARK: config 메서드
+    func configure(with model: TingFeedModel) {
+        self.nameLabel.text = model.userid
+        self.content.text = model.content
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd HH:mm"
+        self.timeLabel.text = dateFormatter.string(from: model.time)
+        self.footPrintLabel.text = "🐾 발도장 \(model.postid)개"
+    }
+    
     //MARK: UI 및 제약조건
     private func setLayout() {
         self.contentView.layer.cornerRadius = 10

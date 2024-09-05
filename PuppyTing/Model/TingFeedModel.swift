@@ -13,4 +13,5 @@ struct TingFeedModel {
     let postid: String
     let location: CLLocationCoordinate2D
     let content: String
+    let time: Date
 }

@@ -15,6 +15,8 @@ class TingViewController: UIViewController {
     private let viewModel = TingViewModel()
     private let disposeBag = DisposeBag()
     
+    private var tingFeedModels: [TingFeedModel] = []
+    
     //MARK: Component 선언
     private lazy var feedCollectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
@@ -47,18 +49,22 @@ class TingViewController: UIViewController {
         super.viewDidLoad()
         setUI()
         setLayout()
+        
+        viewModel.readAll(collection: "tingFeeds") { [weak self] data in
+            self?.tingFeedModels = data
+            DispatchQueue.main.async {
+                self?.feedCollectionView.reloadData()
+            }}
     }
     
-//    //MARK: Rx 관련 - 로직 수정예정
-//    private func bind() {
-//        postButton.rx.tap
-//            .bind(to: viewModel.postButtonTapped)
-//            .disposed(by: disposeBag)
-//        
-//        feedCollectionView.rx.itemSelected
-//            .bind(to: viewModel.cellTapped)
-//            .disposed(by: disposeBag)
-//    }
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        viewModel.readAll(collection: "tingFeeds") { [weak self] data in
+            self?.tingFeedModels = data
+            DispatchQueue.main.async {
+                self?.feedCollectionView.reloadData()
+            }}    
+    }
     
     //MARK: 임시 - button 및 CollectionView 이동 로직
     @objc
@@ -103,7 +109,7 @@ extension TingViewController: UICollectionViewDelegateFlowLayout {
 
 extension TingViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 5
+        return tingFeedModels.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -111,6 +117,9 @@ extension TingViewController: UICollectionViewDataSource {
             .dequeueReusableCell(withReuseIdentifier: TingCollectionViewCell.id, for: indexPath) as? TingCollectionViewCell else {
             return UICollectionViewCell()
         }
+        
+        let feedModel = tingFeedModels[indexPath.row]
+        cell.configure(with: feedModel)
         return cell
     }
 }

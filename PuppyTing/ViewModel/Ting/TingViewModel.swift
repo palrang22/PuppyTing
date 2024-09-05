@@ -7,6 +7,7 @@
 import CoreLocation
 import UIKit
 
+import FirebaseFirestore
 import RxCocoa
 import RxSwift
 
@@ -16,6 +17,8 @@ class TingViewModel {
     private let networkManager = NetworkManager.shared
     private let disposeBag = DisposeBag()
     private var currentLocation: CLLocation?
+    
+    let db = Firestore.firestore()
     
     let items = BehaviorRelay<[Place]>(value:[])
     let error = PublishRelay<String>()
@@ -68,5 +71,38 @@ class TingViewModel {
         var request = URLRequest(url: url)
         request.addValue("KakaoAK \(apiKey)", forHTTPHeaderField: "Authorization")
         return request
+    }
+    
+    // 데이터 전달 메서드
+    
+    func readAll(collection: String, completion: @escaping ([TingFeedModel]) -> Void) {
+        var dataList: [TingFeedModel] = []
+        
+        db.collection(collection).getDocuments(source: .server) { querySnapshot, error in
+            if let error = error {
+                print("Error fetching documents: \(error)")
+            } else {
+                for document in querySnapshot!.documents {
+                    let data = document.data()
+                    
+                    if let userid = data["userid"] as? String,
+                       let geoPoint = data["location"] as? GeoPoint,
+                       let content = data["content"] as? String,
+                       let timestamp = data["timestamp"] as? Timestamp {
+                        
+                        let location = CLLocationCoordinate2D(latitude: geoPoint.latitude, longitude: geoPoint.longitude)
+                        let time = timestamp.dateValue()
+                        
+                        let postid = document.documentID
+                        
+                        let tingFeed = TingFeedModel(userid: userid, postid: postid, location: location, content: content, time: time)
+                        dataList.append(tingFeed)
+                    } else {
+                        print("Error converting document to TingFeedModel")
+                    }
+                }
+                completion(dataList)
+            }
+        }
     }
 }
