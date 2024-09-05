@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		23607BFA2C8978E600A23716 /* DetailTingViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23607BF92C8978E600A23716 /* DetailTingViewModel.swift */; };
 		236E023F2C892B0200469FE0 /* Config.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 236E023E2C892B0200469FE0 /* Config.xcconfig */; };
 		56D686C52C7DA88500B00880 /* SignupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56D686C42C7DA88500B00880 /* SignupViewController.swift */; };
 		56D686C82C7DB09600B00880 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56D686C72C7DB09600B00880 /* LoginViewController.swift */; };
@@ -67,6 +68,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		23607BF92C8978E600A23716 /* DetailTingViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailTingViewModel.swift; sourceTree = "<group>"; };
 		236E023E2C892B0200469FE0 /* Config.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = Config.xcconfig; path = ../../../../../Downloads/Config.xcconfig; sourceTree = "<group>"; };
 		56D686C42C7DA88500B00880 /* SignupViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignupViewController.swift; sourceTree = "<group>"; };
 		56D686C72C7DB09600B00880 /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
@@ -214,6 +216,7 @@
 			isa = PBXGroup;
 			children = (
 				E738FBA12C7C66AC004696BD /* TingViewModel.swift */,
+				23607BF92C8978E600A23716 /* DetailTingViewModel.swift */,
 			);
 			path = Ting;
 			sourceTree = "<group>";
@@ -448,6 +451,7 @@
 				56D686C82C7DB09600B00880 /* LoginViewController.swift in Sources */,
 				E738FB9A2C7C6532004696BD /* TingViewController.swift in Sources */,
 				56FD048F2C80171100EBCDCD /* MyChattingTableViewCell.swift in Sources */,
+				23607BFA2C8978E600A23716 /* DetailTingViewModel.swift in Sources */,
 				C29FCF662C7DB37E00F8951D /* PuppyCollectionViewCell.swift in Sources */,
 				E7F5983B2C8866CE00FE8900 /* AddressView.swift in Sources */,
 				A2085DD12C8059F400698923 /* FireStoreDatabaseManager.swift in Sources */,
