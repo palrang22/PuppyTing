@@ -75,9 +75,25 @@ class PuppyRegistrationViewController: UIViewController {
     
     private let tagTextField: UITextField = {
         let textField = UITextField()
-        textField.placeholder = "특징을 추가하세요! (ex. 친근한, 활발한, 소심한)"
+        textField.placeholder = "쉼표로 구분하여 특징을 추가하세요! (ex. 친근, 활발, 소심)"
         textField.borderStyle = .roundedRect
         return textField
+    }()
+    
+    private var tagStack: UIStackView = {
+        let stack = UIStackView()
+        stack.axis = .horizontal
+        stack.alignment = .leading
+        stack.distribution = .fill
+        stack.layer.cornerRadius = 5
+        stack.spacing = 10
+        return stack
+    }()
+    
+    private let tagScrollView: UIScrollView = {
+        let scroll = UIScrollView()
+        scroll.showsHorizontalScrollIndicator = true
+        return scroll
     }()
 
     // MARK: - Lifecycle
@@ -94,8 +110,10 @@ class PuppyRegistrationViewController: UIViewController {
 
     private func setupUI() {
         // UI 요소들을 배열로 묶어 한 번에 addSubview
-        let views = [puppyImageView, puppyImageChangeButton, nameLabel, nameTextField, ageLabel, ageTextField, tagLabel, tagTextField]
+        let views = [puppyImageView, puppyImageChangeButton, nameLabel, nameTextField, ageLabel, ageTextField, tagLabel, tagTextField, tagScrollView]
         views.forEach { view.addSubview($0) }
+        
+        tagScrollView.addSubview(tagStack)
 
         puppyImageView.snp.makeConstraints {
             $0.top.equalTo(view.safeAreaLayoutGuide).offset(40)
@@ -147,6 +165,18 @@ class PuppyRegistrationViewController: UIViewController {
             $0.top.equalTo(tagLabel.snp.bottom).offset(5)
             $0.left.right.height.equalTo(ageTextField)
         }
+        
+        tagScrollView.snp.makeConstraints {
+            $0.top.equalTo(tagTextField.snp.bottom).offset(20)
+            $0.leading.equalTo(tagTextField)
+            $0.trailing.lessThanOrEqualTo(view.safeAreaLayoutGuide.snp.trailing).offset(-20)
+            $0.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom).offset(-20)
+        }
+        
+        tagStack.snp.makeConstraints {
+            $0.edges.equalToSuperview()
+            $0.height.equalToSuperview()
+        }
     }
 
     // MARK: - Configure Navigation Bar
@@ -165,14 +195,14 @@ class PuppyRegistrationViewController: UIViewController {
             print("rightBarButtonItem is nil")
             return
         }
-
+        
         // 프로필 이미지 변경 버튼을 눌렀을 때, 이미지 선택 옵션을 표시
         puppyImageChangeButton.rx.tap
             .bind { [weak self] in
                 self?.presentImagePickerOptions()
             }
             .disposed(by: disposeBag)
-
+        
         // 버튼 클릭 이벤트를 Rx로 바인딩
         rightBarButtonItem.rx.tap
             .bind { [weak self] in
@@ -183,12 +213,50 @@ class PuppyRegistrationViewController: UIViewController {
                 }
             }
             .disposed(by: disposeBag)
-
+        
         // 텍스트 필드 입력값을 감지하여 버튼 활성화 상태를 업데이트
         Observable.combineLatest(nameTextField.rx.text.orEmpty, ageTextField.rx.text.orEmpty)
             .map { !$0.isEmpty && !$1.isEmpty }
             .bind(to: rightBarButtonItem.rx.isEnabled)
             .disposed(by: disposeBag)
+        
+        // tagTextField 입력값 감지 메서드 - sh
+        tagTextField.rx.text.orEmpty
+            .subscribe(onNext: { [weak self] text in
+                guard let self else { return }
+                
+                if text.last == "," {
+                    let tagWord = text.dropLast()
+                    if !tagWord.isEmpty {
+                        self.addTag(word: String(tagWord))
+                        self.tagTextField.text = ""
+                    }
+                }
+            }).disposed(by: disposeBag)
+    }
+    
+    // UIButton Extension 사용하여 버튼 생성 메서드 - sh
+    private func addTag(word: String) {
+        let button = UIButton()
+        button.makeTag(word: word, target: self, action: #selector(tagTapped))
+        
+        let currentWidth = button.intrinsicContentSize.width
+        
+        tagStack.addArrangedSubview(button)
+        
+        button.snp.makeConstraints {
+            $0.width.equalTo(currentWidth + CGFloat(20))
+        }
+        tagStack.layoutIfNeeded()
+    }
+    
+    // 태그 클릭시 삭제되는 메서드 - sh
+    @objc
+    private func tagTapped(sender: UIButton) {
+        print("tapped")
+        tagStack.removeArrangedSubview(sender)
+        sender.removeFromSuperview()
+        tagStack.layoutIfNeeded()
     }
 
     // MARK: - Handlers
