@@ -101,7 +101,7 @@ class FireStoreDatabaseManager {
         }
         
         return Single.create { [weak self] single in
-            let ref = self?.db.collection("Members").document(currentUser)
+            let ref = self?.db.collection("member").document(currentUser)
             ref?.updateData(["blockedUsers" : FieldValue.arrayUnion([userId])]) { error in
                 if let error = error {
                     single(.failure(error))
@@ -121,10 +121,12 @@ class FireStoreDatabaseManager {
         ]
         
         return Single.create { [weak self] single in
-            self?.db.collection("ReportedPosts").addDocument(data: reportData) { error in
+            self?.db.collection("report").addDocument(data: reportData) { error in
                 if let error = error {
+                    print("1")
                     single(.failure(error))
                 } else {
+                    print("2")
                     single(.success(()))
                 }
             }

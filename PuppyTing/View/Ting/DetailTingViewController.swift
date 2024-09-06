@@ -150,48 +150,7 @@ class DetailTingViewController: UIViewController {
         bind()
     }
     
-//    //MARK: 임시 Button 메서드
-//    @objc
-//    private func blockButtonTapped() {
-//        okAlertWithCancel(
-//            title: "사용자 차단",
-//            message: "사용자를 차단하시겠습니까? 차단 이후 사용자의 게시물이 보이지 않습니다.",
-//            okActionTitle: "차단",
-//            okActionHandler: { _ in
-//            self.okAlert(title: "차단 완료", message: "사용자가 성공적으로 차단되었습니다.")
-//        })
-//    }
-//    @objc
-//    private func deleteButtonTapped() {
-//        okAlert(title: "미구현", message: "취소로직 구현예정", okActionTitle: "빨리해라")
-//    }
-//    @objc
-//    private func reportButtonTapped() {
-//        let reportAlert = UIAlertController(title: "신고 사유 선택", message: nil, preferredStyle: .actionSheet)
-//        let reasons = [
-//            "부적절한 내용",
-//            "부적절한 닉네임 또는 프로필사진",
-//            "스팸 또는 오해의 소지가 있는 정보",
-//            "혐오 발언",
-//            "지적 재산권 침해",
-//            "개인정보 침해",
-//            "불법 활동",
-//            "괴롭힘, 폭력 또는 위협"
-//        ]
-//        
-//        reasons.forEach { reason in
-//            let action = UIAlertAction(title: reason, style: .default) { _ in
-//                self.okAlert(title: "신고 접수", message: "신고가 접수되었습니다. 관리자가 24시간 이내로 검토할 예정이며, 추가 신고/문의는 nnn@naver.com 으로 보내주세요.")
-//            }
-//            reportAlert.addAction(action)
-//        }
-//        let cancelAction = UIAlertAction(title: "취소", style: .cancel)
-//        reportAlert.addAction(cancelAction)
-//        
-//        present(reportAlert, animated: true, completion: nil)
-//    }
-    
-    //MARK: rxcocoa & bind 메서드
+    //MARK: bind
     
     func setData() {
         if let model = tingFeedModels {
