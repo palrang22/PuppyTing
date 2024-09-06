@@ -7,6 +7,7 @@
 
 import Foundation
 
+import FirebaseAuth
 import FirebaseCore
 import FirebaseFirestore
 import RxSwift
@@ -81,4 +82,53 @@ class FireStoreDatabaseManager {
         }
     }
     
+    func deleteDocument(from collection: String, documentId: String) -> Single<Void> {
+        return Single.create { [weak self] single in
+            self?.db.collection(collection).document(documentId).delete { error in
+                if let error = error {
+                    single(.failure(error))
+                } else {
+                    single(.success(()))
+                }
+            }
+            return Disposables.create()
+        }
+    }
+    
+    func blockUser(userId: String) -> Single<Void> {
+        guard let currentUser = Auth.auth().currentUser?.uid else {
+            return Single.error(NSError(domain: "", code: -1, userInfo: [NSLocalizedDescriptionKey: "사용자 인증 실패"]))
+        }
+        
+        return Single.create { [weak self] single in
+            let ref = self?.db.collection("Members").document(currentUser)
+            ref?.updateData(["blockedUsers" : FieldValue.arrayUnion([userId])]) { error in
+                if let error = error {
+                    single(.failure(error))
+                } else {
+                    single(.success(()))
+                }
+            }
+            return Disposables.create()
+        }
+    }
+    
+    func reportPost(postId: String, reason: String) -> Single<Void> {
+        let reportData: [String: Any] = [
+            "postId": postId,
+            "reason": reason,
+            "timeStamp": Timestamp(date: Date())
+        ]
+        
+        return Single.create { [weak self] single in
+            self?.db.collection("ReportedPosts").addDocument(data: reportData) { error in
+                if let error = error {
+                    single(.failure(error))
+                } else {
+                    single(.success(()))
+                }
+            }
+            return Disposables.create()
+        }
+    }
 }
