@@ -7,6 +7,8 @@
 
 import UIKit
 
+import FirebaseAuth
+import RxCocoa
 import RxSwift
 
 class DetailTingViewController: UIViewController {
@@ -158,6 +160,7 @@ class DetailTingViewController: UIViewController {
             let dateFormatter = DateFormatter()
             dateFormatter.dateFormat = "yyyy-MM-dd HH:mm"
             timeLabel.text = dateFormatter.string(from: model.time)
+            setButton(model: model)
             
             FireStoreDatabaseManager.shared.findMemeber(uuid: model.userid)
                 .subscribe(onSuccess: { [weak self] member in
@@ -169,14 +172,27 @@ class DetailTingViewController: UIViewController {
         }
     }
     
+    private func setButton(model: TingFeedModel) {
+        if Auth.auth().currentUser?.uid == model.userid {
+            self.deleteButton.isHidden = false
+            self.blockButton.isHidden = true
+            self.reportButton.isHidden = true
+        } else {
+            self.deleteButton.isHidden = true
+            self.blockButton.isHidden = false
+            self.reportButton.isHidden = false
+        }
+    }
+    
     private func bind() {
         deleteButton.rx.tap
             .subscribe(onNext: { [weak self] in
                 guard let postid = self?.tingFeedModels?.postid else { return }
                 self?.fireStoreDatabase.deleteDocument(from: "tingFeeds", documentId: postid)
                     .subscribe(onSuccess: { [weak self] in
-                        self?.okAlert(title: "삭제 완료", message: "게시물이 성공적으로 삭제되었습니다.")
-                        self?.navigationController?.popViewController(animated: true)
+                        self?.okAlert(title: "삭제 완료", message: "게시물이 성공적으로 삭제되었습니다.", okActionHandler: { _ in
+                            self?.navigationController?.popViewController(animated: true)
+                        })
                     }, onFailure: { error in
                         print("삭제 실패: \(error)")
                         self?.okAlert(title: "삭제 실패", message: "게시물 삭제에 실패했습니다. 다시 시도해주세요. 해당 문제가 지속될 경우 문의 게시판에 제보해주세요.")
@@ -197,14 +213,13 @@ class DetailTingViewController: UIViewController {
                                     })
                     }, onFailure: { error in
                         print("차단 실패")
-                        self!.okAlert(title: "차단 실패", message: "사용자 차단에 실패했습니다. 다시 시도해주세요. 해당 문제가 지속될 경우 문의 게시판에 제보해주세요.")
+                        self!.okAlert(title: "차단 실패", message: "사용자 차단에 실패했습니다. 다시 시도해주세요.\n해당 문제가 지속될 경우 문의 게시판에 제보해주세요.")
                     }).disposed(by: self!.disposeBag)
             }).disposed(by: disposeBag)
         
         reportButton.rx.tap
             .subscribe(onNext: { [weak self] in
                 guard let postid = self?.tingFeedModels?.postid else { return }
-                
                 let reportAlert = UIAlertController(title: "신고 사유 선택", message: nil, preferredStyle: .actionSheet)
                 let reasons = [
                     "부적절한 내용",
@@ -219,7 +234,15 @@ class DetailTingViewController: UIViewController {
                 
                 reasons.forEach { reason in
                     let action = UIAlertAction(title: reason, style: .default) { _ in
-                        self!.okAlert(title: "신고 접수", message: "신고가 접수되었습니다. 관리자가 24시간 이내로 검토할 예정이며, 추가 신고/문의는 nnn@naver.com 으로 보내주세요.")
+                        self?.fireStoreDatabase.reportPost(postId: postid, reason: reason)
+                            .subscribe(onSuccess: {
+                                self!.okAlert(title: "신고 접수", message: "신고가 접수되었습니다. 관리자가 24시간 이내로 검토할 예정이며, 추가 신고/문의는 nnn@naver.com 으로 보내주세요.", okActionHandler: { _ in
+                                    self?.navigationController?.popViewController(animated: true)
+                                })
+                            }, onFailure: { error in
+                            print("신고 실패")
+                                self?.okAlert(title: "신고 실패", message: "게시글 신고에 실패했습니다. 다시 시도해주세요.\n해당 문제가 지속될 경우 문의 게시판에 제보해주세요.")
+                            }).disposed(by: self!.disposeBag)
                     }
                     reportAlert.addAction(action)
                 }

@@ -123,10 +123,8 @@ class FireStoreDatabaseManager {
         return Single.create { [weak self] single in
             self?.db.collection("report").addDocument(data: reportData) { error in
                 if let error = error {
-                    print("1")
                     single(.failure(error))
                 } else {
-                    print("2")
                     single(.success(()))
                 }
             }
