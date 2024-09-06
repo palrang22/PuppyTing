@@ -73,13 +73,16 @@ class ChatListViewController: UIViewController, UITableViewDelegate, UISearchBar
         
         output.chatRooms
             .bind(to: tableView.rx.items(cellIdentifier: ChatTableViewCell.identifier, cellType: ChatTableViewCell.self)) { index, data, cell in
-                
-                if let lastChat = data.lastChat?.text {
-                    cell.configure(with: [UIImage(named: "defaultProfileImage") ?? UIImage()], title: data.name, content: lastChat)
-                } else {
-                    cell.configure(with: [UIImage(named: "defaultProfileImage") ?? UIImage()], title: data.name, content: "내용없음")
+                let otherUser = data.users.first == userId ? data.users.last : data.users.first
+                if let otherUser = otherUser {
+                    FireStoreDatabaseManager.shared.findMemberNickname(uuid: otherUser) { nickname in
+                        if let lastChat = data.lastChat?.text {
+                            cell.configure(with: [UIImage(named: "defaultProfileImage") ?? UIImage()], title: nickname, content: lastChat)
+                        } else {
+                            cell.configure(with: [UIImage(named: "defaultProfileImage") ?? UIImage()], title: nickname, content: "내용없음")
+                        }
+                    }
                 }
-                
             }
             .disposed(by: disposeBag)
         
@@ -100,8 +103,14 @@ class ChatListViewController: UIViewController, UITableViewDelegate, UISearchBar
     private func navigateToChatView(chatRoom: ChatRoom) {
         let chatVC = ChatViewController()
         chatVC.roomId = chatRoom.id
-        chatVC.titleText = "1대1 채팅방"
-        navigationController?.pushViewController(chatVC, animated: true)
+        let userId = findUserId()
+        let otherUser = chatRoom.users.first == userId ? chatRoom.users.last : chatRoom.users.first
+        if let otherUser = otherUser {
+            FireStoreDatabaseManager.shared.findMemberNickname(uuid: otherUser) { nickname in
+                chatVC.titleText = nickname
+                self.navigationController?.pushViewController(chatVC, animated: true)
+            }
+        }
     }
     
     @objc func showSearchBar() {

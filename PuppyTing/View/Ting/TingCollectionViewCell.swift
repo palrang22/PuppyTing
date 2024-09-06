@@ -156,12 +156,25 @@ class TingCollectionViewCell: UICollectionViewCell {
         createChatRoom(chatRoomName: name, users: users)
     }
     
+    private func findUserId() -> String {
+        guard let user = Auth.auth().currentUser else { return "" }
+        return user.uid
+    }
+    
     private func createChatRoom(chatRoomName: String, users: [String]) {
         FirebaseRealtimeDatabaseManager.shared.createChatRoom(name: chatRoomName, users: users).observe(on: MainScheduler.instance).subscribe(onSuccess: { [weak self] roomId in
             let chatVC = ChatViewController()
             chatVC.roomId = roomId
-            guard let vc = self?.viewController else { return }
-            vc.navigationController?.pushViewController(chatVC, animated: true)
+            let userId = self?.findUserId()
+            let otherUser = users.first == userId ? users.last : users.first
+            if let otherUser = otherUser {
+                FireStoreDatabaseManager.shared.findMemberNickname(uuid: otherUser) { nickname in
+                    chatVC.titleText = nickname
+                    guard let vc = self?.viewController else { return }
+                    vc.navigationController?.pushViewController(chatVC, animated: true)
+                }
+            }
+            
         }).disposed(by: disposeBag)
     }
     

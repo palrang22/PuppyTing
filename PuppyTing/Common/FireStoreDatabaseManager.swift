@@ -82,6 +82,19 @@ class FireStoreDatabaseManager {
         }
     }
     
+    func findMemberNickname(uuid: String, completion: @escaping (String) -> Void) {
+        var nickName = ""
+        let docRef = db.collection("member").document(uuid)
+        docRef.getDocument{ result, error in
+            if let result = result, result.exists, let data = result.data() {
+                if let member = Member(dictionary: data) {
+                    nickName = member.nickname
+                }
+            }
+            completion(nickName)
+        }
+    }
+    
     func deleteDocument(from collection: String, documentId: String) -> Single<Void> {
         return Single.create { [weak self] single in
             self?.db.collection(collection).document(documentId).delete { error in
