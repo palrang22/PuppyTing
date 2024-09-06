@@ -8,6 +8,11 @@
 
 /* Begin PBXBuildFile section */
 		23607C022C8A930100A23716 /* UIButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23607C012C8A930100A23716 /* UIButton.swift */; };
+		23607BFA2C8978E600A23716 /* PostingViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23607BF92C8978E600A23716 /* PostingViewModel.swift */; };
+		5602B05C2C8A828A0060F03B /* Config.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 5602B05B2C8A828A0060F03B /* Config.xcconfig */; };
+		5602B05E2C8A82E50060F03B /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5602B05D2C8A82E50060F03B /* ProfileViewController.swift */; };
+		5602B0692C8AEA340060F03B /* ProfileCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5602B0682C8AEA340060F03B /* ProfileCell.swift */; };
+		5602B0712C8AF4EF0060F03B /* PuppyHeaderCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5602B0702C8AF4EF0060F03B /* PuppyHeaderCell.swift */; };
 		56D686C52C7DA88500B00880 /* SignupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56D686C42C7DA88500B00880 /* SignupViewController.swift */; };
 		56D686C82C7DB09600B00880 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56D686C72C7DB09600B00880 /* LoginViewController.swift */; };
 		56D686CC2C7DC88700B00880 /* PptLoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56D686CB2C7DC88600B00880 /* PptLoginViewController.swift */; };
@@ -72,6 +77,11 @@
 
 /* Begin PBXFileReference section */
 		23607C012C8A930100A23716 /* UIButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIButton.swift; sourceTree = "<group>"; };
+		23607BF92C8978E600A23716 /* PostingViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostingViewModel.swift; sourceTree = "<group>"; };
+		5602B05B2C8A828A0060F03B /* Config.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Config.xcconfig; sourceTree = "<group>"; };
+		5602B05D2C8A82E50060F03B /* ProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
+		5602B0682C8AEA340060F03B /* ProfileCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileCell.swift; sourceTree = "<group>"; };
+		5602B0702C8AF4EF0060F03B /* PuppyHeaderCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PuppyHeaderCell.swift; sourceTree = "<group>"; };
 		56D686C42C7DA88500B00880 /* SignupViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignupViewController.swift; sourceTree = "<group>"; };
 		56D686C72C7DB09600B00880 /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 		56D686CB2C7DC88600B00880 /* PptLoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PptLoginViewController.swift; sourceTree = "<group>"; };
@@ -148,6 +158,16 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		5602B05F2C8A82F10060F03B /* Profile */ = {
+			isa = PBXGroup;
+			children = (
+				5602B05D2C8A82E50060F03B /* ProfileViewController.swift */,
+				5602B0682C8AEA340060F03B /* ProfileCell.swift */,
+				5602B0702C8AF4EF0060F03B /* PuppyHeaderCell.swift */,
+			);
+			path = Profile;
+			sourceTree = "<group>";
+		};
 		56D686C32C7DA81700B00880 /* Signup */ = {
 			isa = PBXGroup;
 			children = (
@@ -223,6 +243,7 @@
 			isa = PBXGroup;
 			children = (
 				E738FBA12C7C66AC004696BD /* TingViewModel.swift */,
+				23607BF92C8978E600A23716 /* PostingViewModel.swift */,
 			);
 			path = Ting;
 			sourceTree = "<group>";
@@ -264,6 +285,7 @@
 				E738FB982C7C651D004696BD /* Ting */,
 				E738FB972C7C6518004696BD /* Chat */,
 				E738FB962C7C6510004696BD /* Mypage */,
+				5602B05F2C8A82F10060F03B /* Profile */,
 				A2F9FE4C2C896EE0004D7FF6 /* AppController.swift */,
 			);
 			path = View;
@@ -460,8 +482,11 @@
 				A2085DD42C80622B00698923 /* PptLoginViewModel.swift in Sources */,
 				56D686C82C7DB09600B00880 /* LoginViewController.swift in Sources */,
 				C29FCFC32C88610600F8951D /* MyFeedTableViCell.swift in Sources */,
+				5602B05E2C8A82E50060F03B /* ProfileViewController.swift in Sources */,
 				E738FB9A2C7C6532004696BD /* TingViewController.swift in Sources */,
 				56FD048F2C80171100EBCDCD /* MyChattingTableViewCell.swift in Sources */,
+				23607BFA2C8978E600A23716 /* PostingViewModel.swift in Sources */,
+				5602B0712C8AF4EF0060F03B /* PuppyHeaderCell.swift in Sources */,
 				C29FCF662C7DB37E00F8951D /* PuppyCollectionViewCell.swift in Sources */,
 				E7F5983B2C8866CE00FE8900 /* AddressView.swift in Sources */,
 				A2085DD12C8059F400698923 /* FireStoreDatabaseManager.swift in Sources */,
@@ -496,6 +521,7 @@
 				56D686CC2C7DC88700B00880 /* PptLoginViewController.swift in Sources */,
 				A2F9FE4D2C896EE0004D7FF6 /* AppController.swift in Sources */,
 				E738FB792C7C62EE004696BD /* SceneDelegate.swift in Sources */,
+				5602B0692C8AEA340060F03B /* ProfileCell.swift in Sources */,
 				E70DB34D2C8067B50073B3F8 /* SearchAddressViewController.swift in Sources */,
 				A2085DCF2C804C7300698923 /* FirebaseAuthManager.swift in Sources */,
 			);
@@ -641,13 +667,15 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 5RULM9TM7R;
+				DEVELOPMENT_TEAM = SS444RV4LU;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = PuppyTing/Info.plist;
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "현재 위치를 기반으로 근처 만남의 장소를 검색하기 위해 위치 정보가 필요합니다.";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UIUserInterfaceStyle = Light;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -669,13 +697,15 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 5RULM9TM7R;
+				DEVELOPMENT_TEAM = SS444RV4LU;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = PuppyTing/Info.plist;
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "현재 위치를 기반으로 근처 만남의 장소를 검색하기 위해 위치 정보가 필요합니다.";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UIUserInterfaceStyle = Light;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",

@@ -15,6 +15,8 @@ class TingViewController: UIViewController {
     private let viewModel = TingViewModel()
     private let disposeBag = DisposeBag()
     
+   var tingFeedModels: [TingFeedModel] = []
+    
     //MARK: Component 선언
     private lazy var feedCollectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
@@ -47,18 +49,38 @@ class TingViewController: UIViewController {
         super.viewDidLoad()
         setUI()
         setLayout()
+        bind()
+        readFeedData()
     }
     
-//    //MARK: Rx 관련 - 로직 수정예정
-//    private func bind() {
-//        postButton.rx.tap
-//            .bind(to: viewModel.postButtonTapped)
-//            .disposed(by: disposeBag)
-//        
-//        feedCollectionView.rx.itemSelected
-//            .bind(to: viewModel.cellTapped)
-//            .disposed(by: disposeBag)
-//    }
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        readFeedData()
+    }
+    
+    private func readFeedData() {
+        viewModel.readAll(collection: "tingFeeds") { [weak self] data in
+            self?.tingFeedModels = data
+            DispatchQueue.main.async {
+                self?.feedCollectionView.reloadData()
+            }}
+    }
+    
+    //MARK: Rx
+    private func bind() {
+        feedCollectionView.rx.itemSelected
+            .subscribe(onNext: { [weak self] indexPath in
+                guard let self else { return }
+                let selectedFeed = self.tingFeedModels[indexPath.row]
+                navigate(with: selectedFeed)
+            }).disposed(by: disposeBag)
+    }
+    
+    private func navigate(with selectedData: TingFeedModel) {
+        let detailVC = DetailTingViewController()
+        detailVC.tingFeedModels = selectedData
+        navigationController?.pushViewController(detailVC, animated: true)
+    }
     
     //MARK: 임시 - button 및 CollectionView 이동 로직
     @objc
@@ -103,7 +125,7 @@ extension TingViewController: UICollectionViewDelegateFlowLayout {
 
 extension TingViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 5
+        return tingFeedModels.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -111,12 +133,15 @@ extension TingViewController: UICollectionViewDataSource {
             .dequeueReusableCell(withReuseIdentifier: TingCollectionViewCell.id, for: indexPath) as? TingCollectionViewCell else {
             return UICollectionViewCell()
         }
+        
+        let feedModel = tingFeedModels[indexPath.row]
+        cell.configure(with: feedModel)
         return cell
     }
 }
-
-extension TingViewController: UICollectionViewDelegate {
-    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        navigationController?.pushViewController(DetailTingViewController(), animated: true)
-    }
-}
+//
+//extension TingViewController: UICollectionViewDelegate {
+//    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+//        navigationController?.pushViewController(DetailTingViewController(), animated: true)
+//    }
+//}
