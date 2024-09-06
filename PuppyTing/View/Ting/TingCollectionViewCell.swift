@@ -7,12 +7,15 @@
 
 import UIKit
 
+import FirebaseAuth
 import RxSwift
 
 class TingCollectionViewCell: UICollectionViewCell {
     static let id = "tingCollectionViewCell"
     
     private let disposeBag = DisposeBag()
+    
+    var viewController: UIViewController?
     
     //MARK: 컴포넌트 선언
     private let shadowContainerView: UIView = {
@@ -107,6 +110,7 @@ class TingCollectionViewCell: UICollectionViewCell {
         super.init(frame: frame)
         setConstraints()
         setLayout()
+        addButtonAction()
     }
     
     required init?(coder: NSCoder) {
@@ -130,7 +134,48 @@ class TingCollectionViewCell: UICollectionViewCell {
             }, onFailure: { error in
                 print("멤버 찾기 실패: \(error)")
             }).disposed(by: disposeBag)
-
+        writerId = model.userid
+        settingData()
+    }
+    
+    var writerId: String? = nil
+    let userid = Auth.auth().currentUser?.uid
+    var users:[String] = []
+    private func settingData() {
+        guard let writerId = writerId, let userId = userid else { return }
+        users = [userId, writerId]
+    }
+    
+    private func addButtonAction() {
+        messageSendButton.addTarget(self, action: #selector(createRoom), for: .touchUpInside)
+    }
+    
+    @objc
+    private func createRoom() {
+        guard let name = nameLabel.text else { return }
+        createChatRoom(chatRoomName: name, users: users)
+    }
+    
+    private func findUserId() -> String {
+        guard let user = Auth.auth().currentUser else { return "" }
+        return user.uid
+    }
+    
+    private func createChatRoom(chatRoomName: String, users: [String]) {
+        FirebaseRealtimeDatabaseManager.shared.createChatRoom(name: chatRoomName, users: users).observe(on: MainScheduler.instance).subscribe(onSuccess: { [weak self] roomId in
+            let chatVC = ChatViewController()
+            chatVC.roomId = roomId
+            let userId = self?.findUserId()
+            let otherUser = users.first == userId ? users.last : users.first
+            if let otherUser = otherUser {
+                FireStoreDatabaseManager.shared.findMemberNickname(uuid: otherUser) { nickname in
+                    chatVC.titleText = nickname
+                    guard let vc = self?.viewController else { return }
+                    vc.navigationController?.pushViewController(chatVC, animated: true)
+                }
+            }
+            
+        }).disposed(by: disposeBag)
     }
     
     //MARK: UI 및 제약조건

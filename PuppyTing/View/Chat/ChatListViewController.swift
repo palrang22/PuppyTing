@@ -8,6 +8,7 @@
 import Foundation
 import UIKit
 
+import FirebaseAuth
 import RxCocoa
 import RxSwift
 
@@ -15,6 +16,7 @@ import RxSwift
 class ChatListViewController: UIViewController, UITableViewDelegate, UISearchBarDelegate {
     
     private let disposeBag = DisposeBag()
+    private let chatRoomViewModel = ChatRoomViewModel()
     
     var searchBar: UISearchBar?
     
@@ -31,9 +33,11 @@ class ChatListViewController: UIViewController, UITableViewDelegate, UISearchBar
         setupUI()
         bindTableView()
         
-        tableView.delegate = self
         tableView.rowHeight = UITableView.automaticDimension
         tableView.estimatedRowHeight = 100
+        
+        tableView.refreshControl = refreshControl
+        
     }
     
     private func setupUI() {
@@ -55,24 +59,39 @@ class ChatListViewController: UIViewController, UITableViewDelegate, UISearchBar
         }
     }
     
-    // 예제 데이터
-    private let profileData = Observable.just([
-        (images: [UIImage(named: "defaultProfileImage") ?? UIImage()], title: "한강 산책단톡 1", subtitle: "9월 10일 저녁 7시 산책 가실분!"),
-        (images: [UIImage(named: "defaultProfileImage") ?? UIImage(), UIImage(named: "defaultProfileImage") ?? UIImage()], title: "한강 산책 단톡 4", subtitle: "바로가쟈~!"),
-        (images: [UIImage(named: "defaultProfileImage") ?? UIImage(), UIImage(named: "defaultProfileImage") ?? UIImage(), UIImage(named: "defaultProfileImage") ?? UIImage()], title: "한강 바로가쟈!", subtitle: "산책 렛츠기릿"),
-        (images: [UIImage(named: "defaultProfileImage") ?? UIImage(), UIImage(named: "defaultProfileImage") ?? UIImage(), UIImage(named: "defaultProfileImage") ?? UIImage(), UIImage(named: "defaultProfileImage") ?? UIImage()], title: "오늘은 강서구 바로가쟈!", subtitle: "어제 산책 너무 좋았어!")
-    ])
+    private func findUserId() -> String {
+        guard let user = Auth.auth().currentUser else { return "" }
+        return user.uid
+    }
+    
+    let refreshControl = UIRefreshControl()
     
     private func bindTableView() {
-        profileData
+        let userId = findUserId()
+        let input = ChatRoomViewModel.Input(fetchRooms: refreshControl.rx.controlEvent(.valueChanged).startWith(()))
+        let output = chatRoomViewModel.transform(input: input, userId: userId)
+        
+        output.chatRooms
             .bind(to: tableView.rx.items(cellIdentifier: ChatTableViewCell.identifier, cellType: ChatTableViewCell.self)) { index, data, cell in
-                cell.configure(with: data.images, title: data.title, content: data.subtitle)
+                let otherUser = data.users.first == userId ? data.users.last : data.users.first
+                if let otherUser = otherUser {
+                    FireStoreDatabaseManager.shared.findMemberNickname(uuid: otherUser) { nickname in
+                        if let lastChat = data.lastChat?.text {
+                            cell.configure(with: [UIImage(named: "defaultProfileImage") ?? UIImage()], title: nickname, content: lastChat)
+                        } else {
+                            cell.configure(with: [UIImage(named: "defaultProfileImage") ?? UIImage()], title: nickname, content: "내용없음")
+                        }
+                    }
+                }
             }
             .disposed(by: disposeBag)
         
-        tableView.rx.modelSelected((images: [UIImage], title: String, subtitle: String).self)
-            .subscribe(onNext: { data in
-                print("Selected chat room: \(data.title)")
+        tableView.rx.setDelegate(self)
+            .disposed(by: disposeBag)
+        
+        tableView.rx.modelSelected(ChatRoom.self)
+            .subscribe(onNext: { [weak self] data in
+                self?.navigateToChatView(chatRoom: data)
             })
             .disposed(by: disposeBag)
     }
@@ -81,8 +100,17 @@ class ChatListViewController: UIViewController, UITableViewDelegate, UISearchBar
         100
     }
     
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        navigationController?.pushViewController(ChatViewController(), animated: true)
+    private func navigateToChatView(chatRoom: ChatRoom) {
+        let chatVC = ChatViewController()
+        chatVC.roomId = chatRoom.id
+        let userId = findUserId()
+        let otherUser = chatRoom.users.first == userId ? chatRoom.users.last : chatRoom.users.first
+        if let otherUser = otherUser {
+            FireStoreDatabaseManager.shared.findMemberNickname(uuid: otherUser) { nickname in
+                chatVC.titleText = nickname
+                self.navigationController?.pushViewController(chatVC, animated: true)
+            }
+        }
     }
     
     @objc func showSearchBar() {
