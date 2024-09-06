@@ -7,7 +7,16 @@
 
 import UIKit
 
+import FirebaseAuth
+import RxCocoa
+import RxSwift
+
 class DetailTingViewController: UIViewController {
+    
+    var tingFeedModels: TingFeedModel?
+    let fireStoreDatabase = FireStoreDatabaseManager.shared
+    private let disposeBag = DisposeBag()
+    
     //MARK: Component 선언
     private let scrollView: UIScrollView = {
         let scroll = UIScrollView()
@@ -85,7 +94,7 @@ class DetailTingViewController: UIViewController {
         button.titleLabel?.font = .systemFont(ofSize: 14, weight: .semibold)
         button.backgroundColor = .white
         
-        button.addTarget(self, action: #selector(blockButtonTapped), for: .touchUpInside)
+//        button.addTarget(self, action: #selector(blockButtonTapped), for: .touchUpInside)
         return button
     }()
     
@@ -96,7 +105,7 @@ class DetailTingViewController: UIViewController {
         button.titleLabel?.font = .systemFont(ofSize: 14, weight: .semibold)
         button.backgroundColor = .white
         
-        button.addTarget(self, action: #selector(reportButtonTapped), for: .touchUpInside)
+//        button.addTarget(self, action: #selector(reportButtonTapped), for: .touchUpInside)
         return button
     }()
     
@@ -106,8 +115,8 @@ class DetailTingViewController: UIViewController {
         button.setTitleColor(.darkGray, for: .normal)
         button.titleLabel?.font = .systemFont(ofSize: 14, weight: .semibold)
         button.backgroundColor = .white
-        
-        button.addTarget(self, action: #selector(deleteButtonTapped), for: .touchUpInside)
+//        
+//        button.addTarget(self, action: #selector(deleteButtonTapped), for: .touchUpInside)
         return button
     }()
     
@@ -139,52 +148,109 @@ class DetailTingViewController: UIViewController {
         super.viewDidLoad()
         setUI()
         setConstraints()
+        setData()
+        bind()
     }
     
-    //MARK: 임시 Button 메서드
-    @objc
-    private func blockButtonTapped() {
-        okAlertWithCancel(
-            title: "사용자 차단",
-            message: "사용자를 차단하시겠습니까? 차단 이후 사용자의 게시물이 보이지 않습니다.",
-            okActionTitle: "차단",
-            okActionHandler: { _ in
-            self.okAlert(title: "차단 완료", message: "사용자가 성공적으로 차단되었습니다.")
-        })
-    }
-    @objc
-    private func deleteButtonTapped() {
-        okAlert(title: "미구현", message: "취소로직 구현예정", okActionTitle: "빨리해라")
-    }
-    @objc
-    private func reportButtonTapped() {
-        let reportAlert = UIAlertController(title: "신고 사유 선택", message: nil, preferredStyle: .actionSheet)
-        let reasons = [
-            "부적절한 내용",
-            "부적절한 닉네임 또는 프로필사진",
-            "스팸 또는 오해의 소지가 있는 정보",
-            "혐오 발언",
-            "지적 재산권 침해",
-            "개인정보 침해",
-            "불법 활동",
-            "괴롭힘, 폭력 또는 위협"
-        ]
-        
-        reasons.forEach { reason in
-            let action = UIAlertAction(title: reason, style: .default) { _ in
-                self.okAlert(title: "신고 접수", message: "신고가 접수되었습니다. 관리자가 24시간 이내로 검토할 예정이며, 추가 신고/문의는 nnn@naver.com 으로 보내주세요.")
-            }
-            reportAlert.addAction(action)
+    //MARK: bind
+    
+    func setData() {
+        if let model = tingFeedModels {
+            content.text = model.content
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateFormat = "yyyy-MM-dd HH:mm"
+            timeLabel.text = dateFormatter.string(from: model.time)
+            setButton(model: model)
+            
+            FireStoreDatabaseManager.shared.findMemeber(uuid: model.userid)
+                .subscribe(onSuccess: { [weak self] member in
+                    self?.nameLabel.text = member.nickname
+                    self?.footPrintLabel.text = "🐾 발도장 \(member.footPrint)개"
+                }, onFailure: { error in
+                    print("멤버 찾기 실패: \(error)")
+                }).disposed(by: disposeBag)
         }
-        let cancelAction = UIAlertAction(title: "취소", style: .cancel)
-        reportAlert.addAction(cancelAction)
-        
-        present(reportAlert, animated: true, completion: nil)
     }
     
-    //MARK: bind 메서드
+    private func setButton(model: TingFeedModel) {
+        if Auth.auth().currentUser?.uid == model.userid {
+            self.deleteButton.isHidden = false
+            self.blockButton.isHidden = true
+            self.reportButton.isHidden = true
+        } else {
+            self.deleteButton.isHidden = true
+            self.blockButton.isHidden = false
+            self.reportButton.isHidden = false
+        }
+    }
+    
     private func bind() {
+        deleteButton.rx.tap
+            .subscribe(onNext: { [weak self] in
+                guard let postid = self?.tingFeedModels?.postid else { return }
+                self?.fireStoreDatabase.deleteDocument(from: "tingFeeds", documentId: postid)
+                    .subscribe(onSuccess: { [weak self] in
+                        self?.okAlert(title: "삭제 완료", message: "게시물이 성공적으로 삭제되었습니다.", okActionHandler: { _ in
+                            self?.navigationController?.popViewController(animated: true)
+                        })
+                    }, onFailure: { error in
+                        print("삭제 실패: \(error)")
+                        self?.okAlert(title: "삭제 실패", message: "게시물 삭제에 실패했습니다. 다시 시도해주세요. 해당 문제가 지속될 경우 문의 게시판에 제보해주세요.")
+                    }).disposed(by: self!.disposeBag)
+            }).disposed(by: disposeBag)
         
+        blockButton.rx.tap
+            .subscribe(onNext: { [weak self] in
+                guard let userid = self?.tingFeedModels?.userid else { return }
+                self?.fireStoreDatabase.blockUser(userId: userid)
+                    .subscribe(onSuccess: { [weak self] in
+                        self?.okAlertWithCancel(
+                                        title: "사용자 차단",
+                                        message: "사용자를 차단하시겠습니까? 차단 이후 사용자의 게시물이 보이지 않습니다.",
+                                        okActionTitle: "차단",
+                                        okActionHandler: { _ in
+                                        self!.okAlert(title: "차단 완료", message: "사용자가 성공적으로 차단되었습니다.")
+                                    })
+                    }, onFailure: { error in
+                        print("차단 실패")
+                        self!.okAlert(title: "차단 실패", message: "사용자 차단에 실패했습니다. 다시 시도해주세요.\n해당 문제가 지속될 경우 문의 게시판에 제보해주세요.")
+                    }).disposed(by: self!.disposeBag)
+            }).disposed(by: disposeBag)
+        
+        reportButton.rx.tap
+            .subscribe(onNext: { [weak self] in
+                guard let postid = self?.tingFeedModels?.postid else { return }
+                let reportAlert = UIAlertController(title: "신고 사유 선택", message: nil, preferredStyle: .actionSheet)
+                let reasons = [
+                    "부적절한 내용",
+                    "부적절한 닉네임 또는 프로필사진",
+                    "스팸 또는 오해의 소지가 있는 정보",
+                    "혐오 발언",
+                    "지적 재산권 침해",
+                    "개인정보 침해",
+                    "불법 활동",
+                    "괴롭힘, 폭력 또는 위협"
+                ]
+                
+                reasons.forEach { reason in
+                    let action = UIAlertAction(title: reason, style: .default) { _ in
+                        self?.fireStoreDatabase.reportPost(postId: postid, reason: reason)
+                            .subscribe(onSuccess: {
+                                self!.okAlert(title: "신고 접수", message: "신고가 접수되었습니다. 관리자가 24시간 이내로 검토할 예정이며, 추가 신고/문의는 nnn@naver.com 으로 보내주세요.", okActionHandler: { _ in
+                                    self?.navigationController?.popViewController(animated: true)
+                                })
+                            }, onFailure: { error in
+                            print("신고 실패")
+                                self?.okAlert(title: "신고 실패", message: "게시글 신고에 실패했습니다. 다시 시도해주세요.\n해당 문제가 지속될 경우 문의 게시판에 제보해주세요.")
+                            }).disposed(by: self!.disposeBag)
+                    }
+                    reportAlert.addAction(action)
+                }
+                let cancelAction = UIAlertAction(title: "취소", style: .cancel)
+                reportAlert.addAction(cancelAction)
+                
+                self!.present(reportAlert, animated: true, completion: nil)
+            }).disposed(by: disposeBag)
     }
     
     //MARK: UI 설정 및 제약조건 등
