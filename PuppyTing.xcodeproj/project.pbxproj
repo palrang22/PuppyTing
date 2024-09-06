@@ -32,6 +32,10 @@
 		A2085DD82C806F8D00698923 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = A2085DD72C806F8D00698923 /* GoogleService-Info.plist */; };
 		A2F9FE1D2C859E54004D7FF6 /* FindingPasswordViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2F9FE1C2C859E54004D7FF6 /* FindingPasswordViewModel.swift */; };
 		A2F9FE4D2C896EE0004D7FF6 /* AppController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2F9FE4C2C896EE0004D7FF6 /* AppController.swift */; };
+		A2F9FE4F2C89C493004D7FF6 /* Config.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = A2F9FE4E2C89C493004D7FF6 /* Config.xcconfig */; };
+		A2F9FE512C89D561004D7FF6 /* ChatModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2F9FE502C89D561004D7FF6 /* ChatModel.swift */; };
+		A2F9FE532C89D9CE004D7FF6 /* FirebaseRealtimeDatabaseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2F9FE522C89D9CE004D7FF6 /* FirebaseRealtimeDatabaseManager.swift */; };
+		A2F9FE552C89E082004D7FF6 /* ChatRoomViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2F9FE542C89E082004D7FF6 /* ChatRoomViewModel.swift */; };
 		C29FCF662C7DB37E00F8951D /* PuppyCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C29FCF652C7DB37E00F8951D /* PuppyCollectionViewCell.swift */; };
 		C29FCF682C7DBA4F00F8951D /* PuppyRegistrationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C29FCF672C7DBA4F00F8951D /* PuppyRegistrationViewController.swift */; };
 		C29FCF772C8171FA00F8951D /* MyInfoEditViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C29FCF762C8171FA00F8951D /* MyInfoEditViewController.swift */; };
@@ -97,6 +101,10 @@
 		A2085DD72C806F8D00698923 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		A2F9FE1C2C859E54004D7FF6 /* FindingPasswordViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FindingPasswordViewModel.swift; sourceTree = "<group>"; };
 		A2F9FE4C2C896EE0004D7FF6 /* AppController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppController.swift; sourceTree = "<group>"; };
+		A2F9FE4E2C89C493004D7FF6 /* Config.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = Config.xcconfig; path = ../../../Config.xcconfig; sourceTree = "<group>"; };
+		A2F9FE502C89D561004D7FF6 /* ChatModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatModel.swift; sourceTree = "<group>"; };
+		A2F9FE522C89D9CE004D7FF6 /* FirebaseRealtimeDatabaseManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseRealtimeDatabaseManager.swift; sourceTree = "<group>"; };
+		A2F9FE542C89E082004D7FF6 /* ChatRoomViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatRoomViewModel.swift; sourceTree = "<group>"; };
 		C29FCF652C7DB37E00F8951D /* PuppyCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PuppyCollectionViewCell.swift; sourceTree = "<group>"; };
 		C29FCF672C7DBA4F00F8951D /* PuppyRegistrationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PuppyRegistrationViewController.swift; sourceTree = "<group>"; };
 		C29FCF762C8171FA00F8951D /* MyInfoEditViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyInfoEditViewController.swift; sourceTree = "<group>"; };
@@ -256,6 +264,7 @@
 			isa = PBXGroup;
 			children = (
 				E738FBA32C7C66BA004696BD /* ChatViewModel.swift */,
+				A2F9FE542C89E082004D7FF6 /* ChatRoomViewModel.swift */,
 			);
 			path = Chat;
 			sourceTree = "<group>";
@@ -294,6 +303,7 @@
 				E738FBC42C7DB85A004696BD /* TingFeedModel.swift */,
 				A2085DC92C80395B00698923 /* Member.swift */,
 				E7F598332C847A7800FE8900 /* Place.swift */,
+				A2F9FE502C89D561004D7FF6 /* ChatModel.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -307,6 +317,7 @@
 				A2085DD02C8059F400698923 /* FireStoreDatabaseManager.swift */,
 				E7F598312C8475CC00FE8900 /* NetworkManager.swift */,
 				E7F598382C885D5300FE8900 /* KakaoMapViewController.swift */,
+				A2F9FE522C89D9CE004D7FF6 /* FirebaseRealtimeDatabaseManager.swift */,
 			);
 			path = Common;
 			sourceTree = "<group>";
@@ -316,7 +327,7 @@
 			children = (
 				E738FB762C7C62EE004696BD /* AppDelegate.swift */,
 				E738FB782C7C62EE004696BD /* SceneDelegate.swift */,
-				5602B05B2C8A828A0060F03B /* Config.xcconfig */,
+				A2F9FE4E2C89C493004D7FF6 /* Config.xcconfig */,
 			);
 			path = App;
 			sourceTree = "<group>";
@@ -455,7 +466,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				E738FB802C7C62F0004696BD /* Assets.xcassets in Resources */,
-				5602B05C2C8A828A0060F03B /* Config.xcconfig in Resources */,
+				A2F9FE4F2C89C493004D7FF6 /* Config.xcconfig in Resources */,
 				A2085DD82C806F8D00698923 /* GoogleService-Info.plist in Resources */,
 				E738FBAA2C7C6BB3004696BD /* .gitignore in Resources */,
 				E738FB832C7C62F0004696BD /* Base in Resources */,
@@ -472,6 +483,8 @@
 				C29FCFC12C88566000F8951D /* MyFeedManageViewController.swift in Sources */,
 				56FD04952C856C6E00EBCDCD /* ChangePasswordViewController.swift in Sources */,
 				E738FBC32C7D8019004696BD /* TingCollectionViewCell.swift in Sources */,
+				A2F9FE512C89D561004D7FF6 /* ChatModel.swift in Sources */,
+				A2F9FE532C89D9CE004D7FF6 /* FirebaseRealtimeDatabaseManager.swift in Sources */,
 				E70DB3512C8068460073B3F8 /* SearchedMapViewController.swift in Sources */,
 				E70DB34F2C8068190073B3F8 /* SearchedAddressTableViewCell.swift in Sources */,
 				A2085DD42C80622B00698923 /* PptLoginViewModel.swift in Sources */,
@@ -496,6 +509,7 @@
 				E738FB952C7C64BA004696BD /* UIColor.swift in Sources */,
 				C29FCF772C8171FA00F8951D /* MyInfoEditViewController.swift in Sources */,
 				E738FB9E2C7C668D004696BD /* MypageViewController.swift in Sources */,
+				A2F9FE552C89E082004D7FF6 /* ChatRoomViewModel.swift in Sources */,
 				A2085DCD2C804C3600698923 /* SignUpViewModel.swift in Sources */,
 				E738FBA22C7C66AC004696BD /* TingViewModel.swift in Sources */,
 				56D686C52C7DA88500B00880 /* SignupViewController.swift in Sources */,
@@ -661,7 +675,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = SS444RV4LU;
+				DEVELOPMENT_TEAM = 4AW33HG75T;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = PuppyTing/Info.plist;
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "현재 위치를 기반으로 근처 만남의 장소를 검색하기 위해 위치 정보가 필요합니다.";
@@ -691,7 +705,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = SS444RV4LU;
+				DEVELOPMENT_TEAM = 4AW33HG75T;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = PuppyTing/Info.plist;
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "현재 위치를 기반으로 근처 만남의 장소를 검색하기 위해 위치 정보가 필요합니다.";
