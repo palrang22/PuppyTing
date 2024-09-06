@@ -53,17 +53,25 @@ class FirebaseRealtimeDatabaseManager {
                        let name = dict["name"] as? String,
                        let users = dict["users"] as? [String] {
                         var lastChat: ChatMessage? = nil
-                        if let messageSnapshot = childSnapshot.childSnapshot(forPath: "messages").children.allObjects as? [DataSnapshot] {
+                        if let messageSnapshot = childSnapshot
+                            .childSnapshot(forPath: "messages")
+                            .children.allObjects as? [DataSnapshot] {
                             if let lastMessageSnapshot = messageSnapshot.last,
                                let messageDict = lastMessageSnapshot.value as? [String: Any],
                                let senderId = messageDict["senderId"] as? String,
                                let text = messageDict["text"] as? String,
                                let timestamp = messageDict["timestamp"] as? TimeInterval {
-                                lastChat = ChatMessage(id: lastMessageSnapshot.key, senderId: senderId, text: text, timestamp: timestamp)
+                                lastChat = ChatMessage(id: lastMessageSnapshot.key,
+                                                       senderId: senderId,
+                                                       text: text,
+                                                       timestamp: timestamp)
                             }
                         }
                         if users.contains(userId) {
-                            let room = ChatRoom(id: childSnapshot.key, name: name, users: users, lastChat: lastChat)
+                            let room = ChatRoom(id: childSnapshot.key,
+                                                name: name,
+                                                users: users,
+                                                lastChat: lastChat)
                             chatRooms.append(room)
                         }
                     }
@@ -79,7 +87,11 @@ class FirebaseRealtimeDatabaseManager {
     // 특정 채팅방에 메시지를 전송하는 메서드
     func sendMessage(to roomId: String, senderId: String, text: String) -> Observable<Void> {
         return Observable.create { observer in
-            let messageRef = self.databaseRef.child("chatRooms").child(roomId).child("messages").childByAutoId() // 새로운 메시지의 참조 생성
+            let messageRef = self.databaseRef
+                .child("chatRooms")
+                .child(roomId)
+                .child("messages")
+                .childByAutoId() // 새로운 메시지의 참조 생성
             let messageData: [String: Any] = [
                 "senderId": senderId,
                 "text": text,
@@ -109,7 +121,10 @@ class FirebaseRealtimeDatabaseManager {
                    let text = dict["text"] as? String,
                    let timestamp = dict["timestamp"] as? TimeInterval {
                     
-                    let message = ChatMessage(id: snapshot.key, senderId: senderId, text: text, timestamp: timestamp) // 메시지 객체 생성
+                    let message = ChatMessage(id: snapshot.key,
+                                              senderId: senderId,
+                                              text: text,
+                                              timestamp: timestamp) // 메시지 객체 생성
                     observer.onNext(message) // 새로운 메시지 전달
                 }
             }
