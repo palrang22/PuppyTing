@@ -75,7 +75,7 @@ class PuppyRegistrationViewController: UIViewController {
     
     private let tagTextField: UITextField = {
         let textField = UITextField()
-        textField.placeholder = "쉼표로 구분하여 특징을 추가하세요! (ex. 친근, 활발, 소심)"
+        textField.placeholder = "스페이스바 또는 쉼표로 구분하여 태그를 추가해보세요!"
         textField.borderStyle = .roundedRect
         return textField
     }()
@@ -220,12 +220,12 @@ class PuppyRegistrationViewController: UIViewController {
             .bind(to: rightBarButtonItem.rx.isEnabled)
             .disposed(by: disposeBag)
         
-        // tagTextField 입력값 감지 메서드 - sh
+        // tagTextField 입력값 쉼표/스페이스바 감지 메서드 - sh
         tagTextField.rx.text.orEmpty
             .subscribe(onNext: { [weak self] text in
                 guard let self else { return }
                 
-                if text.last == "," {
+                if text.last == "," || text.last == " " {
                     let tagWord = text.dropLast()
                     if !tagWord.isEmpty {
                         self.addTag(word: String(tagWord))
