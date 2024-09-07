@@ -195,10 +195,12 @@ class DetailTingViewController: UIViewController {
     
     private func setButton(model: TingFeedModel) {
         if Auth.auth().currentUser?.uid == model.userid {
+            self.messageSendButton.isHidden = true
             self.deleteButton.isHidden = false
             self.blockButton.isHidden = true
             self.reportButton.isHidden = true
         } else {
+            self.messageSendButton.isHidden = false
             self.deleteButton.isHidden = true
             self.blockButton.isHidden = false
             self.reportButton.isHidden = false

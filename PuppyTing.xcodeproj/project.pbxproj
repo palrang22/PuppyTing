@@ -8,12 +8,11 @@
 
 /* Begin PBXBuildFile section */
 		23607BFA2C8978E600A23716 /* PostingViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23607BF92C8978E600A23716 /* PostingViewModel.swift */; };
-		23607C042C8B023F00A23716 /* Config.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 23607C032C8B023F00A23716 /* Config.xcconfig */; };
 		23607C022C8A930100A23716 /* UIButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23607C012C8A930100A23716 /* UIButton.swift */; };
+		23607C0A2C8C6CBA00A23716 /* Config.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 23607C092C8C6CBA00A23716 /* Config.xcconfig */; };
 		5602B05E2C8A82E50060F03B /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5602B05D2C8A82E50060F03B /* ProfileViewController.swift */; };
 		5602B0692C8AEA340060F03B /* ProfileCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5602B0682C8AEA340060F03B /* ProfileCell.swift */; };
 		5602B0712C8AF4EF0060F03B /* PuppyHeaderCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5602B0702C8AF4EF0060F03B /* PuppyHeaderCell.swift */; };
-		5602B0752C8C62C30060F03B /* Config.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 5602B0742C8C62C30060F03B /* Config.xcconfig */; };
 		56D686C52C7DA88500B00880 /* SignupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56D686C42C7DA88500B00880 /* SignupViewController.swift */; };
 		56D686C82C7DB09600B00880 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56D686C72C7DB09600B00880 /* LoginViewController.swift */; };
 		56D686CC2C7DC88700B00880 /* PptLoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56D686CB2C7DC88600B00880 /* PptLoginViewController.swift */; };
@@ -36,7 +35,6 @@
 		A2F9FE512C89D561004D7FF6 /* ChatModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2F9FE502C89D561004D7FF6 /* ChatModel.swift */; };
 		A2F9FE532C89D9CE004D7FF6 /* FirebaseRealtimeDatabaseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2F9FE522C89D9CE004D7FF6 /* FirebaseRealtimeDatabaseManager.swift */; };
 		A2F9FE552C89E082004D7FF6 /* ChatRoomViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2F9FE542C89E082004D7FF6 /* ChatRoomViewModel.swift */; };
-		A2F9FE572C8B202D004D7FF6 /* Config.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = A2F9FE562C8B202D004D7FF6 /* Config.xcconfig */; };
 		A2F9FE592C8C2193004D7FF6 /* MyInfoEditVIewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2F9FE582C8C2193004D7FF6 /* MyInfoEditVIewModel.swift */; };
 		A2F9FE5B2C8C4D8C004D7FF6 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = A2F9FE5A2C8C4D8C004D7FF6 /* GoogleService-Info.plist */; };
 		A2F9FE5E2C8C4DAD004D7FF6 /* FirebaseStorage in Frameworks */ = {isa = PBXBuildFile; productRef = A2F9FE5D2C8C4DAD004D7FF6 /* FirebaseStorage */; };
@@ -84,12 +82,11 @@
 
 /* Begin PBXFileReference section */
 		23607BF92C8978E600A23716 /* PostingViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostingViewModel.swift; sourceTree = "<group>"; };
-		23607C032C8B023F00A23716 /* Config.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = Config.xcconfig; path = ../../../../../Downloads/Config.xcconfig; sourceTree = "<group>"; };
 		23607C012C8A930100A23716 /* UIButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIButton.swift; sourceTree = "<group>"; };
+		23607C092C8C6CBA00A23716 /* Config.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = Config.xcconfig; path = ../../../../../Downloads/Config.xcconfig; sourceTree = "<group>"; };
 		5602B05D2C8A82E50060F03B /* ProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
 		5602B0682C8AEA340060F03B /* ProfileCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileCell.swift; sourceTree = "<group>"; };
 		5602B0702C8AF4EF0060F03B /* PuppyHeaderCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PuppyHeaderCell.swift; sourceTree = "<group>"; };
-		5602B0742C8C62C30060F03B /* Config.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Config.xcconfig; sourceTree = "<group>"; };
 		56D686C42C7DA88500B00880 /* SignupViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignupViewController.swift; sourceTree = "<group>"; };
 		56D686C72C7DB09600B00880 /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 		56D686CB2C7DC88600B00880 /* PptLoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PptLoginViewController.swift; sourceTree = "<group>"; };
@@ -110,7 +107,6 @@
 		A2F9FE502C89D561004D7FF6 /* ChatModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatModel.swift; sourceTree = "<group>"; };
 		A2F9FE522C89D9CE004D7FF6 /* FirebaseRealtimeDatabaseManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseRealtimeDatabaseManager.swift; sourceTree = "<group>"; };
 		A2F9FE542C89E082004D7FF6 /* ChatRoomViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatRoomViewModel.swift; sourceTree = "<group>"; };
-		A2F9FE562C8B202D004D7FF6 /* Config.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = Config.xcconfig; path = ../../../Config.xcconfig; sourceTree = "<group>"; };
 		A2F9FE582C8C2193004D7FF6 /* MyInfoEditVIewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyInfoEditVIewModel.swift; sourceTree = "<group>"; };
 		A2F9FE5A2C8C4D8C004D7FF6 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		A2F9FE5F2C8C4DC8004D7FF6 /* FirebaseStorageManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseStorageManager.swift; sourceTree = "<group>"; };
@@ -348,7 +344,7 @@
 			children = (
 				E738FB762C7C62EE004696BD /* AppDelegate.swift */,
 				E738FB782C7C62EE004696BD /* SceneDelegate.swift */,
-				5602B0742C8C62C30060F03B /* Config.xcconfig */,
+				23607C092C8C6CBA00A23716 /* Config.xcconfig */,
 			);
 			path = App;
 			sourceTree = "<group>";
@@ -488,10 +484,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				E738FB802C7C62F0004696BD /* Assets.xcassets in Resources */,
-				5602B0752C8C62C30060F03B /* Config.xcconfig in Resources */,
-				A2085DD82C806F8D00698923 /* GoogleService-Info.plist in Resources */,
 				E738FBAA2C7C6BB3004696BD /* .gitignore in Resources */,
 				A2F9FE5B2C8C4D8C004D7FF6 /* GoogleService-Info.plist in Resources */,
+				23607C0A2C8C6CBA00A23716 /* Config.xcconfig in Resources */,
 				E738FB832C7C62F0004696BD /* Base in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
