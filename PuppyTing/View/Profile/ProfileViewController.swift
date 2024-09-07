@@ -20,11 +20,6 @@ class ProfileViewController: UIViewController {
         return collectionView
     }()
     
-    @objc
-    private func didTapCloseButton() {
-        dismiss(animated: true)
-    }
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         
