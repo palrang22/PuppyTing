@@ -137,7 +137,7 @@ extension TingViewController: UICollectionViewDataSource {
         }
         
         let feedModel = tingFeedModels[indexPath.row]
-        cell.configure(with: feedModel)
+        cell.configure(with: feedModel, currentUserID: currentUserID)
         return cell
     }
 }

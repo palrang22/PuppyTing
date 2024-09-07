@@ -148,8 +148,6 @@ class PostTingViewController: UIViewController {
         }
     }
 
-
-
     //MARK: UI 설정 및 제약조건 등
     private func setUI() {
         let addButton = UIBarButtonItem(title: "추가", style: .plain, target: self, action: #selector(addButtonTapped))
