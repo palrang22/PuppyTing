@@ -151,6 +151,17 @@ class ChatViewController: UIViewController {
                     self.viewModel.findMember(uuid: message.senderId)
                     self.viewModel.memberSubject.observe(on: MainScheduler.instance).subscribe(onNext: { member in
                         cell.name.text = member.nickname
+                        DispatchQueue.main.async { // 메인 스레드에서 UI 업데이트 시작
+                            if member.profileImage == "기본 이미지" || member.profileImage == "defaultProfileImage" {
+                                cell.profileImage.image = UIImage(named: "defaultProfileImage")
+                            } else {
+                                NetworkManager.shared.fetchImage(url: member.profileImage) { imageData in
+                                    DispatchQueue.main.async { // 메인 스레드에서 UI 업데이트
+                                        cell.profileImage.image = imageData
+                                    }
+                                }
+                            }
+                        }
                     }).disposed(by: self.disposeBag)
                     cell.messageBox.text = message.text
                     let date = Date(timeIntervalSince1970: message.timestamp)
