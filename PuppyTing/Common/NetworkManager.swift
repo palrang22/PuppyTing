@@ -5,6 +5,7 @@
 //  Created by 김승희 on 9/1/24.
 //
 import Foundation
+import UIKit
 
 import RxSwift
 
@@ -50,5 +51,55 @@ class NetworkManager {
             
             return Disposables.create()
         }
+    }
+    
+    func loadImageFromURL(urlString: String) -> Single<UIImage?> {
+        return Single.create { single in
+            guard let url = URL(string: urlString) else {
+                single(.failure(NSError(domain: "InvalidURL", code: -1, userInfo: nil)))
+                return Disposables.create()
+            }
+
+            // URLSession을 사용하여 비동기로 이미지 다운로드
+            let task = URLSession.shared.dataTask(with: url) { data, response, error in
+                if let error = error {
+                    single(.failure(error))
+                } else if let data = data, let image = UIImage(data: data) {
+                    single(.success(image))
+                } else {
+                    single(.success(nil))
+                }
+            }
+            task.resume()
+
+            return Disposables.create {
+                task.cancel()
+            }
+        }
+    }
+    
+    func fetchImage(url: String, completion: @escaping (UIImage) -> Void) {
+        guard let url = URL(string: url) else {
+            print("noImage")
+            let image = UIImage(named: "defaultProfileImage")
+            if let image = image {
+                completion(image)
+            } else {
+                completion(UIImage())
+            }
+            return
+        }
+
+        // URLSession을 사용하여 비동기로 이미지 다운로드
+        let task = URLSession.shared.dataTask(with: url) { data, response, error in
+            if let error = error {
+                print("error \(error)")
+            } else if let data = data, let image = UIImage(data: data) {
+                completion(image)
+            } else {
+                print("error")
+            }
+        }
+        task.resume()
     }
 }

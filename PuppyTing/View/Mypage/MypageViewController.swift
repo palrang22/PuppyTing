@@ -431,6 +431,7 @@ class MypageViewController: UIViewController {
 
     private func navigateToMyInfoEdit() {
         let myInfoEditVC = MyInfoEditViewController()
+        myInfoEditVC.setMember(member: memeber)
         if let navigationController = self.navigationController {
             navigationController.pushViewController(myInfoEditVC, animated: true)
         } else {
@@ -479,6 +480,11 @@ class MypageViewController: UIViewController {
         findMember()
         setData()
         addButtonAction()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        findMember()
     }
     
     private func setData() {
