@@ -135,4 +135,35 @@ class FirebaseRealtimeDatabaseManager {
         }
     }
     
+    func checkIfChatRoomExists(userIds: [String], completion: @escaping (Bool, String?) -> Void) {
+        // 모든 채팅방을 순회하며 두 사용자가 포함된 채팅방이 있는지 확인
+        databaseRef.child("chatRooms").observeSingleEvent(of: .value, with: { snapshot in
+            if let chatRooms = snapshot.value as? [String: Any] {
+                for (chatRoomId, chatRoomData) in chatRooms {
+                    if let chatRoomDetails = chatRoomData as? [String: Any],
+                       let users = chatRoomDetails["users"] as? [String] {
+                        
+                        // 두 사용자가 모두 users 배열에 포함되어 있는지 확인
+                        let usersSet = Set(users)
+                        let checkSet = Set(userIds)
+                        
+                        if checkSet.isSubset(of: usersSet) {
+                            // 두 사용자가 포함된 채팅방이 발견되면 true와 채팅방 ID 반환
+                            completion(true, chatRoomId)
+                            return  // 채팅방을 찾으면 더 이상 검색하지 않고 종료
+                        }
+                    }
+                }
+                // 두 사용자가 포함된 채팅방이 없을 경우 false와 nil 반환
+                completion(false, nil)
+            } else {
+                // 데이터가 없을 경우 false와 nil 반환
+                completion(false, nil)
+            }
+        }) { error in
+            print("오류 발생: \(error.localizedDescription)")
+            completion(false, nil)  // 오류 발생 시에도 false 반환
+        }
+    }
+    
 }

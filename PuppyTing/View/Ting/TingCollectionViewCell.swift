@@ -162,20 +162,32 @@ class TingCollectionViewCell: UICollectionViewCell {
     }
     
     private func createChatRoom(chatRoomName: String, users: [String]) {
-        FirebaseRealtimeDatabaseManager.shared.createChatRoom(name: chatRoomName, users: users).observe(on: MainScheduler.instance).subscribe(onSuccess: { [weak self] roomId in
-            let chatVC = ChatViewController()
-            chatVC.roomId = roomId
-            let userId = self?.findUserId()
-            let otherUser = users.first == userId ? users.last : users.first
-            if let otherUser = otherUser {
-                FireStoreDatabaseManager.shared.findMemberNickname(uuid: otherUser) { nickname in
-                    chatVC.titleText = nickname
-                    guard let vc = self?.viewController else { return }
-                    vc.navigationController?.pushViewController(chatVC, animated: true)
+        FirebaseRealtimeDatabaseManager.shared.checkIfChatRoomExists(userIds: users) { exists, chatId in
+            if exists {
+                if let roomId = chatId {
+                    self.moveChatRoom(roomId: roomId, users: users)
                 }
+            } else {
+                FirebaseRealtimeDatabaseManager.shared.createChatRoom(name: chatRoomName, users: users)
+                    .observe(on: MainScheduler.instance).subscribe(onSuccess: { [weak self] roomId in
+                    self?.moveChatRoom(roomId: roomId, users: users)
+                }).disposed(by: self.disposeBag)
             }
-            
-        }).disposed(by: disposeBag)
+        }
+    }
+    
+    private func moveChatRoom(roomId: String, users: [String]) {
+        let chatVC = ChatViewController()
+        chatVC.roomId = roomId
+        let userId = findUserId()
+        let otherUser = users.first == userId ? users.last : users.first
+        if let otherUser = otherUser {
+            FireStoreDatabaseManager.shared.findMemberNickname(uuid: otherUser) { nickname in
+                chatVC.titleText = nickname
+                guard let vc = self.viewController else { return }
+                vc.navigationController?.pushViewController(chatVC, animated: true)
+            }
+        }
     }
     
     //MARK: UI 및 제약조건
