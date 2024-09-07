@@ -150,6 +150,27 @@ class DetailTingViewController: UIViewController {
         setConstraints()
         setData()
         bind()
+        
+        // profilePic에 탭 추가 -> ProfileViewController 연결
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapProfile))
+        profilePic.isUserInteractionEnabled = true
+        profilePic.addGestureRecognizer(tapGesture)
+        // 닉네임에도 탭 추가
+        let nameTapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapProfile))
+        nameLabel.isUserInteractionEnabled = true
+        nameLabel.addGestureRecognizer(nameTapGesture)
+    }
+    
+    @objc private func didTapProfile() {
+        let profileVC = ProfileViewController()
+        
+        // 하프모달로 띄우기
+        if let sheet = profileVC.sheetPresentationController {
+            sheet.detents = [.medium()] // 모달크기 설정
+            sheet.prefersGrabberVisible = true // 위에 바 나오게 하기
+        }
+        
+        present(profileVC, animated: true)
     }
     
     //MARK: bind
