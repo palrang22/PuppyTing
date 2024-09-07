@@ -34,7 +34,7 @@ class ProfileCell: UICollectionViewCell {
         imageView.contentMode = .scaleAspectFill
         imageView.clipsToBounds = true
         imageView.tintColor = .black
-        imageView.image = UIImage(systemName: "person.crop.circle")
+        imageView.image = UIImage(named: "defaultProfileImage")
         return imageView
     }()
     

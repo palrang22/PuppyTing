@@ -7,6 +7,7 @@
 
 import UIKit
 
+import FirebaseAuth
 import RxCocoa
 import RxSwift
 import SnapKit
@@ -15,7 +16,8 @@ class TingViewController: UIViewController {
     private let viewModel = TingViewModel()
     private let disposeBag = DisposeBag()
     
-   var tingFeedModels: [TingFeedModel] = []
+    var tingFeedModels: [TingFeedModel] = []
+    var currentUserID: String = Auth.auth().currentUser?.uid ?? ""
     
     //MARK: Component 선언
     private lazy var feedCollectionView: UICollectionView = {
@@ -135,8 +137,7 @@ extension TingViewController: UICollectionViewDataSource {
         }
         
         let feedModel = tingFeedModels[indexPath.row]
-        cell.configure(with: feedModel)
-        cell.viewController = self
+        cell.configure(with: feedModel, currentUserID: currentUserID)
         return cell
     }
 }

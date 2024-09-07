@@ -9,26 +9,19 @@ import CoreLocation
 import UIKit
 
 import KakaoMapsSDK
+import RxCocoa
+import RxSwift
 
 class KakaoMapViewController: UIViewController, MapControllerDelegate {
     
-    var coordinate: CLLocationCoordinate2D?
-    
     private var mapController: KMController?
     private var mapContainer: KMViewContainer?
-    private var _observerAdded: Bool = false
-    private var _auth: Bool = false
-    private var _appear: Bool = false
-    
-    private let addressView: UIView = {
-        let view = AddressView()
-        return view
-    }()
+    private var coordinate: CLLocationCoordinate2D?  // 좌표를 저장하는 변수
     
     override func viewDidLoad() {
         super.viewDidLoad()
         setupMapView()
-        addViews()
+        setConstraints()
     }
     
     deinit {
@@ -40,9 +33,6 @@ class KakaoMapViewController: UIViewController, MapControllerDelegate {
     private func setupMapView() {
         // 맵 컨테이너 초기화 및 추가
         mapContainer = KMViewContainer(frame: self.view.bounds)
-        if let mapContainer = mapContainer {
-            self.view.addSubview(mapContainer)
-        }
         
         // KMController 생성 및 초기화
         mapController = KMController(viewContainer: mapContainer!)
@@ -50,104 +40,95 @@ class KakaoMapViewController: UIViewController, MapControllerDelegate {
         
         // 엔진 준비
         mapController?.prepareEngine()
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        addObservers()
-        _appear = true
         
-        if mapController?.isEngineActive == false {
-            mapController?.activateEngine()
+        // 좌표가 이미 설정된 경우 지도를 생성
+        if coordinate != nil {
+            addViews()  // addViews는 파라미터 없이 좌표를 내부에서 사용
         }
-    }
-    
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-        _appear = false
-        mapController?.pauseEngine()
-    }
-    
-    override func viewDidDisappear(_ animated: Bool) {
-        super.viewDidDisappear(animated)
-        removeObservers()
-        mapController?.resetEngine()
-    }
-    
-    func addViews() {
-        let mapPoint: MapPoint
-        
-        if let coordinate = coordinate {
-            mapPoint = MapPoint(longitude: coordinate.longitude, latitude: coordinate.latitude)
-        } else {
-            mapPoint = MapPoint(longitude: 126.9053, latitude: 37.5044)
-        }
-        
-        let mapviewInfo = MapviewInfo(viewName: "mapview", viewInfoName: "map", defaultPosition: mapPoint, defaultLevel: 17)
-        mapController?.addView(mapviewInfo)
-    }
-    
-    func addViewSucceeded(_ viewName: String, viewInfoName: String) {
-        print("MapView 추가 성공: \(viewName), \(viewInfoName)")
     }
 
     
+    // 좌표에 따라 지도를 생성하는 메서드
+    func addViews() {
+        let defaultPosition: MapPoint
+        
+        // 좌표가 설정되어 있으면 해당 좌표로 지도 중심을 설정
+        if let coordinate = coordinate {
+            defaultPosition = MapPoint(longitude: coordinate.longitude, latitude: coordinate.latitude)
+        } else {
+            // 기본 좌표 설정
+            defaultPosition = MapPoint(longitude: 127.108678, latitude: 37.402001)
+        }
+        
+        let mapviewInfo = MapviewInfo(viewName: "mapview", viewInfoName: "map", defaultPosition: defaultPosition, defaultLevel: 17)
+        mapController?.addView(mapviewInfo)
+    }
+    
+    // 지도 생성이 성공했을 때 호출되는 delegate
+    func addViewSucceeded(_ viewName: String, viewInfoName: String) {
+        createLabelLayer()
+        createPoiStyle()
+        
+        print("MapView 추가 성공")
+        if let coordinate = coordinate {
+            addPoi(at: coordinate)
+        }
+    }
+    
+    // 지도 생성이 실패했을 때 호출되는 delegate
     func addViewFailed(_ viewName: String, viewInfoName: String) {
-        print("MapView 추가 실패: \(viewName), \(viewInfoName)")
+        print("MapView 추가 실패")
     }
     
-    private func addObservers(){
-        NotificationCenter.default.addObserver(self, selector: #selector(willResignActive), name: UIApplication.willResignActiveNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(didBecomeActive), name: UIApplication.didBecomeActiveNotification, object: nil)
+    // 좌표 설정 메서드: 외부에서 좌표를 받아와서 지도 생성
+    public func setCoordinate(_ coordinate: CLLocationCoordinate2D) {
+        self.coordinate = coordinate
         
-        _observerAdded = true
+        // 지도 엔진이 준비된 상태에서만 addViews() 호출
+        if mapController?.isEngineActive == true {
+            addViews()  // 좌표가 설정되면 바로 지도 생성
+        }
     }
     
-    private func removeObservers(){
-        NotificationCenter.default.removeObserver(self, name: UIApplication.willResignActiveNotification, object: nil)
-        NotificationCenter.default.removeObserver(self, name: UIApplication.didBecomeActiveNotification, object: nil)
-        
-        _observerAdded = false
-    }
+    //MARK: POI
     
-    // MARK: @objc 관련 메서드
-    
-    @objc
-    private func willResignActive(){
-        mapController?.pauseEngine()
-    }
-    
-    @objc
-    private func didBecomeActive(){
-        mapController?.activateEngine()
-    }
-    
-    //MARK: - POI 관련 메서드들
-    
-    // Poi 생성을 위한 LabelLayer 생성
     func createLabelLayer() {
         guard let view = mapController?.getView("mapview") as? KakaoMap else { return }
         let manager = view.getLabelManager()
-        let layerOption = LabelLayerOptions(layerID: "PoiLayer", competitionType: .none, competitionUnit: .symbolFirst, orderType: .rank, zOrder: 0)
+        
+        // POI 레이어 추가
+        let layerOption = LabelLayerOptions(layerID: "PoiLayer",
+                                            competitionType: .none,
+                                            competitionUnit: .symbolFirst,
+                                            orderType: .rank,
+                                            zOrder: 100)
         _ = manager.addLabelLayer(option: layerOption)
     }
     
-    // Poi 표시 스타일 생성
     func createPoiStyle() {
         guard let view = mapController?.getView("mapview") as? KakaoMap else { return }
         let manager = view.getLabelManager()
         
-        // "poiMarker" 이미지가 존재하는지 확인
+        // "poiMarker" 이미지 스타일 추가
         guard let iconImage = UIImage(named: "poiMarker") else {
             print("poiMarker 이미지가 없습니다.")
             return
         }
         
         let iconStyle = PoiIconStyle(symbol: iconImage, anchorPoint: CGPoint(x: 0.0, y: 0.5))
+        
         let poiStyle = PoiStyle(styleID: "DefaultStyle", styles: [
             PerLevelPoiStyle(iconStyle: iconStyle, level: 5)
         ])
+        
         manager.addPoiStyle(poiStyle)
+        print("POI 스타일 추가 성공")
+    }
+    
+    // POI 추가 메서드
+    public func addPoi(at coordinate: CLLocationCoordinate2D) {
+        let mapPoint = MapPoint(longitude: coordinate.longitude, latitude: coordinate.latitude)
+        addSelectedLocationPoi(at: mapPoint)
     }
     
     // 선택된 위치에 POI 추가
@@ -171,10 +152,30 @@ class KakaoMapViewController: UIViewController, MapControllerDelegate {
             print("POI 추가 실패")
         }
     }
-//    
-//    //MARK: 레이아웃
-//    private func setConstraints() {
-//        [
-//    }
+    
+    // 엔진 활성화
+    public func activateEngine() {
+        mapController?.activateEngine()
+    }
+    
+    // 엔진 비활성화
+    public func pauseEngine() {
+        mapController?.pauseEngine()
+    }
+    
+    // 엔진 리셋
+    public func resetEngine() {
+        mapController?.resetEngine()
+    }
+    
+    private func setConstraints() {
+        if let mapContainer = mapContainer {
+            view.addSubview(mapContainer)
+            mapContainer.snp.makeConstraints {
+                $0.edges.equalToSuperview()
+            }
+        } else {
+            print("MapContainer 생성 실패")
+        }
+    }
 }
-

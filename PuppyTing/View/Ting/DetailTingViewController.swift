@@ -150,6 +150,27 @@ class DetailTingViewController: UIViewController {
         setConstraints()
         setData()
         bind()
+        
+        // profilePic에 탭 추가 -> ProfileViewController 연결
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapProfile))
+        profilePic.isUserInteractionEnabled = true
+        profilePic.addGestureRecognizer(tapGesture)
+        // 닉네임에도 탭 추가
+        let nameTapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapProfile))
+        nameLabel.isUserInteractionEnabled = true
+        nameLabel.addGestureRecognizer(nameTapGesture)
+    }
+    
+    @objc private func didTapProfile() {
+        let profileVC = ProfileViewController()
+        
+        // 하프모달로 띄우기
+        if let sheet = profileVC.sheetPresentationController {
+            sheet.detents = [.medium()] // 모달크기 설정
+            sheet.prefersGrabberVisible = true // 위에 바 나오게 하기
+        }
+        
+        present(profileVC, animated: true)
     }
     
     //MARK: bind
@@ -174,10 +195,12 @@ class DetailTingViewController: UIViewController {
     
     private func setButton(model: TingFeedModel) {
         if Auth.auth().currentUser?.uid == model.userid {
+            self.messageSendButton.isHidden = true
             self.deleteButton.isHidden = false
             self.blockButton.isHidden = true
             self.reportButton.isHidden = true
         } else {
+            self.messageSendButton.isHidden = false
             self.deleteButton.isHidden = true
             self.blockButton.isHidden = false
             self.reportButton.isHidden = false
@@ -187,16 +210,31 @@ class DetailTingViewController: UIViewController {
     private func bind() {
         deleteButton.rx.tap
             .subscribe(onNext: { [weak self] in
-                guard let postid = self?.tingFeedModels?.postid else { return }
-                self?.fireStoreDatabase.deleteDocument(from: "tingFeeds", documentId: postid)
-                    .subscribe(onSuccess: { [weak self] in
-                        self?.okAlert(title: "삭제 완료", message: "게시물이 성공적으로 삭제되었습니다.", okActionHandler: { _ in
-                            self?.navigationController?.popViewController(animated: true)
-                        })
-                    }, onFailure: { error in
-                        print("삭제 실패: \(error)")
-                        self?.okAlert(title: "삭제 실패", message: "게시물 삭제에 실패했습니다. 다시 시도해주세요. 해당 문제가 지속될 경우 문의 게시판에 제보해주세요.")
-                    }).disposed(by: self!.disposeBag)
+                    self?.okAlertWithCancel(
+                        title: "게시물 삭제",
+                        message: "게시물을 삭제하시겠습니까?",
+                        okActionTitle: "삭제",
+                        cancelActionTitle: "취소",
+                        okActionHandler: { _ in
+                            guard let postid = self?.tingFeedModels?.postid else { return }
+                            self?.fireStoreDatabase.deleteDocument(from: "tingFeeds", documentId: postid)
+                                .subscribe(onSuccess: { [weak self] in
+                                    self?.okAlert(
+                                        title: "삭제 완료",
+                                        message: "게시물이 성공적으로 삭제되었습니다.",
+                                        okActionHandler: { _ in
+                                            self?.navigationController?.popViewController(animated: true)
+                                        }
+                                    )
+                                }, onFailure: { error in
+                                    print("삭제 실패: \(error)")
+                                    self?.okAlert(
+                                        title: "삭제 실패",
+                                        message: "게시물 삭제에 실패했습니다. 다시 시도해주세요. 해당 문제가 지속될 경우 문의 게시판에 제보해주세요."
+                                    )
+                                }).disposed(by: self?.disposeBag ?? DisposeBag())
+                        }
+                    )
             }).disposed(by: disposeBag)
         
         blockButton.rx.tap

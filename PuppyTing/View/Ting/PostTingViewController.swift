@@ -9,6 +9,9 @@ import CoreLocation
 import UIKit
 
 import FirebaseAuth
+import RxCocoa
+import RxSwift
+import SnapKit
 
 class PostTingViewController: UIViewController {
     
@@ -16,7 +19,10 @@ class PostTingViewController: UIViewController {
     var roadAddressName: String?
     var coordinate: CLLocationCoordinate2D?
     
-    let mapController = SearchedMapViewController()
+    var addressSubject = PublishSubject<(String?, String?, CLLocationCoordinate2D?)>()
+    
+    private let kakaoMapViewController = KakaoMapViewController()
+    private let disposeBag = DisposeBag()
     
     //MARK: UI Component 선언
     private lazy var addMapButton: UIButton = {
@@ -41,10 +47,19 @@ class PostTingViewController: UIViewController {
         textView.delegate = self
         return textView
     }()
+    
+    // 지도 컨테이너 뷰 (처음에는 숨김)
+    private let mapViewContainer: UIView = {
+        let view = UIView()
+        view.backgroundColor = .gray
+        view.isHidden = true
+        return view
+    }()
 
     //MARK: View 생명주기
     override func viewDidLoad() {
         super.viewDidLoad()
+        print("viewDidLoad called")
         setUI()
         setConstraints()
         setupKeyboardDismissRecognizer()
@@ -52,6 +67,7 @@ class PostTingViewController: UIViewController {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+        print("viewDidAppear called")
         textView.becomeFirstResponder()
     }
     
@@ -77,16 +93,59 @@ class PostTingViewController: UIViewController {
     
     @objc
     private func addMapButtonTapped() {
-        navigationController?.pushViewController(SearchAddressViewController(), animated: true)
-    }
-    
-    @objc
-    func handleMapInfo(notification: Notification) {
-        guard let userInfo = notification.userInfo else { return }
+        let searchAddressVC = SearchAddressViewController()
         
-        placeName = userInfo["placeName"] as? String
-        roadAddressName = userInfo["roadAddressName"] as? String
-        coordinate = userInfo["coordinate"] as? CLLocationCoordinate2D
+        // SearchAddressViewController가 데이터 방출 시 처리할 구독 설정
+        searchAddressVC.mapDataSubject
+            .subscribe(onNext: { [weak self] placeName, roadAddressName, coordinate in
+                guard let self = self else { return }
+                
+                // 받은 데이터를 PostTingViewController에 반영
+                self.placeName = placeName
+                self.roadAddressName = roadAddressName
+                self.coordinate = coordinate
+                
+                // 디버깅용 print 로그
+                print("받은 데이터: \(placeName ?? "없음"), \(roadAddressName ?? "없음"), 좌표: \(coordinate?.latitude ?? 0), \(coordinate?.longitude ?? 0)")
+                
+                // UI 업데이트 - 장소, 주소, 좌표를 지도나 화면에 표시하는 등의 작업
+                self.updateMapView()
+            }).disposed(by: disposeBag)
+        
+        // 네비게이션 스택에 SearchAddressViewController 추가
+        self.navigationController?.pushViewController(searchAddressVC, animated: true)
+    }
+
+    // UI 업데이트 함수 추가
+    private func updateMapView() {
+        // 지도 컨테이너를 보이도록 설정
+        mapViewContainer.isHidden = false
+        
+        // KakaoMapViewController가 이미 추가되어 있지 않다면 추가
+        if kakaoMapViewController.parent == nil {
+            // KakaoMapViewController를 자식 뷰 컨트롤러로 추가
+            addChild(kakaoMapViewController)
+            mapViewContainer.addSubview(kakaoMapViewController.view)
+            
+            // 제약 조건 설정 (SnapKit 사용)
+            kakaoMapViewController.view.snp.makeConstraints { make in
+                make.edges.equalToSuperview() // mapViewContainer의 경계에 맞춤
+            }
+            
+            // 자식 뷰 컨트롤러로 이동 완료 처리
+            kakaoMapViewController.didMove(toParent: self)
+            
+            print("KakaoMapViewController가 성공적으로 추가되었습니다.")
+        }
+        
+        // 좌표 설정 및 POI 추가
+        if let coordinate = coordinate {
+            kakaoMapViewController.setCoordinate(coordinate)
+            kakaoMapViewController.addPoi(at: coordinate)
+            print("좌표 설정 및 POI 추가 완료: \(coordinate.latitude), \(coordinate.longitude)")
+        } else {
+            print("좌표가 설정되지 않았습니다.")
+        }
     }
 
     //MARK: UI 설정 및 제약조건 등
@@ -99,7 +158,7 @@ class PostTingViewController: UIViewController {
     }
     
     private func setConstraints() {
-        [addMapButton, textView]
+        [addMapButton, textView, mapViewContainer]
             .forEach { view.addSubview($0) }
         
         addMapButton.snp.makeConstraints {
@@ -112,7 +171,13 @@ class PostTingViewController: UIViewController {
         textView.snp.makeConstraints {
             $0.top.equalTo(addMapButton.snp.bottom).offset(20)
             $0.leading.trailing.equalTo(view.safeAreaLayoutGuide).inset(20)
-            $0.bottom.equalTo(view.safeAreaLayoutGuide).offset(-20)
+        }
+        
+        mapViewContainer.snp.makeConstraints {
+            $0.top.equalTo(textView.snp.bottom).offset(20)
+            $0.leading.trailing.equalTo(view.safeAreaLayoutGuide).inset(20)
+            $0.height.equalTo(200)
+            $0.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom).offset(-20)
         }
     }
 }

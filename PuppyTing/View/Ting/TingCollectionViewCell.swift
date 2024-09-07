@@ -118,9 +118,10 @@ class TingCollectionViewCell: UICollectionViewCell {
     }
     
     //MARK: config 메서드
-    func configure(with model: TingFeedModel) {
+    func configure(with model: TingFeedModel, currentUserID: String) {
         self.nameLabel.text = model.userid
         self.content.text = model.content
+        messageSendButton.isHidden = model.userid == currentUserID
 
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd HH:mm"
