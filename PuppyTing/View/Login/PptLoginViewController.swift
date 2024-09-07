@@ -77,6 +77,7 @@ class PptLoginViewController: UIViewController {
         textField.layer.borderColor = UIColor.darkGray.cgColor
         textField.layer.borderWidth = 1.0
         textField.layer.cornerRadius = 5
+        textField.isSecureTextEntry = true // 비밀번호 입력 숨기기
         return textField
     }()
     
@@ -112,6 +113,9 @@ class PptLoginViewController: UIViewController {
         bind()
         bindData()
         setButtonAction()
+        
+        // 키보드 포커싱 해제 메서드 호출
+        setupKeyboardDismissRecognizer()
     }
     
     private func settingUI() {
