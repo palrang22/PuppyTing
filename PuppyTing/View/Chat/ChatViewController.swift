@@ -7,6 +7,7 @@
 
 import UIKit
 
+import FirebaseAuth
 import RxCocoa
 import RxSwift
 import SnapKit
@@ -17,6 +18,9 @@ class ChatViewController: UIViewController {
     let disposeBag = DisposeBag()
     
     var titleText: String? // 타이틀 저장 변수 ChatListVC에서 가져와야함..
+    var roomId: String!
+    
+    let userId = Auth.auth().currentUser?.uid
     
     let chattingTableView: UITableView = {
         let tableView = UITableView()
@@ -117,47 +121,55 @@ class ChatViewController: UIViewController {
 
     
     private func setupBindings() {
-        viewModel.messages
-            .bind(to: chattingTableView.rx.items) { tableView, row, message in
-                if message.isMyMessage {
+        let input = ChatViewModel.Input(
+            roomId: roomId,
+            fetchMessages: Observable.just(()),
+            sendMessage: sendButton.rx.tap
+                .withLatestFrom(messageTextView.rx.text.orEmpty)
+                .asObservable()
+        )
+        
+        let output = viewModel.transform(input: input)
+        
+        output.messages
+            .bind(to: chattingTableView.rx.items) { (tableView: UITableView, row: Int, message: ChatMessage) in
+                if message.senderId == self.userId {
                     guard let cell = tableView.dequeueReusableCell(withIdentifier: MyChattingTableViewCell.identifier, for: IndexPath(row: row, section: 0)) as? MyChattingTableViewCell else {
                         return UITableViewCell()
                     }
                     cell.messageBox.text = message.text
-                    cell.date.text = message.date
+                    let date = Date(timeIntervalSince1970: message.timestamp)
+                    let dateFormatter = DateFormatter()
+                    dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+                    let dateString = dateFormatter.string(from: date)
+                    cell.date.text = dateString
                     return cell
                 } else {
                     guard let cell = tableView.dequeueReusableCell(withIdentifier: ChattingTableViewCell.identifier, for: IndexPath(row: row, section: 0)) as? ChattingTableViewCell else {
                         return UITableViewCell()
                     }
+                    self.viewModel.findMember(uuid: message.senderId)
+                    self.viewModel.memberSubject.observe(on: MainScheduler.instance).subscribe(onNext: { member in
+                        cell.name.text = member.nickname
+                    }).disposed(by: self.disposeBag)
                     cell.messageBox.text = message.text
-                    cell.date.text = message.date
+                    let date = Date(timeIntervalSince1970: message.timestamp)
+                    let dateFormatter = DateFormatter()
+                    dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+                    let dateString = dateFormatter.string(from: date)
+                    cell.date.text = dateString
                     return cell
                 }
             }
             .disposed(by: disposeBag)
         
-        // sendButton 클릭 시 ViewModel에 메세지 전달
-        sendButton.rx.tap
-            .withLatestFrom(messageTextView.rx.text.orEmpty) // 버튼 눌렸을 때 텍스트뷰 내용 가져옴
-            .filter { !$0.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty } // 빈 문자열 필터링
-            .bind(to: viewModel.messageText) // ViewModel의 MessageText에 바인딩
-            .disposed(by: disposeBag)
-        
-        // 메세지 전송 후 텍스트뷰 초기화, 크기 초기화
-        viewModel.messageText
-            .map { _ in "" }
-            .bind(to: messageTextView.rx.text)
-            .disposed(by: disposeBag)
-        
-        viewModel.messageText
-            .subscribe(onNext: { [weak self] _ in
-                self?.resetMessageTextViewHeight()
-            })
-            .disposed(by: disposeBag)
+        output.messageSent
+            .subscribe(onNext: { [weak self] in
+                self?.messageTextView.text = ""
+            }).disposed(by: disposeBag)
         
         // 메세지 추가 후 테이블뷰 맨 아래로 스크롤
-        viewModel.messages
+        output.messages
             .skip(1) // 처음 초기화값 건너뛰고 이후 변경될 때 반응
             .subscribe(onNext: { [weak self] _ in
                 self?.scrollToBottom()
@@ -174,7 +186,7 @@ class ChatViewController: UIViewController {
     func setupConstraints() {
         
         navigationController?.navigationBar.tintColor = UIColor.puppyPurple
-        navigationItem.title = "한강산책톡" // 여기에 가져온 title정보 나오게
+        navigationItem.title = titleText // 여기에 가져온 title정보 나오게
         
         chattingTableView.snp.makeConstraints {
             $0.top.leading.trailing.equalTo(view.safeAreaLayoutGuide)
