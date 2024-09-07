@@ -309,7 +309,12 @@ class MyInfoEditViewController: UIViewController {
         guard let newPassword = password,
               let passwordCheck = passwordCheck,
               newPassword == passwordCheck,
-              let oldPasswrod = oldPassword else { return }
+              let oldPasswrod = oldPassword,
+              newPassword != "",
+              passwordCheck != "" else {
+                  okAlert(title: "에러", message: "모든 칸을 입력 후 진행해주세요")
+                  return
+              }
         updatePassword(oldPassword: oldPasswrod, newPassword: newPassword)
     }
 
@@ -329,6 +334,7 @@ class MyInfoEditViewController: UIViewController {
         present(picker, animated: true, completion: nil)
     }
     
+    // 아직 데이터를 막는 메서드가 존재하지 않아서 오류 생길 가능성 높음
     private func updatePassword(oldPassword: String, newPassword: String) {
         myInfoEditViewModel.updatePassword(oldpassword: oldPassword, newPassword: newPassword)
     }
