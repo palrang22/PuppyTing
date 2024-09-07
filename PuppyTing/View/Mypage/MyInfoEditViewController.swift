@@ -15,7 +15,20 @@ class MyInfoEditViewController: UIViewController {
             if let member = member {
                 emailLabel.text = member.email
                 nickNameTextField.text = member.nickname
-                userProfileImageButton.setImage(UIImage(named: "defaultProfileImage"), for: .normal)
+                if member.profileImage == "기본 이미지" || member.profileImage == "defaultProfileImage" {
+                    userProfileImageButton.setImage(UIImage(named: "defaultProfileImage"), for: .normal)
+                } else {
+                    fetchImage(imageUrl: member.profileImage)
+                }
+            }
+        }
+    }
+    
+    private var realImage: UIImage? = nil {
+        didSet {
+            //이미지 변경
+            if let image = realImage {
+                userProfileImageButton.setImage(image, for: .normal)
             }
         }
     }
@@ -359,6 +372,10 @@ class MyInfoEditViewController: UIViewController {
         myInfoEditViewModel.updateMember(member: updateMember)
     }
     
+    private func fetchImage(imageUrl: String) {
+        myInfoEditViewModel.fetchImage(image: imageUrl)
+    }
+    
     private func bindData() {
         myInfoEditViewModel.updateSubject.observe(on: MainScheduler.instance).subscribe(onNext: { [weak self] isUpdate in
             self?.update = isUpdate
@@ -368,6 +385,9 @@ class MyInfoEditViewController: UIViewController {
         }).disposed(by: disposeBag)
         myInfoEditViewModel.imageSubject.observe(on: MainScheduler.instance).subscribe(onNext: { [weak self] imageUrl in
             self?.image = imageUrl
+        }).disposed(by: disposeBag)
+        myInfoEditViewModel.realImageSubject.observe(on: MainScheduler.instance).subscribe(onNext: { [weak self] image in
+            self?.realImage = image
         }).disposed(by: disposeBag)
     }
 }

@@ -17,6 +17,7 @@ class MyInfoEditVIewModel {
     let updateSubject = PublishSubject<Bool>()
     let passwordSubject = PublishSubject<Bool>()
     let imageSubject = PublishSubject<String>()
+    let realImageSubject = PublishSubject<UIImage>()
     
     func updateMember(member: Member) {
         FireStoreDatabaseManager.shared.updateMember(member: member).observe(on: MainScheduler.instance).subscribe(onSuccess: { [weak self] isUpdate in
@@ -33,6 +34,14 @@ class MyInfoEditVIewModel {
     func updateImage(image: UIImage) {
         FirebaseStorageManager.shared.uploadImage(image: image).observe(on: MainScheduler.instance).subscribe(onSuccess: { [weak self] imageUrl in
             self?.imageSubject.onNext(imageUrl)
+        }).disposed(by: disposeBag)
+    }
+    
+    func fetchImage(image: String) {
+        NetworkManager.shared.loadImageFromURL(urlString: image).observe(on: MainScheduler.instance).subscribe(onSuccess: { [weak self] image in
+            if let image = image {
+                self?.realImageSubject.onNext(image)
+            }
         }).disposed(by: disposeBag)
     }
     
