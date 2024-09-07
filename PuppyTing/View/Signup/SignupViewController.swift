@@ -105,12 +105,13 @@ class SignupViewController: UIViewController {
         textField.layer.borderColor = UIColor.darkGray.cgColor
         textField.layer.borderWidth = 1.0
         textField.layer.cornerRadius = 5
+        textField.isSecureTextEntry = true // 비밀번호 입력 숨기기
         return textField
     }()
     
     let guideLine: UILabel = {
         let label = UILabel()
-        label.text = "대소문자, 특수문자를 포함하여\n8자 이상으로 작성"
+        label.text = "대소문자, 숫자, 특수문자를 포함하여 8자 이상으로 작성"
         label.numberOfLines = 0
         label.textAlignment = .left
         label.textColor = .gray
@@ -167,6 +168,7 @@ class SignupViewController: UIViewController {
         textField.layer.borderColor = UIColor.darkGray.cgColor
         textField.layer.borderWidth = 1.0
         textField.layer.cornerRadius = 5
+        textField.isSecureTextEntry = true // 비밀번호 입력 숨기기
         return textField
     }()
     
@@ -239,6 +241,9 @@ class SignupViewController: UIViewController {
         bindUI()
         setButtonAction()
         bindData()
+        
+        // 키보드 포커싱 해제 메서드 호출
+        setupKeyboardDismissRecognizer()
     }
     
     private func configureUI() {
