@@ -24,7 +24,7 @@ class FireStoreDatabaseManager {
     
     func emailSignUp(uuid: String, email: String, pw: String, nickname: String) -> Single<Member> {
         return Single.create{ [weak self] single in
-            let memeber = Member(uuid: uuid, email: email, password: pw, nickname: nickname, profileImage: "기본 이미지", footPrint: 0, isSocial: false)
+            let memeber = Member(uuid: uuid, email: email, password: pw, nickname: nickname, profileImage: "defaultProfileImage", footPrint: 0, isSocial: false)
             self?.db.collection("member").document(uuid).setData(memeber.dictionary) { error in
                 if let error = error {
                     single(.failure(error))
@@ -38,7 +38,7 @@ class FireStoreDatabaseManager {
     
     func socialSignUp(uuid: String, email: String) -> Single<Member> {
         return Single.create { [weak self] single in
-            let member = Member(uuid: uuid, email: email, password: "nil", nickname: "User_\(email.split(separator: "@")[0])", profileImage: "기본 이미지", footPrint: 0, isSocial: true)
+            let member = Member(uuid: uuid, email: email, password: "nil", nickname: "User_\(email.split(separator: "@")[0])", profileImage: "defaultProfileImage", footPrint: 0, isSocial: true)
             self?.db.collection("member").document(uuid).setData(member.dictionary) { error in
                 if let error = error {
                     single(.failure(error))
@@ -53,7 +53,7 @@ class FireStoreDatabaseManager {
     func updateMember(member: Member) -> Single<Bool> {
         return Single.create { single in
             let docRef = self.db.collection("member").document(member.uuid)
-            docRef.updateData(["nickname" : member.nickname, "password" : member.password]) { error in
+            docRef.updateData(["nickname" : member.nickname, "password" : member.password, "profileImage" : member.profileImage]) { error in
                 if let error = error {
                     single(.failure(error))
                 } else {

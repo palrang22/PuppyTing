@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import UIKit
 
 import RxSwift
 
@@ -13,15 +14,9 @@ class MyInfoEditVIewModel {
     
     private let disposeBag = DisposeBag()
     
-    private let memberSubject = PublishSubject<Member>()
     let updateSubject = PublishSubject<Bool>()
     let passwordSubject = PublishSubject<Bool>()
-    
-    func findMember(uuid: String) {
-        FireStoreDatabaseManager.shared.findMemeber(uuid: uuid).observe(on: MainScheduler.instance).subscribe(onSuccess: { [weak self] member in
-            self?.memberSubject.onNext(member)
-        }).disposed(by: disposeBag)
-    }
+    let imageSubject = PublishSubject<String>()
     
     func updateMember(member: Member) {
         FireStoreDatabaseManager.shared.updateMember(member: member).observe(on: MainScheduler.instance).subscribe(onSuccess: { [weak self] isUpdate in
@@ -32,6 +27,12 @@ class MyInfoEditVIewModel {
     func updatePassword(oldpassword: String, newPassword: String) {
         FirebaseAuthManager.shared.passwordUpdate(oldPassword: oldpassword, newPassword: newPassword).observe(on: MainScheduler.instance).subscribe(onSuccess: { [weak self] isUpdate in
             self?.passwordSubject.onNext(isUpdate)
+        }).disposed(by: disposeBag)
+    }
+    
+    func updateImage(image: UIImage) {
+        FirebaseStorageManager.shared.uploadImage(image: image).observe(on: MainScheduler.instance).subscribe(onSuccess: { [weak self] imageUrl in
+            self?.imageSubject.onNext(imageUrl)
         }).disposed(by: disposeBag)
     }
     

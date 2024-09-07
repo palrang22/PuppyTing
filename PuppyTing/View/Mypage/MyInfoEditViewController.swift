@@ -33,18 +33,26 @@ class MyInfoEditViewController: UIViewController {
         }
     }
     
+    private var image: String = "" {
+        didSet {
+            // 이미지 변경
+            let nickname = nickNameTextField.text
+            let password = passwordTextField.text
+            let passwordCheck = passwordCheckTextField.text
+            guard let nickname = nickname,
+                  nickname != member?.nickname,
+                  let password = password,
+                  let passwordCheck = passwordCheck,
+                  password == passwordCheck, 
+                  image != "" else { return }
+            updateMember(nickname: nickname, password: password, image: image)
+        }
+    }
+    
     private var passwordUpdate: Bool = false {
         didSet {
             if passwordUpdate {
-                let nickname = nickNameTextField.text
-                let password = passwordTextField.text
-                let passwordCheck = passwordCheckTextField.text
-                guard let nickname = nickname,
-                      nickname != member?.nickname,
-                      let password = password,
-                      let passwordCheck = passwordCheck,
-                      password == passwordCheck else { return }
-                updateMember(nickname: nickname, password: password)
+                updateImage()
             } else {
                 print("비번 변경 실패")
             }
@@ -334,14 +342,20 @@ class MyInfoEditViewController: UIViewController {
         present(picker, animated: true, completion: nil)
     }
     
-    // 아직 데이터를 막는 메서드가 존재하지 않아서 오류 생길 가능성 높음
     private func updatePassword(oldPassword: String, newPassword: String) {
         myInfoEditViewModel.updatePassword(oldpassword: oldPassword, newPassword: newPassword)
     }
     
-    private func updateMember(nickname: String, password: String) {
+    private func updateImage() {
+        let image = userProfileImageButton.imageView?.image
+        if let image = image {
+            myInfoEditViewModel.updateImage(image: image)
+        }
+    }
+    
+    private func updateMember(nickname: String, password: String, image: String) {
         guard let member = member else { return }
-        let updateMember = Member(uuid: member.uuid, email: member.email, password: password, nickname: nickname, profileImage: member.profileImage, footPrint: member.footPrint, isSocial: member.isSocial)
+        let updateMember = Member(uuid: member.uuid, email: member.email, password: password, nickname: nickname, profileImage: image, footPrint: member.footPrint, isSocial: member.isSocial)
         myInfoEditViewModel.updateMember(member: updateMember)
     }
     
@@ -351,6 +365,9 @@ class MyInfoEditViewController: UIViewController {
         }).disposed(by: disposeBag)
         myInfoEditViewModel.passwordSubject.observe(on: MainScheduler.instance).subscribe(onNext: { [weak self] isUpdate in
             self?.passwordUpdate = isUpdate
+        }).disposed(by: disposeBag)
+        myInfoEditViewModel.imageSubject.observe(on: MainScheduler.instance).subscribe(onNext: { [weak self] imageUrl in
+            self?.image = imageUrl
         }).disposed(by: disposeBag)
     }
 }
