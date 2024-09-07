@@ -14,6 +14,8 @@ import FirebaseCore
 final class AppController {
     static let shared = AppController()
     
+    var isPasswordUpdating = false
+    
     private init() {
         FirebaseApp.configure()
         registerAuthStateDidChangeEvent()
@@ -43,6 +45,10 @@ final class AppController {
     
     @objc
     private func checkLogin() {
+        guard !isPasswordUpdating else {
+            isPasswordUpdating = false // 플래그 초기화
+            return
+        }
         if let user = Auth.auth().currentUser {
             print("user = \(user.email)")
             if user.isEmailVerified {

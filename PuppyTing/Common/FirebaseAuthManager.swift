@@ -150,4 +150,39 @@ class FirebaseAuthManager {
         }
     }
     
+    // 사용자 재인증 후 가능하도록 실행
+    func passwordUpdate(oldPassword: String, newPassword: String) -> Single<Bool> {
+        AppController.shared.isPasswordUpdating = true
+        
+        return Single.create { single in
+            if let user = Auth.auth().currentUser {
+                var email = ""
+                if let currentEmail = user.email {
+                    email = currentEmail
+                }
+                let password = oldPassword
+                let credential = EmailAuthProvider.credential(withEmail: email, password: password)
+                user.reauthenticate(with: credential) { result, error in
+                    if let error = error {
+                        single(.failure(error))
+                        AppController.shared.isPasswordUpdating = false
+                    } else {
+                        AppController.shared.isPasswordUpdating = true
+                        user.updatePassword(to: newPassword) { error in
+                            if let error = error {
+                                single(.failure(error))
+                            } else {
+                                single(.success(true))
+                            }
+                            AppController.shared.isPasswordUpdating = false
+                        }
+                    }
+                }
+            } else {
+                single(.success(false))
+            }
+            return Disposables.create()
+        }
+    }
+    
 }

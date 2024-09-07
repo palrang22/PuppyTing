@@ -50,6 +50,20 @@ class FireStoreDatabaseManager {
         }
     }
     
+    func updateMember(member: Member) -> Single<Bool> {
+        return Single.create { single in
+            let docRef = self.db.collection("member").document(member.uuid)
+            docRef.updateData(["nickname" : member.nickname, "password" : member.password]) { error in
+                if let error = error {
+                    single(.failure(error))
+                } else {
+                    single(.success(true))
+                }
+            }
+            return Disposables.create()
+        }
+    }
+    
     func findMemeber(uuid: String) -> Single<Bool> {
         return Single.create { [weak self] single in
             let docRef = self?.db.collection("member").document(uuid)
