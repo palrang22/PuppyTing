@@ -11,17 +11,13 @@ import UIKit
 import KakaoMapsSDK
 import SnapKit
 
-class SearchedMapViewController: UIViewController, MapControllerDelegate {
+class SearchedMapViewController: UIViewController {
     
     var placeName: String?
     var roadAddressName: String?
     var coordinate: CLLocationCoordinate2D?
     
-    private var mapController: KMController?
-    private var mapContainer: KMViewContainer?
-    private var _observerAdded: Bool = false
-    private var _auth: Bool = false
-    private var _appear: Bool = false
+    private let kakaoMapViewController = KakaoMapViewController()
     
     private lazy var closeButton: UIButton = {
         let button = UIButton()
@@ -47,184 +43,42 @@ class SearchedMapViewController: UIViewController, MapControllerDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        setupMapView()
+        view.addSubview(kakaoMapViewController.view)
         setConstraints()
-        
-        if let placeName = placeName, let roadAddressName = roadAddressName {
-            (addressView as? AddressView)?.config(placeName: placeName, roadAddressName: roadAddressName)
-        }
-    }
-    
-    deinit {
-        // 맵 엔진 정지 및 리소스 해제
-        mapController?.pauseEngine()
-        mapController?.resetEngine()
-    }
-    
-    private func setupMapView() {
-        // 맵 컨테이너 초기화 및 추가
-        mapContainer = KMViewContainer(frame: self.view.bounds)
-        if let mapContainer = mapContainer {
-            self.view.addSubview(mapContainer)
-        }
-        
-        // KMController 생성 및 초기화
-        mapController = KMController(viewContainer: mapContainer!)
-        mapController?.delegate = self
-        
-        // 엔진 준비
-        mapController?.prepareEngine()
+        configMapInfo()
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        addObservers()
-        _appear = true
-        
-        if mapController?.isEngineActive == false {
-            mapController?.activateEngine()
-        }
+        kakaoMapViewController.activateEngine()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        _appear = false
-        mapController?.pauseEngine()
+        kakaoMapViewController.pauseEngine()
     }
     
-    override func viewDidDisappear(_ animated: Bool) {
-        super.viewDidDisappear(animated)
-        removeObservers()
-        mapController?.resetEngine()
-    }
-    
-    func addViews() {
-        guard let coordinate = coordinate else {
-            print("좌표값 없음")
-            return
+    func configMapInfo() {
+        if let placeName = placeName, let roadAddressName = roadAddressName {
+            (addressView as? AddressView)?.config(placeName: placeName, roadAddressName: roadAddressName)
         }
-        
-        let mapPoint = MapPoint(longitude: coordinate.longitude, latitude: coordinate.latitude)
-        let mapviewInfo = MapviewInfo(viewName: "mapview", viewInfoName: "map", defaultPosition: mapPoint, defaultLevel: 17)
-        mapController?.addView(mapviewInfo)
-    }
-    
-    func addViewSucceeded(_ viewName: String, viewInfoName: String) {
-        print("MapView 추가 성공: \(viewName), \(viewInfoName)")
-        createLabelLayer()
-        createPoiStyle()
-        
-        // 지도 뷰가 성공적으로 로드되었으니 이제 POI를 추가
-        guard let coordinate = coordinate else {
-            print("좌표값 없음")
-            return
-        }
-        
-        let mapPoint = MapPoint(longitude: coordinate.longitude, latitude: coordinate.latitude)
-        addSelectedLocationPoi(at: mapPoint)
-    }
 
-    
-    func addViewFailed(_ viewName: String, viewInfoName: String) {
-        print("MapView 추가 실패: \(viewName), \(viewInfoName)")
+        if let coordinate = coordinate {
+            kakaoMapViewController.setCoordinate(coordinate)
+            kakaoMapViewController.addPoi(at: coordinate)
+        }
     }
     
-    private func addObservers(){
-        NotificationCenter.default.addObserver(self, selector: #selector(willResignActive), name: UIApplication.willResignActiveNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(didBecomeActive), name: UIApplication.didBecomeActiveNotification, object: nil)
-        
-        _observerAdded = true
-    }
-    
-    private func removeObservers(){
-        NotificationCenter.default.removeObserver(self, name: UIApplication.willResignActiveNotification, object: nil)
-        NotificationCenter.default.removeObserver(self, name: UIApplication.didBecomeActiveNotification, object: nil)
-        
-        _observerAdded = false
-    }
-    
-    // MARK: @objc 관련 메서드
-    
-    @objc
-    private func willResignActive(){
-        mapController?.pauseEngine()
-    }
-    
-    @objc
-    private func didBecomeActive(){
-        mapController?.activateEngine()
-    }
-    
-    @objc
-    private func backToPost() {
-        let mapInfo: [String:Any] = [
-            "placeName": placeName ?? "",
-            "roadAddressName": roadAddressName ?? "",
-            "coordinate": coordinate ?? CLLocationCoordinate2D()
-        ]
-                
-        dismiss(animated: true, completion: nil)
-        NotificationCenter.default.post(name: Notification.Name("popToPostView"), object: nil, userInfo: mapInfo)
-        print("버튼 눌림")
-    }
-    
-    @objc
-    func dismissModal() {
+    @objc private func backToPost() {
         dismiss(animated: true, completion: nil)
     }
     
-    //MARK: - POI 관련 메서드들
-    
-    // Poi 생성을 위한 LabelLayer 생성
-    func createLabelLayer() {
-        guard let view = mapController?.getView("mapview") as? KakaoMap else { return }
-        let manager = view.getLabelManager()
-        let layerOption = LabelLayerOptions(layerID: "PoiLayer", competitionType: .none, competitionUnit: .symbolFirst, orderType: .rank, zOrder: 0)
-        _ = manager.addLabelLayer(option: layerOption)
-    }
-    
-    // Poi 표시 스타일 생성
-    func createPoiStyle() {
-        guard let view = mapController?.getView("mapview") as? KakaoMap else { return }
-        let manager = view.getLabelManager()
-        
-        // "poiMarker" 이미지가 존재하는지 확인
-        guard let iconImage = UIImage(named: "poiMarker") else {
-            print("poiMarker 이미지가 없습니다.")
-            return
-        }
-        
-        let iconStyle = PoiIconStyle(symbol: iconImage, anchorPoint: CGPoint(x: 0.0, y: 0.5))
-        let poiStyle = PoiStyle(styleID: "DefaultStyle", styles: [
-            PerLevelPoiStyle(iconStyle: iconStyle, level: 5)
-        ])
-        manager.addPoiStyle(poiStyle)
-    }
-    
-    // 선택된 위치에 POI 추가
-    func addSelectedLocationPoi(at mapPoint: MapPoint) {
-        guard let view = mapController?.getView("mapview") as? KakaoMap else {
-            print("MapView가 로드되지 않았습니다.")
-            return
-        }
-        let manager = view.getLabelManager()
-        guard let layer = manager.getLabelLayer(layerID: "PoiLayer") else {
-            print("POI Layer가 생성되지 않았습니다.")
-            return
-        }
-        
-        let poiOption = PoiOptions(styleID: "DefaultStyle")
-        poiOption.rank = 0
-        if let poi = layer.addPoi(option: poiOption, at: mapPoint) {
-            poi.show()
-            print("POI 추가 성공")
-        } else {
-            print("POI 추가 실패")
-        }
+    @objc func dismissModal() {
+        dismiss(animated: true, completion: nil)
     }
     
     private func setConstraints() {
-        [closeButton, addressView, selectButton].forEach { view.addSubview($0) }
+        [kakaoMapViewController.view, closeButton, addressView, selectButton].forEach { view.addSubview($0) }
         
         closeButton.snp.makeConstraints {
             $0.leading.equalTo(view.safeAreaLayoutGuide).offset(20)
@@ -241,6 +95,11 @@ class SearchedMapViewController: UIViewController, MapControllerDelegate {
             $0.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom).offset(-20)
             $0.height.equalTo(44)
             $0.leading.trailing.equalToSuperview().inset(20)
+        }
+        
+        kakaoMapViewController.view.snp.makeConstraints {
+            $0.top.leading.trailing.equalToSuperview()
+            $0.bottom.equalTo(addressView.snp.top).offset(-20)
         }
     }
 }
