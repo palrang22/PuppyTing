@@ -9,9 +9,14 @@ import CoreLocation
 import UIKit
 
 import KakaoMapsSDK
+import RxCocoa
+import RxSwift
 import SnapKit
 
 class SearchedMapViewController: UIViewController {
+    
+    let mapDataSubject = PublishSubject<(String?, String?, CLLocationCoordinate2D?)>()
+    private let disposeBag = DisposeBag()
     
     var placeName: String?
     var roadAddressName: String?
@@ -22,7 +27,6 @@ class SearchedMapViewController: UIViewController {
     private lazy var closeButton: UIButton = {
         let button = UIButton()
         button.setImage(UIImage(named: "closeButton"), for: .normal)
-        button.addTarget(self, action: #selector(dismissModal), for: .touchUpInside)
         return button
     }()
     
@@ -32,7 +36,6 @@ class SearchedMapViewController: UIViewController {
         button.setTitle("여기로 지정", for: .normal)
         button.setTitleColor(.white, for: .normal)
         button.titleLabel?.font = .systemFont(ofSize: 14, weight: .semibold)
-        button.addTarget(self, action: #selector(backToPost), for: .touchUpInside)
         return button
     }()
     
@@ -46,6 +49,7 @@ class SearchedMapViewController: UIViewController {
         view.addSubview(kakaoMapViewController.view)
         setConstraints()
         configMapInfo()
+        bind()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -69,12 +73,20 @@ class SearchedMapViewController: UIViewController {
         }
     }
     
-    @objc private func backToPost() {
-        dismiss(animated: true, completion: nil)
-    }
-    
-    @objc func dismissModal() {
-        dismiss(animated: true, completion: nil)
+    func bind() {
+        closeButton.rx.tap
+            .bind { [weak self] in
+                self?.dismiss(animated: true, completion: nil)
+            }
+            .disposed(by: disposeBag)
+        
+        selectButton.rx.tap
+            .bind { [weak self] in
+                guard let self = self else { return }
+                
+                self.mapDataSubject.onNext((self.placeName, self.roadAddressName, self.coordinate))
+                self.dismiss(animated: true, completion: nil)
+            }.disposed(by: disposeBag)
     }
     
     private func setConstraints() {
@@ -98,8 +110,7 @@ class SearchedMapViewController: UIViewController {
         }
         
         kakaoMapViewController.view.snp.makeConstraints {
-            $0.top.leading.trailing.equalToSuperview()
-            $0.bottom.equalTo(addressView.snp.top).offset(-20)
+            $0.edges.equalToSuperview()
         }
     }
 }

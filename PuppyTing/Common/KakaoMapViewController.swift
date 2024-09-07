@@ -21,6 +21,7 @@ class KakaoMapViewController: UIViewController, MapControllerDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupMapView()
+        setConstraints()
     }
     
     deinit {
@@ -32,9 +33,6 @@ class KakaoMapViewController: UIViewController, MapControllerDelegate {
     private func setupMapView() {
         // 맵 컨테이너 초기화 및 추가
         mapContainer = KMViewContainer(frame: self.view.bounds)
-        if let mapContainer = mapContainer {
-            self.view.addSubview(mapContainer)
-        }
         
         // KMController 생성 및 초기화
         mapController = KMController(viewContainer: mapContainer!)
@@ -48,6 +46,7 @@ class KakaoMapViewController: UIViewController, MapControllerDelegate {
             addViews()  // addViews는 파라미터 없이 좌표를 내부에서 사용
         }
     }
+
     
     // 좌표에 따라 지도를 생성하는 메서드
     func addViews() {
@@ -167,5 +166,16 @@ class KakaoMapViewController: UIViewController, MapControllerDelegate {
     // 엔진 리셋
     public func resetEngine() {
         mapController?.resetEngine()
+    }
+    
+    private func setConstraints() {
+        if let mapContainer = mapContainer {
+            view.addSubview(mapContainer)
+            mapContainer.snp.makeConstraints {
+                $0.edges.equalToSuperview()
+            }
+        } else {
+            print("MapContainer 생성 실패")
+        }
     }
 }

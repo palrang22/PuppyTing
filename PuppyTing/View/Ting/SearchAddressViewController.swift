@@ -13,6 +13,7 @@ import RxSwift
 import SnapKit
 
 class SearchAddressViewController: UIViewController {
+    let mapDataSubject = PublishSubject<(String?, String?, CLLocationCoordinate2D?)>()
     
     private let locationManager = CLLocationManager()
     private let viewModel = TingViewModel()
@@ -96,7 +97,8 @@ class SearchAddressViewController: UIViewController {
         
         tableView.rx.modelSelected(Place.self)
             .subscribe(onNext: { [weak self] place in
-                self?.searchBar.resignFirstResponder()
+                guard let self = self else { return }
+                self.searchBar.resignFirstResponder()
                 
                 let detailVC = SearchedMapViewController()
                 detailVC.placeName = place.placeName
@@ -105,8 +107,28 @@ class SearchAddressViewController: UIViewController {
                     detailVC.coordinate = CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
                 }
                 
+                // detailVC에서 방출된 데이터를 받아 처리
+                detailVC.mapDataSubject
+                    .subscribe(onNext: { [weak self] placeName, roadAddressName, coordinate in
+                        guard let self = self else { return }
+                        
+                        // 받아온 데이터로 처리
+                        if let coordinate = coordinate {
+                            print("선택된 장소: \(placeName ?? "")")
+                            print("선택된 도로명 주소: \(roadAddressName ?? "")")
+                            print("선택된 좌표: \(coordinate.latitude), \(coordinate.longitude)")
+                            
+                            // 선택된 데이터를 상위 컨트롤러의 mapDataSubject로 방출
+                            self.mapDataSubject.onNext((placeName, roadAddressName, coordinate))
+                            
+                            // 화면 이동
+                            self.navigationController?.popViewController(animated: true)
+                        }
+                    }).disposed(by: self.disposeBag)
+                
+                // detailVC를 fullScreen으로 모달 표시
                 detailVC.modalPresentationStyle = .fullScreen
-                self?.present(detailVC, animated: true, completion: nil)
+                self.present(detailVC, animated: true, completion: nil)
             }).disposed(by: disposeBag)
     }
     
