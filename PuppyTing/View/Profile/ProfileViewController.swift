@@ -11,16 +11,6 @@ import SnapKit
 
 class ProfileViewController: UIViewController {
     
-//    하프모달 시 클로즈버튼 필요 없음
-//    private let closeButton: UIButton = {
-//        let button = UIButton(type: .system)
-//        button.setTitle("✕", for: .normal)
-//        button.titleLabel?.font = .systemFont(ofSize: 20)
-//        button.setTitleColor(.black, for: .normal)
-//        button.addTarget(self, action: #selector(didTapCloseButton), for: .touchUpInside)
-//        return button
-//    }()
-    
     private let collectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .vertical
@@ -42,17 +32,8 @@ class ProfileViewController: UIViewController {
         collectionView.dataSource = self
         collectionView.delegate = self
         
-        // 버튼을 먼저 추가 - 클로즈버튼 하프모달시 필요없음
-//        view.addSubview(closeButton)
-//        closeButton.snp.makeConstraints {
-//            $0.top.equalTo(view.safeAreaLayoutGuide).offset(10)
-//            $0.leading.equalTo(view.safeAreaLayoutGuide).offset(10)
-//            $0.height.width.equalTo(44)
-//        }
-        
         view.addSubview(collectionView)
         collectionView.snp.makeConstraints {
-//            $0.top.equalTo(closeButton.snp.bottom).offset(10)
             $0.top.equalTo(view.safeAreaLayoutGuide)
             $0.leading.trailing.bottom.equalTo(view.safeAreaLayoutGuide)
         }

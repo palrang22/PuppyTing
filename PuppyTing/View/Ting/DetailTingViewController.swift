@@ -163,6 +163,7 @@ class DetailTingViewController: UIViewController {
     
     @objc private func didTapProfile() {
         let profileVC = ProfileViewController()
+        profileVC.modalPresentationStyle = .pageSheet
         
         // 하프모달로 띄우기
         if let sheet = profileVC.sheetPresentationController {
