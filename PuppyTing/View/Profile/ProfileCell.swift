@@ -7,9 +7,12 @@
 
 import UIKit
 
+import RxSwift
 import SnapKit
 
 class ProfileCell: UICollectionViewCell {
+    
+    private let disposeBag = DisposeBag()
     
     private let stackView: UIStackView = {
         let stackView = UIStackView()
@@ -93,6 +96,37 @@ class ProfileCell: UICollectionViewCell {
     @objc private func footButtonTapped() {
         print("발도장 남기기 버튼 눌림")
     }
+    
+    func configure(with member: Member) {
+           nicknameLabel.text = member.nickname
+           footNumberLabel.text = "\(member.footPrint)개"
+           
+           // 프로필 이미지가 있으면 가져오고 없으면 기본프로필로 설정
+           if !member.profileImage.isEmpty {
+               loadImage(from: member.profileImage)
+           } else {
+               profileImageView.image = UIImage(named: "defaultProfileImage") // 기본 이미지
+           }
+       }
+        
+    // 프로필 이미지가 있을 때 이미지를 불러옴
+       private func loadImage(from urlString: String) {
+           guard let url = URL(string: urlString) else { return }
+           
+           URLSession.shared.dataTask(with: url) { [weak self] data, response, error in
+               if let error = error {
+                   print("이미지 로딩 실패: \(error)")
+                   return
+               }
+               
+               guard let data = data, let image = UIImage(data: data) else { return }
+               
+               // UI는 메인 스레드에서 업데이트
+               DispatchQueue.main.async {
+                   self?.profileImageView.image = image
+               }
+           }.resume()
+       }
     
     override init(frame: CGRect) {
         super.init(frame: frame)
