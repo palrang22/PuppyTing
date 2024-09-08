@@ -83,6 +83,7 @@ class NetworkManager {
             print("noImage")
             let image = UIImage(named: "defaultProfileImage")
             if let image = image {
+                print("test")
                 completion(image)
             } else {
                 completion(UIImage())
@@ -94,6 +95,13 @@ class NetworkManager {
         let task = URLSession.shared.dataTask(with: url) { data, response, error in
             if let error = error {
                 print("error \(error)")
+                let image = UIImage(named: "defaultProfileImage")
+                if let image = image {
+                    print("test")
+                    completion(image)
+                } else {
+                    completion(UIImage())
+                }
             } else if let data = data, let image = UIImage(data: data) {
                 completion(image)
             } else {

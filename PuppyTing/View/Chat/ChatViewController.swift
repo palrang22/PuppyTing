@@ -105,7 +105,7 @@ class ChatViewController: UIViewController {
         }
         scrollToBottom() // 키보드가 나타날 때 자동으로 스크롤
     }
-
+    
     // 키보드가 사라질 때 호출되는 메서드
     @objc func keyboardWillHide(notification: NSNotification) {
         messageInputViewBottomConstraint.update(offset: 0)
@@ -113,12 +113,12 @@ class ChatViewController: UIViewController {
             self.view.layoutIfNeeded()
         }
     }
-
+    
     // 메모리 해제를 위해 노티피케이션 제거
     deinit {
         NotificationCenter.default.removeObserver(self)
     }
-
+    
     
     private func setupBindings() {
         let input = ChatViewModel.Input(
@@ -137,38 +137,24 @@ class ChatViewController: UIViewController {
                     guard let cell = tableView.dequeueReusableCell(withIdentifier: MyChattingTableViewCell.identifier, for: IndexPath(row: row, section: 0)) as? MyChattingTableViewCell else {
                         return UITableViewCell()
                     }
-                    cell.messageBox.text = message.text
                     let date = Date(timeIntervalSince1970: message.timestamp)
                     let dateFormatter = DateFormatter()
                     dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
                     let dateString = dateFormatter.string(from: date)
-                    cell.date.text = dateString
+                    cell.config(message: message.text, time: dateString)
                     return cell
                 } else {
                     guard let cell = tableView.dequeueReusableCell(withIdentifier: ChattingTableViewCell.identifier, for: IndexPath(row: row, section: 0)) as? ChattingTableViewCell else {
                         return UITableViewCell()
                     }
                     self.viewModel.findMember(uuid: message.senderId)
-                    self.viewModel.memberSubject.observe(on: MainScheduler.instance).subscribe(onNext: { member in
-                        cell.name.text = member.nickname
-                        DispatchQueue.main.async { // 메인 스레드에서 UI 업데이트 시작
-                            if member.profileImage == "기본 이미지" || member.profileImage == "defaultProfileImage" {
-                                cell.profileImage.image = UIImage(named: "defaultProfileImage")
-                            } else {
-                                NetworkManager.shared.fetchImage(url: member.profileImage) { imageData in
-                                    DispatchQueue.main.async { // 메인 스레드에서 UI 업데이트
-                                        cell.profileImage.image = imageData
-                                    }
-                                }
-                            }
-                        }
-                    }).disposed(by: self.disposeBag)
-                    cell.messageBox.text = message.text
                     let date = Date(timeIntervalSince1970: message.timestamp)
                     let dateFormatter = DateFormatter()
                     dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
                     let dateString = dateFormatter.string(from: date)
-                    cell.date.text = dateString
+                    self.viewModel.memberSubject.observe(on: MainScheduler.instance).subscribe(onNext: { member in
+                        cell.config(image: member.profileImage, message: message.text, time: dateString, nickname: member.nickname)
+                    }).disposed(by: self.disposeBag)
                     return cell
                 }
             }
