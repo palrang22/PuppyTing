@@ -105,6 +105,13 @@ class TingCollectionViewCell: UICollectionViewCell {
         return button
     }()
     
+    private let hidableStack: UIStackView = {
+        let stack = UIStackView()
+        stack.spacing = 20
+        stack.axis = .vertical
+        return stack
+    }()
+    
     //MARK: View 생명주기
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -200,12 +207,14 @@ class TingCollectionViewCell: UICollectionViewCell {
     private func setConstraints() {
         [nameLabel,
          timeLabel].forEach { infoStack.addArrangedSubview($0) }
+        
+        [content,
+         messageSendButton].forEach { hidableStack.addArrangedSubview($0) }
+        
         [shadowContainerView, profilePic,
          infoStack,
          footPrintLabel,
-         content,
-         mapView,
-         messageSendButton].forEach { contentView.addSubview($0) }
+         hidableStack].forEach { contentView.addSubview($0) }
         
         shadowContainerView.snp.makeConstraints {
             $0.edges.equalToSuperview().inset(5)
@@ -227,22 +236,22 @@ class TingCollectionViewCell: UICollectionViewCell {
             $0.centerY.equalTo(profilePic)
         }
         
+        hidableStack.snp.makeConstraints {
+            $0.top.equalTo(infoStack.snp.bottom).offset(20)
+            $0.leading.trailing.equalToSuperview()
+            $0.bottom.equalToSuperview().offset(-20)
+        }
+
         content.snp.makeConstraints {
-            $0.top.equalTo(profilePic.snp.bottom).offset(20)
+//            $0.top.equalTo(hidableStack.snp.top)
             $0.leading.trailing.equalToSuperview().inset(20)
         }
-        
-        mapView.snp.makeConstraints {
-            $0.top.equalTo(content.snp.bottom).offset(20)
-            $0.leading.trailing.equalToSuperview().inset(20)
-            $0.height.equalTo(70)
-        }
-        
+
         messageSendButton.snp.makeConstraints {
-            $0.top.equalTo(mapView.snp.bottom).offset(20)
+//            $0.top.equalTo(content.snp.bottom).offset(20)
             $0.leading.trailing.equalToSuperview().inset(20)
             $0.height.equalTo(44)
-            $0.bottom.equalToSuperview().offset(-30)
+//            $0.bottom.equalToSuperview().offset(-30)
         }
     }
 }
