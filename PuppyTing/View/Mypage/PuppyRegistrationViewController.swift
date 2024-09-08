@@ -1,5 +1,6 @@
 import UIKit
 
+import FirebaseAuth
 import RxCocoa
 import RxSwift
 import SnapKit
@@ -10,6 +11,7 @@ class PuppyRegistrationViewController: UIViewController {
 
     var completionHandler: ((String, String, UIImage?) -> Void)?
     var isEditMode: Bool = false
+    private let puppyRegistrationViewModel = PuppyRegistrationViewModel()
     
     private let disposeBag = DisposeBag()
     
@@ -101,9 +103,11 @@ class PuppyRegistrationViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
+        setupKeyboardDismissRecognizer()
         setupUI()
         configureNavigationBar()
         setupBindings()
+        bindData()
     }
 
     // MARK: - Setup UI
@@ -177,6 +181,69 @@ class PuppyRegistrationViewController: UIViewController {
             $0.edges.equalToSuperview()
             $0.height.equalToSuperview()
         }
+    }
+    
+    private func findUserId() -> String {
+        guard let user = Auth.auth().currentUser else { return "" }
+        return user.uid
+    }
+    
+    private func updateImage(image: UIImage) {
+        puppyRegistrationViewModel.updateImage(image: image)
+    }
+    
+    private func addPuppy() {
+        guard let name = nameTextField.text,
+              let strAge = ageTextField.text,
+              let age = Int(strAge)
+              else { return }
+        let userId = findUserId()
+        let image = puppyImage
+        // 이미지, 이름, 나이 저장
+        var tagArr: [String] = []
+        
+        for view in tagStack.arrangedSubviews {
+            if let button = view as? UIButton {
+                if let tag = button.titleLabel?.text {
+                    tagArr.append(tag)
+                }
+            }
+        }
+        
+        guard !tagArr.isEmpty else { return }
+        
+        print("이름 : \(name)\n나이 : \(age)\n태그 : \(tagArr)")
+        puppyRegistrationViewModel.createPet(userId: userId, name: name, age: age, petImage: image, tag: tagArr)
+    }
+    
+    private func uploadImage() {
+        guard let image = puppyImageView.image else { return }
+        updateImage(image: image)
+    }
+    
+    
+    
+    var puppyImage: String = "" {
+        didSet {
+            addPuppy()
+        }
+    }
+    
+    var pet: Pet? = nil {
+        didSet {
+            // 데이터 생성
+            // 등록 후 이전 화면으로 돌아가기
+            navigationController?.popViewController(animated: true)
+        }
+    }
+    
+    private func bindData() {
+        puppyRegistrationViewModel.imageSubject.observe(on: MainScheduler.instance).subscribe(onNext: { [weak self] image in
+            self?.puppyImage = image
+        }).disposed(by: disposeBag)
+        puppyRegistrationViewModel.petSubject.observe(on: MainScheduler.instance).subscribe(onNext: { [weak self] pet in
+            self?.pet = pet
+        }).disposed(by: disposeBag)
     }
 
     // MARK: - Configure Navigation Bar
@@ -287,10 +354,9 @@ class PuppyRegistrationViewController: UIViewController {
         }
 
         // 새로운 데이터를 completionHandler를 통해 전달 (이미지 포함)
-        completionHandler?(name, info, puppyImageView.image)
+        //completionHandler?(name, info, puppyImageView.image)
+        uploadImage()
         
-        // 등록 후 이전 화면으로 돌아가기
-        navigationController?.popViewController(animated: true)
     }
 
     private func presentAlert(title: String, message: String) {
