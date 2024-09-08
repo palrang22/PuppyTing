@@ -169,6 +169,11 @@ class ChatViewController: UIViewController {
                     dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
                     let dateString = dateFormatter.string(from: date)
                     cell.date.text = dateString
+                    
+                    // 프로필 이미지 탭 클로저
+                    cell.profileImageTapped = { [weak self] in
+                        self?.presentProfileViewController()
+                    }
                     return cell
                 }
             }
@@ -186,6 +191,17 @@ class ChatViewController: UIViewController {
                 self?.scrollToBottom()
             })
             .disposed(by: disposeBag)
+    }
+    
+    // 하프모달로 띄우기
+    private func presentProfileViewController() {
+        let profileVC = ProfileViewController()
+        profileVC.modalPresentationStyle = .pageSheet
+        if let sheet = profileVC.sheetPresentationController {
+            sheet.detents = [.medium()]
+            sheet.prefersGrabberVisible = true
+        }
+        present(profileVC, animated: true, completion: nil)
     }
     
     // 제일 밑 채팅 보이기
