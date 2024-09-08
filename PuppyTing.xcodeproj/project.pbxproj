@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		23607BFA2C8978E600A23716 /* PostingViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23607BF92C8978E600A23716 /* PostingViewModel.swift */; };
 		23607C022C8A930100A23716 /* UIButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23607C012C8A930100A23716 /* UIButton.swift */; };
-		23607C0A2C8C6CBA00A23716 /* Config.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 23607C092C8C6CBA00A23716 /* Config.xcconfig */; };
 		5602B05E2C8A82E50060F03B /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5602B05D2C8A82E50060F03B /* ProfileViewController.swift */; };
 		5602B0692C8AEA340060F03B /* ProfileCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5602B0682C8AEA340060F03B /* ProfileCell.swift */; };
 		5602B0712C8AF4EF0060F03B /* PuppyHeaderCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5602B0702C8AF4EF0060F03B /* PuppyHeaderCell.swift */; };
@@ -39,6 +38,9 @@
 		A2F9FE5B2C8C4D8C004D7FF6 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = A2F9FE5A2C8C4D8C004D7FF6 /* GoogleService-Info.plist */; };
 		A2F9FE5E2C8C4DAD004D7FF6 /* FirebaseStorage in Frameworks */ = {isa = PBXBuildFile; productRef = A2F9FE5D2C8C4DAD004D7FF6 /* FirebaseStorage */; };
 		A2F9FE602C8C4DC8004D7FF6 /* FirebaseStorageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2F9FE5F2C8C4DC8004D7FF6 /* FirebaseStorageManager.swift */; };
+		A2F9FE6A2C8DA1D3004D7FF6 /* Config.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = A2F9FE692C8DA1D3004D7FF6 /* Config.xcconfig */; };
+		A2F9FE6C2C8DAF18004D7FF6 /* Pet.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2F9FE6B2C8DAF18004D7FF6 /* Pet.swift */; };
+		A2F9FE6E2C8DAFD8004D7FF6 /* PuppyRegistrationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2F9FE6D2C8DAFD8004D7FF6 /* PuppyRegistrationViewModel.swift */; };
 		C29FCF662C7DB37E00F8951D /* PuppyCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C29FCF652C7DB37E00F8951D /* PuppyCollectionViewCell.swift */; };
 		C29FCF682C7DBA4F00F8951D /* PuppyRegistrationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C29FCF672C7DBA4F00F8951D /* PuppyRegistrationViewController.swift */; };
 		C29FCF772C8171FA00F8951D /* MyInfoEditViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C29FCF762C8171FA00F8951D /* MyInfoEditViewController.swift */; };
@@ -83,7 +85,6 @@
 /* Begin PBXFileReference section */
 		23607BF92C8978E600A23716 /* PostingViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostingViewModel.swift; sourceTree = "<group>"; };
 		23607C012C8A930100A23716 /* UIButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIButton.swift; sourceTree = "<group>"; };
-		23607C092C8C6CBA00A23716 /* Config.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = Config.xcconfig; path = ../../../../../Downloads/Config.xcconfig; sourceTree = "<group>"; };
 		5602B05D2C8A82E50060F03B /* ProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
 		5602B0682C8AEA340060F03B /* ProfileCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileCell.swift; sourceTree = "<group>"; };
 		5602B0702C8AF4EF0060F03B /* PuppyHeaderCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PuppyHeaderCell.swift; sourceTree = "<group>"; };
@@ -110,6 +111,9 @@
 		A2F9FE582C8C2193004D7FF6 /* MyInfoEditVIewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyInfoEditVIewModel.swift; sourceTree = "<group>"; };
 		A2F9FE5A2C8C4D8C004D7FF6 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		A2F9FE5F2C8C4DC8004D7FF6 /* FirebaseStorageManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseStorageManager.swift; sourceTree = "<group>"; };
+		A2F9FE692C8DA1D3004D7FF6 /* Config.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = Config.xcconfig; path = ../../../Config.xcconfig; sourceTree = "<group>"; };
+		A2F9FE6B2C8DAF18004D7FF6 /* Pet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Pet.swift; sourceTree = "<group>"; };
+		A2F9FE6D2C8DAFD8004D7FF6 /* PuppyRegistrationViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PuppyRegistrationViewModel.swift; sourceTree = "<group>"; };
 		C29FCF652C7DB37E00F8951D /* PuppyCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PuppyCollectionViewCell.swift; sourceTree = "<group>"; };
 		C29FCF672C7DBA4F00F8951D /* PuppyRegistrationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PuppyRegistrationViewController.swift; sourceTree = "<group>"; };
 		C29FCF762C8171FA00F8951D /* MyInfoEditViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyInfoEditViewController.swift; sourceTree = "<group>"; };
@@ -271,6 +275,7 @@
 			children = (
 				E738FBA52C7C66C9004696BD /* MyPageViewModel.swift */,
 				A2F9FE582C8C2193004D7FF6 /* MyInfoEditVIewModel.swift */,
+				A2F9FE6D2C8DAFD8004D7FF6 /* PuppyRegistrationViewModel.swift */,
 			);
 			path = MyPage;
 			sourceTree = "<group>";
@@ -319,6 +324,7 @@
 				A2085DC92C80395B00698923 /* Member.swift */,
 				E7F598332C847A7800FE8900 /* Place.swift */,
 				A2F9FE502C89D561004D7FF6 /* ChatModel.swift */,
+				A2F9FE6B2C8DAF18004D7FF6 /* Pet.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -344,7 +350,7 @@
 			children = (
 				E738FB762C7C62EE004696BD /* AppDelegate.swift */,
 				E738FB782C7C62EE004696BD /* SceneDelegate.swift */,
-				23607C092C8C6CBA00A23716 /* Config.xcconfig */,
+				A2F9FE692C8DA1D3004D7FF6 /* Config.xcconfig */,
 			);
 			path = App;
 			sourceTree = "<group>";
@@ -484,9 +490,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				E738FB802C7C62F0004696BD /* Assets.xcassets in Resources */,
+				A2F9FE6A2C8DA1D3004D7FF6 /* Config.xcconfig in Resources */,
 				E738FBAA2C7C6BB3004696BD /* .gitignore in Resources */,
 				A2F9FE5B2C8C4D8C004D7FF6 /* GoogleService-Info.plist in Resources */,
-				23607C0A2C8C6CBA00A23716 /* Config.xcconfig in Resources */,
 				E738FB832C7C62F0004696BD /* Base in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -502,6 +508,7 @@
 				56FD04952C856C6E00EBCDCD /* ChangePasswordViewController.swift in Sources */,
 				E738FBC32C7D8019004696BD /* TingCollectionViewCell.swift in Sources */,
 				A2F9FE512C89D561004D7FF6 /* ChatModel.swift in Sources */,
+				A2F9FE6E2C8DAFD8004D7FF6 /* PuppyRegistrationViewModel.swift in Sources */,
 				A2F9FE532C89D9CE004D7FF6 /* FirebaseRealtimeDatabaseManager.swift in Sources */,
 				E70DB3512C8068460073B3F8 /* SearchedMapViewController.swift in Sources */,
 				E70DB34F2C8068190073B3F8 /* SearchedAddressTableViewCell.swift in Sources */,
@@ -519,6 +526,7 @@
 				A2085DD12C8059F400698923 /* FireStoreDatabaseManager.swift in Sources */,
 				E738FB772C7C62EE004696BD /* AppDelegate.swift in Sources */,
 				E738FBC52C7DB85A004696BD /* TingFeedModel.swift in Sources */,
+				A2F9FE6C2C8DAF18004D7FF6 /* Pet.swift in Sources */,
 				A2F9FE592C8C2193004D7FF6 /* MyInfoEditVIewModel.swift in Sources */,
 				23607C022C8A930100A23716 /* UIButton.swift in Sources */,
 				A2085DC82C7EB4BA00698923 /* ChatTableViewCell.swift in Sources */,
