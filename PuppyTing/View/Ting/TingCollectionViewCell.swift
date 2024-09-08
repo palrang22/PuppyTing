@@ -139,6 +139,24 @@ class TingCollectionViewCell: UICollectionViewCell {
             .subscribe(onSuccess: { [weak self] member in
                 self?.nameLabel.text = member.nickname
                 self?.footPrintLabel.text = "🐾 발도장 \(member.footPrint)개"
+                
+                if !(member.profileImage == "defaultProfileImage") {
+                    NetworkManager.shared.loadImageFromURL(urlString: member.profileImage)
+                        .subscribe(onSuccess: { [weak self] image in
+                            print("이미지 로드 성공 2")
+                            DispatchQueue.main.async {
+                                self?.profilePic.image = image ?? UIImage(named: "defaultProfileImage")
+                            }
+                        }, onFailure: { error in
+                            print("1이미지 로드 실패: \(error)")
+                            DispatchQueue.main.async {
+                                self?.profilePic.image = UIImage(named: "defaultProfileImage")
+                            }
+                        }).disposed(by: self?.disposeBag ?? DisposeBag())
+                } else {
+                    print("접근")
+                }
+                
             }, onFailure: { error in
                 print("멤버 찾기 실패: \(error)")
             }).disposed(by: disposeBag)
@@ -238,20 +256,17 @@ class TingCollectionViewCell: UICollectionViewCell {
         
         hidableStack.snp.makeConstraints {
             $0.top.equalTo(infoStack.snp.bottom).offset(20)
-            $0.leading.trailing.equalToSuperview()
+            $0.leading.trailing.equalToSuperview().inset(20)
             $0.bottom.equalToSuperview().offset(-20)
         }
 
-        content.snp.makeConstraints {
-//            $0.top.equalTo(hidableStack.snp.top)
-            $0.leading.trailing.equalToSuperview().inset(20)
-        }
+//        content.snp.makeConstraints {
+//            $0.leading.trailing.equalToSuperview().inset(20)
+//        }
 
         messageSendButton.snp.makeConstraints {
-//            $0.top.equalTo(content.snp.bottom).offset(20)
-            $0.leading.trailing.equalToSuperview().inset(20)
+            //$0.leading.trailing.equalToSuperview().inset(20)
             $0.height.equalTo(44)
-//            $0.bottom.equalToSuperview().offset(-30)
         }
     }
 }
