@@ -40,7 +40,7 @@ struct Pet: Codable {
         self.tag = tag
     }
     
-    var dictionray: [String: Any] {
+    var dictionary: [String: Any] {
         return [
             "id": id,
             "userId": userId,

@@ -187,41 +187,42 @@ class FireStoreDatabaseManager {
             return Disposables.create()
         }
     }
+
     
-    func createPuppy(userId: String, name: String, age: Int, petImage: String, tag: [String]) -> Single<Pet> {
-        return Single.create { single in
-            let docRef = self.db.collection("pet").document()
-            let petId = docRef.documentID
-            
-            let pet = Pet(id: petId, userId: userId, name: name, age: age, petImage: petImage, tag: tag)
-            docRef.setData(pet.dictionray) { error in
-                if let error = error {
-                    single(.failure(error))
-                } else {
-                    single(.success(pet))
-                }
-            }
-            return Disposables.create()
-        }
-    }
+//    func createPuppy(userId: String, name: String, age: Int, petImage: String, tag: [String]) -> Single<Pet> {
+//        return Single.create { single in
+//            let docRef = self.db.collection("pet").document()
+//            let petId = docRef.documentID
+//            
+//            let pet = Pet(id: petId, userId: userId, name: name, age: age, petImage: petImage, tag: tag)
+//            docRef.setData(pet.dictionray) { error in
+//                if let error = error {
+//                    single(.failure(error))
+//                } else {
+//                    single(.success(pet))
+//                }
+//            }
+//            return Disposables.create()
+//        }
+//    }
     
-    func findPetList(userId: String) -> Single<[Pet]> {
-        return Single.create { single in
-            self.db.collection("pet").whereField("userId", isEqualTo: userId).getDocuments { querySnapshot, error in
-                if let error = error {
-                    single(.failure(error))
-                } else {
-                    var petList: [Pet] = []
-                    print(querySnapshot!.documents)
-                    for i in querySnapshot!.documents {
-                        if let pet = Pet(dictionary: i.data()) {
-                            petList.append(pet)
-                        }
-                    }
-                    single(.success(petList))
-                }
-            }
-            return Disposables.create()
-        }
-    }
+//    func findPetList(userId: String) -> Single<[Pet]> {
+//        return Single.create { single in
+//            self.db.collection("pet").whereField("userId", isEqualTo: userId).getDocuments { querySnapshot, error in
+//                if let error = error {
+//                    single(.failure(error))
+//                } else {
+//                    var petList: [Pet] = []
+//                    print(querySnapshot!.documents)
+//                    for i in querySnapshot!.documents {
+//                        if let pet = Pet(dictionary: i.data()) {
+//                            petList.append(pet)
+//                        }
+//                    }
+//                    single(.success(petList))
+//                }
+//            }
+//            return Disposables.create()
+//        }
+//    }
 }
