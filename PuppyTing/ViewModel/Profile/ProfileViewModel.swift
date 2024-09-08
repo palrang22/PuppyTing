@@ -18,7 +18,7 @@ class ProfileViewModel {
     let bookmarkError = PublishSubject<Error>()
     
     func addBookmark(bookmarkId: String) {
-        FireStoreDatabaseManager.shared.addBookmard(forUserId: Auth.auth().currentUser?.uid ?? "", bookmarkId: bookmarkId)
+        FireStoreDatabaseManager.shared.addBookmark(forUserId: Auth.auth().currentUser?.uid ?? "", bookmarkId: bookmarkId)
             .observe(on: MainScheduler.instance)
             .subscribe(onSuccess: { [weak self] in
                 self?.bookmarkSuccess.onNext(())

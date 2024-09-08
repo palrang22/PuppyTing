@@ -175,7 +175,7 @@ class FireStoreDatabaseManager {
     }
     
     // 즐겨찾기 추가 메서드
-    func addBookmard(forUserId userId: String, bookmarkId: String) -> Single<Void> {
+    func addBookmark(forUserId userId: String, bookmarkId: String) -> Single<Void> {
         guard let currentUser = Auth.auth().currentUser?.uid else {
             return Single.error(NSError(domain: "", code: -1, userInfo: [NSLocalizedDescriptionKey: "사용자 인증 실패"]))
         }
