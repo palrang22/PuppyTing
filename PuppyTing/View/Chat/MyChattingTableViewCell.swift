@@ -66,5 +66,10 @@ class MyChattingTableViewCell: UITableViewCell {
         }
         
     }
+    
+    func config(message: String, time: String) {
+        messageBox.text = message
+        date.text = time
+    }
 
 }
