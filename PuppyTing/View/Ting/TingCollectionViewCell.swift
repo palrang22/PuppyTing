@@ -158,10 +158,7 @@ class TingCollectionViewCell: UICollectionViewCell {
                                 self?.profilePic.image = UIImage(named: "defaultProfileImage")
                             }
                         }).disposed(by: self?.disposeBag ?? DisposeBag())
-                } else {
-                    print("접근")
                 }
-                
             }, onFailure: { error in
                 print("멤버 찾기 실패: \(error)")
             }).disposed(by: disposeBag)

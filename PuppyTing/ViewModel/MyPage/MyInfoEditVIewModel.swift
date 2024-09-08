@@ -16,8 +16,10 @@ class MyInfoEditVIewModel {
     
     let updateSubject = PublishSubject<Bool>()
     let passwordSubject = PublishSubject<Bool>()
+    let fireStorePasswordSubject = PublishSubject<Bool>()
     let imageSubject = PublishSubject<String>()
     let realImageSubject = PublishSubject<UIImage>()
+    let memberSubject = PublishSubject<Member>()
     
     func updateMember(member: Member) {
         FireStoreDatabaseManager.shared.updateMember(member: member).observe(on: MainScheduler.instance).subscribe(onSuccess: { [weak self] isUpdate in
@@ -28,6 +30,12 @@ class MyInfoEditVIewModel {
     func updatePassword(oldpassword: String, newPassword: String) {
         FirebaseAuthManager.shared.passwordUpdate(oldPassword: oldpassword, newPassword: newPassword).observe(on: MainScheduler.instance).subscribe(onSuccess: { [weak self] isUpdate in
             self?.passwordSubject.onNext(isUpdate)
+        }).disposed(by: disposeBag)
+    }
+    
+    func updateFireStorePassword(uuid: String, password: String) {
+        FireStoreDatabaseManager.shared.updatePassword(uuid: uuid, password: password).observe(on: MainScheduler.instance).subscribe(onSuccess: { [weak self] isUpdate in
+            self?.fireStorePasswordSubject.onNext(isUpdate)
         }).disposed(by: disposeBag)
     }
     
@@ -42,6 +50,12 @@ class MyInfoEditVIewModel {
             if let image = image {
                 self?.realImageSubject.onNext(image)
             }
+        }).disposed(by: disposeBag)
+    }
+    
+    func findMember(uuid: String) {
+        FireStoreDatabaseManager.shared.findMemeber(uuid: uuid).observe(on: MainScheduler.instance).subscribe(onSuccess: { [weak self] member in
+            self?.memberSubject.onNext(member)
         }).disposed(by: disposeBag)
     }
     

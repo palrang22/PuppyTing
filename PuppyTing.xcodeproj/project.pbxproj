@@ -228,6 +228,13 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		A2F9FE782C8E1E59004D7FF6 /* Recovered References */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = "Recovered References";
+			sourceTree = "<group>";
+		};
 		E738FB6A2C7C62EE004696BD = {
 			isa = PBXGroup;
 			children = (
@@ -236,6 +243,7 @@
 				E738FB752C7C62EE004696BD /* PuppyTing */,
 				E738FB742C7C62EE004696BD /* Products */,
 				A2F9FE5C2C8C4DAD004D7FF6 /* Frameworks */,
+				A2F9FE782C8E1E59004D7FF6 /* Recovered References */,
 			);
 			sourceTree = "<group>";
 		};
@@ -708,11 +716,10 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				CODE_SIGN_STYLE = Manual;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = "";
-				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = SS444RV4LU;
+				DEVELOPMENT_TEAM = 4AW33HG75T;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = PuppyTing/Info.plist;
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "현재 위치를 기반으로 근처 만남의 장소를 검색하기 위해 위치 정보가 필요합니다.";
@@ -730,7 +737,6 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.sh.PuppyTing;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = puppyTingProfile;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -742,11 +748,10 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				CODE_SIGN_STYLE = Manual;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = "";
-				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = SS444RV4LU;
+				DEVELOPMENT_TEAM = 4AW33HG75T;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = PuppyTing/Info.plist;
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "현재 위치를 기반으로 근처 만남의 장소를 검색하기 위해 위치 정보가 필요합니다.";
@@ -764,7 +769,6 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.sh.PuppyTing;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = puppyTingProfile;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";

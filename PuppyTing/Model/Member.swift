@@ -39,7 +39,10 @@ struct Member: Codable {
               let nickname = dictionary["nickname"] as? String,
               let profileImage = dictionary["profileImage"] as? String,
               let footPrint = dictionary["footPrint"] as? Int,
-              let isSocial = dictionary["isSocial"] as? Bool else { return nil }
+              let isSocial = dictionary["isSocial"] as? Bool,
+              let blockedUsers = dictionary["blockedUsers"],
+              let bookMarkUsers = dictionary["bookMarkUsers"],
+              let puppies = dictionary["puppies"] else { return nil }
         
         self.uuid = uuid
         self.email = email
