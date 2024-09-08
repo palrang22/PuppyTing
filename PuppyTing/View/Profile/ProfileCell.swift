@@ -12,6 +12,9 @@ import SnapKit
 
 class ProfileCell: UICollectionViewCell {
     
+    var viewModel: ProfileViewModel?
+    var bookmarkId: String? // 즐겨찾기 할 유저 Id
+    
     private let disposeBag = DisposeBag()
     
     private let stackView: UIStackView = {
@@ -70,7 +73,7 @@ class ProfileCell: UICollectionViewCell {
         button.backgroundColor = UIColor.puppyPurple
         button.layer.cornerRadius = 10
         button.setTitleColor(.white, for: .normal)
-        button.addTarget(self, action: #selector(footButtonTapped), for: .touchUpInside)
+//        button.addTarget(self, action: #selector(footButtonTapped), for: .touchUpInside)
         return button
     }()
     
@@ -89,12 +92,14 @@ class ProfileCell: UICollectionViewCell {
         button.backgroundColor = UIColor.puppyPurple
         button.layer.cornerRadius = 10
         button.setTitleColor(.white, for: .normal)
+        button.addTarget(self, action: #selector(favoriteButtonTapped), for: .touchUpInside)
         return button
     }()
     
-    // 작동되는지 확인
-    @objc private func footButtonTapped() {
-        print("발도장 남기기 버튼 눌림")
+    // 즐겨찾기 버튼
+    @objc private func favoriteButtonTapped() {
+        guard let bookmarkId = bookmarkId else { return }
+        viewModel?.addBookmark(bookmarkId: bookmarkId)
     }
     
     func configure(with member: Member) {
