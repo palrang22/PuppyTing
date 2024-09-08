@@ -148,6 +148,7 @@ class TingCollectionViewCell: UICollectionViewCell {
                 } else {
                     NetworkManager.shared.loadImageFromURL(urlString: member.profileImage)
                         .subscribe(onSuccess: { [weak self] image in
+                            print("이미지 로드 성공 2")
                             DispatchQueue.main.async {
                                 self?.profilePic.image = image ?? UIImage(named: "defaultProfileImage")
                             }
@@ -157,6 +158,8 @@ class TingCollectionViewCell: UICollectionViewCell {
                                 self?.profilePic.image = UIImage(named: "defaultProfileImage")
                             }
                         }).disposed(by: self?.disposeBag ?? DisposeBag())
+                } else {
+                    print("접근")
                 }
                 
             }, onFailure: { error in
@@ -258,20 +261,17 @@ class TingCollectionViewCell: UICollectionViewCell {
         
         hidableStack.snp.makeConstraints {
             $0.top.equalTo(infoStack.snp.bottom).offset(20)
-            $0.leading.trailing.equalToSuperview()
+            $0.leading.trailing.equalToSuperview().inset(20)
             $0.bottom.equalToSuperview().offset(-20)
         }
 
-        content.snp.makeConstraints {
-//            $0.top.equalTo(hidableStack.snp.top)
-            $0.leading.trailing.equalToSuperview().inset(20)
-        }
+//        content.snp.makeConstraints {
+//            $0.leading.trailing.equalToSuperview().inset(20)
+//        }
 
         messageSendButton.snp.makeConstraints {
-//            $0.top.equalTo(content.snp.bottom).offset(20)
-            $0.leading.trailing.equalToSuperview().inset(20)
+            //$0.leading.trailing.equalToSuperview().inset(20)
             $0.height.equalTo(44)
-//            $0.bottom.equalToSuperview().offset(-30)
         }
     }
 }
