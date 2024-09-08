@@ -32,17 +32,6 @@ class ChatViewModel {
     
     // ViewModel의 Input을 받아 Output을 생성하는 메서드
     func transform(input: Input) -> Output {
-//        let messages = input.fetchMessages
-//            .flatMapLatest { [weak self] _ -> Observable<[ChatMessage]> in
-//                guard let self = self else { return Observable.just([]) } // self가 nil인 경우 빈 배열 반환
-//                return FirebaseRealtimeDatabaseManager.shared.observeMessages(in: input.roomId)
-//                    .scan([]) { (oldMessages, newMessage) in
-//                        var messages = oldMessages
-//                        messages.append(newMessage)
-//                        return messages
-//                    }
-//                    .catchAndReturn([]) // 에러 발생 시 빈 배열 반환
-//            }
         let messages = input.fetchMessages
             .flatMapLatest { [weak self] _ -> Observable<[ChatMessage]> in
                 guard let self = self else { return Observable.just([]) }

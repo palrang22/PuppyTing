@@ -132,40 +132,6 @@ class ChatViewController: UIViewController {
         
         let output = viewModel.transform(input: input)
         
-//        output.messages
-//            .bind(to: chattingTableView.rx.items) { (tableView: UITableView, row: Int, message: ChatMessage) in
-//                if message.senderId == self.userId {
-//                    guard let cell = tableView.dequeueReusableCell(withIdentifier: MyChattingTableViewCell.identifier, for: IndexPath(row: row, section: 0)) as? MyChattingTableViewCell else {
-//                        return UITableViewCell()
-//                    }
-//                    let date = Date(timeIntervalSince1970: message.timestamp)
-//                    let dateFormatter = DateFormatter()
-//                    dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
-//                    let dateString = dateFormatter.string(from: date)
-//                    cell.config(message: message.text, time: dateString)
-//                    return cell
-//                } else {
-//                    guard let cell = tableView.dequeueReusableCell(withIdentifier: ChattingTableViewCell.identifier, for: IndexPath(row: row, section: 0)) as? ChattingTableViewCell else {
-//                        return UITableViewCell()
-//                    }
-//                    self.viewModel.findMember(uuid: message.senderId)
-//                    let date = Date(timeIntervalSince1970: message.timestamp)
-//                    let dateFormatter = DateFormatter()
-//                    dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
-//                    let dateString = dateFormatter.string(from: date)
-//                    self.viewModel.memberSubject.observe(on: MainScheduler.instance).subscribe(onNext: { member in
-//                        cell.config(image: member.profileImage, message: message.text, time: dateString, nickname: member.nickname)
-//                    }).disposed(by: self.disposeBag)
-//                    cell.date.text = dateString
-//                    
-//                    // 프로필 이미지 탭 클로저
-//                    cell.profileImageTapped = { [weak self] in
-//                        self?.presentProfileViewController()
-//                    }
-//                    return cell
-//                }
-//            }
-//            .disposed(by: disposeBag)
         output.messages
             .bind(to: chattingTableView.rx.items) { (tableView: UITableView, row: Int, message: ChatMessage) in
                 if message.senderId == "date" {
