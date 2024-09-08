@@ -9,10 +9,10 @@
 /* Begin PBXBuildFile section */
 		23607BFA2C8978E600A23716 /* PostingViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23607BF92C8978E600A23716 /* PostingViewModel.swift */; };
 		23607C022C8A930100A23716 /* UIButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23607C012C8A930100A23716 /* UIButton.swift */; };
+		23607C0C2C8DC56800A23716 /* Config.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 23607C0B2C8DC56800A23716 /* Config.xcconfig */; };
 		5602B05E2C8A82E50060F03B /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5602B05D2C8A82E50060F03B /* ProfileViewController.swift */; };
 		5602B0692C8AEA340060F03B /* ProfileCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5602B0682C8AEA340060F03B /* ProfileCell.swift */; };
 		5602B0712C8AF4EF0060F03B /* PuppyHeaderCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5602B0702C8AF4EF0060F03B /* PuppyHeaderCell.swift */; };
-		5602B07B2C8C7ED70060F03B /* Config.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 5602B07A2C8C7ED70060F03B /* Config.xcconfig */; };
 		56D686C52C7DA88500B00880 /* SignupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56D686C42C7DA88500B00880 /* SignupViewController.swift */; };
 		56D686C82C7DB09600B00880 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56D686C72C7DB09600B00880 /* LoginViewController.swift */; };
 		56D686CC2C7DC88700B00880 /* PptLoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56D686CB2C7DC88600B00880 /* PptLoginViewController.swift */; };
@@ -83,10 +83,10 @@
 /* Begin PBXFileReference section */
 		23607BF92C8978E600A23716 /* PostingViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostingViewModel.swift; sourceTree = "<group>"; };
 		23607C012C8A930100A23716 /* UIButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIButton.swift; sourceTree = "<group>"; };
+		23607C0B2C8DC56800A23716 /* Config.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = Config.xcconfig; path = ../../../../../Downloads/Config.xcconfig; sourceTree = "<group>"; };
 		5602B05D2C8A82E50060F03B /* ProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
 		5602B0682C8AEA340060F03B /* ProfileCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileCell.swift; sourceTree = "<group>"; };
 		5602B0702C8AF4EF0060F03B /* PuppyHeaderCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PuppyHeaderCell.swift; sourceTree = "<group>"; };
-		5602B07A2C8C7ED70060F03B /* Config.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Config.xcconfig; sourceTree = "<group>"; };
 		56D686C42C7DA88500B00880 /* SignupViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignupViewController.swift; sourceTree = "<group>"; };
 		56D686C72C7DB09600B00880 /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 		56D686CB2C7DC88600B00880 /* PptLoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PptLoginViewController.swift; sourceTree = "<group>"; };
@@ -344,7 +344,7 @@
 			children = (
 				E738FB762C7C62EE004696BD /* AppDelegate.swift */,
 				E738FB782C7C62EE004696BD /* SceneDelegate.swift */,
-				5602B07A2C8C7ED70060F03B /* Config.xcconfig */,
+				23607C0B2C8DC56800A23716 /* Config.xcconfig */,
 			);
 			path = App;
 			sourceTree = "<group>";
@@ -484,9 +484,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				E738FB802C7C62F0004696BD /* Assets.xcassets in Resources */,
-				5602B07B2C8C7ED70060F03B /* Config.xcconfig in Resources */,
 				E738FBAA2C7C6BB3004696BD /* .gitignore in Resources */,
 				A2F9FE5B2C8C4D8C004D7FF6 /* GoogleService-Info.plist in Resources */,
+				23607C0C2C8DC56800A23716 /* Config.xcconfig in Resources */,
 				E738FB832C7C62F0004696BD /* Base in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -572,7 +572,7 @@
 /* Begin XCBuildConfiguration section */
 		E738FB852C7C62F0004696BD /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 5602B07A2C8C7ED70060F03B /* Config.xcconfig */;
+			baseConfigurationReference = 23607C0B2C8DC56800A23716 /* Config.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
@@ -636,7 +636,7 @@
 		};
 		E738FB862C7C62F0004696BD /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 5602B07A2C8C7ED70060F03B /* Config.xcconfig */;
+			baseConfigurationReference = 23607C0B2C8DC56800A23716 /* Config.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
@@ -696,9 +696,11 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_STYLE = Automatic;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 4AW33HG75T;
+				DEVELOPMENT_TEAM = "";
+				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = SS444RV4LU;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = PuppyTing/Info.plist;
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "현재 위치를 기반으로 근처 만남의 장소를 검색하기 위해 위치 정보가 필요합니다.";
@@ -715,6 +717,8 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.sh.PuppyTing;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = puppyTingProfile;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -726,9 +730,11 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_STYLE = Automatic;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 4AW33HG75T;
+				DEVELOPMENT_TEAM = "";
+				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = SS444RV4LU;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = PuppyTing/Info.plist;
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "현재 위치를 기반으로 근처 만남의 장소를 검색하기 위해 위치 정보가 필요합니다.";
@@ -745,6 +751,8 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.sh.PuppyTing;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = puppyTingProfile;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
