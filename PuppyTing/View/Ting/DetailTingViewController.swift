@@ -13,8 +13,6 @@ import RxSwift
 
 class DetailTingViewController: UIViewController {
     
-    private var ifmapCalled = false
-    
     var tingFeedModels: TingFeedModel?
     let fireStoreDatabase = FireStoreDatabaseManager.shared
     private let disposeBag = DisposeBag()
@@ -210,7 +208,6 @@ class DetailTingViewController: UIViewController {
     }
     
     private func configMap(with coordinate: CLLocationCoordinate2D) {
-        ifmapCalled = true
         addChild(kakaoMapViewController)
         view.addSubview(kakaoMapViewController.view)
         
