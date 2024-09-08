@@ -16,15 +16,17 @@ class MypageViewController: UIViewController {
     private var petList: [Pet] = [] {
         didSet {
             puppys.accept(petList)
-            pageControl.numberOfPages = petList.count
-            collectionView.isHidden = false
-            pageControl.isHidden = false
-            collectionView.snp.updateConstraints {
-                $0.height.equalTo(150) // 컬렉션 뷰의 콘텐츠에 맞는 높이 설정
-            }
+            if !petList.isEmpty {
+                pageControl.numberOfPages = petList.count
+                collectionView.isHidden = false
+                pageControl.isHidden = false
+                collectionView.snp.updateConstraints {
+                    $0.height.equalTo(150) // 컬렉션 뷰의 콘텐츠에 맞는 높이 설정
+                }
 
-            UIView.animate(withDuration: 0.3) {
-                self.view.layoutIfNeeded()
+                UIView.animate(withDuration: 0.3) {
+                    self.view.layoutIfNeeded()
+                }
             }
         }
     }
