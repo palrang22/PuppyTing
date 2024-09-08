@@ -76,25 +76,11 @@ class ChatListViewController: UIViewController, UITableViewDelegate, UISearchBar
                 let otherUser = data.users.first == userId ? data.users.last : data.users.first
                 if let otherUser = otherUser {
                     FireStoreDatabaseManager.shared.findMember(uuid: otherUser) { member in
-                        DispatchQueue.main.async { // 메인 스레드에서 UI 업데이트 시작
-                            if member.profileImage == "기본 이미지" || member.profileImage == "defaultProfileImage" {
-                                if let lastChat = data.lastChat?.text {
-                                    cell.configure(with: [UIImage(named: "defaultProfileImage") ?? UIImage()], title: member.nickname, content: lastChat)
-                                } else {
-                                    cell.configure(with: [UIImage(named: "defaultProfileImage") ?? UIImage()], title: member.nickname, content: "내용없음")
-                                }
-                            } else {
-                                NetworkManager.shared.fetchImage(url: member.profileImage) { imageData in
-                                    DispatchQueue.main.async { // 메인 스레드에서 UI 업데이트
-                                        if let lastChat = data.lastChat?.text {
-                                            cell.configure(with: [imageData], title: member.nickname, content: lastChat)
-                                        } else {
-                                            cell.configure(with: [imageData], title: member.nickname, content: "내용없음")
-                                        }
-                                    }
-                                }
-                            }
-                        } // 메인 스레드에서 UI 업데이트 끝
+                        if let lastChat = data.lastChat?.text {
+                            cell.config(image: member.profileImage, title: member.nickname, content: lastChat)
+                        } else {
+                            cell.config(image: member.profileImage, title: member.nickname, content: "내용 없음")
+                        }
                     }
                 }
             }
