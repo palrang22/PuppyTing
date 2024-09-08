@@ -7,9 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		23607C022C8A930100A23716 /* UIButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23607C012C8A930100A23716 /* UIButton.swift */; };
 		23607BFA2C8978E600A23716 /* PostingViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23607BF92C8978E600A23716 /* PostingViewModel.swift */; };
-		5602B05C2C8A828A0060F03B /* Config.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 5602B05B2C8A828A0060F03B /* Config.xcconfig */; };
+		23607C022C8A930100A23716 /* UIButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23607C012C8A930100A23716 /* UIButton.swift */; };
+		23E704C22C8E232500AFD3CD /* Config.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 23E704C12C8E232500AFD3CD /* Config.xcconfig */; };
+		23E704C42C8E238400AFD3CD /* PuppyModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23E704C32C8E238400AFD3CD /* PuppyModel.swift */; };
 		5602B05E2C8A82E50060F03B /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5602B05D2C8A82E50060F03B /* ProfileViewController.swift */; };
 		5602B0692C8AEA340060F03B /* ProfileCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5602B0682C8AEA340060F03B /* ProfileCell.swift */; };
 		5602B0712C8AF4EF0060F03B /* PuppyHeaderCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5602B0702C8AF4EF0060F03B /* PuppyHeaderCell.swift */; };
@@ -38,7 +39,6 @@
 		C29FCF772C8171FA00F8951D /* MyInfoEditViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C29FCF762C8171FA00F8951D /* MyInfoEditViewController.swift */; };
 		C29FCFC12C88566000F8951D /* MyFeedManageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C29FCFC02C88566000F8951D /* MyFeedManageViewController.swift */; };
 		C29FCFC32C88610600F8951D /* MyFeedTableViCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C29FCFC22C88610600F8951D /* MyFeedTableViCell.swift */; };
-		C29FCFC52C8AFA1200F8951D /* Config.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = C29FCFC42C8AFA1200F8951D /* Config.xcconfig */; };
 		E70DB3452C7F0CB60073B3F8 /* PostTingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E70DB3442C7F0CB60073B3F8 /* PostTingViewController.swift */; };
 		E70DB3472C7F0CD00073B3F8 /* DetailTingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E70DB3462C7F0CD00073B3F8 /* DetailTingViewController.swift */; };
 		E70DB3492C7F3F060073B3F8 /* UIViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E70DB3482C7F3F060073B3F8 /* UIViewController.swift */; };
@@ -76,9 +76,10 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		23607C012C8A930100A23716 /* UIButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIButton.swift; sourceTree = "<group>"; };
 		23607BF92C8978E600A23716 /* PostingViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostingViewModel.swift; sourceTree = "<group>"; };
-		5602B05B2C8A828A0060F03B /* Config.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Config.xcconfig; sourceTree = "<group>"; };
+		23607C012C8A930100A23716 /* UIButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIButton.swift; sourceTree = "<group>"; };
+		23E704C12C8E232500AFD3CD /* Config.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = Config.xcconfig; path = ../../../../../Downloads/Config.xcconfig; sourceTree = "<group>"; };
+		23E704C32C8E238400AFD3CD /* PuppyModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PuppyModel.swift; sourceTree = "<group>"; };
 		5602B05D2C8A82E50060F03B /* ProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
 		5602B0682C8AEA340060F03B /* ProfileCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileCell.swift; sourceTree = "<group>"; };
 		5602B0702C8AF4EF0060F03B /* PuppyHeaderCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PuppyHeaderCell.swift; sourceTree = "<group>"; };
@@ -105,7 +106,6 @@
 		C29FCF762C8171FA00F8951D /* MyInfoEditViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyInfoEditViewController.swift; sourceTree = "<group>"; };
 		C29FCFC02C88566000F8951D /* MyFeedManageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyFeedManageViewController.swift; sourceTree = "<group>"; };
 		C29FCFC22C88610600F8951D /* MyFeedTableViCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyFeedTableViCell.swift; sourceTree = "<group>"; };
-		C29FCFC42C8AFA1200F8951D /* Config.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = Config.xcconfig; path = ../../../../Config.xcconfig; sourceTree = "<group>"; };
 		E70DB3442C7F0CB60073B3F8 /* PostTingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostTingViewController.swift; sourceTree = "<group>"; };
 		E70DB3462C7F0CD00073B3F8 /* DetailTingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailTingViewController.swift; sourceTree = "<group>"; };
 		E70DB3482C7F3F060073B3F8 /* UIViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIViewController.swift; sourceTree = "<group>"; };
@@ -298,6 +298,7 @@
 				E738FBC42C7DB85A004696BD /* TingFeedModel.swift */,
 				A2085DC92C80395B00698923 /* Member.swift */,
 				E7F598332C847A7800FE8900 /* Place.swift */,
+				23E704C32C8E238400AFD3CD /* PuppyModel.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -321,7 +322,7 @@
 			children = (
 				E738FB762C7C62EE004696BD /* AppDelegate.swift */,
 				E738FB782C7C62EE004696BD /* SceneDelegate.swift */,
-				C29FCFC42C8AFA1200F8951D /* Config.xcconfig */,
+				23E704C12C8E232500AFD3CD /* Config.xcconfig */,
 			);
 			path = App;
 			sourceTree = "<group>";
@@ -460,7 +461,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				E738FB802C7C62F0004696BD /* Assets.xcassets in Resources */,
-				C29FCFC52C8AFA1200F8951D /* Config.xcconfig in Resources */,
+				23E704C22C8E232500AFD3CD /* Config.xcconfig in Resources */,
 				A2085DD82C806F8D00698923 /* GoogleService-Info.plist in Resources */,
 				E738FBAA2C7C6BB3004696BD /* .gitignore in Resources */,
 				E738FB832C7C62F0004696BD /* Base in Resources */,
@@ -511,6 +512,7 @@
 				A2F9FE1D2C859E54004D7FF6 /* FindingPasswordViewModel.swift in Sources */,
 				56FD04932C856C4200EBCDCD /* FindingPasswordViewController.swift in Sources */,
 				E738FBA62C7C66C9004696BD /* MyPageViewModel.swift in Sources */,
+				23E704C42C8E238400AFD3CD /* PuppyModel.swift in Sources */,
 				56FD04912C80172B00EBCDCD /* ChattingTableViewCell.swift in Sources */,
 				A2085DD62C806A4D00698923 /* LoginViewModel.swift in Sources */,
 				E70DB3492C7F3F060073B3F8 /* UIViewController.swift in Sources */,
