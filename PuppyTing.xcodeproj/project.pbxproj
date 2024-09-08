@@ -12,6 +12,8 @@
 		5602B05E2C8A82E50060F03B /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5602B05D2C8A82E50060F03B /* ProfileViewController.swift */; };
 		5602B0692C8AEA340060F03B /* ProfileCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5602B0682C8AEA340060F03B /* ProfileCell.swift */; };
 		5602B0712C8AF4EF0060F03B /* PuppyHeaderCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5602B0702C8AF4EF0060F03B /* PuppyHeaderCell.swift */; };
+		5602B0862C8E0C6F0060F03B /* ProfileViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5602B0852C8E0C6F0060F03B /* ProfileViewModel.swift */; };
+		5602B0882C8E10D50060F03B /* Config.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 5602B0872C8E10D50060F03B /* Config.xcconfig */; };
 		56D686C52C7DA88500B00880 /* SignupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56D686C42C7DA88500B00880 /* SignupViewController.swift */; };
 		56D686C82C7DB09600B00880 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56D686C72C7DB09600B00880 /* LoginViewController.swift */; };
 		56D686CC2C7DC88700B00880 /* PptLoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56D686CB2C7DC88600B00880 /* PptLoginViewController.swift */; };
@@ -89,6 +91,8 @@
 		5602B05D2C8A82E50060F03B /* ProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
 		5602B0682C8AEA340060F03B /* ProfileCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileCell.swift; sourceTree = "<group>"; };
 		5602B0702C8AF4EF0060F03B /* PuppyHeaderCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PuppyHeaderCell.swift; sourceTree = "<group>"; };
+		5602B0852C8E0C6F0060F03B /* ProfileViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewModel.swift; sourceTree = "<group>"; };
+		5602B0872C8E10D50060F03B /* Config.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Config.xcconfig; sourceTree = "<group>"; };
 		56D686C42C7DA88500B00880 /* SignupViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignupViewController.swift; sourceTree = "<group>"; };
 		56D686C72C7DB09600B00880 /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 		56D686CB2C7DC88600B00880 /* PptLoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PptLoginViewController.swift; sourceTree = "<group>"; };
@@ -180,6 +184,14 @@
 				5602B05D2C8A82E50060F03B /* ProfileViewController.swift */,
 				5602B0682C8AEA340060F03B /* ProfileCell.swift */,
 				5602B0702C8AF4EF0060F03B /* PuppyHeaderCell.swift */,
+			);
+			path = Profile;
+			sourceTree = "<group>";
+		};
+		5602B0842C8E0C590060F03B /* Profile */ = {
+			isa = PBXGroup;
+			children = (
+				5602B0852C8E0C6F0060F03B /* ProfileViewModel.swift */,
 			);
 			path = Profile;
 			sourceTree = "<group>";
@@ -300,6 +312,7 @@
 				E738FB8C2C7C6424004696BD /* Ting */,
 				E738FB8E2C7C6445004696BD /* Chat */,
 				E738FB8D2C7C6437004696BD /* MyPage */,
+				5602B0842C8E0C590060F03B /* Profile */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
@@ -353,6 +366,7 @@
 			children = (
 				E738FB762C7C62EE004696BD /* AppDelegate.swift */,
 				E738FB782C7C62EE004696BD /* SceneDelegate.swift */,
+				5602B0872C8E10D50060F03B /* Config.xcconfig */,
 				A2F9FE762C8DF3CB004D7FF6 /* Config.xcconfig */,
 			);
 			path = App;
@@ -493,6 +507,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				E738FB802C7C62F0004696BD /* Assets.xcassets in Resources */,
+				5602B0882C8E10D50060F03B /* Config.xcconfig in Resources */,
 				A2F9FE772C8DF3CB004D7FF6 /* Config.xcconfig in Resources */,
 				E738FBAA2C7C6BB3004696BD /* .gitignore in Resources */,
 				A2F9FE5B2C8C4D8C004D7FF6 /* GoogleService-Info.plist in Resources */,
@@ -548,6 +563,7 @@
 				E738FB9C2C7C653C004696BD /* ChatViewController.swift in Sources */,
 				A2085DCA2C80395B00698923 /* Member.swift in Sources */,
 				E738FBA02C7C669D004696BD /* SampleModel.swift in Sources */,
+				5602B0862C8E0C6F0060F03B /* ProfileViewModel.swift in Sources */,
 				A2F9FE1D2C859E54004D7FF6 /* FindingPasswordViewModel.swift in Sources */,
 				56FD04932C856C4200EBCDCD /* FindingPasswordViewController.swift in Sources */,
 				E738FBA62C7C66C9004696BD /* MyPageViewModel.swift in Sources */,
@@ -584,6 +600,7 @@
 /* Begin XCBuildConfiguration section */
 		E738FB852C7C62F0004696BD /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 5602B0872C8E10D50060F03B /* Config.xcconfig */;
 			baseConfigurationReference = A2F9FE762C8DF3CB004D7FF6 /* Config.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -648,6 +665,7 @@
 		};
 		E738FB862C7C62F0004696BD /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 5602B0872C8E10D50060F03B /* Config.xcconfig */;
 			baseConfigurationReference = A2F9FE762C8DF3CB004D7FF6 /* Config.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
