@@ -4,7 +4,7 @@
 //
 //  Created by 김승희 on 8/28/24.
 //
-
+import CoreLocation
 import UIKit
 
 import FirebaseAuth
@@ -16,6 +16,8 @@ class DetailTingViewController: UIViewController {
     var tingFeedModels: TingFeedModel?
     let fireStoreDatabase = FireStoreDatabaseManager.shared
     private let disposeBag = DisposeBag()
+    
+    private let kakaoMapViewController = KakaoMapViewController()
     
     //MARK: Component 선언
     private let scrollView: UIScrollView = {
@@ -70,22 +72,17 @@ class DetailTingViewController: UIViewController {
         let style = NSMutableParagraphStyle()
         style.lineSpacing = 6
         let styleText = NSAttributedString(string:
-                                            "내용1\n내용2\n내용3\n내용4"
-                                           , attributes: [
-            .font: UIFont.systemFont(ofSize: 16, weight: .medium),
-            .paragraphStyle: style])
+                                            "내용1\n내용2\n내용3\n내용4",
+                                           attributes: [
+                                            .font: UIFont.systemFont(ofSize: 16, weight: .medium),
+                                            .paragraphStyle: style])
         label.attributedText = styleText
         label.numberOfLines = 0
         label.textAlignment = .left
         label.lineBreakMode = .byTruncatingTail
         return label
     }()
-    
-    private let mapView: UIImageView = {
-        let map = UIImageView()
-        map.image = UIImage(named: "mapPhoto")
-        return map
-    }()
+
     
     private lazy var blockButton: UIButton = {
         let button = UIButton()
@@ -93,8 +90,6 @@ class DetailTingViewController: UIViewController {
         button.setTitleColor(.darkGray, for: .normal)
         button.titleLabel?.font = .systemFont(ofSize: 14, weight: .semibold)
         button.backgroundColor = .white
-        
-//        button.addTarget(self, action: #selector(blockButtonTapped), for: .touchUpInside)
         return button
     }()
     
@@ -104,8 +99,6 @@ class DetailTingViewController: UIViewController {
         button.setTitleColor(.darkGray, for: .normal)
         button.titleLabel?.font = .systemFont(ofSize: 14, weight: .semibold)
         button.backgroundColor = .white
-        
-//        button.addTarget(self, action: #selector(reportButtonTapped), for: .touchUpInside)
         return button
     }()
     
@@ -115,8 +108,6 @@ class DetailTingViewController: UIViewController {
         button.setTitleColor(.darkGray, for: .normal)
         button.titleLabel?.font = .systemFont(ofSize: 14, weight: .semibold)
         button.backgroundColor = .white
-//        
-//        button.addTarget(self, action: #selector(deleteButtonTapped), for: .touchUpInside)
         return button
     }()
     
@@ -143,7 +134,7 @@ class DetailTingViewController: UIViewController {
         return button
     }()
 
-    //MARK: View 생명주기
+    // MARK: View 생명주기
     override func viewDidLoad() {
         super.viewDidLoad()
         setUI()
@@ -155,15 +146,31 @@ class DetailTingViewController: UIViewController {
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapProfile))
         profilePic.isUserInteractionEnabled = true
         profilePic.addGestureRecognizer(tapGesture)
+        
         // 닉네임에도 탭 추가
         let nameTapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapProfile))
         nameLabel.isUserInteractionEnabled = true
         nameLabel.addGestureRecognizer(nameTapGesture)
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        kakaoMapViewController.activateEngine()
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        kakaoMapViewController.pauseEngine()
+    }
+    
     @objc private func didTapProfile() {
         let profileVC = ProfileViewController()
         profileVC.modalPresentationStyle = .pageSheet
+        
+        // 선택된 사용자의 uuid 전달
+        if let userid = tingFeedModels?.userid {
+            profileVC.userid = userid
+        }
         
         // 하프모달로 띄우기
         if let sheet = profileVC.sheetPresentationController {
@@ -174,24 +181,49 @@ class DetailTingViewController: UIViewController {
         present(profileVC, animated: true)
     }
     
-    //MARK: bind
+    // MARK: bind
     
-    func setData() {
+    private func setData() {
         if let model = tingFeedModels {
             content.text = model.content
             let dateFormatter = DateFormatter()
             dateFormatter.dateFormat = "yyyy-MM-dd HH:mm"
             timeLabel.text = dateFormatter.string(from: model.time)
-            setButton(model: model)
+            
+            let coordinate = model.location
+            if coordinate.latitude != 0.0, coordinate.longitude != 0.0 {
+                configMap(with: coordinate)
+            }
             
             FireStoreDatabaseManager.shared.findMemeber(uuid: model.userid)
-                .subscribe(onSuccess: { [weak self] member in
-                    self?.nameLabel.text = member.nickname
-                    self?.footPrintLabel.text = "🐾 발도장 \(member.footPrint)개"
-                }, onFailure: { error in
-                    print("멤버 찾기 실패: \(error)")
-                }).disposed(by: disposeBag)
+                            .subscribe(onSuccess: { [weak self] member in
+                                self?.nameLabel.text = member.nickname
+                                self?.footPrintLabel.text = "🐾 발도장 \(member.footPrint)개"
+                            }, onFailure: { error in
+                                print("멤버 찾기 실패: \(error)")
+                            }).disposed(by: disposeBag)
+            
+            setButton(model: model)
         }
+    }
+    
+    private func configMap(with coordinate: CLLocationCoordinate2D) {
+        addChild(kakaoMapViewController)
+        view.addSubview(kakaoMapViewController.view)
+        
+        kakaoMapViewController.view.snp.makeConstraints {
+            $0.top.equalTo(content.snp.bottom).offset(20)
+            $0.leading.trailing.equalToSuperview().inset(20)
+            $0.height.equalTo(150)
+        }
+        
+        view.layoutIfNeeded()
+        
+        mapTrueConstraints()
+        
+        kakaoMapViewController.didMove(toParent: self)
+        kakaoMapViewController.setCoordinate(coordinate)
+        kakaoMapViewController.addPoi(at: coordinate)
     }
     
     private func setButton(model: TingFeedModel) {
@@ -292,7 +324,7 @@ class DetailTingViewController: UIViewController {
             }).disposed(by: disposeBag)
     }
     
-    //MARK: UI 설정 및 제약조건 등
+    // MARK: UI 설정 및 제약조건 등
     private func setUI() {
         view.backgroundColor = .white
     }
@@ -319,7 +351,6 @@ class DetailTingViewController: UIViewController {
          footPrintLabel,
          content,
          buttonStack,
-         mapView,
          messageSendButton].forEach { contentView.addSubview($0) }
         
         profilePic.snp.makeConstraints {
@@ -343,14 +374,8 @@ class DetailTingViewController: UIViewController {
             $0.leading.trailing.equalTo(view.safeAreaLayoutGuide).inset(30)
         }
         
-        mapView.snp.makeConstraints {
-            $0.top.equalTo(content.snp.bottom).offset(20)
-            $0.leading.trailing.equalToSuperview().inset(20)
-            $0.height.equalTo(150)
-        }
-        
         buttonStack.snp.makeConstraints {
-            $0.top.equalTo(mapView.snp.bottom).offset(20)
+            $0.top.equalTo(content.snp.bottom).offset(20)
             $0.trailing.equalToSuperview().offset(-20)
         }
         
@@ -359,6 +384,13 @@ class DetailTingViewController: UIViewController {
             $0.leading.trailing.equalToSuperview().inset(20)
             $0.height.equalTo(44)
             $0.bottom.equalToSuperview().offset(-30)
+        }
+    }
+    
+    private func mapTrueConstraints() {
+        buttonStack.snp.makeConstraints {
+            $0.top.equalTo(kakaoMapViewController.view.snp.bottom).offset(20)
+            $0.trailing.equalToSuperview().offset(-20)
         }
     }
 }
