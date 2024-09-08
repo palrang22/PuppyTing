@@ -69,7 +69,12 @@ final class AppController {
     }
     
     func logOut() {
-        routeToLogin()
+        do {
+            try Auth.auth().signOut()
+            routeToLogin()
+        } catch {
+            print("로그아웃 실패")
+        }
     }
     
 }
