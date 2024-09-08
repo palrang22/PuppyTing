@@ -148,7 +148,6 @@ class TingCollectionViewCell: UICollectionViewCell {
                 } else {
                     NetworkManager.shared.loadImageFromURL(urlString: member.profileImage)
                         .subscribe(onSuccess: { [weak self] image in
-                            print("이미지 로드 성공 2")
                             DispatchQueue.main.async {
                                 self?.profilePic.image = image ?? UIImage(named: "defaultProfileImage")
                             }
@@ -158,8 +157,6 @@ class TingCollectionViewCell: UICollectionViewCell {
                                 self?.profilePic.image = UIImage(named: "defaultProfileImage")
                             }
                         }).disposed(by: self?.disposeBag ?? DisposeBag())
-                } else {
-                    print("접근")
                 }
                 
             }, onFailure: { error in

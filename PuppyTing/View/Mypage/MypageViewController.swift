@@ -17,9 +17,9 @@ class MypageViewController: UIViewController {
         didSet {
             puppys.accept(petList)
             pageControl.numberOfPages = petList.count
-            collectionView.isHidden = false
+            puppyCollectionView.isHidden = false
             pageControl.isHidden = false
-            collectionView.snp.updateConstraints {
+            puppyCollectionView.snp.updateConstraints {
                 $0.height.equalTo(150) // 컬렉션 뷰의 콘텐츠에 맞는 높이 설정
             }
 
@@ -96,7 +96,7 @@ class MypageViewController: UIViewController {
         return label
     }()
     
-    private let collectionView: UICollectionView = {
+    private let puppyCollectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal  // 가로 스크롤로 설정
         layout.minimumLineSpacing = 0
@@ -213,7 +213,7 @@ class MypageViewController: UIViewController {
             $0.edges.equalToSuperview().inset(20)
         }
 
-        [profileContainerView, collectionView, pageControl, addPuppyButton, menuContainerView].forEach {
+        [profileContainerView, puppyCollectionView, pageControl, addPuppyButton, menuContainerView].forEach {
             stackView.addArrangedSubview($0)
         }
 
@@ -249,7 +249,7 @@ class MypageViewController: UIViewController {
             $0.height.equalTo(44)
         }
 
-        collectionView.snp.makeConstraints {
+        puppyCollectionView.snp.makeConstraints {
             $0.height.equalTo(0)
             $0.left.right.equalToSuperview()
         }
@@ -316,8 +316,8 @@ class MypageViewController: UIViewController {
         }
 
         //collectionView.dataSource = self
-        collectionView.delegate = self
-        collectionView.register(PuppyCollectionViewCell.self, forCellWithReuseIdentifier: PuppyCollectionViewCell.identifier)
+        puppyCollectionView.delegate = self
+        puppyCollectionView.register(PuppyCollectionViewCell.self, forCellWithReuseIdentifier: PuppyCollectionViewCell.identifier)
 
         setupMenuItems() // 메뉴 항목을 설정하는 함수 호출
     }
@@ -426,16 +426,10 @@ class MypageViewController: UIViewController {
             }
             .disposed(by: disposeBag)
         
-        puppys.bind(to: collectionView.rx.items(cellIdentifier: PuppyCollectionViewCell.identifier, cellType: PuppyCollectionViewCell.self)) { index, data, cell in
-            cell.config(puppy: data)
-        }.disposed(by: disposeBag)
-        
-        
-//        collectionView.rx.itemSelected
-//            .bind { [weak self] indexPath in
-//                self?.navigateToPuppyEdit(at: indexPath)
-//            }
-//            .disposed(by: disposeBag)
+        puppys.bind(to: puppyCollectionView.rx
+            .items(cellIdentifier: PuppyCollectionViewCell.identifier, cellType: PuppyCollectionViewCell.self)) { index, pet, cell in
+                cell.config(puppy: pet)
+            }.disposed(by: disposeBag)
     }
 
     private func navigateToPuppyRegistration() {
@@ -461,13 +455,13 @@ class MypageViewController: UIViewController {
     }
 
     private func navigateToPuppyEdit(at indexPath: IndexPath) {
-        let puppy = puppies[indexPath.row]
+        let puppy = petList[indexPath.row]
         let puppyRegistrationVC = PuppyRegistrationViewController()
         puppyRegistrationVC.isEditMode = true
-        puppyRegistrationVC.setupWithPuppy(name: puppy.name, info: puppy.info, tag: puppy.tag)
+        puppyRegistrationVC.setupWithPuppy(name: puppy.name, info: "\(puppy.age)살", tag: puppy.tag.joined(separator: ", "))
         puppyRegistrationVC.completionHandler = { [weak self] name, info, image in
-            self?.puppies[indexPath.row] = (name: name, info: info, tag: puppy.tag, image: image)
-            self?.collectionView.reloadItems(at: [indexPath])
+            self?.petList[indexPath.row] = puppy
+            self?.puppyCollectionView.reloadItems(at: [indexPath])
         }
         if let navigationController = self.navigationController {
             navigationController.pushViewController(puppyRegistrationVC, animated: true)
@@ -476,15 +470,16 @@ class MypageViewController: UIViewController {
         }
     }
 
+
     private func addPuppy(name: String, info: String, image: UIImage?) {
         let tag = "태그 예시" // 태그는 예시로 고정값을 사용
         puppies.append((name: name, info: info, tag: tag, image: image)) // 데이터 추가
-        collectionView.reloadData()
+        puppyCollectionView.reloadData()
         pageControl.numberOfPages = puppies.count // 페이지 수 업데이트
-        collectionView.isHidden = false
+//        puppyCollectionView.isHidden = false
         pageControl.isHidden = false
 
-        collectionView.snp.updateConstraints {
+        puppyCollectionView.snp.updateConstraints {
             $0.height.equalTo(150) // 컬렉션 뷰의 콘텐츠에 맞는 높이 설정
         }
 
@@ -501,22 +496,52 @@ class MypageViewController: UIViewController {
         findMember()
         setData()
         addButtonAction()
-        viewModel.findPetList(uuid: findUserId())
+        loadPuppyInfo()
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         findMember()
-        viewModel.findPetList(uuid: findUserId())
+        loadPuppyInfo()
+    }
+    
+    private func loadPuppyInfo() {
+        let userId = findUserId()
+        print("현재 로그인된 사용자 UUID: \(userId)")
+
+        viewModel.fetchMemberPets(memberId: userId)
+            .observe(on: MainScheduler.instance)
+            .subscribe(onSuccess: { [weak self] petList in
+                self?.handlePetList(petList)
+            }, onFailure: { error in
+                print("Error fetching pets: \(error.localizedDescription)")
+            }).disposed(by: disposeBag)
+    }
+    
+    private func handlePetList(_ petList: [Pet]) {
+        if !petList.isEmpty {
+            self.petList = petList
+            self.puppyCollectionView.isHidden = false
+            self.pageControl.isHidden = false
+            self.pageControl.numberOfPages = petList.count
+        } else {
+            self.puppyCollectionView.isHidden = true
+            self.pageControl.isHidden = true
+        }
     }
     
     private func setData() {
-        viewModel.memberSubject.observe(on: MainScheduler.instance).subscribe(onNext: { [weak self] member in
-            self?.memeber = member
-        }).disposed(by: disposeBag)
-        viewModel.petListSubject.observe(on: MainScheduler.instance).subscribe(onNext: { [weak self] petList in
-            self?.petList = petList
-        }).disposed(by: disposeBag)
+        viewModel.memberSubject
+            .observe(on: MainScheduler.instance)
+            .subscribe(onNext: { [weak self] member in
+                self?.memeber = member
+            }).disposed(by: disposeBag)
+
+        viewModel.petListSubject
+            .observe(on: MainScheduler.instance)
+            .subscribe(onNext: { [weak self] petList in
+                self?.handlePetList(petList)
+            }).disposed(by: disposeBag)
     }
     
     private func findUserId() -> String {
@@ -544,24 +569,6 @@ class MypageViewController: UIViewController {
 
     }
 }
-
-// MARK: - UICollectionViewDataSource
-//extension MypageViewController: UICollectionViewDataSource {
-//
-//    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-//        return puppies.count
-//    }
-//    
-//    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-//        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PuppyCollectionViewCell.identifier, for: indexPath) as? PuppyCollectionViewCell else {
-//            return UICollectionViewCell()
-//        }
-//        
-//        let puppy = puppies[indexPath.row]
-//        cell.configure(with: puppy)
-//        return cell
-//    }
-//}
 
 // MARK: - UICollectionViewDelegateFlowLayout
 extension MypageViewController: UICollectionViewDelegateFlowLayout {
