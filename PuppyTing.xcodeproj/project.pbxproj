@@ -41,6 +41,8 @@
 		A2F9FE6C2C8DAF18004D7FF6 /* Pet.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2F9FE6B2C8DAF18004D7FF6 /* Pet.swift */; };
 		A2F9FE6E2C8DAFD8004D7FF6 /* PuppyRegistrationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2F9FE6D2C8DAFD8004D7FF6 /* PuppyRegistrationViewModel.swift */; };
 		A2F9FE772C8DF3CB004D7FF6 /* Config.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = A2F9FE762C8DF3CB004D7FF6 /* Config.xcconfig */; };
+		A2F9FE7A2C8E6BBB004D7FF6 /* ChatDateTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2F9FE792C8E6BBB004D7FF6 /* ChatDateTableViewCell.swift */; };
+		A2F9FE7C2C8E6BF7004D7FF6 /* Date.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2F9FE7B2C8E6BF7004D7FF6 /* Date.swift */; };
 		C29FCF662C7DB37E00F8951D /* PuppyCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C29FCF652C7DB37E00F8951D /* PuppyCollectionViewCell.swift */; };
 		C29FCF682C7DBA4F00F8951D /* PuppyRegistrationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C29FCF672C7DBA4F00F8951D /* PuppyRegistrationViewController.swift */; };
 		C29FCF772C8171FA00F8951D /* MyInfoEditViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C29FCF762C8171FA00F8951D /* MyInfoEditViewController.swift */; };
@@ -115,6 +117,8 @@
 		A2F9FE6B2C8DAF18004D7FF6 /* Pet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Pet.swift; sourceTree = "<group>"; };
 		A2F9FE6D2C8DAFD8004D7FF6 /* PuppyRegistrationViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PuppyRegistrationViewModel.swift; sourceTree = "<group>"; };
 		A2F9FE762C8DF3CB004D7FF6 /* Config.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Config.xcconfig; sourceTree = "<group>"; };
+		A2F9FE792C8E6BBB004D7FF6 /* ChatDateTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatDateTableViewCell.swift; sourceTree = "<group>"; };
+		A2F9FE7B2C8E6BF7004D7FF6 /* Date.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Date.swift; sourceTree = "<group>"; };
 		C29FCF652C7DB37E00F8951D /* PuppyCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PuppyCollectionViewCell.swift; sourceTree = "<group>"; };
 		C29FCF672C7DBA4F00F8951D /* PuppyRegistrationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PuppyRegistrationViewController.swift; sourceTree = "<group>"; };
 		C29FCF762C8171FA00F8951D /* MyInfoEditViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyInfoEditViewController.swift; sourceTree = "<group>"; };
@@ -352,6 +356,7 @@
 				E7F598382C885D5300FE8900 /* KakaoMapViewController.swift */,
 				A2F9FE522C89D9CE004D7FF6 /* FirebaseRealtimeDatabaseManager.swift */,
 				A2F9FE5F2C8C4DC8004D7FF6 /* FirebaseStorageManager.swift */,
+				A2F9FE7B2C8E6BF7004D7FF6 /* Date.swift */,
 			);
 			path = Common;
 			sourceTree = "<group>";
@@ -387,6 +392,7 @@
 				A2085DC72C7EB4BA00698923 /* ChatTableViewCell.swift */,
 				56FD048E2C80171100EBCDCD /* MyChattingTableViewCell.swift */,
 				56FD04902C80172B00EBCDCD /* ChattingTableViewCell.swift */,
+				A2F9FE792C8E6BBB004D7FF6 /* ChatDateTableViewCell.swift */,
 			);
 			path = Chat;
 			sourceTree = "<group>";
@@ -546,6 +552,7 @@
 				A2085DC62C7EB37400698923 /* ChatListViewController.swift in Sources */,
 				E7F598342C847A7800FE8900 /* Place.swift in Sources */,
 				C29FCF682C7DBA4F00F8951D /* PuppyRegistrationViewController.swift in Sources */,
+				A2F9FE7C2C8E6BF7004D7FF6 /* Date.swift in Sources */,
 				E738FB952C7C64BA004696BD /* UIColor.swift in Sources */,
 				C29FCF772C8171FA00F8951D /* MyInfoEditViewController.swift in Sources */,
 				E738FB9E2C7C668D004696BD /* MypageViewController.swift in Sources */,
@@ -563,6 +570,7 @@
 				A2085DD62C806A4D00698923 /* LoginViewModel.swift in Sources */,
 				E70DB3492C7F3F060073B3F8 /* UIViewController.swift in Sources */,
 				E738FBA42C7C66BA004696BD /* ChatViewModel.swift in Sources */,
+				A2F9FE7A2C8E6BBB004D7FF6 /* ChatDateTableViewCell.swift in Sources */,
 				E70DB3472C7F0CD00073B3F8 /* DetailTingViewController.swift in Sources */,
 				E70DB3452C7F0CB60073B3F8 /* PostTingViewController.swift in Sources */,
 				E7F598392C885D5300FE8900 /* KakaoMapViewController.swift in Sources */,
