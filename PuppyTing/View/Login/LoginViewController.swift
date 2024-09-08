@@ -18,36 +18,6 @@ class LoginViewController: UIViewController {
     
     private let loginViewModel = LoginViewModel()
     
-    var user: User? = nil {
-        didSet {
-            // 소셜 로그인 완료
-            print(user?.email)
-            guard let user = user else { return }
-            loginViewModel.isExistsUser(uuid: user.uid)
-        }
-    }
-    
-    var existsUser: Bool = false {
-        didSet {
-            if existsUser {
-                // 데이터가 있음
-                okAlert(title: "소셜 로그인", message: "로그인 성공")
-            } else {
-                // 데이터가 없음
-                guard let user = user, let email = user.email else { return }
-                loginViewModel.signUp(uuid: user.uid, email: email)
-            }
-        }
-    }
-    
-    var member: Member? = nil {
-        didSet {
-            // 소셜 로그인 - 회원가입 성공
-            print(member?.dictionary)
-            okAlert(title: "소셜 로그인", message: "회원가입 성공")
-        }
-    }
-    
     let logoImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.image = UIImage(named: "appleLogin") // 이후 수정
@@ -118,13 +88,23 @@ class LoginViewController: UIViewController {
     
     private func bindData() {
         loginViewModel.userSubject.observe(on: MainScheduler.instance).subscribe(onNext: { [weak self] user in
-            self?.user = user
+            self?.isExistsUser(uuid: user.uid)
         }).disposed(by: disposeBag)
         loginViewModel.userExistsSubject.observe(on: MainScheduler.instance).subscribe(onNext: { [weak self] exists in
-            self?.existsUser = exists
+            if exists {
+                self?.endSignIn()
+            } else {
+                self?.signUp()
+            }
         }).disposed(by: disposeBag)
         loginViewModel.memeberSubject.observe(on: MainScheduler.instance).subscribe(onNext: { [weak self] member in
-            self?.member = member
+            self?.endSignIn()
+        }).disposed(by: disposeBag)
+        loginViewModel.errorSubject.observe(on: MainScheduler.instance).subscribe(onNext: { [weak self] error in
+            self?.error(error: error)
+        }).disposed(by: disposeBag)
+        loginViewModel.memberErrorSubject.observe(on: MainScheduler.instance).subscribe(onNext: { [weak self] error in
+            self?.error(error: error)
         }).disposed(by: disposeBag)
     }
     
@@ -143,6 +123,36 @@ class LoginViewController: UIViewController {
     @objc
     private func didTapGoogleLoginButton() {
         loginViewModel.googleSignIn(viewController: self)
+    }
+    
+    private func isExistsUser(uuid: String) {
+        loginViewModel.isExistsUser(uuid: uuid)
+    }
+    
+    private func signUp() {
+        guard let user = loginViewModel.user, let email = user.email else { return }
+        loginViewModel.signUp(uuid: user.uid, email: email)
+    }
+    
+    private func endSignIn() {
+        okAlert(title: "소셜 로그인", message: "로그인이 완료되었습니다.", okActionTitle: "OK") { _ in
+            AppController.shared.setHome()
+        }
+    }
+    
+    private func error(error: Error) {
+        if let error = error as? AuthError {
+            switch error {
+            case .ClientIdinvalidError:
+                okAlert(title: "소셜 로그인 실패", message: "관리자 문의 필요함", okActionTitle: "ok")
+            case .GoogleSignInFailError:
+                okAlert(title: "소셜 로그인 실패", message: "관리자 문의 필요함", okActionTitle: "ok")
+            case .TokeninvalidError:
+                okAlert(title: "소셜 로그인 실패", message: "관리자 문의 필요함", okActionTitle: "ok")
+            default:
+                okAlert(title: "로그인 실패", message: "알 수 없는 이유로 로그인에 실패했습니다.", okActionTitle: "다시 로그인 시도하기")
+            }
+        }
     }
     
 }

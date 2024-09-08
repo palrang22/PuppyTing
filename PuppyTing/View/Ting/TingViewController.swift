@@ -4,7 +4,7 @@
 //
 //  Created by 김승희 on 8/26/24.
 //
-
+import CoreLocation
 import UIKit
 
 import FirebaseAuth
@@ -78,6 +78,12 @@ class TingViewController: UIViewController {
             }).disposed(by: disposeBag)
     }
     
+    private func handleLocation(location: CLLocationCoordinate2D) {
+        // location 정보를 처리하는 메서드
+        print("받아온 location: \(location.latitude), \(location.longitude)")
+        // 이곳에서 location을 이용한 추가 작업 처리 가능
+    }
+    
     private func navigate(with selectedData: TingFeedModel) {
         let detailVC = DetailTingViewController()
         detailVC.tingFeedModels = selectedData
@@ -117,7 +123,17 @@ class TingViewController: UIViewController {
 //MARK: CollectionView
 extension TingViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: collectionView.frame.width, height: 350)
+        let width = collectionView.frame.width
+        let dummyCell = TingCollectionViewCell()
+        let feedModel = tingFeedModels[indexPath.row]
+        dummyCell.configure(with: feedModel, currentUserID: currentUserID)
+        
+        dummyCell.setNeedsLayout()
+        dummyCell.layoutIfNeeded()
+        
+        let height = dummyCell.systemLayoutSizeFitting(CGSize(width: width, height: UIView.layoutFittingCompressedSize.height)).height + 30
+        
+        return CGSize(width: width, height: height)
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
@@ -141,9 +157,3 @@ extension TingViewController: UICollectionViewDataSource {
         return cell
     }
 }
-//
-//extension TingViewController: UICollectionViewDelegate {
-//    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-//        navigationController?.pushViewController(DetailTingViewController(), animated: true)
-//    }
-//}

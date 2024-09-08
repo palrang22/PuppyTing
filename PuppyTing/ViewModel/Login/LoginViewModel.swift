@@ -20,10 +20,12 @@ class LoginViewModel {
     let userExistsSubject = PublishSubject<Bool>()
     let memeberSubject = PublishSubject<Member>()
     let memberErrorSubject = PublishSubject<Error>()
+    var user: User? = nil
     
     func googleSignIn(viewController: UIViewController) {
         FirebaseAuthManager.shared.googleSignIn(viewController: viewController).observe(on: MainScheduler.instance).subscribe(onSuccess: { [weak self] user in
             self?.userSubject.onNext(user)
+            self?.user = user
         }, onFailure: { [weak self] error in
             self?.errorSubject.onNext(error)
         }).disposed(by: disposeBag)

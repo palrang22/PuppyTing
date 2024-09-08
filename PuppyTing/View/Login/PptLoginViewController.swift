@@ -18,30 +18,6 @@ class PptLoginViewController: UIViewController {
     
     private let pptLoginViewModel = PptLoginViewModel()
     
-    var user: User? = nil {
-        didSet {
-            // 데이터가 들어오면 로그인이 완료된 거임
-            print(user?.email)
-            okAlert(title: "로그인 완료", message: "로그인이 완료되었습니다.", okActionTitle: "OK")
-        }
-    }
-    
-    var error: Error? = nil {
-        didSet {
-            print(error)
-            if let error = error as? AuthError {
-                switch error {
-                case .EmailVerificationFailError:
-                    okAlert(title: "로그인 실패", message: "이메일 인증에 실패했습니다.", okActionTitle: "ok")
-                case .InvalidCredential:
-                    okAlert(title: "로그인 실패", message: "이메일 혹은 비밀번호가 잘못 입력 되었습니다.", okActionTitle: "ok")
-                default:
-                    okAlert(title: "로그인 실패", message: "알 수 없는 이유로 로그인에 실패했습니다.", okActionTitle: "다시 로그인 시도하기")
-                }
-            }
-        }
-    }
-    
     let eRegex = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,64}"
     let pRegex = "^(?=.*[A-Za-z])(?=.*[0-9])(?=.*[!@#$%^&*()_+=-]).{8,50}" // 8자리 ~ 50자리 영어+숫자+특수문자
     
@@ -189,10 +165,10 @@ class PptLoginViewController: UIViewController {
     
     private func bindData() {
         pptLoginViewModel.userSubject.observe(on: MainScheduler.instance).subscribe(onNext: { [weak self] user in
-            self?.user = user
+            self?.login()
         }).disposed(by: disposeBag)
         pptLoginViewModel.errorSubject.observe(on: MainScheduler.instance).subscribe(onNext: { [weak self] error in
-            self?.error = error
+            self?.error(error: error)
         }).disposed(by: disposeBag)
     }
 
@@ -238,5 +214,24 @@ class PptLoginViewController: UIViewController {
     private func didTapLoginButton() {
         guard let email = emailfield.text, let pw = pwfield.text else { return }
         pptLoginViewModel.emailSignIn(email: email, pw: pw)
+    }
+    
+    private func login() {
+        okAlert(title: "로그인 완료", message: "로그인이 완료되었습니다.", okActionTitle: "OK") { _ in
+            AppController.shared.setHome()
+        }
+    }
+    
+    private func error(error: Error) {
+        if let error = error as? AuthError {
+            switch error {
+            case .EmailVerificationFailError:
+                okAlert(title: "로그인 실패", message: "이메일 인증에 실패했습니다.", okActionTitle: "ok")
+            case .InvalidCredential:
+                okAlert(title: "로그인 실패", message: "이메일 혹은 비밀번호가 잘못 입력 되었습니다.", okActionTitle: "ok")
+            default:
+                okAlert(title: "로그인 실패", message: "알 수 없는 이유로 로그인에 실패했습니다.", okActionTitle: "다시 로그인 시도하기")
+            }
+        }
     }
 }
