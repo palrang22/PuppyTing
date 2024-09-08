@@ -34,7 +34,7 @@ class FirebaseAuthManager {
     }
     
     func emailSignUp(email: String, pw: String) -> Single<User> {
-        return Single<User>.create { [weak self] single in
+        return Single<User>.create { single in
             Auth.auth().createUser(withEmail: email, password: pw) { result, error in
                 if let error = error {
                     single(.failure(error))
@@ -48,7 +48,7 @@ class FirebaseAuthManager {
                 
                 if !result.user.isEmailVerified {
                     Auth.auth().currentUser?.sendEmailVerification { error in
-                        if let error = error {
+                        if error != nil {
                             single(.failure(AuthError.SendEmailFailError))
                             return
                         } else {
@@ -63,8 +63,8 @@ class FirebaseAuthManager {
     }
     
     func emailSignIn(email: String, pw: String) -> Single<User> {
-        return Single<User>.create { [weak self] single in
-            Auth.auth().signIn(withEmail: email, password: pw) { [weak self] result, error in
+        return Single<User>.create { single in
+            Auth.auth().signIn(withEmail: email, password: pw) { result, error in
                 if let error = error as NSError? {
                     if let errorCode = AuthErrorCode(rawValue: error.code) {
                         switch errorCode {
@@ -92,7 +92,7 @@ class FirebaseAuthManager {
     }
     
     func googleSignIn(viewController: UIViewController) -> Single<User> {
-        return Single<User>.create { [weak self] single in
+        return Single<User>.create { single in
             guard let clientId = FirebaseApp.app()?.options.clientID else { 
                 single(.failure(AuthError.ClientIdinvalidError))
                 return Disposables.create()
@@ -100,7 +100,7 @@ class FirebaseAuthManager {
             let config = GIDConfiguration(clientID: clientId)
             GIDSignIn.sharedInstance.configuration = config
             
-            GIDSignIn.sharedInstance.signIn(withPresenting: viewController) { [unowned self] result, error in
+            GIDSignIn.sharedInstance.signIn(withPresenting: viewController) { result, error in
                 guard error == nil else {
                     print("test1: \(String(describing: error))")
                     single(.failure(AuthError.GoogleSignInFailError))
@@ -115,8 +115,7 @@ class FirebaseAuthManager {
                 let credential = GoogleAuthProvider.credential(withIDToken: idToken, accessToken: user.accessToken.tokenString)
                 
                 Auth.auth().signIn(with: credential) { result, error in
-                    if let error = error {
-                        print("test2")
+                    if error != nil {
                         single(.failure(AuthError.GoogleSignInFailError))
                     }
                     if let result = result {
@@ -129,7 +128,7 @@ class FirebaseAuthManager {
     }
     
     func passwordReset(email: String) -> Single<Bool> {
-        return Single.create { [weak self] single in
+        return Single.create { single in
             Auth.auth().sendPasswordReset(withEmail: email) { error in
                 if let error = error as NSError? {
                     if let errorCode = AuthErrorCode(rawValue: error.code) {

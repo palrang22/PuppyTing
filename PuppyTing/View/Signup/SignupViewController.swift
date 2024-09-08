@@ -20,37 +20,6 @@ class SignupViewController: UIViewController {
     let pwRegex = "^(?=.*[A-Za-z])(?=.*[0-9])(?=.*[!@#$%^&*()_+=-]).{8,50}" // 8자리 ~ 50자리 영어+숫자+특수문자
     
     let signUpViewModel = SignUpViewModel()
-    
-    var user: User? = nil {
-        didSet {
-            // user 가 들어왔을 때 다시 데이터베이스에 저장하는 메서드 실행
-            print("test")
-            guard let user = user, let email = user.email, let pw = pwTextField.text, let nickname = nickTextField.text else { return }
-            signUpViewModel.signUp(uuid: user.uid, email: email, pw: pw, nickname: nickname)
-        }
-    }
-    
-    var userError: Error? = nil {
-        didSet {
-            // 인증 실패 error
-        }
-    }
-    
-    var memeber: Member? = nil {
-        didSet {
-            // 유저 데이터까지 db에 저장 완료
-            print(memeber)
-            okAlert(title: "회원가입 완료", message: "회원가입이 완료되었습니다.\n이메일 인증을 하고 로그인을 진행해주세요!") { [weak self] _ in
-                self?.dismiss(animated: true)
-            }
-        }
-    }
-    
-    var memberError: Error? = nil {
-        didSet {
-            // 유저를 db에 생성 하다 발생한 오류
-        }
-    }
 
     let cancleButton: UIButton = {
         let button = UIButton(type: .system)
@@ -456,19 +425,19 @@ class SignupViewController: UIViewController {
     
     private func bindData() {
         signUpViewModel.userSubject.observe(on: MainScheduler.instance).subscribe(onNext: { [weak self] user in
-            self?.user = user
+            self?.signUp(user: user)
         }).disposed(by: disposeBag)
         
         signUpViewModel.userErrorSubject.observe(on: MainScheduler.instance).subscribe(onNext: { [weak self] error in
-            self?.userError = error
+            self?.error(error: error)
         }).disposed(by: disposeBag)
         
         signUpViewModel.memeberSubject.observe(on: MainScheduler.instance).subscribe(onNext: { [weak self] memeber in
-            self?.memeber = memeber
+            self?.endSignUp()
         }).disposed(by: disposeBag)
         
         signUpViewModel.memberErrorSubject.observe(on: MainScheduler.instance).subscribe(onNext: { [weak self] error in
-            self?.memberError = error
+            self?.error(error: error)
         }).disposed(by: disposeBag)
     }
     
@@ -503,6 +472,32 @@ class SignupViewController: UIViewController {
     private func didTapSignUpButton() {
         guard let email = emailTextField.text, let pw = pwTextField.text else { return }
         signUpViewModel.authentication(email: email, pw: pw)
+    }
+    
+    private func signUp(user: User) {
+        guard let email = user.email, let pw = pwTextField.text, let nickname = nickTextField.text else { return }
+        signUpViewModel.signUp(uuid: user.uid, email: email, pw: pw, nickname: nickname)
+    }
+    
+    private func endSignUp() {
+        okAlert(title: "회원가입 완료", message: "회원가입이 완료되었습니다.\n이메일 인증을 하고 로그인을 진행해주세요!") { [weak self] _ in
+            self?.dismiss(animated: true)
+        }
+    }
+    
+    private func error(error: Error) {
+        if let error = error as? AuthError {
+            switch error {
+            case .CreateFailError:
+                okAlert(title: "회원가입 실패", message: "회원가입에 실패했습니다.", okActionTitle: "ok")
+            case .SendEmailFailError:
+                okAlert(title: "회원가입 실패", message: "이메일 전송에 실패했습니다.", okActionTitle: "ok")
+            default:
+                okAlert(title: "회원가입 실패", message: "알 수 없는 이유로 회원가입에 실패했습니다.", okActionTitle: "ok")
+            }
+        } else {
+            okAlert(title: "회원가입 실패", message: "알 수 없는 이유로 회원가입에 실패했습니다.", okActionTitle: "ok")
+        }
     }
 }
 
