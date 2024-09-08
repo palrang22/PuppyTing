@@ -33,6 +33,9 @@ class TingCollectionViewCell: UICollectionViewCell {
     private let profilePic: UIImageView = {
         let imageView = UIImageView()
         imageView.image = UIImage(named: "defaultProfileImage")
+        imageView.layer.cornerRadius = 25
+        imageView.layer.masksToBounds = true
+        imageView.clipsToBounds = true
         return imageView
     }()
     
@@ -140,7 +143,9 @@ class TingCollectionViewCell: UICollectionViewCell {
                 self?.nameLabel.text = member.nickname
                 self?.footPrintLabel.text = "🐾 발도장 \(member.footPrint)개"
                 
-                if !(member.profileImage == "defaultProfileImage") {
+                if member.profileImage == "defaultProfileImage" {
+                            self?.profilePic.image = UIImage(named: "defaultProfileImage")
+                } else {
                     NetworkManager.shared.loadImageFromURL(urlString: member.profileImage)
                         .subscribe(onSuccess: { [weak self] image in
                             print("이미지 로드 성공 2")
@@ -148,7 +153,7 @@ class TingCollectionViewCell: UICollectionViewCell {
                                 self?.profilePic.image = image ?? UIImage(named: "defaultProfileImage")
                             }
                         }, onFailure: { error in
-                            print("1이미지 로드 실패: \(error)")
+                            print("이미지 로드 실패: \(error)")
                             DispatchQueue.main.async {
                                 self?.profilePic.image = UIImage(named: "defaultProfileImage")
                             }
