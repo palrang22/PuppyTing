@@ -196,6 +196,16 @@ class DetailTingViewController: UIViewController {
             if coordinate.latitude != 0.0, coordinate.longitude != 0.0 {
                 configMap(with: coordinate)
             }
+            
+            FireStoreDatabaseManager.shared.findMemeber(uuid: model.userid)
+                            .subscribe(onSuccess: { [weak self] member in
+                                self?.nameLabel.text = member.nickname
+                                self?.footPrintLabel.text = "🐾 발도장 \(member.footPrint)개"
+                            }, onFailure: { error in
+                                print("멤버 찾기 실패: \(error)")
+                            }).disposed(by: disposeBag)
+            
+            setButton(model: model)
         }
     }
     
