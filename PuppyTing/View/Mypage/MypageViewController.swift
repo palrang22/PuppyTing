@@ -537,13 +537,9 @@ class MypageViewController: UIViewController {
     
     @objc
     private func logOut() {
-        do {
-            try Auth.auth().signOut()
+        okAlertWithCancel(title: "로그아웃", message: "정말로 로그아웃 하시겠습니까?", okActionTitle: "아니오", cancelActionTitle: "예", cancelActionHandler:  { _ in
             AppController.shared.logOut()
-        } catch {
-            print("로그아웃 실패")
-        }
-
+        })
     }
 }
 
