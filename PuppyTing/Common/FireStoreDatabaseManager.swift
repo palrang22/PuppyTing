@@ -182,7 +182,7 @@ class FireStoreDatabaseManager {
         
         return Single.create { [weak self] single in
             let ref = self?.db.collection("member").document(currentUser)
-            ref?.updateData(["bookmark": FieldValue.arrayUnion([bookmarkId])]) { error in
+            ref?.updateData(["bookMarkUsers": FieldValue.arrayUnion([bookmarkId])]) { error in
                 if let error = error {
                     single(.failure(error))
                 } else {
