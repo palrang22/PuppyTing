@@ -33,6 +33,9 @@ class TingCollectionViewCell: UICollectionViewCell {
     private let profilePic: UIImageView = {
         let imageView = UIImageView()
         imageView.image = UIImage(named: "defaultProfileImage")
+        imageView.layer.cornerRadius = 25
+        imageView.layer.masksToBounds = true
+        imageView.clipsToBounds = true
         return imageView
     }()
     
@@ -105,6 +108,13 @@ class TingCollectionViewCell: UICollectionViewCell {
         return button
     }()
     
+    private let hidableStack: UIStackView = {
+        let stack = UIStackView()
+        stack.spacing = 20
+        stack.axis = .vertical
+        return stack
+    }()
+    
     //MARK: View 생명주기
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -132,6 +142,26 @@ class TingCollectionViewCell: UICollectionViewCell {
             .subscribe(onSuccess: { [weak self] member in
                 self?.nameLabel.text = member.nickname
                 self?.footPrintLabel.text = "🐾 발도장 \(member.footPrint)개"
+                
+                if member.profileImage == "defaultProfileImage" {
+                            self?.profilePic.image = UIImage(named: "defaultProfileImage")
+                } else {
+                    NetworkManager.shared.loadImageFromURL(urlString: member.profileImage)
+                        .subscribe(onSuccess: { [weak self] image in
+                            print("이미지 로드 성공 2")
+                            DispatchQueue.main.async {
+                                self?.profilePic.image = image ?? UIImage(named: "defaultProfileImage")
+                            }
+                        }, onFailure: { error in
+                            print("이미지 로드 실패: \(error)")
+                            DispatchQueue.main.async {
+                                self?.profilePic.image = UIImage(named: "defaultProfileImage")
+                            }
+                        }).disposed(by: self?.disposeBag ?? DisposeBag())
+                } else {
+                    print("접근")
+                }
+                
             }, onFailure: { error in
                 print("멤버 찾기 실패: \(error)")
             }).disposed(by: disposeBag)
@@ -200,12 +230,14 @@ class TingCollectionViewCell: UICollectionViewCell {
     private func setConstraints() {
         [nameLabel,
          timeLabel].forEach { infoStack.addArrangedSubview($0) }
+        
+        [content,
+         messageSendButton].forEach { hidableStack.addArrangedSubview($0) }
+        
         [shadowContainerView, profilePic,
          infoStack,
          footPrintLabel,
-         content,
-         mapView,
-         messageSendButton].forEach { contentView.addSubview($0) }
+         hidableStack].forEach { contentView.addSubview($0) }
         
         shadowContainerView.snp.makeConstraints {
             $0.edges.equalToSuperview().inset(5)
@@ -227,22 +259,19 @@ class TingCollectionViewCell: UICollectionViewCell {
             $0.centerY.equalTo(profilePic)
         }
         
-        content.snp.makeConstraints {
-            $0.top.equalTo(profilePic.snp.bottom).offset(20)
+        hidableStack.snp.makeConstraints {
+            $0.top.equalTo(infoStack.snp.bottom).offset(20)
             $0.leading.trailing.equalToSuperview().inset(20)
+            $0.bottom.equalToSuperview().offset(-20)
         }
-        
-        mapView.snp.makeConstraints {
-            $0.top.equalTo(content.snp.bottom).offset(20)
-            $0.leading.trailing.equalToSuperview().inset(20)
-            $0.height.equalTo(70)
-        }
-        
+
+//        content.snp.makeConstraints {
+//            $0.leading.trailing.equalToSuperview().inset(20)
+//        }
+
         messageSendButton.snp.makeConstraints {
-            $0.top.equalTo(mapView.snp.bottom).offset(20)
-            $0.leading.trailing.equalToSuperview().inset(20)
+            //$0.leading.trailing.equalToSuperview().inset(20)
             $0.height.equalTo(44)
-            $0.bottom.equalToSuperview().offset(-30)
         }
     }
 }

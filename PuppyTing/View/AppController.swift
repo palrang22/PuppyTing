@@ -9,16 +9,17 @@ import Foundation
 import UIKit
 
 import FirebaseAuth
+import FirebaseAuthInternal
 import FirebaseCore
 
 final class AppController {
     static let shared = AppController()
     
     var isPasswordUpdating = false
+    private var authStateListenerHandle: AuthStateDidChangeListenerHandle?
     
     private init() {
         FirebaseApp.configure()
-        registerAuthStateDidChangeEvent()
     }
     
     private var window: UIWindow!
@@ -34,34 +35,31 @@ final class AppController {
         window.backgroundColor = .systemBackground
         window.makeKeyAndVisible()
         
-        if Auth.auth().currentUser == nil {
-            routeToLogin()
-        }
+        checkLoginStatus()
+        removeAuthStateListener()
     }
     
-    private func registerAuthStateDidChangeEvent() {
-        NotificationCenter.default.addObserver(self, selector: #selector(checkLogin), name: .AuthStateDidChange, object: nil)
-    }
-    
-    @objc
-    private func checkLogin() {
-        guard !isPasswordUpdating else {
-            isPasswordUpdating = false // 플래그 초기화
-            return
-        }
-        if let user = Auth.auth().currentUser {
-            print("user = \(user.email)")
-            if user.isEmailVerified {
-                setHome()
+    private func checkLoginStatus() {
+        authStateListenerHandle = Auth.auth().addStateDidChangeListener { auth, user in
+            if let user = user {
+                if user.isEmailVerified {
+                    self.setHome()
+                } else {
+                    self.routeToLogin()
+                }
             } else {
-                routeToLogin()
+                self.routeToLogin()
             }
-        } else {
-            routeToLogin()
         }
     }
     
-    private func setHome() {
+    private func removeAuthStateListener() {
+        if let handle = authStateListenerHandle {
+            Auth.auth().removeStateDidChangeListener(handle)
+        }
+    }
+    
+    func setHome() {
         let homeVC = TabBarController()
         rootViewController = homeVC
     }
