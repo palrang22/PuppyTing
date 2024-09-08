@@ -30,7 +30,6 @@ class MypageViewController: UIViewController {
                     self.view.layoutIfNeeded()
                 }
             }
-            }
         }
     }
     
