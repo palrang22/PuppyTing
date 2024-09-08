@@ -158,7 +158,6 @@ class TingCollectionViewCell: UICollectionViewCell {
                             }
                         }).disposed(by: self?.disposeBag ?? DisposeBag())
                 }
-                
             }, onFailure: { error in
                 print("멤버 찾기 실패: \(error)")
             }).disposed(by: disposeBag)

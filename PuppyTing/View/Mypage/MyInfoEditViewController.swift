@@ -15,7 +15,7 @@ class MyInfoEditViewController: UIViewController {
             if let member = member {
                 emailLabel.text = member.email
                 nickNameTextField.text = member.nickname
-                if member.profileImage == "기본 이미지" || member.profileImage == "defaultProfileImage" {
+                if member.profileImage == "defaultProfileImage" {
                     userProfileImageButton.setImage(UIImage(named: "defaultProfileImage"), for: .normal)
                 } else {
                     fetchImage(imageUrl: member.profileImage)
@@ -29,45 +29,6 @@ class MyInfoEditViewController: UIViewController {
             //이미지 변경
             if let image = realImage {
                 userProfileImageButton.setImage(image, for: .normal)
-            }
-        }
-    }
-    
-    private var update: Bool = false {
-        didSet {
-            // 업데이트 성공
-            if update {
-                print("업데이트 성공")
-                navigationController?.popViewController(animated: true)
-            } else {
-                print("업데이트 실패")
-            }
-
-        }
-    }
-    
-    private var image: String = "" {
-        didSet {
-            // 이미지 변경
-            let nickname = nickNameTextField.text
-            let password = passwordTextField.text
-            let passwordCheck = passwordCheckTextField.text
-            guard let nickname = nickname,
-                  nickname != member?.nickname,
-                  let password = password,
-                  let passwordCheck = passwordCheck,
-                  password == passwordCheck, 
-                  image != "" else { return }
-            updateMember(nickname: nickname, password: password, image: image)
-        }
-    }
-    
-    private var passwordUpdate: Bool = false {
-        didSet {
-            if passwordUpdate {
-                updateImage()
-            } else {
-                print("비번 변경 실패")
             }
         }
     }
@@ -304,6 +265,7 @@ class MyInfoEditViewController: UIViewController {
     
     private func setupActions() {
         userProfileImageButton.addTarget(self, action: #selector(handleProfileImageChange), for: .touchUpInside)
+        passwordChangeButton.addTarget(self, action: #selector(updatePassword), for: .touchUpInside)
     }
     
     // MARK: - Handlers
@@ -325,19 +287,7 @@ class MyInfoEditViewController: UIViewController {
     }
 
     @objc private func handleEditButtonTapped() {
-        let password = passwordTextField.text
-        let passwordCheck = passwordCheckTextField.text
-        let oldPassword = member?.password
-        guard let newPassword = password,
-              let passwordCheck = passwordCheck,
-              newPassword == passwordCheck,
-              let oldPasswrod = oldPassword,
-              newPassword != "",
-              passwordCheck != "" else {
-                  okAlert(title: "에러", message: "모든 칸을 입력 후 진행해주세요")
-                  return
-              }
-        updatePassword(oldPassword: oldPasswrod, newPassword: newPassword)
+        updateImage()
     }
 
     private func presentPhotoLibrary() {
@@ -356,10 +306,6 @@ class MyInfoEditViewController: UIViewController {
         present(picker, animated: true, completion: nil)
     }
     
-    private func updatePassword(oldPassword: String, newPassword: String) {
-        myInfoEditViewModel.updatePassword(oldpassword: oldPassword, newPassword: newPassword)
-    }
-    
     private func updateImage() {
         let image = userProfileImageButton.imageView?.image
         if let image = image {
@@ -367,10 +313,22 @@ class MyInfoEditViewController: UIViewController {
         }
     }
     
-    private func updateMember(nickname: String, password: String, image: String) {
+    private func updateMember(nickname: String, image: String) {
         guard let member = member else { return }
-        let updateMember = Member(uuid: member.uuid, email: member.email, password: password, nickname: nickname, profileImage: image, footPrint: member.footPrint, isSocial: member.isSocial)
+        let updateMember = Member(uuid: member.uuid, email: member.email, password: member.password, nickname: nickname, profileImage: image, footPrint: member.footPrint, isSocial: member.isSocial, blockedUsers: member.blockedUsers, bookMarkUsers: member.bookMarkUsers, puppies: member.puppies)
         myInfoEditViewModel.updateMember(member: updateMember)
+    }
+    
+    @objc 
+    private func updatePassword() {
+        guard let password = passwordTextField.text, let passwordCheck = passwordCheckTextField.text, let oldPassword = member?.password else { return }
+        guard password == passwordCheck else { return }
+        myInfoEditViewModel.updatePassword(oldpassword: oldPassword, newPassword: password)
+    }
+    
+    private func updateFireStorePassword() {
+        guard let member = member, let password = passwordTextField.text else { return }
+        myInfoEditViewModel.updateFireStorePassword(uuid: member.uuid, password: password)
     }
     
     private func fetchImage(imageUrl: String) {
@@ -379,13 +337,44 @@ class MyInfoEditViewController: UIViewController {
     
     private func bindData() {
         myInfoEditViewModel.updateSubject.observe(on: MainScheduler.instance).subscribe(onNext: { [weak self] isUpdate in
-            self?.update = isUpdate
+            if isUpdate {
+                self?.okAlert(title: "정보 수정", message: "완료", okActionTitle: "ok") { _ in
+                    self?.navigationController?.popViewController(animated: true)
+                }
+            } else {
+                self?.okAlert(title: "정보 수정", message: "실패")
+            }
         }).disposed(by: disposeBag)
         myInfoEditViewModel.passwordSubject.observe(on: MainScheduler.instance).subscribe(onNext: { [weak self] isUpdate in
-            self?.passwordUpdate = isUpdate
+            if isUpdate {
+                // 멤버 변경 해야댐
+                self?.updateFireStorePassword()
+            } else {
+                self?.okAlert(title: "비밀번호 변경 실패", message: "몰?루?")
+                self?.passwordTextField.text = ""
+                self?.passwordCheckTextField.text = ""
+            }
+        }).disposed(by: disposeBag)
+        myInfoEditViewModel.fireStorePasswordSubject.observe(on: MainScheduler.instance).subscribe(onNext: { [weak self] isUpdate in
+            if isUpdate {
+                self?.okAlert(title: "비밀번호 변경 완료", message: "비밀번호를 변경했습니다.", okActionTitle: "ok")
+                self?.passwordTextField.text = ""
+                self?.passwordCheckTextField.text = ""
+                if let member = self?.member {
+                    self?.myInfoEditViewModel.findMember(uuid: member.uuid)
+                }
+            } else {
+                self?.okAlert(title: "비밀번호 변경 실패", message: "몰?루?")
+                self?.passwordTextField.text = ""
+                self?.passwordCheckTextField.text = ""
+            }
+        }).disposed(by: disposeBag)
+        myInfoEditViewModel.memberSubject.observe(on: MainScheduler.instance).subscribe(onNext: { [weak self] member in
+            self?.member = member
         }).disposed(by: disposeBag)
         myInfoEditViewModel.imageSubject.observe(on: MainScheduler.instance).subscribe(onNext: { [weak self] imageUrl in
-            self?.image = imageUrl
+            guard let nickname = self?.member?.nickname else { return }
+            self?.updateMember(nickname: nickname, image: imageUrl)
         }).disposed(by: disposeBag)
         myInfoEditViewModel.realImageSubject.observe(on: MainScheduler.instance).subscribe(onNext: { [weak self] image in
             self?.realImage = image
