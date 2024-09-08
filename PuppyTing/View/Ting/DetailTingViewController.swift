@@ -220,6 +220,8 @@ class DetailTingViewController: UIViewController {
             $0.height.equalTo(150)
         }
         
+        view.layoutIfNeeded()
+        
         mapTrueConstraints()
         
         kakaoMapViewController.didMove(toParent: self)
