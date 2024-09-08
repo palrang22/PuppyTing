@@ -72,10 +72,10 @@ class DetailTingViewController: UIViewController {
         let style = NSMutableParagraphStyle()
         style.lineSpacing = 6
         let styleText = NSAttributedString(string:
-                                            "내용1\n내용2\n내용3\n내용4"
-                                           , attributes: [
-            .font: UIFont.systemFont(ofSize: 16, weight: .medium),
-            .paragraphStyle: style])
+                                            "내용1\n내용2\n내용3\n내용4",
+                                           attributes: [
+                                            .font: UIFont.systemFont(ofSize: 16, weight: .medium),
+                                            .paragraphStyle: style])
         label.attributedText = styleText
         label.numberOfLines = 0
         label.textAlignment = .left
@@ -90,8 +90,6 @@ class DetailTingViewController: UIViewController {
         button.setTitleColor(.darkGray, for: .normal)
         button.titleLabel?.font = .systemFont(ofSize: 14, weight: .semibold)
         button.backgroundColor = .white
-        
-//        button.addTarget(self, action: #selector(blockButtonTapped), for: .touchUpInside)
         return button
     }()
     
@@ -101,8 +99,6 @@ class DetailTingViewController: UIViewController {
         button.setTitleColor(.darkGray, for: .normal)
         button.titleLabel?.font = .systemFont(ofSize: 14, weight: .semibold)
         button.backgroundColor = .white
-        
-//        button.addTarget(self, action: #selector(reportButtonTapped), for: .touchUpInside)
         return button
     }()
     
@@ -112,8 +108,6 @@ class DetailTingViewController: UIViewController {
         button.setTitleColor(.darkGray, for: .normal)
         button.titleLabel?.font = .systemFont(ofSize: 14, weight: .semibold)
         button.backgroundColor = .white
-//        
-//        button.addTarget(self, action: #selector(deleteButtonTapped), for: .touchUpInside)
         return button
     }()
     
@@ -140,7 +134,7 @@ class DetailTingViewController: UIViewController {
         return button
     }()
 
-    //MARK: View 생명주기
+    // MARK: View 생명주기
     override func viewDidLoad() {
         super.viewDidLoad()
         setUI()
@@ -152,6 +146,7 @@ class DetailTingViewController: UIViewController {
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapProfile))
         profilePic.isUserInteractionEnabled = true
         profilePic.addGestureRecognizer(tapGesture)
+        
         // 닉네임에도 탭 추가
         let nameTapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapProfile))
         nameLabel.isUserInteractionEnabled = true
@@ -172,6 +167,11 @@ class DetailTingViewController: UIViewController {
         let profileVC = ProfileViewController()
         profileVC.modalPresentationStyle = .pageSheet
         
+        // 선택된 사용자의 uuid 전달
+        if let userid = tingFeedModels?.userid {
+            profileVC.userid = userid
+        }
+        
         // 하프모달로 띄우기
         if let sheet = profileVC.sheetPresentationController {
             sheet.detents = [.medium()] // 모달크기 설정
@@ -181,7 +181,7 @@ class DetailTingViewController: UIViewController {
         present(profileVC, animated: true)
     }
     
-    //MARK: bind
+    // MARK: bind
     
     private func setData() {
         if let model = tingFeedModels {
@@ -324,7 +324,7 @@ class DetailTingViewController: UIViewController {
             }).disposed(by: disposeBag)
     }
     
-    //MARK: UI 설정 및 제약조건 등
+    // MARK: UI 설정 및 제약조건 등
     private func setUI() {
         view.backgroundColor = .white
     }
