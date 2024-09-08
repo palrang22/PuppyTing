@@ -7,19 +7,16 @@
 
 import UIKit
 
+import FirebaseAuth
+import RxCocoa
+import RxSwift
 import SnapKit
 
 class ProfileViewController: UIViewController {
     
-//    하프모달 시 클로즈버튼 필요 없음
-//    private let closeButton: UIButton = {
-//        let button = UIButton(type: .system)
-//        button.setTitle("✕", for: .normal)
-//        button.titleLabel?.font = .systemFont(ofSize: 20)
-//        button.setTitleColor(.black, for: .normal)
-//        button.addTarget(self, action: #selector(didTapCloseButton), for: .touchUpInside)
-//        return button
-//    }()
+    var userid: String?
+    private var member: Member?
+    private let disposeBag = DisposeBag()
     
     private let collectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
@@ -30,39 +27,39 @@ class ProfileViewController: UIViewController {
         return collectionView
     }()
     
-    @objc
-    private func didTapCloseButton() {
-        dismiss(animated: true)
-    }
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         
         view.backgroundColor = .white
         collectionView.dataSource = self
         collectionView.delegate = self
-        
-        // 버튼을 먼저 추가 - 클로즈버튼 하프모달시 필요없음
-//        view.addSubview(closeButton)
-//        closeButton.snp.makeConstraints {
-//            $0.top.equalTo(view.safeAreaLayoutGuide).offset(10)
-//            $0.leading.equalTo(view.safeAreaLayoutGuide).offset(10)
-//            $0.height.width.equalTo(44)
-//        }
-        
         view.addSubview(collectionView)
         collectionView.snp.makeConstraints {
-//            $0.top.equalTo(closeButton.snp.bottom).offset(10)
             $0.top.equalTo(view.safeAreaLayoutGuide)
             $0.leading.trailing.bottom.equalTo(view.safeAreaLayoutGuide)
         }
         
         collectionView.register(ProfileCell.self, forCellWithReuseIdentifier: "ProfileCell")
         collectionView.register(PuppyHeaderCell.self, forCellWithReuseIdentifier: "PuppyHeaderCell")
+        
+        loadData()
+    }
+    
+    // Firestore에서 특정 사용자 정보를 가져와 컬렉션뷰에 표시하고 그걸 ProfileCell에 전달
+    private func loadData() {
+        guard let userid = self.userid else { return }
+        FireStoreDatabaseManager.shared.findMemeber(uuid: userid)
+            .subscribe(onSuccess: { [weak self] member in
+                self?.member = member
+                self?.collectionView.reloadData()
+            }, onFailure: { error in
+                print("멤버 찾기 실패: \(error)")
+            }).disposed(by: disposeBag)
     }
 }
 
-extension ProfileViewController: UICollectionViewDataSource {
+// MARK: - UICollectionViewDataSource, UICollectionViewDelegate
+extension ProfileViewController: UICollectionViewDataSource, UICollectionViewDelegate {
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return 2
@@ -72,6 +69,9 @@ extension ProfileViewController: UICollectionViewDataSource {
         switch indexPath.item {
         case 0:
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "ProfileCell", for: indexPath) as! ProfileCell
+            if let member = self.member {
+                cell.configure(with: member)
+            }
             return cell
         case 1:
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "PuppyHeaderCell", for: indexPath) as! PuppyHeaderCell
@@ -82,6 +82,7 @@ extension ProfileViewController: UICollectionViewDataSource {
     }
 }
 
+// MARK: - UICollectionViewDelegateFlowLayout
 extension ProfileViewController: UICollectionViewDelegateFlowLayout {
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
