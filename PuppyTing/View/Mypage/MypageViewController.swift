@@ -12,6 +12,22 @@ class MypageViewController: UIViewController {
     private let scrollView = UIScrollView()
     private let contentView = UIView()
     private var puppies: [(name: String, info: String, tag: String, image: UIImage?)] = [] // 이미지 추가
+    private let puppys = BehaviorRelay<[Pet]>(value: [])
+    private var petList: [Pet] = [] {
+        didSet {
+            puppys.accept(petList)
+            pageControl.numberOfPages = petList.count
+            collectionView.isHidden = false
+            pageControl.isHidden = false
+            collectionView.snp.updateConstraints {
+                $0.height.equalTo(150) // 컬렉션 뷰의 콘텐츠에 맞는 높이 설정
+            }
+
+            UIView.animate(withDuration: 0.3) {
+                self.view.layoutIfNeeded()
+            }
+        }
+    }
     
     private let viewModel = MyPageViewModel()
     private var memeber: Member? = nil {
@@ -299,7 +315,7 @@ class MypageViewController: UIViewController {
             $0.width.height.equalTo(logOutButton)
         }
 
-        collectionView.dataSource = self
+        //collectionView.dataSource = self
         collectionView.delegate = self
         collectionView.register(PuppyCollectionViewCell.self, forCellWithReuseIdentifier: PuppyCollectionViewCell.identifier)
 
@@ -410,11 +426,16 @@ class MypageViewController: UIViewController {
             }
             .disposed(by: disposeBag)
         
-        collectionView.rx.itemSelected
-            .bind { [weak self] indexPath in
-                self?.navigateToPuppyEdit(at: indexPath)
-            }
-            .disposed(by: disposeBag)
+        puppys.bind(to: collectionView.rx.items(cellIdentifier: PuppyCollectionViewCell.identifier, cellType: PuppyCollectionViewCell.self)) { index, data, cell in
+            cell.config(puppy: data)
+        }.disposed(by: disposeBag)
+        
+        
+//        collectionView.rx.itemSelected
+//            .bind { [weak self] indexPath in
+//                self?.navigateToPuppyEdit(at: indexPath)
+//            }
+//            .disposed(by: disposeBag)
     }
 
     private func navigateToPuppyRegistration() {
@@ -480,17 +501,27 @@ class MypageViewController: UIViewController {
         findMember()
         setData()
         addButtonAction()
+        viewModel.findPetList(uuid: findUserId())
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         findMember()
+        viewModel.findPetList(uuid: findUserId())
     }
     
     private func setData() {
         viewModel.memberSubject.observe(on: MainScheduler.instance).subscribe(onNext: { [weak self] member in
             self?.memeber = member
         }).disposed(by: disposeBag)
+        viewModel.petListSubject.observe(on: MainScheduler.instance).subscribe(onNext: { [weak self] petList in
+            self?.petList = petList
+        }).disposed(by: disposeBag)
+    }
+    
+    private func findUserId() -> String {
+        guard let user = Auth.auth().currentUser else { return "" }
+        return user.uid
     }
     
     private func findMember() {
@@ -515,22 +546,22 @@ class MypageViewController: UIViewController {
 }
 
 // MARK: - UICollectionViewDataSource
-extension MypageViewController: UICollectionViewDataSource {
-
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return puppies.count
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PuppyCollectionViewCell.identifier, for: indexPath) as? PuppyCollectionViewCell else {
-            return UICollectionViewCell()
-        }
-        
-        let puppy = puppies[indexPath.row]
-        cell.configure(with: puppy)
-        return cell
-    }
-}
+//extension MypageViewController: UICollectionViewDataSource {
+//
+//    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+//        return puppies.count
+//    }
+//    
+//    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+//        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PuppyCollectionViewCell.identifier, for: indexPath) as? PuppyCollectionViewCell else {
+//            return UICollectionViewCell()
+//        }
+//        
+//        let puppy = puppies[indexPath.row]
+//        cell.configure(with: puppy)
+//        return cell
+//    }
+//}
 
 // MARK: - UICollectionViewDelegateFlowLayout
 extension MypageViewController: UICollectionViewDelegateFlowLayout {

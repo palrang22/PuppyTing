@@ -92,4 +92,23 @@ class PuppyCollectionViewCell: UICollectionViewCell {
         puppyTagLabel.text = puppy.tag
         puppyImageView.image = puppy.image ?? UIImage(systemName: "person.crop.circle")
     }
+    
+    func config(puppy: Pet) {
+        puppyNameLabel.text = puppy.name
+        puppyInfoLabel.text = "\(puppy.age)살"
+        var tag = ""
+        for i in puppy.tag {
+            tag += "\(i), "
+        }
+        puppyTagLabel.text = tag
+        fetchImage(url: puppy.petImage)
+    }
+    
+    private func fetchImage(url: String) {
+        NetworkManager.shared.fetchImage(url: url) { image in
+            DispatchQueue.main.async {
+                self.puppyImageView.image = image
+            }
+        }
+    }
 }

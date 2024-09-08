@@ -77,6 +77,13 @@ class ChatTableViewCell: UITableViewCell {
         
     }
     
+    func config(image: String, title: String, content: String) {
+        outerStackView.arrangedSubviews.forEach { $0.removeFromSuperview() }
+        chatRoomLabel.text = title
+        chatingLogLabel.text = content
+        fetchImage(image: image)
+    }
+    
     func configure(with images: [UIImage], title: String, content: String) {
         // 이미지 컨테이너 초기화
         outerStackView.arrangedSubviews.forEach { $0.removeFromSuperview() }
@@ -150,6 +157,22 @@ class ChatTableViewCell: UITableViewCell {
             
             outerStackView.addArrangedSubview(topStackView)
             outerStackView.addArrangedSubview(bottomStackView)
+        }
+    }
+    
+    private func fetchImage(image: String) {
+        let imageView = UIImageView()
+        imageView.contentMode = .scaleAspectFill
+        imageView.clipsToBounds = true
+        imageView.layer.cornerRadius = 8 // 각진 모서리
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.heightAnchor.constraint(equalToConstant: 28).isActive = true
+        imageView.widthAnchor.constraint(equalToConstant: 28).isActive = true
+        NetworkManager.shared.fetchImage(url: image) { image in
+            DispatchQueue.main.async {
+                imageView.image = image
+                self.outerStackView.addArrangedSubview(imageView)
+            }
         }
     }
     
