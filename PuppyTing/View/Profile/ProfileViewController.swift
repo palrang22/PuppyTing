@@ -71,6 +71,8 @@ extension ProfileViewController: UICollectionViewDataSource, UICollectionViewDel
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "ProfileCell", for: indexPath) as! ProfileCell
             if let member = self.member {
                 cell.configure(with: member)
+                cell.bookmarkId = member.uuid
+                cell.viewModel = ProfileViewModel()
             }
             return cell
         case 1:
