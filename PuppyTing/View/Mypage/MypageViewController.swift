@@ -68,6 +68,8 @@ class MypageViewController: UIViewController {
         profileImage.backgroundColor = .clear
         profileImage.tintColor = .black
         profileImage.image = UIImage(systemName: "person.crop.circle")
+        profileImage.layer.cornerRadius = 30
+        profileImage.layer.masksToBounds = true
         return profileImage
     }()
     
@@ -462,7 +464,7 @@ class MypageViewController: UIViewController {
         let puppy = petList[indexPath.row]
         let puppyRegistrationVC = PuppyRegistrationViewController()
         puppyRegistrationVC.isEditMode = true
-        puppyRegistrationVC.setupWithPuppy(name: puppy.name, info: "\(puppy.age)살", tag: puppy.tag.joined(separator: ", "))
+        puppyRegistrationVC.setupWithPuppy(name: puppy.name, info: "\(puppy.age)살", tag: puppy.tag.joined(separator: ", "), imageUrl: puppy.petImage)
         puppyRegistrationVC.completionHandler = { [weak self] name, info, image in
             self?.petList[indexPath.row] = puppy
             self?.puppyCollectionView.reloadItems(at: [indexPath])
@@ -536,15 +538,29 @@ class MypageViewController: UIViewController {
     
     private func setData() {
         viewModel.memberSubject
-            .observe(on: MainScheduler.instance)
-            .subscribe(onNext: { [weak self] member in
-                self?.memeber = member
-            }).disposed(by: disposeBag)
+                .observe(on: MainScheduler.instance)
+                .subscribe(onNext: { [weak self] member in
+                    self?.memeber = member
+                    self?.nickNameLabel.text = member.nickname
+                    self?.myFootLabel.text = "내 발도장: \(member.footPrint)개"
+                    self?.loadProfileImage(urlString: member.profileImage)
+                }).disposed(by: disposeBag)
 
         viewModel.petListSubject
             .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] petList in
                 self?.handlePetList(petList)
+            }).disposed(by: disposeBag)
+    }
+    
+    private func loadProfileImage(urlString: String) {
+        NetworkManager.shared.loadImageFromURL(urlString: urlString)
+            .observe(on: MainScheduler.instance)
+            .subscribe(onSuccess: { [weak self] image in
+                self?.profileImageView.image = image ?? UIImage(named: "defaultProfileImage")
+            }, onFailure: { [weak self] error in
+                print("프로필 이미지 로딩 실패: \(error)")
+                self?.profileImageView.image = UIImage(named: "defaultProfileImage")
             }).disposed(by: disposeBag)
     }
     
@@ -579,5 +595,11 @@ extension MypageViewController: UICollectionViewDelegateFlowLayout {
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         return CGSize(width: collectionView.bounds.width, height: collectionView.bounds.height - 20)
+    }
+}
+
+extension MypageViewController: UICollectionViewDelegate {
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        navigateToPuppyEdit(at: indexPath)
     }
 }
