@@ -14,6 +14,8 @@
 		5602B0712C8AF4EF0060F03B /* PuppyHeaderCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5602B0702C8AF4EF0060F03B /* PuppyHeaderCell.swift */; };
 		5602B0862C8E0C6F0060F03B /* ProfileViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5602B0852C8E0C6F0060F03B /* ProfileViewModel.swift */; };
 		5602B0882C8E10D50060F03B /* Config.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 5602B0872C8E10D50060F03B /* Config.xcconfig */; };
+		5602B08A2C8E91B30060F03B /* FavoriteListTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5602B0892C8E91B20060F03B /* FavoriteListTableViewCell.swift */; };
+		5602B08C2C8E9AD90060F03B /* FavoriteListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5602B08B2C8E9AD90060F03B /* FavoriteListViewController.swift */; };
 		56D686C52C7DA88500B00880 /* SignupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56D686C42C7DA88500B00880 /* SignupViewController.swift */; };
 		56D686C82C7DB09600B00880 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56D686C72C7DB09600B00880 /* LoginViewController.swift */; };
 		56D686CC2C7DC88700B00880 /* PptLoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56D686CB2C7DC88600B00880 /* PptLoginViewController.swift */; };
@@ -95,6 +97,8 @@
 		5602B0702C8AF4EF0060F03B /* PuppyHeaderCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PuppyHeaderCell.swift; sourceTree = "<group>"; };
 		5602B0852C8E0C6F0060F03B /* ProfileViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewModel.swift; sourceTree = "<group>"; };
 		5602B0872C8E10D50060F03B /* Config.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Config.xcconfig; sourceTree = "<group>"; };
+		5602B0892C8E91B20060F03B /* FavoriteListTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteListTableViewCell.swift; sourceTree = "<group>"; };
+		5602B08B2C8E9AD90060F03B /* FavoriteListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteListViewController.swift; sourceTree = "<group>"; };
 		56D686C42C7DA88500B00880 /* SignupViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignupViewController.swift; sourceTree = "<group>"; };
 		56D686C72C7DB09600B00880 /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 		56D686CB2C7DC88600B00880 /* PptLoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PptLoginViewController.swift; sourceTree = "<group>"; };
@@ -394,6 +398,8 @@
 				C29FCF762C8171FA00F8951D /* MyInfoEditViewController.swift */,
 				C29FCFC02C88566000F8951D /* MyFeedManageViewController.swift */,
 				C29FCFC22C88610600F8951D /* MyFeedTableViCell.swift */,
+				5602B08B2C8E9AD90060F03B /* FavoriteListViewController.swift */,
+				5602B0892C8E91B20060F03B /* FavoriteListTableViewCell.swift */,
 			);
 			path = Mypage;
 			sourceTree = "<group>";
@@ -553,6 +559,7 @@
 				56FD048F2C80171100EBCDCD /* MyChattingTableViewCell.swift in Sources */,
 				23607BFA2C8978E600A23716 /* PostingViewModel.swift in Sources */,
 				5602B0712C8AF4EF0060F03B /* PuppyHeaderCell.swift in Sources */,
+				5602B08A2C8E91B30060F03B /* FavoriteListTableViewCell.swift in Sources */,
 				C29FCF662C7DB37E00F8951D /* PuppyCollectionViewCell.swift in Sources */,
 				E7F5983B2C8866CE00FE8900 /* AddressView.swift in Sources */,
 				A2085DD12C8059F400698923 /* FireStoreDatabaseManager.swift in Sources */,
@@ -591,6 +598,7 @@
 				E70DB3452C7F0CB60073B3F8 /* PostTingViewController.swift in Sources */,
 				E7F598392C885D5300FE8900 /* KakaoMapViewController.swift in Sources */,
 				56D686CC2C7DC88700B00880 /* PptLoginViewController.swift in Sources */,
+				5602B08C2C8E9AD90060F03B /* FavoriteListViewController.swift in Sources */,
 				A2F9FE4D2C896EE0004D7FF6 /* AppController.swift in Sources */,
 				E738FB792C7C62EE004696BD /* SceneDelegate.swift in Sources */,
 				5602B0692C8AEA340060F03B /* ProfileCell.swift in Sources */,
@@ -616,7 +624,6 @@
 /* Begin XCBuildConfiguration section */
 		E738FB852C7C62F0004696BD /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 5602B0872C8E10D50060F03B /* Config.xcconfig */;
 			baseConfigurationReference = A2F9FE762C8DF3CB004D7FF6 /* Config.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -681,7 +688,6 @@
 		};
 		E738FB862C7C62F0004696BD /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 5602B0872C8E10D50060F03B /* Config.xcconfig */;
 			baseConfigurationReference = A2F9FE762C8DF3CB004D7FF6 /* Config.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;

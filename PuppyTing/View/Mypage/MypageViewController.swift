@@ -398,8 +398,8 @@ class MypageViewController: UIViewController {
             // 다른 페이지로 이동 (받은 산책 후기)
             break
         case 2:
-            // 다른 페이지로 이동 (즐겨 찾는 친구)
-            break
+            let favorireListVC = FavoriteListViewController()
+            navigationController?.pushViewController(favorireListVC, animated: true)
         case 3:
             // 다른 페이지로 이동 (차단 목록)
             break
