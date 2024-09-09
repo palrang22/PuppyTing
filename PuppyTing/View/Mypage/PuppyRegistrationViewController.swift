@@ -425,11 +425,23 @@ class PuppyRegistrationViewController: UIViewController {
 
     // MARK: - Setup Data
 
-    func setupWithPuppy(name: String, info: String, tag: String) {
-        // 전달된 데이터를 UI에 반영
+    func setupWithPuppy(name: String, info: String, tag: String, imageUrl: String?) {
         nameTextField.text = name
         ageTextField.text = info
         tagTextField.text = tag
+        
+        if let imageUrl = imageUrl {
+            NetworkManager.shared.loadImageFromURL(urlString: imageUrl)
+                .observe(on: MainScheduler.instance) // UI 업데이트는 메인 스레드에서
+                .subscribe(onSuccess: { [weak self] image in
+                    self?.puppyImageView.image = image ?? UIImage(named: "defaultImage")
+                }, onFailure: { [weak self] error in
+                    print("이미지 로딩 실패: \(error)")
+                    self?.puppyImageView.image = UIImage(named: "defaultImage")
+                }).disposed(by: disposeBag)
+        } else {
+            puppyImageView.image = UIImage(named: "defaultImage")
+        }
     }
     
     // MARK: - Image Picker
