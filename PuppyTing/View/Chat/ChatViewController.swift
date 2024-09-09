@@ -26,6 +26,7 @@ class ChatViewController: UIViewController {
         let tableView = UITableView()
         tableView.register(MyChattingTableViewCell.self, forCellReuseIdentifier: MyChattingTableViewCell.identifier)
         tableView.register(ChattingTableViewCell.self, forCellReuseIdentifier: ChattingTableViewCell.identifier)
+        tableView.register(ChatDateTableViewCell.self, forCellReuseIdentifier: ChatDateTableViewCell.identifier)
         tableView.separatorStyle = .none
         return tableView
     }()
@@ -133,34 +134,33 @@ class ChatViewController: UIViewController {
         
         output.messages
             .bind(to: chattingTableView.rx.items) { (tableView: UITableView, row: Int, message: ChatMessage) in
-                if message.senderId == self.userId {
-                    guard let cell = tableView.dequeueReusableCell(withIdentifier: MyChattingTableViewCell.identifier, for: IndexPath(row: row, section: 0)) as? MyChattingTableViewCell else {
-                        return UITableViewCell()
-                    }
+                if message.senderId == "date" {
+                    // 날짜 메시지일 경우, 날짜만 표시하는 셀을 구성
+                    let cell = tableView.dequeueReusableCell(withIdentifier: ChatDateTableViewCell.identifier, for: IndexPath(row: row, section: 0)) as! ChatDateTableViewCell
+                    cell.config(dateText: message.text) // 날짜만 표시
+                    return cell
+                } else if message.senderId == self.userId {
+                    // 일반 메시지인 경우, 기존 로직 그대로 사용
+                    let cell = tableView.dequeueReusableCell(withIdentifier: MyChattingTableViewCell.identifier, for: IndexPath(row: row, section: 0)) as! MyChattingTableViewCell
                     let date = Date(timeIntervalSince1970: message.timestamp)
                     let dateFormatter = DateFormatter()
-                    dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+                    dateFormatter.dateFormat = "HH:mm"
                     let dateString = dateFormatter.string(from: date)
                     cell.config(message: message.text, time: dateString)
                     return cell
                 } else {
-                    guard let cell = tableView.dequeueReusableCell(withIdentifier: ChattingTableViewCell.identifier, for: IndexPath(row: row, section: 0)) as? ChattingTableViewCell else {
-                        return UITableViewCell()
-                    }
-                    self.viewModel.findMember(uuid: message.senderId)
+                    // 상대방의 일반 메시지인 경우, 기존 로직 그대로 사용
+                    let cell = tableView.dequeueReusableCell(withIdentifier: ChattingTableViewCell.identifier, for: IndexPath(row: row, section: 0)) as! ChattingTableViewCell
                     let date = Date(timeIntervalSince1970: message.timestamp)
                     let dateFormatter = DateFormatter()
-                    dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+                    dateFormatter.dateFormat = "HH:mm"
                     let dateString = dateFormatter.string(from: date)
-                    self.viewModel.memberSubject.observe(on: MainScheduler.instance).subscribe(onNext: { member in
-                        cell.config(image: member.profileImage, message: message.text, time: dateString, nickname: member.nickname)
-                    }).disposed(by: self.disposeBag)
-                    cell.date.text = dateString
-                    
-                    // 프로필 이미지 탭 클로저
-                    cell.profileImageTapped = { [weak self] in
-                        self?.presentProfileViewController()
-                    }
+                    self.viewModel.findMember(uuid: message.senderId)
+                    self.viewModel.memberSubject
+                        .observe(on: MainScheduler.instance)
+                        .subscribe(onNext: { member in
+                            cell.config(image: member.profileImage, message: message.text, time: dateString, nickname: member.nickname)
+                        }).disposed(by: self.disposeBag)
                     return cell
                 }
             }

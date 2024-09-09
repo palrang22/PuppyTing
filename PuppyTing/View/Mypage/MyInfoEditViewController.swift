@@ -13,6 +13,13 @@ class MyInfoEditViewController: UIViewController {
         didSet {
             // 데이터 전송 시 화면 구성 변환
             if let member = member {
+                if member.isSocial {
+                    passwordTextField.isHidden = true
+                    passwordTitleLabel.isHidden = true
+                    passwordChangeButton.isHidden = true
+                    passwordCheckTextField.isHidden = true
+                    passwordCheckTitleLabel.isHidden = true
+                }
                 emailLabel.text = member.email
                 nickNameTextField.text = member.nickname
                 if member.profileImage == "defaultProfileImage" {
@@ -32,6 +39,8 @@ class MyInfoEditViewController: UIViewController {
             }
         }
     }
+    
+    let pwRegex = "^(?=.*[A-Za-z])(?=.*[0-9])(?=.*[!@#$%^&*()_+=-]).{8,50}"
     
     func setMember(member: Member?) {
         self.member = member
@@ -313,6 +322,11 @@ class MyInfoEditViewController: UIViewController {
         }
     }
     
+    private func checkPasswordValid(_ password: String) -> Bool {
+        let predicate = NSPredicate(format: "SELF MATCHES %@", pwRegex)
+        return predicate.evaluate(with: password)
+    }
+    
     private func updateMember(nickname: String, image: String) {
         guard let member = member else { return }
         let updateMember = Member(uuid: member.uuid, email: member.email, password: member.password, nickname: nickname, profileImage: image, footPrint: member.footPrint, isSocial: member.isSocial, blockedUsers: member.blockedUsers, bookMarkUsers: member.bookMarkUsers, puppies: member.puppies)
@@ -322,7 +336,14 @@ class MyInfoEditViewController: UIViewController {
     @objc 
     private func updatePassword() {
         guard let password = passwordTextField.text, let passwordCheck = passwordCheckTextField.text, let oldPassword = member?.password else { return }
-        guard password == passwordCheck else { return }
+        guard password == passwordCheck else { 
+            okAlert(title: "비밀번호 변경", message: "비밀번호가 일치하지 않습니다.", okActionTitle: "ok")
+            return
+        }
+        guard checkPasswordValid(password) else {
+            okAlert(title: "비밀번호 변경", message: "비밀번호는 8자리 ~ 50자리 영어+숫자+특수문자 로 설정해주세요", okActionTitle: "ok")
+            return
+        }
         myInfoEditViewModel.updatePassword(oldpassword: oldPassword, newPassword: password)
     }
     
@@ -373,7 +394,7 @@ class MyInfoEditViewController: UIViewController {
             self?.member = member
         }).disposed(by: disposeBag)
         myInfoEditViewModel.imageSubject.observe(on: MainScheduler.instance).subscribe(onNext: { [weak self] imageUrl in
-            guard let nickname = self?.member?.nickname else { return }
+            guard let nickname = self?.nickNameTextField.text else { return }
             self?.updateMember(nickname: nickname, image: imageUrl)
         }).disposed(by: disposeBag)
         myInfoEditViewModel.realImageSubject.observe(on: MainScheduler.instance).subscribe(onNext: { [weak self] image in
