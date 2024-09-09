@@ -4,7 +4,6 @@
 //
 //  Created by 김승희 on 8/27/24.
 //
-
 import UIKit
 
 import FirebaseAuth
@@ -16,6 +15,8 @@ class TingCollectionViewCell: UICollectionViewCell {
     private let disposeBag = DisposeBag()
     
     var viewController: UIViewController?
+    let calendar = Calendar.current
+    let currentDate = Date()
     
     //MARK: 컴포넌트 선언
     private let shadowContainerView: UIView = {
@@ -132,10 +133,9 @@ class TingCollectionViewCell: UICollectionViewCell {
         self.nameLabel.text = model.userid
         self.content.text = model.content
         messageSendButton.isHidden = model.userid == currentUserID
-
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy-MM-dd HH:mm"
-        self.timeLabel.text = dateFormatter.string(from: model.time)
+        
+        changeDateFormat(time: model.time)
+        
         self.footPrintLabel.text = "🐾 발도장 \(model.postid)개"
         
         FireStoreDatabaseManager.shared.findMemeber(uuid: model.userid)
@@ -148,7 +148,6 @@ class TingCollectionViewCell: UICollectionViewCell {
                 } else {
                     NetworkManager.shared.loadImageFromURL(urlString: member.profileImage)
                         .subscribe(onSuccess: { [weak self] image in
-                            print("이미지 로드 성공 2")
                             DispatchQueue.main.async {
                                 self?.profilePic.image = image ?? UIImage(named: "defaultProfileImage")
                             }
@@ -158,10 +157,7 @@ class TingCollectionViewCell: UICollectionViewCell {
                                 self?.profilePic.image = UIImage(named: "defaultProfileImage")
                             }
                         }).disposed(by: self?.disposeBag ?? DisposeBag())
-                } else {
-                    print("접근")
                 }
-                
             }, onFailure: { error in
                 print("멤버 찾기 실패: \(error)")
             }).disposed(by: disposeBag)
@@ -185,6 +181,24 @@ class TingCollectionViewCell: UICollectionViewCell {
     private func createRoom() {
         guard let name = nameLabel.text else { return }
         createChatRoom(chatRoomName: name, users: users)
+    }
+    
+    private func changeDateFormat(time: Date) {
+        let dateFormatter = DateFormatter()
+        let timeDifference = calendar.dateComponents([.minute, .hour, .day], from: time, to: currentDate)
+            
+        if let minute = timeDifference.minute, let hour = timeDifference.hour, let day = timeDifference.day {
+            if day > 0 {
+                dateFormatter.dateFormat = "yyyy-MM-dd"
+                self.timeLabel.text = dateFormatter.string(from: time)
+            } else if hour > 0 {
+                self.timeLabel.text = "\(hour)시간 전"
+            } else if minute > 0 {
+                self.timeLabel.text = "\(minute)분 전"
+            } else {
+                self.timeLabel.text = "방금 전"
+            }
+        }
     }
     
     private func findUserId() -> String {
