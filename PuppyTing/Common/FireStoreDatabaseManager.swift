@@ -187,6 +187,12 @@ class FireStoreDatabaseManager {
                     single(.failure(error))
                 } else {
                     single(.success(()))
+                }
+            }
+            return Disposables.create()
+        }
+    }
+    
     func createPuppy(userId: String, name: String, age: Int, petImage: String, tag: [String]) -> Single<Pet> {
         return Single.create { single in
             let docRef = self.db.collection("pet").document()
