@@ -497,6 +497,7 @@ class MypageViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
+        setupKeyboardDismissRecognizer()
         setupUI()
         setupBindings()
         findMember()
@@ -507,7 +508,6 @@ class MypageViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        findMember()
         loadPuppyInfo()
     }
     

@@ -17,7 +17,6 @@ class FireStoreDatabaseManager {
     static let shared = FireStoreDatabaseManager()
     
     private let db = Firestore.firestore()
-    
     private init () {
         
     }
