@@ -9,6 +9,7 @@ import UIKit
 
 import FirebaseAuth
 import FirebaseCore
+import FirebaseDynamicLinks
 import GoogleSignIn
 import KakaoMapsSDK
 
@@ -23,8 +24,33 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     // Google 인증 프로세스가 종료되었을 때 앱이 수신하는 URL 을 처리하는 역할
     func application(_ app: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey : Any] = [:]) -> Bool {
-        return GIDSignIn.sharedInstance.handle(url)
+        print("aaa")
+        if GIDSignIn.sharedInstance.handle(url) {
+            return true
+        }
+        
+        if let dynamicLink = DynamicLinks.dynamicLinks().dynamicLink(fromCustomSchemeURL: url), let deepLinkURL = dynamicLink.url {
+            handleDeepLink(url: deepLinkURL)
+            return true
+        }
+        return false
     }
+    
+    func handleDeepLink(url: URL) {
+        guard let components = URLComponents(url: url, resolvingAgainstBaseURL: false),
+              let queryItems = components.queryItems else { return }
+        print("aa")
+        if let oobCode = queryItems.first(where: { $0.name == "oobCode" })?.value {
+            Auth.auth().applyActionCode(oobCode) { error in
+                if let error = error {
+                    print("error")
+                } else {
+                    print("이메일 인증 성공")
+                }
+            }
+        }
+    }
+    
     
     // MARK: UISceneSession Lifecycle
     
