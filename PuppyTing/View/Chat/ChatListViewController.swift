@@ -73,6 +73,11 @@ class ChatListViewController: UIViewController, UITableViewDelegate, UISearchBar
         let output = chatRoomViewModel.transform(input: input, userId: userId)
         
         output.chatRooms
+            .subscribe { _ in
+                self.refreshControl.endRefreshing()
+            }.disposed(by: disposeBag)
+        
+        output.chatRooms
             .bind(to: tableView.rx.items(cellIdentifier: ChatTableViewCell.identifier, cellType: ChatTableViewCell.self)) { index, data, cell in
                 let otherUser = data.users.first == userId ? data.users.last : data.users.first
                 if let otherUser = otherUser {
