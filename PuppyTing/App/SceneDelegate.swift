@@ -49,6 +49,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
                     if let error = error {
                         print("Error verifying email: \(error.localizedDescription)")
                     } else {
+                        print("이메일 인증 완료")
                         print("Email verified successfully.")
                     }
                 }
