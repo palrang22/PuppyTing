@@ -43,12 +43,22 @@ final class AppController {
         authStateListenerHandle = Auth.auth().addStateDidChangeListener { auth, user in
             if let user = user {
                 if user.isEmailVerified {
-                    self.setHome()
+                    self.checkUserData(user: user)
                 } else {
                     self.routeToLogin()
                 }
             } else {
                 self.routeToLogin()
+            }
+        }
+    }
+    
+    private func checkUserData(user: User) {
+        FireStoreDatabaseManager.shared.checkUserData(user: user) { result in
+            if result {
+                self.setHome()
+            } else {
+                self.logOut()
             }
         }
     }
