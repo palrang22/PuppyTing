@@ -21,6 +21,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         AppController.shared.show(in: window)
     }
     
+    // AppDelegate 에서 처리를 할 필요가 없는건가..?
     func scene(_ scene: UIScene, continue userActivity: NSUserActivity) {
         guard let incomingURL = userActivity.webpageURL else {
             return
@@ -28,7 +29,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         handleDeepLink(deepLinkURL: incomingURL)
     }
 
-    func handleDeepLink(deepLinkURL: URL) {
+   func handleDeepLink(deepLinkURL: URL) {
         // Deep Link URL에서 쿼리 파라미터 추출
         guard let deepLinkComponents = URLComponents(url: deepLinkURL, resolvingAgainstBaseURL: false),
               let deepLinkQueryItems = deepLinkComponents.queryItems else {
