@@ -205,6 +205,7 @@ class MypageViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = .white
         setupKeyboardDismissRecognizer()
+        setGesture()
         setupUI()
         setupBindings()
         fetchMemberInfo()
@@ -217,6 +218,13 @@ class MypageViewController: UIViewController {
         super.viewWillAppear(animated)
         loadUserInfo()
         loadPuppyInfo()
+    }
+    
+    //MARK: Gesture
+    private func setGesture() {
+        let tapGesture = UITapGestureRecognizer(target: self, action: nil)
+        tapGesture.cancelsTouchesInView = false
+        puppyCollectionView.addGestureRecognizer(tapGesture)
     }
     
     // MARK: - Setup Bindings
@@ -234,9 +242,19 @@ class MypageViewController: UIViewController {
             .disposed(by: disposeBag)
         
         puppys.bind(to: puppyCollectionView.rx
-            .items(cellIdentifier: PuppyCollectionViewCell.identifier, cellType: PuppyCollectionViewCell.self)) { index, pet, cell in
+            .items(cellIdentifier: PuppyCollectionViewCell.identifier
+                   , cellType: PuppyCollectionViewCell.self)) { index, pet, cell in
                 cell.config(puppy: pet)
             }.disposed(by: disposeBag)
+        
+        puppyCollectionView.rx.itemSelected
+            .subscribe(onNext: { [weak self] indexPath in
+                print("셀 선택됨: \(indexPath.row)")  // 선택된 셀의 인덱스를 출력
+                self?.navigateToPuppyEdit(at: indexPath)
+            }).disposed(by: disposeBag)
+        
+        puppyCollectionView.rx.setDelegate(self)
+            .disposed(by: disposeBag)
     }
     
     //MARK: Puppy 관련 메서드
@@ -277,8 +295,9 @@ class MypageViewController: UIViewController {
         let puppy = petList[indexPath.row]
         let puppyRegistrationVC = PuppyRegistrationViewController()
         puppyRegistrationVC.isEditMode = true
+        puppyRegistrationVC.setPet(pet: puppy)
         puppyRegistrationVC.setupWithPuppy(name: puppy.name, info: "\(puppy.age)", tag: puppy.tag.joined(separator: ", "), imageUrl: puppy.petImage)
-        
+
         puppyRegistrationVC.puppyUpdatedSubject
             .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] name, info, imageUrl in
@@ -287,7 +306,7 @@ class MypageViewController: UIViewController {
                 self?.puppyCollectionView.reloadItems(at: [indexPath])
             })
             .disposed(by: disposeBag)
-        
+
         if let navigationController = self.navigationController {
             navigationController.pushViewController(puppyRegistrationVC, animated: true)
         } else {
@@ -409,7 +428,11 @@ class MypageViewController: UIViewController {
     
     @objc
     private func logOut() {
-        okAlertWithCancel(title: "로그아웃", message: "정말로 로그아웃 하시겠습니까?", okActionTitle: "아니오", cancelActionTitle: "예", cancelActionHandler:  { _ in
+        okAlertWithCancel(title: "로그아웃",
+                          message: "정말로 로그아웃 하시겠습니까?",
+                          okActionTitle: "아니오",
+                          cancelActionTitle: "예",
+                          cancelActionHandler:  { _ in
             AppController.shared.logOut()
         })
     }
@@ -630,7 +653,6 @@ class MypageViewController: UIViewController {
         }
 
         //collectionView.dataSource = self
-        puppyCollectionView.delegate = self
         puppyCollectionView.register(PuppyCollectionViewCell.self, forCellWithReuseIdentifier: PuppyCollectionViewCell.identifier)
 
         setupMenuItems() // 메뉴 항목을 설정하는 함수 호출
@@ -645,8 +667,9 @@ extension MypageViewController: UICollectionViewDelegateFlowLayout {
     }
 }
 
-extension MypageViewController: UICollectionViewDelegate {
-    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        navigateToPuppyEdit(at: indexPath)
-    }
-}
+//extension MypageViewController: UICollectionViewDelegate {
+//    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+//        print("클릭됨")
+//        navigateToPuppyEdit(at: indexPath)
+//    }
+//}

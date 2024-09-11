@@ -17,6 +17,10 @@ class PuppyRegistrationViewController: UIViewController {
     private let puppyRegistrationViewModel = PuppyRegistrationViewModel()
     private let disposeBag = DisposeBag()
     
+    func setPet(pet: Pet) {
+        self.pet = pet
+    }
+    
     // UI Elements
     private let puppyImageView: UIImageView = {
         let imageView = UIImageView()
@@ -322,9 +326,14 @@ class PuppyRegistrationViewController: UIViewController {
     }
 
     @objc private func handleEditButtonTapped() {
-        guard let petId = pet?.id, let name = nameTextField.text, !name.isEmpty,
-              let strAge = ageTextField.text, let age = Int(strAge),
-              !name.isEmpty, !strAge.isEmpty else {
+            print("petId: \(pet?.id ?? "nil")")
+            print("name: \(nameTextField.text ?? "nil")")
+            print("age: \(ageTextField.text ?? "nil")")
+        
+        guard let petId = pet?.id,
+              let name = nameTextField.text, !name.isEmpty,  // 이름 필드 검사
+              let strAge = ageTextField.text, !strAge.isEmpty, // 나이 필드 검사
+              let age = Int(strAge) else {  // 나이 필드를 Int로 변환
             okAlert(title: "오류", message: "1. 모든 필드를 채워주세요.")
             return
         }
