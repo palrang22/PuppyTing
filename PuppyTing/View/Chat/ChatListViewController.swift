@@ -32,6 +32,7 @@ class ChatListViewController: UIViewController, UITableViewDelegate, UISearchBar
         
         setupUI()
         bindTableView()
+        bindData()
         
         tableView.rowHeight = UITableView.automaticDimension
         tableView.estimatedRowHeight = 100
@@ -94,6 +95,29 @@ class ChatListViewController: UIViewController, UITableViewDelegate, UISearchBar
                 self?.navigateToChatView(chatRoom: data)
             })
             .disposed(by: disposeBag)
+        
+        tableView.rx.itemDeleted
+            .subscribe(onNext: { [weak self] indexPath in
+                guard let self = self else { return }
+                
+                let chatRooms = try? self.chatRoomViewModel.chatRoomsSubject.value()
+                if let chatRoom = chatRooms?[indexPath.row] {
+                    self.chatRoomViewModel.deleteChatRoom(chatRoom)
+                }
+            })
+            .disposed(by: disposeBag)
+    }
+    
+    private func bindData() {
+        chatRoomViewModel.deleteRoomSubject.observe(on: MainScheduler.instance).subscribe(onNext: { isDelete in
+            if isDelete {
+                //채팅방 삭제
+                self.okAlert(title: "채팅방 삭제", message: "채팅방 삭제 완료")
+            } else {
+                //채팅방 삭제 실패
+                self.okAlert(title: "채팅방 삭제", message: "채팅방 삭제 실패")
+            }
+        }).disposed(by: disposeBag)
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {

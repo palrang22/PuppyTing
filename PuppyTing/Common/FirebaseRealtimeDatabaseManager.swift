@@ -166,4 +166,20 @@ class FirebaseRealtimeDatabaseManager {
         }
     }
     
+    func deleteChatRoom(roomId: String) -> Single<Void> {
+        return Single<Void>.create { single in
+            let roomRef = self.databaseRef.child("chatRooms").child(roomId)
+            
+            roomRef.removeValue { error, _ in
+                if let error = error {
+                    single(.failure(error)) // 에러 발생 시 실패 방출
+                } else {
+                    single(.success(())) // 성공 시 성공 이벤트 방출
+                }
+            }
+            
+            return Disposables.create()
+        }
+    }
+    
 }
