@@ -8,13 +8,13 @@ import SnapKit
 class PuppyRegistrationViewController: UIViewController {
 
     // MARK: - Properties
-
-    var completionHandler: ((String, String, UIImage?) -> Void)?
-    var isEditMode: Bool = false
-    private let puppyRegistrationViewModel = PuppyRegistrationViewModel()
     
     var pet: Pet?
-    
+    var isEditMode: Bool = false
+
+    var puppyRegisteredSubject = PublishSubject<(String, String, String?)>()
+    var puppyUpdatedSubject = PublishSubject<(String, String, String?)>()
+    private let puppyRegistrationViewModel = PuppyRegistrationViewModel()
     private let disposeBag = DisposeBag()
     
     // UI Elements
@@ -110,7 +110,7 @@ class PuppyRegistrationViewController: UIViewController {
         setupUI()
         configureNavigationBar()
         setupBindings()
-        bindData()
+        bind()
     }
 
     // MARK: - Setup UI
@@ -195,74 +195,22 @@ class PuppyRegistrationViewController: UIViewController {
         puppyRegistrationViewModel.updateImage(image: image)
     }
     
-    private func addPuppy() {
-        // 이름, 나이, 태그 값이 유효한지 확인
-        guard let name = nameTextField.text,
-              let strAge = ageTextField.text,
-              let age = Int(strAge),
-              !name.isEmpty,
-              !strAge.isEmpty else {
-            okAlert(title: "오류", message: "나이는 정수로 입력해주세요.")
-            return
-        }
+    private func bind() {
+        guard let pet = pet else { return }
+        nameTextField.text = pet.name
+        ageTextField.text = "\(pet.age)"
+        pet.tag.forEach { addTag(word: $0) }
         
-        // 사용자 ID 가져오기
-        let userId = findUserId()
-        
-        // 태그 추출
-        var tagArr: [String] = []
-        for view in tagStack.arrangedSubviews {
-            if let button = view as? UIButton, let tag = button.titleLabel?.text {
-                tagArr.append(tag)
-            }
-        }
-        
-        guard !tagArr.isEmpty else {
-            okAlert(title: "오류", message: "태그를 하나 이상 추가해주세요.")
-            return
-        }
-        
-        guard let image = puppyImageView.image else {
-            okAlert(title: "오류", message: "이미지를 선택해주세요.")
-            return
-        }
-        
-        FirebaseStorageManager.shared.uploadImage(image: image)
+        // petImage가 String이므로 바로 사용
+        let imageUrl = pet.petImage
+        NetworkManager.shared.loadImageFromURL(urlString: imageUrl)
             .observe(on: MainScheduler.instance)
-            .subscribe(onSuccess: { [weak self] imageUrl in
-                self?.puppyRegistrationViewModel.createPuppy(userId: userId, name: name, age: age, petImage: imageUrl, tag: tagArr)
-                    .observe(on: MainScheduler.instance)
-                    .subscribe(onSuccess: { pet in
-                        self?.completionHandler?(name, "\(age)살", image)
-                        self?.navigationController?.popViewController(animated: true)
-                    }, onFailure: { error in
-                        print("강아지 정보 저장 실패: \(error)")
-                        self?.okAlert(title: "오류", message: "강아지 정보를 저장할 수 없습니다. 다시 시도해주세요.")
-                    })
-                    .disposed(by: self?.disposeBag ?? DisposeBag())
-            }, onFailure: { error in
-                print("이미지 업로드 실패: \(error)")
-                self.okAlert(title: "오류", message: "이미지 업로드에 실패했습니다. 다시 시도해주세요.")
-            })
-            .disposed(by: disposeBag)
-    }
-    
-//    var pet: Pet? = nil {
-//        didSet {
-//            // 데이터 생성
-//            // 등록 후 이전 화면으로 돌아가기
-//            navigationController?.popViewController(animated: true)
-//        }
-//    }
-    
-    private func bindData() {
-        puppyRegistrationViewModel.imageSubject.observe(on: MainScheduler.instance).subscribe(onNext: { [weak self] image in
-            self?.puppyImageView.image = UIImage(named: image)
-        }).disposed(by: disposeBag)
-
-        puppyRegistrationViewModel.petSubject.observe(on: MainScheduler.instance).subscribe(onNext: { [weak self] pet in
-            self?.pet = pet
-        }).disposed(by: disposeBag)
+            .subscribe(onSuccess: { [weak self] image in
+                self?.puppyImageView.image = image ?? UIImage(named: "defaultImage")
+            }, onFailure: { [weak self] error in
+                print("이미지 로딩 실패: \(error)")
+                self?.puppyImageView.image = UIImage(named: "defaultImage")
+            }).disposed(by: disposeBag)
     }
 
     // MARK: - Configure Navigation Bar
@@ -289,17 +237,6 @@ class PuppyRegistrationViewController: UIViewController {
                 self?.presentImagePickerOptions()
             }
             .disposed(by: disposeBag)
-        
-//        // 버튼 클릭 이벤트를 Rx로 바인딩
-//        rightBarButtonItem.rx.tap
-//            .bind { [weak self] in
-//                if self?.isEditMode == true {
-//                    self?.handleEditButtonTapped()
-//                } else {
-//                    self?.handleSubmitButtonTapped()
-//                }
-//            }
-//            .disposed(by: disposeBag)
         
         // 텍스트 필드 입력값을 감지하여 버튼 활성화 상태를 업데이트
         Observable.combineLatest(nameTextField.rx.text.orEmpty, ageTextField.rx.text.orEmpty)
@@ -352,7 +289,7 @@ class PuppyRegistrationViewController: UIViewController {
         guard let name = nameTextField.text, !name.isEmpty,
               let strAge = ageTextField.text, let age = Int(strAge),
               !name.isEmpty, !strAge.isEmpty else {
-            okAlert(title: "오류", message: "2. 모든 필드를 채워주세요.")
+            okAlert(title: "오류", message: "모든 필드를 채워주세요.")
             return
         }
         
@@ -371,15 +308,17 @@ class PuppyRegistrationViewController: UIViewController {
         
         FirebaseStorageManager.shared.uploadImage(image: image)
             .flatMap { imageUrl in
-                self.puppyRegistrationViewModel.createPuppy(userId: userId, name: name, age: age, petImage: imageUrl, tag: tagArr)
+                return self.puppyRegistrationViewModel.createPuppy(userId: userId, name: name, age: age, petImage: imageUrl, tag: tagArr)
             }
             .observe(on: MainScheduler.instance)
             .subscribe(onSuccess: { pet in
+                self.puppyRegisteredSubject.onNext((name, "\(age)", pet.petImage)) // 이벤트 방출
                 self.navigationController?.popViewController(animated: true)
             }, onFailure: { error in
                 print("강아지 등록 실패: \(error)")
             })
             .disposed(by: disposeBag)
+        
     }
 
     @objc private func handleEditButtonTapped() {
