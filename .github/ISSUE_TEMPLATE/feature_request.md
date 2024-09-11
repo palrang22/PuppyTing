@@ -1,9 +1,10 @@
 ---
-name: "Feature Request"
-about: "어떤 기능을 넣을 것인지"
+name: Feature Request
+about: 어떤 기능을 넣을 것인지
 title: "[FEATURE]"
-lables: "feature request"
-assignees: "담당자"
+labels: ''
+assignees: ''
+
 ---
 
 ## 🚀 기능 요청
@@ -26,4 +27,4 @@ assignees: "담당자"
 
 ### 추가 사항
 
-- 
+-
