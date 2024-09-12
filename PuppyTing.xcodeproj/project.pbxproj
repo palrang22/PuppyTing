@@ -248,13 +248,6 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		A2F9FE782C8E1E59004D7FF6 /* Recovered References */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			name = "Recovered References";
-			sourceTree = "<group>";
-		};
 		E738FB6A2C7C62EE004696BD = {
 			isa = PBXGroup;
 			children = (
@@ -263,7 +256,6 @@
 				E738FB752C7C62EE004696BD /* PuppyTing */,
 				E738FB742C7C62EE004696BD /* Products */,
 				A2F9FE5C2C8C4DAD004D7FF6 /* Frameworks */,
-				A2F9FE782C8E1E59004D7FF6 /* Recovered References */,
 			);
 			sourceTree = "<group>";
 		};
@@ -383,7 +375,6 @@
 			children = (
 				E738FB762C7C62EE004696BD /* AppDelegate.swift */,
 				E738FB782C7C62EE004696BD /* SceneDelegate.swift */,
-				5602B0872C8E10D50060F03B /* Config.xcconfig */,
 				A2F9FE762C8DF3CB004D7FF6 /* Config.xcconfig */,
 			);
 			path = App;
@@ -527,7 +518,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				E738FB802C7C62F0004696BD /* Assets.xcassets in Resources */,
-				5602B0882C8E10D50060F03B /* Config.xcconfig in Resources */,
 				A2F9FE772C8DF3CB004D7FF6 /* Config.xcconfig in Resources */,
 				E738FBAA2C7C6BB3004696BD /* .gitignore in Resources */,
 				A2F9FE5B2C8C4D8C004D7FF6 /* GoogleService-Info.plist in Resources */,

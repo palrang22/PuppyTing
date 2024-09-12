@@ -11,8 +11,9 @@ class MyPageViewModel {
     private let disposeBag = DisposeBag()
     
     // 멤버 정보 가져오기
-    func findMember(uuid: String) {
-        FireStoreDatabaseManager.shared.findMemeber(uuid: uuid).observe(on: MainScheduler.instance)
+    func fetchMemberInfo(uuid: String) {
+        FireStoreDatabaseManager.shared
+            .findMemeber(uuid: uuid).observe(on: MainScheduler.instance)
             .subscribe(onSuccess: { [weak self] member in
                 self?.memberSubject.onNext(member)
             }).disposed(by: disposeBag)

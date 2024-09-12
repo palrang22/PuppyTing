@@ -19,7 +19,10 @@ class PuppyRegistrationViewModel {
     private let disposeBag = DisposeBag()
     
     func updateImage(image: UIImage) {
-        FirebaseStorageManager.shared.uploadImage(image: image).observe(on: MainScheduler.instance).subscribe(onSuccess: { [weak self] imageUrl in
+        FirebaseStorageManager.shared
+            .uploadImage(image: image)
+            .observe(on: MainScheduler.instance)
+            .subscribe(onSuccess: { [weak self] imageUrl in
             self?.imageSubject.onNext(imageUrl)
         }).disposed(by: disposeBag)
     }
@@ -47,7 +50,6 @@ class PuppyRegistrationViewModel {
                     }
                 }
             }
-            
             return Disposables.create()
         }
     }

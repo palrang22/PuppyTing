@@ -170,6 +170,7 @@ class ChatTableViewCell: UITableViewCell {
         imageView.widthAnchor.constraint(equalToConstant: 28).isActive = true
         NetworkManager.shared.fetchImage(url: image) { image in
             DispatchQueue.main.async {
+                self.outerStackView.arrangedSubviews.forEach { $0.removeFromSuperview() }
                 imageView.image = image
                 self.outerStackView.addArrangedSubview(imageView)
             }
