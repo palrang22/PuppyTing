@@ -7,14 +7,21 @@
 
 import UIKit
 
+import RxSwift
+
 class FavoriteListViewController: UIViewController {
     
     private let tableView = UITableView()
+    private let viewModel = FavoriteListViewModel()
+    private let disposeBag = DisposeBag()
+    private var favoriteList = [Favorite]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         setupView()
         setupTableView()
+        bindViewModel()
+        viewModel.fetchFavorites()
     }
     
     private func setupView() {
@@ -35,12 +42,22 @@ class FavoriteListViewController: UIViewController {
         tableView.rowHeight = UITableView.automaticDimension
         tableView.estimatedRowHeight = 80
     }
+    
+    private func bindViewModel() {
+        viewModel.favorites
+            .observe(on: MainScheduler.instance)
+            .subscribe(onNext: { [weak self] favorites in
+                self?.favoriteList = favorites
+                self?.tableView.reloadData()
+            })
+            .disposed(by: disposeBag)
+    }
 }
 
 extension FavoriteListViewController: UITableViewDataSource, UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 10 // 예시 데이터
+        return favoriteList.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -48,10 +65,8 @@ extension FavoriteListViewController: UITableViewDataSource, UITableViewDelegate
             return UITableViewCell()
         }
         
-        let nickname = "사용자 닉네임 \(indexPath.row + 1)"
-        let profileImage = UIImage(named: "userProfileImage") // 임의의 이미지
-        
-        cell.configure(with: nickname, profileImage: profileImage)
+        let favorite = favoriteList[indexPath.row]
+        cell.configure(with: favorite)
         
         return cell
     }

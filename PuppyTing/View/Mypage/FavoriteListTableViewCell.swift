@@ -72,8 +72,32 @@ class FavoriteListTableViewCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func configure(with nickname: String, profileImage: UIImage?) {
-        nicknameLabel.text = nickname
-        profileImageView.image = profileImage ?? UIImage(named: "defaultProfileImage")
+    func configure(with favorite: Favorite) {
+        nicknameLabel.text = favorite.nickname
+        // 프로필 이미지 불러오기
+        if let profileImageURL = favorite.profileImageURL, !profileImageURL.isEmpty {
+            loadImage(from: profileImageURL)
+        } else {
+            profileImageView.image = UIImage(named: "defaultProfileImage") // 기본 이미지
+        }
+    }
+    
+    // URL로부터 이미지를 비동기적으로 불러오는 함수 
+    private func loadImage(from urlString: String) {
+        guard let url = URL(string: urlString) else { return }
+        
+        URLSession.shared.dataTask(with: url) { [weak self] data, response, error in
+            if let error = error {
+                print("이미지 로딩 실패: \(error)")
+                return
+            }
+            
+            guard let data = data, let image = UIImage(data: data) else { return }
+            
+            // UI 업데이트는 메인 스레드에서 수행
+            DispatchQueue.main.async {
+                self?.profileImageView.image = image
+            }
+        }.resume()
     }
 }
