@@ -393,16 +393,14 @@ class MypageViewController: UIViewController {
 
         switch selectedIndex {
         case 0:
-            navigateToMyFeedManagement() // 내 피드 관리 페이지로 이동
+            navigateToMyFeedManagement()
         case 1:
-            // 다른 페이지로 이동 (받은 산책 후기)
             break
         case 2:
             // 다른 페이지로 이동 (즐겨 찾는 친구)
             break
         case 3:
-            // 다른 페이지로 이동 (차단 목록)
-            break
+            navigateToMyBlockList()
         default:
             break
         }
@@ -418,6 +416,15 @@ class MypageViewController: UIViewController {
         }
     }
     
+    // MARK: - 내 차단 목록으로 이동
+    private func navigateToMyBlockList() {
+        let myBlockListViewController = MyBlockListViewController()
+        if let navigationController = self.navigationController {
+            navigationController.pushViewController(myBlockListViewController, animated: true)
+        } else {
+            present(myBlockListViewController, animated: true, completion: nil)
+        }
+    }
     // MARK: - Setup Bindings
     private func setupBindings() {
         addPuppyButton.rx.tap

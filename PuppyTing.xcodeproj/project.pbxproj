@@ -51,6 +51,8 @@
 		C29FCFC12C88566000F8951D /* MyFeedManageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C29FCFC02C88566000F8951D /* MyFeedManageViewController.swift */; };
 		C29FCFC32C88610600F8951D /* MyFeedTableViCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C29FCFC22C88610600F8951D /* MyFeedTableViCell.swift */; };
 		C29FCFC92C8DF25300F8951D /* DetailTingViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C29FCFC82C8DF25300F8951D /* DetailTingViewModel.swift */; };
+		C29FCFCF2C90176500F8951D /* MyBlockListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C29FCFCE2C90176500F8951D /* MyBlockListViewController.swift */; };
+		C29FCFD12C90193D00F8951D /* MyBlockListTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C29FCFD02C90193D00F8951D /* MyBlockListTableViewCell.swift */; };
 		E70DB3452C7F0CB60073B3F8 /* PostTingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E70DB3442C7F0CB60073B3F8 /* PostTingViewController.swift */; };
 		E70DB3472C7F0CD00073B3F8 /* DetailTingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E70DB3462C7F0CD00073B3F8 /* DetailTingViewController.swift */; };
 		E70DB3492C7F3F060073B3F8 /* UIViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E70DB3482C7F3F060073B3F8 /* UIViewController.swift */; };
@@ -129,6 +131,8 @@
 		C29FCFC02C88566000F8951D /* MyFeedManageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyFeedManageViewController.swift; sourceTree = "<group>"; };
 		C29FCFC22C88610600F8951D /* MyFeedTableViCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyFeedTableViCell.swift; sourceTree = "<group>"; };
 		C29FCFC82C8DF25300F8951D /* DetailTingViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailTingViewModel.swift; sourceTree = "<group>"; };
+		C29FCFCE2C90176500F8951D /* MyBlockListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyBlockListViewController.swift; sourceTree = "<group>"; };
+		C29FCFD02C90193D00F8951D /* MyBlockListTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyBlockListTableViewCell.swift; sourceTree = "<group>"; };
 		E70DB3442C7F0CB60073B3F8 /* PostTingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostTingViewController.swift; sourceTree = "<group>"; };
 		E70DB3462C7F0CD00073B3F8 /* DetailTingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailTingViewController.swift; sourceTree = "<group>"; };
 		E70DB3482C7F3F060073B3F8 /* UIViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIViewController.swift; sourceTree = "<group>"; };
@@ -394,6 +398,8 @@
 				C29FCF762C8171FA00F8951D /* MyInfoEditViewController.swift */,
 				C29FCFC02C88566000F8951D /* MyFeedManageViewController.swift */,
 				C29FCFC22C88610600F8951D /* MyFeedTableViCell.swift */,
+				C29FCFCE2C90176500F8951D /* MyBlockListViewController.swift */,
+				C29FCFD02C90193D00F8951D /* MyBlockListTableViewCell.swift */,
 			);
 			path = Mypage;
 			sourceTree = "<group>";
@@ -568,12 +574,14 @@
 				E7F598342C847A7800FE8900 /* Place.swift in Sources */,
 				C29FCF682C7DBA4F00F8951D /* PuppyRegistrationViewController.swift in Sources */,
 				A2F9FE7C2C8E6BF7004D7FF6 /* Date.swift in Sources */,
+				C29FCFD12C90193D00F8951D /* MyBlockListTableViewCell.swift in Sources */,
 				E738FB952C7C64BA004696BD /* UIColor.swift in Sources */,
 				C29FCF772C8171FA00F8951D /* MyInfoEditViewController.swift in Sources */,
 				E738FB9E2C7C668D004696BD /* MypageViewController.swift in Sources */,
 				A2F9FE552C89E082004D7FF6 /* ChatRoomViewModel.swift in Sources */,
 				A2085DCD2C804C3600698923 /* SignUpViewModel.swift in Sources */,
 				E738FBA22C7C66AC004696BD /* TingViewModel.swift in Sources */,
+				C29FCFCF2C90176500F8951D /* MyBlockListViewController.swift in Sources */,
 				56D686C52C7DA88500B00880 /* SignupViewController.swift in Sources */,
 				E738FB9C2C7C653C004696BD /* ChatViewController.swift in Sources */,
 				A2085DCA2C80395B00698923 /* Member.swift in Sources */,
@@ -616,7 +624,6 @@
 /* Begin XCBuildConfiguration section */
 		E738FB852C7C62F0004696BD /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 5602B0872C8E10D50060F03B /* Config.xcconfig */;
 			baseConfigurationReference = A2F9FE762C8DF3CB004D7FF6 /* Config.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -681,7 +688,6 @@
 		};
 		E738FB862C7C62F0004696BD /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 5602B0872C8E10D50060F03B /* Config.xcconfig */;
 			baseConfigurationReference = A2F9FE762C8DF3CB004D7FF6 /* Config.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -745,7 +751,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 4AW33HG75T;
+				DEVELOPMENT_TEAM = SS444RV4LU;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = PuppyTing/Info.plist;
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "현재 위치를 기반으로 근처 만남의 장소를 검색하기 위해 위치 정보가 필요합니다.";
@@ -777,7 +783,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 4AW33HG75T;
+				DEVELOPMENT_TEAM = SS444RV4LU;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = PuppyTing/Info.plist;
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "현재 위치를 기반으로 근처 만남의 장소를 검색하기 위해 위치 정보가 필요합니다.";
