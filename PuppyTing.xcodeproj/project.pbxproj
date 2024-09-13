@@ -13,7 +13,6 @@
 		5602B0692C8AEA340060F03B /* ProfileCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5602B0682C8AEA340060F03B /* ProfileCell.swift */; };
 		5602B0712C8AF4EF0060F03B /* PuppyHeaderCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5602B0702C8AF4EF0060F03B /* PuppyHeaderCell.swift */; };
 		5602B0862C8E0C6F0060F03B /* ProfileViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5602B0852C8E0C6F0060F03B /* ProfileViewModel.swift */; };
-		5602B0882C8E10D50060F03B /* Config.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 5602B0872C8E10D50060F03B /* Config.xcconfig */; };
 		56D686C52C7DA88500B00880 /* SignupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56D686C42C7DA88500B00880 /* SignupViewController.swift */; };
 		56D686C82C7DB09600B00880 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56D686C72C7DB09600B00880 /* LoginViewController.swift */; };
 		56D686CC2C7DC88700B00880 /* PptLoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56D686CB2C7DC88600B00880 /* PptLoginViewController.swift */; };
@@ -21,6 +20,7 @@
 		56FD04912C80172B00EBCDCD /* ChattingTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56FD04902C80172B00EBCDCD /* ChattingTableViewCell.swift */; };
 		56FD04932C856C4200EBCDCD /* FindingPasswordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56FD04922C856C4200EBCDCD /* FindingPasswordViewController.swift */; };
 		56FD04952C856C6E00EBCDCD /* ChangePasswordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56FD04942C856C6E00EBCDCD /* ChangePasswordViewController.swift */; };
+		A2024BB52C9026DD0049DD8A /* FirebaseDynamicLinks in Frameworks */ = {isa = PBXBuildFile; productRef = A2024BB42C9026DD0049DD8A /* FirebaseDynamicLinks */; };
 		A2085DA32C7D678400698923 /* GoogleSignIn in Frameworks */ = {isa = PBXBuildFile; productRef = A2085DA22C7D678400698923 /* GoogleSignIn */; };
 		A2085DA52C7D678400698923 /* GoogleSignInSwift in Frameworks */ = {isa = PBXBuildFile; productRef = A2085DA42C7D678400698923 /* GoogleSignInSwift */; };
 		A2085DC62C7EB37400698923 /* ChatListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2085DC52C7EB37400698923 /* ChatListViewController.swift */; };
@@ -96,7 +96,6 @@
 		5602B0682C8AEA340060F03B /* ProfileCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileCell.swift; sourceTree = "<group>"; };
 		5602B0702C8AF4EF0060F03B /* PuppyHeaderCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PuppyHeaderCell.swift; sourceTree = "<group>"; };
 		5602B0852C8E0C6F0060F03B /* ProfileViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewModel.swift; sourceTree = "<group>"; };
-		5602B0872C8E10D50060F03B /* Config.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Config.xcconfig; sourceTree = "<group>"; };
 		56D686C42C7DA88500B00880 /* SignupViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignupViewController.swift; sourceTree = "<group>"; };
 		56D686C72C7DB09600B00880 /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 		56D686CB2C7DC88600B00880 /* PptLoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PptLoginViewController.swift; sourceTree = "<group>"; };
@@ -104,6 +103,7 @@
 		56FD04902C80172B00EBCDCD /* ChattingTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChattingTableViewCell.swift; sourceTree = "<group>"; };
 		56FD04922C856C4200EBCDCD /* FindingPasswordViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FindingPasswordViewController.swift; sourceTree = "<group>"; };
 		56FD04942C856C6E00EBCDCD /* ChangePasswordViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChangePasswordViewController.swift; sourceTree = "<group>"; };
+		A2024BB32C9023030049DD8A /* PuppyTing.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = PuppyTing.entitlements; sourceTree = "<group>"; };
 		A2085DC52C7EB37400698923 /* ChatListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatListViewController.swift; sourceTree = "<group>"; };
 		A2085DC72C7EB4BA00698923 /* ChatTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatTableViewCell.swift; sourceTree = "<group>"; };
 		A2085DC92C80395B00698923 /* Member.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Member.swift; sourceTree = "<group>"; };
@@ -180,6 +180,7 @@
 				A2F9FE5E2C8C4DAD004D7FF6 /* FirebaseStorage in Frameworks */,
 				E738FBB02C7C7074004696BD /* RxCocoa in Frameworks */,
 				E738FBBE2C7C72CB004696BD /* FirebaseFirestore in Frameworks */,
+				A2024BB52C9026DD0049DD8A /* FirebaseDynamicLinks in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -248,13 +249,6 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		A2F9FE782C8E1E59004D7FF6 /* Recovered References */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			name = "Recovered References";
-			sourceTree = "<group>";
-		};
 		E738FB6A2C7C62EE004696BD = {
 			isa = PBXGroup;
 			children = (
@@ -263,7 +257,6 @@
 				E738FB752C7C62EE004696BD /* PuppyTing */,
 				E738FB742C7C62EE004696BD /* Products */,
 				A2F9FE5C2C8C4DAD004D7FF6 /* Frameworks */,
-				A2F9FE782C8E1E59004D7FF6 /* Recovered References */,
 			);
 			sourceTree = "<group>";
 		};
@@ -278,6 +271,7 @@
 		E738FB752C7C62EE004696BD /* PuppyTing */ = {
 			isa = PBXGroup;
 			children = (
+				A2024BB32C9023030049DD8A /* PuppyTing.entitlements */,
 				E738FB932C7C6496004696BD /* App */,
 				E738FB922C7C6490004696BD /* Common */,
 				E738FB912C7C6485004696BD /* Model */,
@@ -383,7 +377,6 @@
 			children = (
 				E738FB762C7C62EE004696BD /* AppDelegate.swift */,
 				E738FB782C7C62EE004696BD /* SceneDelegate.swift */,
-				5602B0872C8E10D50060F03B /* Config.xcconfig */,
 				A2F9FE762C8DF3CB004D7FF6 /* Config.xcconfig */,
 			);
 			path = App;
@@ -476,6 +469,7 @@
 				A2085DA42C7D678400698923 /* GoogleSignInSwift */,
 				E7F598362C849E1300FE8900 /* KakaoMapsSDK-SPM */,
 				A2F9FE5D2C8C4DAD004D7FF6 /* FirebaseStorage */,
+				A2024BB42C9026DD0049DD8A /* FirebaseDynamicLinks */,
 			);
 			productName = PuppyTing;
 			productReference = E738FB732C7C62EE004696BD /* PuppyTing.app */;
@@ -527,7 +521,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				E738FB802C7C62F0004696BD /* Assets.xcassets in Resources */,
-				5602B0882C8E10D50060F03B /* Config.xcconfig in Resources */,
 				A2F9FE772C8DF3CB004D7FF6 /* Config.xcconfig in Resources */,
 				E738FBAA2C7C6BB3004696BD /* .gitignore in Resources */,
 				A2F9FE5B2C8C4D8C004D7FF6 /* GoogleService-Info.plist in Resources */,
@@ -748,6 +741,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = PuppyTing/PuppyTing.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
@@ -780,6 +774,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = PuppyTing/PuppyTing.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
@@ -874,6 +869,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		A2024BB42C9026DD0049DD8A /* FirebaseDynamicLinks */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = E738FBB82C7C72CB004696BD /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseDynamicLinks;
+		};
 		A2085DA22C7D678400698923 /* GoogleSignIn */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = A2085DA12C7D678400698923 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */;

@@ -21,6 +21,18 @@ class FireStoreDatabaseManager {
         
     }
     
+    func checkUserData(user: User, completion: @escaping (Bool) -> Void) {
+        let docRef = db.collection("member").document(user.uid)
+        
+        docRef.getDocument { document, error in
+            if let document = document, document.exists {
+                completion(true)
+            } else {
+                completion(false)
+            }
+        }
+    }
+    
     func emailSignUp(uuid: String, email: String, pw: String, nickname: String) -> Single<Member> {
         return Single.create{ [weak self] single in
             let memeber = Member(uuid: uuid, email: email, password: pw, nickname: nickname, profileImage: "defaultProfileImage", footPrint: 0, isSocial: false)
