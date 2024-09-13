@@ -9,6 +9,7 @@ import UIKit
 
 import FirebaseAuth
 import FirebaseCore
+import FirebaseDynamicLinks
 import GoogleSignIn
 import KakaoMapsSDK
 
@@ -23,8 +24,49 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     // Google 인증 프로세스가 종료되었을 때 앱이 수신하는 URL 을 처리하는 역할
     func application(_ app: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey : Any] = [:]) -> Bool {
-        return GIDSignIn.sharedInstance.handle(url)
+        if GIDSignIn.sharedInstance.handle(url) {
+            return true
+        }
+        
+        
+        if let dynamicLink = DynamicLinks.dynamicLinks().dynamicLink(fromCustomSchemeURL: url), let deepLinkURL = dynamicLink.url {
+            handleDeepLink(deepLinkURL: deepLinkURL)  // Deep Link 처리
+            return true
+        } else {
+            return false
+        }
+        return false
     }
+    
+    func handleDeepLink(deepLinkURL: URL) {
+        // Deep Link URL에서 쿼리 파라미터 추출
+        guard let deepLinkComponents = URLComponents(url: deepLinkURL, resolvingAgainstBaseURL: false),
+              let deepLinkQueryItems = deepLinkComponents.queryItems else {
+            print("No query items in deep link URL")
+            return
+        }
+        
+        // 'oobCode'와 'mode' 파라미터를 추출
+        if let oobCode = deepLinkQueryItems.first(where: { $0.name == "oobCode" })?.value,
+           let mode = deepLinkQueryItems.first(where: { $0.name == "mode" })?.value {
+            
+            print("Mode: \(mode), oobCode: \(oobCode)") // 추출된 파라미터 출력
+
+            // 이메일 인증 처리
+            if mode == "verifyEmail" {
+                Auth.auth().applyActionCode(oobCode) { error in
+                    if let error = error {
+                        print("Error verifying email: \(error.localizedDescription)")
+                    } else {
+                        print("Email verified successfully.")
+                    }
+                }
+            }
+        } else {
+            print("Required query parameters (oobCode, mode) not found.")
+        }
+    }
+    
     
     // MARK: UISceneSession Lifecycle
     
