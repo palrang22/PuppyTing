@@ -206,17 +206,9 @@ class DetailTingViewController: UIViewController {
                                 if member.profileImage == "defaultProfileImage" {
                                                     self?.profilePic.image = UIImage(named: "defaultProfileImage")
                                 } else {
-                                    NetworkManager.shared.loadImageFromURL(urlString: member.profileImage)
-                                        .subscribe(onSuccess: { [weak self] image in
-                                            DispatchQueue.main.async {
-                                                self?.profilePic.image = image ?? UIImage(named: "defaultProfileImage")
-                                            }
-                                        }, onFailure: { error in
-                                            print("이미지 로드 실패: \(error)")
-                                            DispatchQueue.main.async {
-                                                self?.profilePic.image = UIImage(named: "defaultProfileImage")
-                                            }
-                                        }).disposed(by: self?.disposeBag ?? DisposeBag())
+                                    if let profilePic = self?.profilePic {
+                                        KingFisherManager.shared.loadProfileImage(urlString: member.profileImage, into: profilePic, placeholder: UIImage(named: "defaultProfileImage"))
+                                    }
                                 }
                                 
                             }, onFailure: { error in

@@ -62,16 +62,16 @@ class MyInfoEditVIewModel {
             }).disposed(by: disposeBag)
     }
     
-    func fetchImage(image: String) {
-        NetworkManager.shared
-            .loadImageFromURL(urlString: image)
-            .observe(on: MainScheduler.instance)
-            .subscribe(onSuccess: { [weak self] image in
-            if let image = image {
-                self?.realImageSubject.onNext(image)
-            }
-        }).disposed(by: disposeBag)
-    }
+//    func fetchImage(image: String) {
+//        NetworkManager.shared
+//            .loadImageFromURL(urlString: image)
+//            .observe(on: MainScheduler.instance)
+//            .subscribe(onSuccess: { [weak self] image in
+//            if let image = image {
+//                self?.realImageSubject.onNext(image)
+//            }
+//        }).disposed(by: disposeBag)
+//    }
     
     func findMember(uuid: String) {
         FireStoreDatabaseManager.shared

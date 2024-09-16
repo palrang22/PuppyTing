@@ -19,7 +19,9 @@ class KingFisherManager {
             imageView.image = placeholder
             return
         }
-        imageView.kf.setImage(with: url, placeholder: placeholder)
+        imageView.kf.setImage(with: url, placeholder: placeholder, options: [
+            .cacheOriginalImage
+        ])
     }
     
     func loadAnyImage(urlString: String, into imageView: UIImageView, placeholder: UIImage? = UIImage(named: "defaultAnyImage")) {
@@ -27,7 +29,9 @@ class KingFisherManager {
             imageView.image = placeholder
             return
         }
-        imageView.kf.setImage(with: url, placeholder: placeholder)
+        imageView.kf.setImage(with: url, placeholder: placeholder, options: [
+            .cacheOriginalImage
+        ])
     }
 
     func clearCache() {

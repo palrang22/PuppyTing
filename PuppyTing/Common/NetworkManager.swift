@@ -78,36 +78,36 @@ class NetworkManager {
 //        }
 //    }
 //    
-//    func fetchImage(url: String, completion: @escaping (UIImage) -> Void) {
-//        guard let url = URL(string: url) else {
-//            print("noImage")
-//            let image = UIImage(named: "defaultProfileImage")
-//            if let image = image {
-//                print("test")
-//                completion(image)
-//            } else {
-//                completion(UIImage())
-//            }
-//            return
-//        }
-//
-//        // URLSession을 사용하여 비동기로 이미지 다운로드
-//        let task = URLSession.shared.dataTask(with: url) { data, response, error in
-//            if let error = error {
-//                print("error \(error)")
-//                let image = UIImage(named: "defaultProfileImage")
-//                if let image = image {
-//                    print("test")
-//                    completion(image)
-//                } else {
-//                    completion(UIImage())
-//                }
-//            } else if let data = data, let image = UIImage(data: data) {
-//                completion(image)
-//            } else {
-//                print("error")
-//            }
-//        }
-//        task.resume()
-//    }
+    func fetchImage(url: String, completion: @escaping (UIImage) -> Void) {
+        guard let url = URL(string: url) else {
+            print("noImage")
+            let image = UIImage(named: "defaultProfileImage")
+            if let image = image {
+                print("test")
+                completion(image)
+            } else {
+                completion(UIImage())
+            }
+            return
+        }
+
+        // URLSession을 사용하여 비동기로 이미지 다운로드
+        let task = URLSession.shared.dataTask(with: url) { data, response, error in
+            if let error = error {
+                print("error \(error)")
+                let image = UIImage(named: "defaultProfileImage")
+                if let image = image {
+                    print("test")
+                    completion(image)
+                } else {
+                    completion(UIImage())
+                }
+            } else if let data = data, let image = UIImage(data: data) {
+                completion(image)
+            } else {
+                print("error")
+            }
+        }
+        task.resume()
+    }
 }
