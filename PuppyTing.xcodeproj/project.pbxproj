@@ -16,6 +16,7 @@
 		2369F3A92C97F889006040B3 /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = 2369F3A82C97F889006040B3 /* Kingfisher */; };
 		2369F3AB2C97FC93006040B3 /* Report.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2369F3AA2C97FC93006040B3 /* Report.swift */; };
 		2369F3AD2C97FDC1006040B3 /* FirebaseDynamicLinks in Frameworks */ = {isa = PBXBuildFile; productRef = 2369F3AC2C97FDC1006040B3 /* FirebaseDynamicLinks */; };
+		2369F3AF2C980222006040B3 /* KingFisherManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2369F3AE2C980222006040B3 /* KingFisherManager.swift */; };
 		5602B05E2C8A82E50060F03B /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5602B05D2C8A82E50060F03B /* ProfileViewController.swift */; };
 		5602B0692C8AEA340060F03B /* ProfileCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5602B0682C8AEA340060F03B /* ProfileCell.swift */; };
 		5602B0712C8AF4EF0060F03B /* PuppyHeaderCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5602B0702C8AF4EF0060F03B /* PuppyHeaderCell.swift */; };
@@ -92,6 +93,7 @@
 		23607BF92C8978E600A23716 /* PostingViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostingViewModel.swift; sourceTree = "<group>"; };
 		23607C012C8A930100A23716 /* UIButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIButton.swift; sourceTree = "<group>"; };
 		2369F3AA2C97FC93006040B3 /* Report.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Report.swift; sourceTree = "<group>"; };
+		2369F3AE2C980222006040B3 /* KingFisherManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KingFisherManager.swift; sourceTree = "<group>"; };
 		5602B05D2C8A82E50060F03B /* ProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
 		5602B0682C8AEA340060F03B /* ProfileCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileCell.swift; sourceTree = "<group>"; };
 		5602B0702C8AF4EF0060F03B /* PuppyHeaderCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PuppyHeaderCell.swift; sourceTree = "<group>"; };
@@ -366,6 +368,7 @@
 				A2F9FE522C89D9CE004D7FF6 /* FirebaseRealtimeDatabaseManager.swift */,
 				A2F9FE5F2C8C4DC8004D7FF6 /* FirebaseStorageManager.swift */,
 				A2F9FE7B2C8E6BF7004D7FF6 /* Date.swift */,
+				2369F3AE2C980222006040B3 /* KingFisherManager.swift */,
 			);
 			path = Common;
 			sourceTree = "<group>";
@@ -536,6 +539,7 @@
 				C29FCFC12C88566000F8951D /* MyFeedManageViewController.swift in Sources */,
 				56FD04952C856C6E00EBCDCD /* ChangePasswordViewController.swift in Sources */,
 				E738FBC32C7D8019004696BD /* TingCollectionViewCell.swift in Sources */,
+				2369F3AF2C980222006040B3 /* KingFisherManager.swift in Sources */,
 				A2F9FE512C89D561004D7FF6 /* ChatModel.swift in Sources */,
 				A2F9FE6E2C8DAFD8004D7FF6 /* PuppyRegistrationViewModel.swift in Sources */,
 				A2F9FE532C89D9CE004D7FF6 /* FirebaseRealtimeDatabaseManager.swift in Sources */,
