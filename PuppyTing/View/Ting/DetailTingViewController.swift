@@ -324,8 +324,10 @@ class DetailTingViewController: UIViewController {
                 ]
                 
                 reasons.forEach { reason in
-                    let action = UIAlertAction(title: reason, style: .default) { _ in
-                        self?.fireStoreDatabase.reportPost(postId: postid, reason: reason)
+                    let action = UIAlertAction(title: reason, style: .default) { [weak self] _ in
+                        let report = Report(postId: postid, reason: reason, timeStamp: Date())
+                        
+                        self?.fireStoreDatabase.reportPost(report: report)
                             .subscribe(onSuccess: {
                                 self!.okAlert(title: "신고 접수", message: "신고가 접수되었습니다. 관리자가 24시간 이내로 검토할 예정이며, 추가 신고/문의는 nnn@naver.com 으로 보내주세요.", okActionHandler: { _ in
                                     self?.navigationController?.popViewController(animated: true)

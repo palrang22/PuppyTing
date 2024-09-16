@@ -86,7 +86,6 @@ class TingCollectionViewCell: UICollectionViewCell {
         return label
     }()
     
-    // 추후 mapKit으로 수정예정
     private let mapView: UIImageView = {
         let map = UIImageView()
         map.image = UIImage(named: "mapPhoto")
