@@ -86,7 +86,6 @@ class TingCollectionViewCell: UICollectionViewCell {
         return label
     }()
     
-    // 추후 mapKit으로 수정예정
     private let mapView: UIImageView = {
         let map = UIImageView()
         map.image = UIImage(named: "mapPhoto")
@@ -146,17 +145,9 @@ class TingCollectionViewCell: UICollectionViewCell {
                 if member.profileImage == "defaultProfileImage" {
                             self?.profilePic.image = UIImage(named: "defaultProfileImage")
                 } else {
-                    NetworkManager.shared.loadImageFromURL(urlString: member.profileImage)
-                        .subscribe(onSuccess: { [weak self] image in
-                            DispatchQueue.main.async {
-                                self?.profilePic.image = image ?? UIImage(named: "defaultProfileImage")
-                            }
-                        }, onFailure: { error in
-                            print("이미지 로드 실패: \(error)")
-                            DispatchQueue.main.async {
-                                self?.profilePic.image = UIImage(named: "defaultProfileImage")
-                            }
-                        }).disposed(by: self?.disposeBag ?? DisposeBag())
+                    if let profilePic = self?.profilePic {
+                        KingFisherManager.shared.loadProfileImage(urlString: member.profileImage, into: profilePic, placeholder: UIImage(named: "defaultProfileImage"))
+                    }
                 }
             }, onFailure: { error in
                 print("멤버 찾기 실패: \(error)")

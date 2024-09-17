@@ -196,8 +196,6 @@ class MyInfoEditViewController: UIViewController {
         userProfileImageButton.addTarget(self, action: #selector(handleProfileImageChange), for: .touchUpInside)
         passwordChangeButton.addTarget(self, action: #selector(updatePassword), for: .touchUpInside)
     }
-
-    
     
     //MARK: 멤버 정보 수정 관련 메서드
 
@@ -227,7 +225,21 @@ class MyInfoEditViewController: UIViewController {
     }
     
     private func fetchImage(imageUrl: String) {
-        myInfoEditViewModel.fetchImage(image: imageUrl)
+        guard let url = URL(string: imageUrl) else {
+            userProfileImageButton.setImage(UIImage(named: "defaultProfileImage"), for: .normal)
+            return
+        }
+        userProfileImageButton.kf.setImage(with: url, for: .normal, placeholder: UIImage(named: "defaultProfileImage"), options: [
+            .cacheOriginalImage
+        ], completionHandler: { result in
+            switch result {
+            case .success(let value):
+                print("Image successfully loaded: \(value.image)")
+            case .failure(let error):
+                print("Image loading failed: \(error.localizedDescription)")
+                self.userProfileImageButton.setImage(UIImage(named: "defaultProfileImage"), for: .normal)
+            }
+        })
     }
     
     //MARK: 사진 업로드 관련 메서드
