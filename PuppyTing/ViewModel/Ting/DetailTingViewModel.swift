@@ -12,4 +12,6 @@ class DetailTingViewModel {
             self?.memberSubject.onNext(member)
         }).disposed(by: disposeBag)
     }
+    
+    
 }

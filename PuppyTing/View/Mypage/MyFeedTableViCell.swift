@@ -5,6 +5,7 @@ class MyFeedTableViewCell: UITableViewCell {
     
     static let identifier = "MyFeedTableViewCell"
     
+    // 제목 라벨
     private let titleLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.boldSystemFont(ofSize: 24)
@@ -12,6 +13,7 @@ class MyFeedTableViewCell: UITableViewCell {
         return label
     }()
     
+    // 날짜 라벨
     private let dateLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 16)
@@ -19,6 +21,7 @@ class MyFeedTableViewCell: UITableViewCell {
         return label
     }()
     
+    // 부가 설명 라벨
     private let descriptionLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 18)
@@ -31,12 +34,16 @@ class MyFeedTableViewCell: UITableViewCell {
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
-        [titleLabel, dateLabel, descriptionLabel].forEach { contentView.addSubview($0) }
-     
+        // 셀에 라벨 추가
+        contentView.addSubview(titleLabel)
+        contentView.addSubview(dateLabel)
+        contentView.addSubview(descriptionLabel)
+        
+        // SnapKit으로 레이아웃 설정
         titleLabel.snp.makeConstraints {
             $0.top.leading.equalToSuperview().offset(10)
             $0.left.equalToSuperview().offset(20)
-            $0.trailing.lessThanOrEqualTo(dateLabel.snp.leading).offset(-10)
+            $0.trailing.lessThanOrEqualTo(dateLabel.snp.leading).offset(-10) // dateLabel과의 간격 설정
         }
 
         dateLabel.snp.makeConstraints {
@@ -45,6 +52,7 @@ class MyFeedTableViewCell: UITableViewCell {
             $0.width.lessThanOrEqualTo(100)
         }
 
+        
         descriptionLabel.snp.makeConstraints {
             $0.top.equalTo(titleLabel.snp.bottom).offset(5)
             $0.left.equalTo(titleLabel)
