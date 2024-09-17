@@ -53,31 +53,31 @@ class NetworkManager {
         }
     }
     
-    func loadImageFromURL(urlString: String) -> Single<UIImage?> {
-        return Single.create { single in
-            guard let url = URL(string: urlString) else {
-                single(.failure(NSError(domain: "InvalidURL", code: -1, userInfo: nil)))
-                return Disposables.create()
-            }
-
-            // URLSession을 사용하여 비동기로 이미지 다운로드
-            let task = URLSession.shared.dataTask(with: url) { data, response, error in
-                if let error = error {
-                    single(.failure(error))
-                } else if let data = data, let image = UIImage(data: data) {
-                    single(.success(image))
-                } else {
-                    single(.success(nil))
-                }
-            }
-            task.resume()
-
-            return Disposables.create {
-                task.cancel()
-            }
-        }
-    }
-    
+//    func loadImageFromURL(urlString: String) -> Single<UIImage?> {
+//        return Single.create { single in
+//            guard let url = URL(string: urlString) else {
+//                single(.failure(NSError(domain: "InvalidURL", code: -1, userInfo: nil)))
+//                return Disposables.create()
+//            }
+//
+//            // URLSession을 사용하여 비동기로 이미지 다운로드
+//            let task = URLSession.shared.dataTask(with: url) { data, response, error in
+//                if let error = error {
+//                    single(.failure(error))
+//                } else if let data = data, let image = UIImage(data: data) {
+//                    single(.success(image))
+//                } else {
+//                    single(.success(nil))
+//                }
+//            }
+//            task.resume()
+//
+//            return Disposables.create {
+//                task.cancel()
+//            }
+//        }
+//    }
+//    
     func fetchImage(url: String, completion: @escaping (UIImage) -> Void) {
         guard let url = URL(string: url) else {
             print("noImage")

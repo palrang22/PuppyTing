@@ -204,17 +204,7 @@ class PuppyRegistrationViewController: UIViewController {
         nameTextField.text = pet.name
         ageTextField.text = "\(pet.age)"
         pet.tag.forEach { addTag(word: $0) }
-        
-        // petImage가 String이므로 바로 사용
-        let imageUrl = pet.petImage
-        NetworkManager.shared.loadImageFromURL(urlString: imageUrl)
-            .observe(on: MainScheduler.instance)
-            .subscribe(onSuccess: { [weak self] image in
-                self?.puppyImageView.image = image ?? UIImage(named: "defaultImage")
-            }, onFailure: { [weak self] error in
-                print("이미지 로딩 실패: \(error)")
-                self?.puppyImageView.image = UIImage(named: "defaultImage")
-            }).disposed(by: disposeBag)
+        KingFisherManager.shared.loadAnyImage(urlString: pet.petImage, into: puppyImageView, placeholder: UIImage(named: "defaultImage"))
     }
 
     // MARK: - Configure Navigation Bar
@@ -378,18 +368,8 @@ class PuppyRegistrationViewController: UIViewController {
         ageTextField.text = info
         tagTextField.text = tag
         
-        if let imageUrl = imageUrl {
-            NetworkManager.shared.loadImageFromURL(urlString: imageUrl)
-                .observe(on: MainScheduler.instance) // UI 업데이트는 메인 스레드에서
-                .subscribe(onSuccess: { [weak self] image in
-                    self?.puppyImageView.image = image ?? UIImage(named: "defaultImage")
-                }, onFailure: { [weak self] error in
-                    print("이미지 로딩 실패: \(error)")
-                    self?.puppyImageView.image = UIImage(named: "defaultImage")
-                }).disposed(by: disposeBag)
-        } else {
-            puppyImageView.image = UIImage(named: "defaultImage")
-        }
+        guard let imageUrl = imageUrl else { return }
+        KingFisherManager.shared.loadAnyImage(urlString: imageUrl, into: puppyImageView, placeholder: UIImage(named: "defaultImage"))
     }
     
     // MARK: - Image Picker
