@@ -1,14 +1,15 @@
 import UIKit
 
-import FirebaseAuth
-import RxCocoa
 import RxSwift
 import SnapKit
 
-class MyBlockListViewController : UIViewController {
+class MyBlockListViewController: UIViewController {
     
     private let disposeBag = DisposeBag()
     private let tableView = UITableView()
+    private let viewModel = BlockListViewModel()
+    
+    private var blockedUsers: [Member] = [] // 차단된 사용자 목록을 저장할 배열
     
     private func setupNavigationBar() {
         navigationItem.title = "차단 목록"
@@ -41,38 +42,80 @@ class MyBlockListViewController : UIViewController {
         
         setupNavigationBar()
         setupTableView()
+        bindViewModel()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        self.tabBarController?.tabBar.isHidden = true
+        
+        // 차단된 사용자 목록을 가져옴
+        viewModel.fetchBlockedUsers()
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        
+        self.tabBarController?.tabBar.isHidden = false
+    }
+    
+    private func bindViewModel() {
+        viewModel.blockedUsers
+            .observe(on: MainScheduler.instance)
+            .subscribe(onNext: { [weak self] members in
+                self?.blockedUsers = members
+                self?.tableView.reloadData()
+            }).disposed(by: disposeBag)
     }
 }
 
+// MARK: - UITableViewDataSource, UITableViewDelegate
 extension MyBlockListViewController: UITableViewDataSource, UITableViewDelegate {
     
-    // 셀 수
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 10 // 예시로 10개의 셀을 반환
+        return blockedUsers.count
     }
     
-    // 셀 구성
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: MyBlockListTableViewCell.identifier, for: indexPath) as? MyBlockListTableViewCell else {
             return UITableViewCell()
         }
         
-        // 데이터 설정 (임의의 데이터)
-        let title = "차단한 사람 닉네임 \(indexPath.row + 1)"
-        let profileImage = UIImage(systemName: "person.crop.circle")
-        
-        cell.configure(with: title, image: profileImage)
+        // 데이터 설정
+        let member = blockedUsers[indexPath.row]
+        cell.configure(with: member)
+        cell.delegate = self // 델리게이트 설정
         
         return cell
     }
     
-    // 셀 높이 자동 조정
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return UITableView.automaticDimension
     }
     
-    // 셀 높이 예측
     func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
         return 100
+    }
+}
+
+// MARK: - MyBlockListTableViewCellDelegate
+extension MyBlockListViewController: MyBlockListTableViewCellDelegate {
+    
+    func didTapUnblockButton(for member: Member) {
+        // Firestore에서 차단 해제
+        FireStoreDatabaseManager.shared.unblockUser(userId: member.uuid)
+            .subscribe(onSuccess: {
+                print("\(member.nickname) 차단 해제 성공")
+                
+                // 차단 목록에서 해당 사용자 제거
+                self.blockedUsers.removeAll { $0.uuid == member.uuid }
+                
+                // 테이블 뷰 갱신
+                self.tableView.reloadData()
+                
+            }, onFailure: { error in
+                print("차단 해제 실패: \(error)")
+            }).disposed(by: disposeBag)
     }
 }

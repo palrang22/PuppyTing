@@ -185,7 +185,6 @@ class DetailTingViewController: UIViewController {
     }
     
     // MARK: bind
-    
     private func setData() {
         if let model = tingFeedModels {
             content.text = model.content

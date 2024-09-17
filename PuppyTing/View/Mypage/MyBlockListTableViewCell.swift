@@ -1,11 +1,19 @@
 import UIKit
+
 import SnapKit
+
+protocol MyBlockListTableViewCellDelegate: AnyObject {
+    func didTapUnblockButton(for member: Member)
+}
 
 class MyBlockListTableViewCell: UITableViewCell {
     
     static let identifier = "MyBlockListTableViewCell"
     
-    private let ProfileImageView: UIImageView = {
+    weak var delegate: MyBlockListTableViewCellDelegate?
+    private var member: Member?
+    
+    private let profileImageView: UIImageView = {
         let profileImage = UIImageView()
         profileImage.contentMode = .scaleAspectFill
         profileImage.clipsToBounds = true
@@ -17,14 +25,14 @@ class MyBlockListTableViewCell: UITableViewCell {
         return profileImage
     }()
     
-    private let NameLable: UILabel = {
+    private let nameLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.boldSystemFont(ofSize: 20)
         label.textColor = .black
         return label
     }()
     
-    private let BlockcancleButton: UIButton = {
+    private let unblockButton: UIButton = {
         let button = UIButton(type: .system)
         button.setTitle("차단 해제", for: .normal)
         button.titleLabel?.font = UIFont.systemFont(ofSize: 16)
@@ -37,13 +45,12 @@ class MyBlockListTableViewCell: UITableViewCell {
         return button
     }()
     
-    // 초기화 메서드
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
-        [ProfileImageView, NameLable, BlockcancleButton].forEach { contentView.addSubview($0) }
+        [profileImageView, nameLabel, unblockButton].forEach { contentView.addSubview($0) }
         
-        ProfileImageView.snp.makeConstraints {
+        profileImageView.snp.makeConstraints {
             $0.top.equalToSuperview().offset(10)
             $0.leading.equalToSuperview().offset(10)
             $0.centerY.equalToSuperview()
@@ -51,31 +58,57 @@ class MyBlockListTableViewCell: UITableViewCell {
             $0.bottom.equalToSuperview().offset(-10)
         }
         
-        NameLable.snp.makeConstraints {
-            $0.leading.equalTo(ProfileImageView.snp.trailing).offset(10)
-            $0.centerY.equalTo(ProfileImageView.snp.centerY)
+        nameLabel.snp.makeConstraints {
+            $0.leading.equalTo(profileImageView.snp.trailing).offset(10)
+            $0.centerY.equalTo(profileImageView.snp.centerY)
         }
         
-        BlockcancleButton.snp.makeConstraints {
+        unblockButton.snp.makeConstraints {
             $0.trailing.equalToSuperview().offset(-10)
             $0.centerY.equalToSuperview()
             $0.width.equalTo(80)
             $0.height.equalTo(44)
         }
         
-        BlockcancleButton.addTarget(self, action: #selector(blockCancelTapped), for: .touchUpInside)
-           }
+        unblockButton.addTarget(self, action: #selector(unblockButtonTapped), for: .touchUpInside)
+    }
+    
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
-    // 셀 구성 함수(데이터 바인딩)
-    func configure(with title: String, image: UIImage?) {
-        ProfileImageView.image = image
-        NameLable.text = title
+    func configure(with member: Member) {
+        self.member = member
+        nameLabel.text = member.nickname
+        
+        // 프로필 이미지 로드
+        if !member.profileImage.isEmpty {
+            loadImage(from: member.profileImage)
+        } else {
+            profileImageView.image = UIImage(named: "defaultProfileImage") // 기본 프로필 이미지 사용
+        }
     }
     
-    @objc private func blockCancelTapped() {
-        print("차단 해제 버튼이 눌렸습니다.")
+    private func loadImage(from urlString: String) {
+        guard let url = URL(string: urlString) else { return }
+
+        URLSession.shared.dataTask(with: url) { [weak self] data, response, error in
+            if let error = error {
+                print("이미지 로드 실패: \(error)")
+                return
+            }
+            
+            guard let data = data, let image = UIImage(data: data) else { return }
+            
+            // UI는 메인 스레드에서 업데이트
+            DispatchQueue.main.async {
+                self?.profileImageView.image = image
+            }
+        }.resume()
+    }
+    
+    @objc private func unblockButtonTapped() {
+        guard let member = member else { return }
+        delegate?.didTapUnblockButton(for: member)
     }
 }
