@@ -230,24 +230,6 @@ class FireStoreDatabaseManager {
         }
     }
     
-    func blockUser(userId: String) -> Single<Void> {
-        guard let currentUser = Auth.auth().currentUser?.uid else {
-            return Single.error(NSError(domain: "", code: -1, userInfo: [NSLocalizedDescriptionKey: "사용자 인증 실패"]))
-        }
-        
-        return Single.create { [weak self] single in
-            let ref = self?.db.collection("member").document(currentUser)
-            ref?.updateData(["blockedUsers" : FieldValue.arrayUnion([userId])]) { error in
-                if let error = error {
-                    single(.failure(error))
-                } else {
-                    single(.success(()))
-                }
-            }
-            return Disposables.create()
-        }
-    }
-
     func getBlockedUsers() -> Single<[Member]> {
         guard let currentUser = Auth.auth().currentUser?.uid else {
             return Single.error(NSError(domain: "", code: -1, userInfo: [NSLocalizedDescriptionKey: "사용자 인증 실패"]))
