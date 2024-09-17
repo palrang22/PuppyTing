@@ -61,6 +61,10 @@
 		C29FCFC12C88566000F8951D /* MyFeedManageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C29FCFC02C88566000F8951D /* MyFeedManageViewController.swift */; };
 		C29FCFC32C88610600F8951D /* MyFeedTableViCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C29FCFC22C88610600F8951D /* MyFeedTableViCell.swift */; };
 		C29FCFC92C8DF25300F8951D /* DetailTingViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C29FCFC82C8DF25300F8951D /* DetailTingViewModel.swift */; };
+		C29FCFCF2C90176500F8951D /* MyBlockListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C29FCFCE2C90176500F8951D /* MyBlockListViewController.swift */; };
+		C29FCFD12C90193D00F8951D /* MyBlockListTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C29FCFD02C90193D00F8951D /* MyBlockListTableViewCell.swift */; };
+		C29FD0142C980A5D00F8951D /* BlockListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C29FD0132C980A5D00F8951D /* BlockListViewModel.swift */; };
+		C29FD0162C9985E200F8951D /* ProfileCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C29FD0152C9985E200F8951D /* ProfileCellViewModel.swift */; };
 		E70DB3452C7F0CB60073B3F8 /* PostTingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E70DB3442C7F0CB60073B3F8 /* PostTingViewController.swift */; };
 		E70DB3472C7F0CD00073B3F8 /* DetailTingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E70DB3462C7F0CD00073B3F8 /* DetailTingViewController.swift */; };
 		E70DB3492C7F3F060073B3F8 /* UIViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E70DB3482C7F3F060073B3F8 /* UIViewController.swift */; };
@@ -141,6 +145,10 @@
 		C29FCFC02C88566000F8951D /* MyFeedManageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyFeedManageViewController.swift; sourceTree = "<group>"; };
 		C29FCFC22C88610600F8951D /* MyFeedTableViCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyFeedTableViCell.swift; sourceTree = "<group>"; };
 		C29FCFC82C8DF25300F8951D /* DetailTingViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailTingViewModel.swift; sourceTree = "<group>"; };
+		C29FCFCE2C90176500F8951D /* MyBlockListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyBlockListViewController.swift; sourceTree = "<group>"; };
+		C29FCFD02C90193D00F8951D /* MyBlockListTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyBlockListTableViewCell.swift; sourceTree = "<group>"; };
+		C29FD0132C980A5D00F8951D /* BlockListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlockListViewModel.swift; sourceTree = "<group>"; };
+		C29FD0152C9985E200F8951D /* ProfileCellViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileCellViewModel.swift; sourceTree = "<group>"; };
 		E70DB3442C7F0CB60073B3F8 /* PostTingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostTingViewController.swift; sourceTree = "<group>"; };
 		E70DB3462C7F0CD00073B3F8 /* DetailTingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailTingViewController.swift; sourceTree = "<group>"; };
 		E70DB3482C7F3F060073B3F8 /* UIViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIViewController.swift; sourceTree = "<group>"; };
@@ -209,6 +217,7 @@
 			isa = PBXGroup;
 			children = (
 				5602B0852C8E0C6F0060F03B /* ProfileViewModel.swift */,
+				C29FD0152C9985E200F8951D /* ProfileCellViewModel.swift */,
 			);
 			path = Profile;
 			sourceTree = "<group>";
@@ -309,6 +318,7 @@
 				E738FBA52C7C66C9004696BD /* MyPageViewModel.swift */,
 				A2F9FE582C8C2193004D7FF6 /* MyInfoEditVIewModel.swift */,
 				A2F9FE6D2C8DAFD8004D7FF6 /* PuppyRegistrationViewModel.swift */,
+				C29FD0132C980A5D00F8951D /* BlockListViewModel.swift */,
 				56EF72412C94315C00CC919F /* FavoriteListViewModel.swift */,
 			);
 			path = MyPage;
@@ -402,8 +412,8 @@
 				C29FCF762C8171FA00F8951D /* MyInfoEditViewController.swift */,
 				C29FCFC02C88566000F8951D /* MyFeedManageViewController.swift */,
 				C29FCFC22C88610600F8951D /* MyFeedTableViCell.swift */,
-				5602B08B2C8E9AD90060F03B /* FavoriteListViewController.swift */,
-				5602B0892C8E91B20060F03B /* FavoriteListTableViewCell.swift */,
+				C29FCFCE2C90176500F8951D /* MyBlockListViewController.swift */,
+				C29FCFD02C90193D00F8951D /* MyBlockListTableViewCell.swift */,
 			);
 			path = Mypage;
 			sourceTree = "<group>";
@@ -555,6 +565,7 @@
 				A2F9FE512C89D561004D7FF6 /* ChatModel.swift in Sources */,
 				A2F9FE6E2C8DAFD8004D7FF6 /* PuppyRegistrationViewModel.swift in Sources */,
 				A2F9FE532C89D9CE004D7FF6 /* FirebaseRealtimeDatabaseManager.swift in Sources */,
+				C29FD0142C980A5D00F8951D /* BlockListViewModel.swift in Sources */,
 				E70DB3512C8068460073B3F8 /* SearchedMapViewController.swift in Sources */,
 				E70DB34F2C8068190073B3F8 /* SearchedAddressTableViewCell.swift in Sources */,
 				A2085DD42C80622B00698923 /* PptLoginViewModel.swift in Sources */,
@@ -585,12 +596,14 @@
 				E7F598342C847A7800FE8900 /* Place.swift in Sources */,
 				C29FCF682C7DBA4F00F8951D /* PuppyRegistrationViewController.swift in Sources */,
 				A2F9FE7C2C8E6BF7004D7FF6 /* Date.swift in Sources */,
+				C29FCFD12C90193D00F8951D /* MyBlockListTableViewCell.swift in Sources */,
 				E738FB952C7C64BA004696BD /* UIColor.swift in Sources */,
 				C29FCF772C8171FA00F8951D /* MyInfoEditViewController.swift in Sources */,
 				E738FB9E2C7C668D004696BD /* MypageViewController.swift in Sources */,
 				A2F9FE552C89E082004D7FF6 /* ChatRoomViewModel.swift in Sources */,
 				A2085DCD2C804C3600698923 /* SignUpViewModel.swift in Sources */,
 				E738FBA22C7C66AC004696BD /* TingViewModel.swift in Sources */,
+				C29FCFCF2C90176500F8951D /* MyBlockListViewController.swift in Sources */,
 				56D686C52C7DA88500B00880 /* SignupViewController.swift in Sources */,
 				E738FB9C2C7C653C004696BD /* ChatViewController.swift in Sources */,
 				A2085DCA2C80395B00698923 /* Member.swift in Sources */,
@@ -605,6 +618,7 @@
 				A2F9FE7A2C8E6BBB004D7FF6 /* ChatDateTableViewCell.swift in Sources */,
 				E70DB3472C7F0CD00073B3F8 /* DetailTingViewController.swift in Sources */,
 				E70DB3452C7F0CB60073B3F8 /* PostTingViewController.swift in Sources */,
+				C29FD0162C9985E200F8951D /* ProfileCellViewModel.swift in Sources */,
 				E7F598392C885D5300FE8900 /* KakaoMapViewController.swift in Sources */,
 				56D686CC2C7DC88700B00880 /* PptLoginViewController.swift in Sources */,
 				5602B08C2C8E9AD90060F03B /* FavoriteListViewController.swift in Sources */,
