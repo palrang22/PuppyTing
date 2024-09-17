@@ -397,18 +397,7 @@ class MypageViewController: UIViewController {
     }
     
     private func loadProfileImage(urlString: String) {
-        if urlString == "defaultProfileImage" {
-            self.profileImageView.image = UIImage(named: "defaultProfileImage")
-        } else {
-            NetworkManager.shared.loadImageFromURL(urlString: urlString)
-                .observe(on: MainScheduler.instance)
-                .subscribe(onSuccess: { [weak self] image in
-                    self?.profileImageView.image = image ?? UIImage(named: "defaultProfileImage")
-                }, onFailure: { [weak self] error in
-                    print("프로필 이미지 로딩 실패: \(error)")
-                    self?.profileImageView.image = UIImage(named: "defaultProfileImage")
-                }).disposed(by: disposeBag)
-        }
+        KingFisherManager.shared.loadProfileImage(urlString: urlString, into: profileImageView, placeholder: UIImage(named: "defaultProfileImage"))
     }
     
     private func fetchMemberInfo() {
@@ -501,8 +490,8 @@ class MypageViewController: UIViewController {
         case 1:
             break
         case 2:
-            // 다른 페이지로 이동 (즐겨 찾는 친구)
-            break
+            let favorireListVC = FavoriteListViewController()
+            navigationController?.pushViewController(favorireListVC, animated: true)
         case 3:
             navigateToMyBlockList()
         default:

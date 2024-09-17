@@ -32,6 +32,8 @@ class FireStoreDatabaseManager {
         }
     }
     
+    //MARK: CREATE
+    
     func emailSignUp(uuid: String, email: String, pw: String, nickname: String) -> Single<Member> {
         return Single.create{ [weak self] single in
             let member = Member(uuid: uuid, email: email, password: pw, nickname: nickname, profileImage: "defaultProfileImage", footPrint: 0, isSocial: false)
@@ -120,6 +122,71 @@ class FireStoreDatabaseManager {
         }
     }
     
+    func blockUser(userId: String) -> Single<Void> {
+        guard let currentUser = Auth.auth().currentUser?.uid else {
+            return Single.error(NSError(domain: "", code: -1, userInfo: [NSLocalizedDescriptionKey: "사용자 인증 실패"]))
+        }
+        
+        return Single.create { [weak self] single in
+            let ref = self?.db.collection("member").document(currentUser)
+            ref?.updateData(["blockedUsers" : FieldValue.arrayUnion([userId])]) { error in
+                if let error = error {
+                    single(.failure(error))
+                } else {
+                    single(.success(()))
+                }
+            }
+            return Disposables.create()
+        }
+    }
+    
+    func reportPost(report: Report) -> Single<Void> {
+        return Single.create { [weak self] single in
+            self?.db.collection("report").addDocument(data: report.dictionary) { error in
+                if let error = error {
+                    single(.failure(error))
+                } else {
+                    single(.success(()))
+                }
+            }
+            return Disposables.create()
+        }
+    }
+
+    // 즐겨찾기 추가 메서드
+    func addBookmark(forUserId userId: String, bookmarkId: String) -> Single<Void> {
+        guard let currentUser = Auth.auth().currentUser?.uid else {
+            return Single.error(NSError(domain: "", code: -1, userInfo: [NSLocalizedDescriptionKey: "사용자 인증 실패"]))
+        }
+        
+        return Single.create { [weak self] single in
+            let ref = self?.db.collection("member").document(currentUser)
+            ref?.updateData(["bookMarkUsers": FieldValue.arrayUnion([bookmarkId])]) { error in
+                if let error = error {
+                    single(.failure(error))
+                } else {
+                    single(.success(()))
+                }
+            }
+            return Disposables.create()
+        }
+    }
+
+    
+    //MARK: Read
+    
+    func checkUserData(user: User, completion: @escaping (Bool) -> Void) {
+        let docRef = db.collection("member").document(user.uid)
+        
+        docRef.getDocument { document, error in
+            if let document = document, document.exists {
+                completion(true)
+            } else {
+                completion(false)
+            }
+        }
+    }
+    
     func findMember(uuid: String, completion: @escaping (Member) -> Void) {
         var member: Member? = nil
         let docRef = db.collection("member").document(uuid)
@@ -147,6 +214,8 @@ class FireStoreDatabaseManager {
             completion(nickName)
         }
     }
+    
+    //MARK: DELETE
     
     func deleteDocument(from collection: String, documentId: String) -> Single<Void> {
         return Single.create { [weak self] single in
