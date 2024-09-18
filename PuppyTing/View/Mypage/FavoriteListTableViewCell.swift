@@ -81,30 +81,11 @@ class FavoriteListTableViewCell: UITableViewCell {
     
     func configure(with favorite: Favorite) {
         nicknameLabel.text = favorite.nickname
-        // 프로필 이미지 불러오기
+        // 프로필 이미지 불러오기 - 킹피셔 코드 사용
         if let profileImageURL = favorite.profileImageURL, !profileImageURL.isEmpty {
-            loadImage(from: profileImageURL)
+            KingFisherManager.shared.loadProfileImage(urlString: profileImageURL, into: profileImageView)
         } else {
-            profileImageView.image = UIImage(named: "defaultProfileImage") // 기본 이미지
+            profileImageView.image = UIImage(named: "defaultProfileImage")
         }
-    }
-    
-    // URL로부터 이미지를 비동기적으로 불러오는 함수 
-    private func loadImage(from urlString: String) {
-        guard let url = URL(string: urlString) else { return }
-        
-        URLSession.shared.dataTask(with: url) { [weak self] data, response, error in
-            if let error = error {
-                print("이미지 로딩 실패: \(error)")
-                return
-            }
-            
-            guard let data = data, let image = UIImage(data: data) else { return }
-            
-            // UI 업데이트는 메인 스레드에서 수행
-            DispatchQueue.main.async {
-                self?.profileImageView.image = image
-            }
-        }.resume()
     }
 }
