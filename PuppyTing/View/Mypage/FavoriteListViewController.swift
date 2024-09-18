@@ -52,6 +52,20 @@ class FavoriteListViewController: UIViewController {
             })
             .disposed(by: disposeBag)
     }
+    
+    private func unfavoriteUser(at indexPath: IndexPath) {
+        let favorite = favoriteList[indexPath.row]
+        guard let bookmarkId = favorite.uuid else { return }
+        
+        viewModel.removeBookmark(bookmarkId: bookmarkId)
+            .subscribe(onSuccess: { [weak self] in
+                self?.favoriteList.remove(at: indexPath.row)
+                self?.tableView.deleteRows(at: [indexPath], with: .automatic)
+            }, onError: { error in
+                print("즐겨찾기 해제 오류: \(error)")
+            })
+            .disposed(by: disposeBag)
+    }
 }
 
 extension FavoriteListViewController: UITableViewDataSource, UITableViewDelegate {
@@ -67,6 +81,10 @@ extension FavoriteListViewController: UITableViewDataSource, UITableViewDelegate
         
         let favorite = favoriteList[indexPath.row]
         cell.configure(with: favorite)
+        
+        cell.onUnfavoriteButtonTapped = { [weak self] in
+            self?.unfavoriteUser(at: indexPath)
+        }
         
         return cell
     }

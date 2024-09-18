@@ -13,6 +13,8 @@ class FavoriteListTableViewCell: UITableViewCell {
     
     static let identifier = "FavoriteListTableViewCell"
     
+    var onUnfavoriteButtonTapped: (() -> Void)?
+    
     private let profileImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFill
@@ -34,6 +36,7 @@ class FavoriteListTableViewCell: UITableViewCell {
         button.backgroundColor = UIColor.puppyPurple
         button.layer.cornerRadius = 10
         button.setTitleColor(.white, for: .normal)
+        button.addTarget(self, action: #selector(unfavoriteButtonTapped), for: .touchUpInside)
         return button
     }()
     
@@ -70,6 +73,10 @@ class FavoriteListTableViewCell: UITableViewCell {
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    @objc private func unfavoriteButtonTapped() {
+        onUnfavoriteButtonTapped?()
     }
     
     func configure(with favorite: Favorite) {

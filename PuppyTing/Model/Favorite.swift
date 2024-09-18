@@ -8,7 +8,7 @@
 import Foundation
 
 struct Favorite {
-    let uuid: String
+    let uuid: String?
     let nickname: String
     let profileImageURL: String?
     

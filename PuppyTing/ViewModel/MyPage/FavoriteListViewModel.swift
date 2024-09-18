@@ -19,6 +19,20 @@ class FavoriteListViewModel {
     // 즐겨찾기 목록을 저장할 Observable
     let favorites = PublishSubject<[Favorite]>()
     
+    // 즐겨찾기 추가 성공과 오류를 처리할 Observable
+    let bookmarkSuccess = PublishSubject<Void>()
+    let bookmarkError = PublishSubject<Error>()
+    
+    // 즐겨찾기 삭제
+    func removeBookmark(bookmarkId: String) -> Single<Void> {
+        guard let userId = Auth.auth().currentUser?.uid else {
+            return Single.error(NSError(domain: "", code: 0, userInfo: [NSLocalizedDescriptionKey: "현재 사용자 정보가 없습니다."]))
+        }
+        
+        return FireStoreDatabaseManager.shared.removeBookmark(forUserId: userId, bookmarkId: bookmarkId)
+            .observe(on: MainScheduler.instance)
+    }
+    
     // 즐겨찾기 목록 불러오기
     func fetchFavorites() {
         guard let currentUser = Auth.auth().currentUser?.uid else { return }
