@@ -48,21 +48,22 @@ class FavoriteListTableViewCell: UITableViewCell {
         contentView.addSubview(unfavoriteButton)
         
         profileImageView.snp.makeConstraints {
-            $0.top.leading.equalTo(contentView).offset(10)
+            $0.top.equalTo(contentView).offset(10)
+            $0.leading.equalTo(contentView).offset(20)
             $0.width.height.equalTo(60)
         }
         
         nicknameLabel.snp.makeConstraints {
-            $0.leading.equalTo(profileImageView.snp.trailing).offset(10)
+            $0.leading.equalTo(profileImageView.snp.trailing).offset(15)
             $0.centerY.equalTo(profileImageView)
             $0.trailing.lessThanOrEqualTo(unfavoriteButton.snp.leading).offset(-10)
         }
         
         unfavoriteButton.snp.makeConstraints {
-            $0.trailing.equalTo(contentView).offset(-10)
+            $0.trailing.equalTo(contentView).offset(-20)
             $0.centerY.equalTo(profileImageView)
             $0.width.equalTo(80)
-            $0.height.equalTo(30)
+            $0.height.equalTo(44)
         }
         
         contentView.snp.makeConstraints {
