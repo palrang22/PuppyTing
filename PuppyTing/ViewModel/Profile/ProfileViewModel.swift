@@ -26,5 +26,13 @@ class ProfileViewModel {
                 self?.bookmarkError.onNext(error)
             }).disposed(by: disposeBag)
     }
+    
+    func blockedUser(uuid: String) {
+        FireStoreDatabaseManager.shared.blockUser(userId: uuid).observe(on: MainScheduler.instance).subscribe(onSuccess: { _ in
+            // 성공
+        }, onFailure: { error in
+            // 실패
+        }).disposed(by: disposeBag)
+    }
 }
 

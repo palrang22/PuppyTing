@@ -87,7 +87,6 @@ class ProfileCell: UICollectionViewCell {
         button.backgroundColor = UIColor.puppyPurple
         button.layer.cornerRadius = 10
         button.setTitleColor(.white, for: .normal)
-        button.addTarget(self, action: #selector(favoriteButtonTapped), for: .touchUpInside)
         return button
     }()
     
@@ -100,16 +99,28 @@ class ProfileCell: UICollectionViewCell {
         return stackView
     }()
     
+    private func buttonActionSetting() {
+        favoriteButton.addTarget(self, action: #selector(favoriteButtonTapped), for: .touchUpInside)
+        blockButton.addTarget(self, action: #selector(blockButtonTapped), for: .touchUpInside)
+    }
+    
     // 즐겨찾기 버튼
     @objc private func favoriteButtonTapped() {
         guard let bookmarkId = bookmarkId else { return }
         viewModel?.addBookmark(bookmarkId: bookmarkId)
     }
     
+    // 유저 차단 버튼 - psh
+    @objc
+    private func blockButtonTapped() {
+        guard let userId = bookmarkId else { return }
+        viewModel?.blockedUser(uuid: userId)
+    }
+    
     func configure(with member: Member) {
         nicknameLabel.text = member.nickname
         footNumberLabel.text = "\(member.footPrint)개"
-        
+        buttonActionSetting()
         // 프로필 이미지 로드 - 킹피셔매니저 코드 사용
         if !member.profileImage.isEmpty {
             KingFisherManager.shared.loadProfileImage(urlString: member.profileImage, into: profileImageView)
