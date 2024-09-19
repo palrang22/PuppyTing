@@ -55,7 +55,7 @@ class FavoriteListViewController: UIViewController {
     
     private func unfavoriteUser(at indexPath: IndexPath) {
         let favorite = favoriteList[indexPath.row]
-        guard let bookmarkId = favorite.uuid else { return }
+        let bookmarkId = favorite.uuid
         
         viewModel.removeBookmark(bookmarkId: bookmarkId)
             .subscribe(onSuccess: { [weak self] in
