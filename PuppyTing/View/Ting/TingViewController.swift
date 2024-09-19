@@ -25,13 +25,12 @@ class TingViewController: UIViewController {
     private lazy var feedCollectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .vertical
-        //layout.estimatedItemSize = UICollectionViewFlowLayout.automaticSize
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collectionView.register(TingCollectionViewCell.self,
                                 forCellWithReuseIdentifier: TingCollectionViewCell.id)
-        //collectionView.refreshControl = refreshControl
         collectionView.delegate = self
         collectionView.dataSource = self
+        collectionView.refreshControl = refreshControl
         return collectionView
     }()
     
@@ -60,16 +59,16 @@ class TingViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setUI()
-        setLayout()        
+        setLayout()
         bind()
         loadInitialData()
     }
     
-//    override func viewWillAppear(_ animated: Bool) {
-//        super.viewWillAppear(animated)
-//        self.feedCollectionView.reloadData()
-//    }
-    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        refreshFeed()
+    }
+
     private func loadInitialData() {
         loadFeedData(limit: 10)
     }
@@ -82,36 +81,45 @@ class TingViewController: UIViewController {
     }
     
     @objc private func refreshFeed() {
-        viewModel.lastDocuments = nil
-        tingFeedModels.removeAll()
-        loadInitialData()
-        refreshControl.endRefreshing()
+        viewModel.lastDocuments = nil  // 마지막 문서를 nil로 초기화 (처음부터 불러오기 위함)
+        tingFeedModels.removeAll()     // 기존 데이터 모두 삭제
+        feedCollectionView.reloadData()  // UI 업데이트
+        loadInitialData()  // 처음부터 데이터를 다시 로드
+        refreshControl.endRefreshing()  // 새로고침 종료
     }
-        
+
     private func loadFeedData(limit: Int) {
         viewModel.fetchFeed(collection: "tingFeeds", userId: currentUserID, limit: limit, lastDocument: viewModel.lastDocuments)
             .observe(on: MainScheduler.instance)
             .subscribe(
-                onSuccess: { [weak self] (data, hasMore) in
+                onNext: { [weak self] (data, lastDocument, hasMore) in
                     guard let self = self else { return }
+
+                    // 새로운 데이터 추가 시 중복 제거
                     let newFeeds = data.filter { newFeed in
                         !self.tingFeedModels.contains(where: { $0.postid == newFeed.postid })
                     }
+
                     self.tingFeedModels.append(contentsOf: newFeeds)
-                    self.feedCollectionView.reloadData()
+
+                    // 컬렉션뷰 데이터 다시 로드
+                    DispatchQueue.main.async {
+                        self.feedCollectionView.reloadData()
+                    }
+
+                    // 다음 데이터를 더 불러올 수 있는지 여부 확인
                     self.hasMoreData = hasMore
-                    
-//                    if let lastDoc = data.last {
-//                        self.viewModel.lastDocuments = lastDoc
-//                    }
+                    self.viewModel.lastDocuments = lastDocument
                     self.isLoading = false
                 },
-                onFailure: { [weak self] error in
+                onError: { [weak self] error in
                     print("데이터 로드 실패: \(error.localizedDescription)")
                     self?.isLoading = false
                 }
             ).disposed(by: disposeBag)
     }
+
+
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         let offsetY = scrollView.contentOffset.y
@@ -128,16 +136,10 @@ class TingViewController: UIViewController {
     private func bind() {
         feedCollectionView.rx.itemSelected
             .subscribe(onNext: { [weak self] indexPath in
-                guard let self else { return }
+                guard let self = self else { return }
                 let selectedFeed = self.tingFeedModels[indexPath.row]
-                navigate(with: selectedFeed)
+                self.navigate(with: selectedFeed)
             }).disposed(by: disposeBag)
-    }
-    
-    private func handleLocation(location: CLLocationCoordinate2D) {
-        // location 정보를 처리하는 메서드
-        print("받아온 location: \(location.latitude), \(location.longitude)")
-        // 이곳에서 location을 이용한 추가 작업 처리 가능
     }
     
     private func navigate(with selectedData: TingFeedModel) {
@@ -208,8 +210,7 @@ extension TingViewController: UICollectionViewDataSource {
             return UICollectionViewCell() // 빈 셀 반환
         }
         
-        guard let cell = collectionView
-            .dequeueReusableCell(withReuseIdentifier: TingCollectionViewCell.id, for: indexPath) as? TingCollectionViewCell else {
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: TingCollectionViewCell.id, for: indexPath) as? TingCollectionViewCell else {
             return UICollectionViewCell()
         }
         
