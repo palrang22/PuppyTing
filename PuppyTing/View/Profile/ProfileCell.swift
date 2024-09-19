@@ -93,6 +93,15 @@ class ProfileCell: UICollectionViewCell {
         return button
     }()
     
+    private let buttonStackView: UIStackView = {
+        let stackView = UIStackView()
+        stackView.axis = .horizontal
+        stackView.distribution = .fillEqually
+        stackView.spacing = 10
+        stackView.alignment = .fill
+        return stackView
+    }()
+    
     // 즐겨찾기 버튼
     @objc private func favoriteButtonTapped() {
         guard let bookmarkId = bookmarkId else { return }
@@ -117,7 +126,7 @@ class ProfileCell: UICollectionViewCell {
         
         contentView.addSubview(profileContainerView)
         
-        [profileImageView, nicknameLabel, footView, evaluateView].forEach {
+        [profileImageView, nicknameLabel, footView, buttonStackView].forEach {
             profileContainerView.addSubview($0)
         }
         
@@ -126,7 +135,7 @@ class ProfileCell: UICollectionViewCell {
         }
         
         [footButton, favoriteButton, blockButton].forEach {
-            evaluateView.addSubview($0)
+            buttonStackView.addArrangedSubview($0)
         }
         
         profileContainerView.snp.makeConstraints {
@@ -161,34 +170,10 @@ class ProfileCell: UICollectionViewCell {
             $0.leading.equalTo(footStampLabel.snp.trailing).offset(20)
         }
         
-        evaluateView.snp.makeConstraints {
+        buttonStackView.snp.makeConstraints {
             $0.top.equalTo(footView.snp.bottom).offset(10)
-            $0.centerX.equalToSuperview()
-            $0.leading.trailing.equalToSuperview()
+            $0.leading.trailing.equalToSuperview().inset(10)
             $0.height.equalTo(44)
-        }
-        
-        footButton.snp.makeConstraints {
-            $0.top.equalToSuperview()
-            $0.centerY.equalTo(favoriteButton.snp.centerY)
-            $0.leading.equalToSuperview().offset(10)
-            $0.height.equalTo(44)
-            $0.width.equalTo(100)
-        }
-        
-        favoriteButton.snp.makeConstraints {
-            $0.top.equalToSuperview()
-            $0.centerX.equalToSuperview()
-            $0.height.equalTo(44)
-            $0.width.equalTo(100)
-        }
-        
-        blockButton.snp.makeConstraints {
-            $0.top.equalToSuperview()
-            $0.centerY.equalTo(favoriteButton.snp.centerY)
-            $0.trailing.equalToSuperview().offset(-10)
-            $0.height.equalTo(44)
-            $0.width.equalTo(100)
         }
     }
     
