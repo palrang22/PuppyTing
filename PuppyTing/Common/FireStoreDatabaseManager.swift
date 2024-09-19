@@ -17,7 +17,7 @@ class FireStoreDatabaseManager {
     static let shared = FireStoreDatabaseManager()
     
     private let db = Firestore.firestore()
-    private let disposeBag = DisposeBag() // DisposeBag 추가
+    private let disposeBag = DisposeBag() // kkh
     
     private init() {}
     
@@ -129,7 +129,7 @@ class FireStoreDatabaseManager {
         }
     }
     
-    func getBlockedUsers() -> Single<[Member]> {
+    func getBlockedUsers() -> Single<[Member]> { // kkh
         guard let currentUser = Auth.auth().currentUser?.uid else {
             return Single.error(NSError(domain: "", code: -1, userInfo: [NSLocalizedDescriptionKey: "사용자 인증 실패"]))
         }
@@ -167,7 +167,7 @@ class FireStoreDatabaseManager {
         }
     }
     
-    func unblockUser(userId: String) -> Single<Void> {
+    func unblockUser(userId: String) -> Single<Void> { // kkh
         guard let currentUser = Auth.auth().currentUser?.uid else {
             return Single.error(NSError(domain: "", code: -1, userInfo: [NSLocalizedDescriptionKey: "사용자 인증 실패"]))
         }

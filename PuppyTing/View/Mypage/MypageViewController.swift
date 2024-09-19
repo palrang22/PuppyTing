@@ -511,7 +511,7 @@ class MypageViewController: UIViewController {
     }
     
     // MARK: - 내 차단 목록으로 이동
-    private func navigateToMyBlockList() {
+    private func navigateToMyBlockList() { // kkh
         let myBlockListViewController = MyBlockListViewController()
         if let navigationController = self.navigationController {
             navigationController.pushViewController(myBlockListViewController, animated: true)
