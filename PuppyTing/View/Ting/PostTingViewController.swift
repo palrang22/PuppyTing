@@ -187,8 +187,11 @@ class PostTingViewController: UIViewController {
 
 extension PostTingViewController: UITextViewDelegate {
     func textViewDidBeginEditing(_ textView: UITextView) {
-        textView.text = nil
-        textView.textColor = .gray
+        if textView.textColor == .gray {
+            textView.text = nil
+            textView.textColor = .black
+            
+        }
     }
     
     func textViewDidEndEditing(_ textView: UITextView) {
