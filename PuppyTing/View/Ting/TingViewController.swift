@@ -18,6 +18,8 @@ class TingViewController: UIViewController {
     
     var tingFeedModels: [TingFeedModel] = []
     var currentUserID: String = Auth.auth().currentUser?.uid ?? ""
+    var isLoading = false
+    var hasMoreData = false
     
     //MARK: Component 선언
     private lazy var feedCollectionView: UICollectionView = {
@@ -27,6 +29,7 @@ class TingViewController: UIViewController {
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collectionView.register(TingCollectionViewCell.self,
                                 forCellWithReuseIdentifier: TingCollectionViewCell.id)
+        collectionView.refreshControl = refreshControl
         collectionView.delegate = self
         collectionView.dataSource = self
         return collectionView
@@ -34,7 +37,7 @@ class TingViewController: UIViewController {
     
     private let addressLabel: UILabel = {
         let label = UILabel()
-        label.text = "지역이름"
+        label.text = "모든 지역"
         label.textColor = .black
         label.font = .systemFont(ofSize: 20, weight: .heavy)
         return label
@@ -47,32 +50,78 @@ class TingViewController: UIViewController {
         return button
     }()
     
+    private lazy var refreshControl: UIRefreshControl = {
+        let refreshControl = UIRefreshControl()
+        refreshControl.addTarget(self, action: #selector(refreshFeed), for: .valueChanged)
+        return refreshControl
+    }()
+    
     //MARK: View 생명주기
     override func viewDidLoad() {
         super.viewDidLoad()
         setUI()
         setLayout()        
         bind()
-        readFeedData()
+        loadInitialData()
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        readFeedData()
+//    override func viewWillAppear(_ animated: Bool) {
+//        super.viewWillAppear(animated)
+//        self.feedCollectionView.reloadData()
+//    }
+    
+    private func loadInitialData() {
+        loadFeedData(limit: 10)
+    }
+        
+    private func loadMoreData() {
+        if !isLoading && hasMoreData {
+            isLoading = true
+            loadFeedData(limit: 10)
+        }
     }
     
-    private func readFeedData() {
-        viewModel.readAll(collection: "tingFeeds", userId: currentUserID)
+    @objc private func refreshFeed() {
+        viewModel.lastDocuments = nil
+        tingFeedModels.removeAll()
+        loadInitialData()
+        refreshControl.endRefreshing()
+    }
+        
+    private func loadFeedData(limit: Int) {
+        viewModel.fetchFeed(collection: "tingFeeds", userId: currentUserID, limit: limit, lastDocument: viewModel.lastDocuments)
             .observe(on: MainScheduler.instance)
             .subscribe(
-                onSuccess: { [weak self] data in
-                    self?.tingFeedModels = data
-                    self?.feedCollectionView.reloadData()
+                onSuccess: { [weak self] (data, hasMore) in
+                    guard let self = self else { return }
+                    let newFeeds = data.filter { newFeed in
+                        !self.tingFeedModels.contains(where: { $0.postid == newFeed.postid })
+                    }
+                    self.tingFeedModels.append(contentsOf: newFeeds)
+                    self.feedCollectionView.reloadData()
+                    self.hasMoreData = hasMore
+                    
+//                    if let lastDoc = data.last {
+//                        self.viewModel.lastDocuments = lastDoc
+//                    }
+                    self.isLoading = false
                 },
-                onFailure: { error in
+                onFailure: { [weak self] error in
                     print("데이터 로드 실패: \(error.localizedDescription)")
+                    self?.isLoading = false
                 }
             ).disposed(by: disposeBag)
+    }
+    
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        let offsetY = scrollView.contentOffset.y
+        let contentHeight = scrollView.contentSize.height
+        let height = scrollView.frame.size.height
+        
+        if offsetY > contentHeight - height {
+            print("스크롤됨")
+            loadMoreData()
+        }
     }
     
     //MARK: Rx
@@ -154,6 +203,11 @@ extension TingViewController: UICollectionViewDataSource {
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        guard indexPath.row < tingFeedModels.count else {
+            print("Error: Index out of range. row: \(indexPath.row), count: \(tingFeedModels.count)")
+            return UICollectionViewCell() // 빈 셀 반환
+        }
+        
         guard let cell = collectionView
             .dequeueReusableCell(withReuseIdentifier: TingCollectionViewCell.id, for: indexPath) as? TingCollectionViewCell else {
             return UICollectionViewCell()

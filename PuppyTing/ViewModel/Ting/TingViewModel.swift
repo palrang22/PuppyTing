@@ -18,7 +18,8 @@ class TingViewModel {
     private let disposeBag = DisposeBag()
     private var currentLocation: CLLocation?
     
-    let db = Firestore.firestore()
+    private let db = Firestore.firestore()
+    var lastDocuments: DocumentSnapshot?
     
     let items = BehaviorRelay<[Place]>(value:[])
     let error = PublishRelay<String>()
@@ -61,10 +62,10 @@ class TingViewModel {
         
         var components = URLComponents(string: "https://dapi.kakao.com/v2/local/search/keyword.json")
         components?.queryItems = [
-        URLQueryItem(name: "query", value: keyword),
-        URLQueryItem(name: "y", value: "\(latitude)"),
-        URLQueryItem(name: "x", value: "\(longitude)"),
-        URLQueryItem(name: "radius", value: "\(radius)")
+            URLQueryItem(name: "query", value: keyword),
+            URLQueryItem(name: "y", value: "\(latitude)"),
+            URLQueryItem(name: "x", value: "\(longitude)"),
+            URLQueryItem(name: "radius", value: "\(radius)")
         ]
         
         guard let url = components?.url, let apiKey = apiKey else { return nil }
@@ -74,48 +75,71 @@ class TingViewModel {
     }
     
     // 데이터 전달 메서드
-    func readAll(collection: String, userId: String) -> Single<[TingFeedModel]> {
-            return Single.create { [weak self] single in
-                var dataList: [TingFeedModel] = []
+    func fetchFeed(collection: String, userId: String, limit: Int, lastDocument: DocumentSnapshot?) -> Single<([TingFeedModel], Bool)> {
+        return Single.create { [weak self] single in
+            var dataList: [TingFeedModel] = []
+            
+            guard let strongSelf = self else {
+                single(.failure(NSError(domain: "Self is nil", code: -1, userInfo: nil)))
+                return Disposables.create()
+            }
+            
+            let membersDocRef = strongSelf.db.collection("member").document(userId)
+            
+            membersDocRef.getDocument { documentSnapshot, error in
+                if let error = error {
+                    print("fetch 오류: \(error)")
+                    single(.failure(error))
+                    return
+                }
                 
-                let membersDocRef = self?.db.collection("member").document(userId)
-                
-                membersDocRef?.getDocument { documentSnapshot, error in
-                    if let error = error {
-                        print("fetch 오류: \(error)")
-                        single(.failure(error))
-                        return
+                if let blockedUsers = documentSnapshot?.data()?["blockedUsers"] as? [String] {
+                    var query: Query = strongSelf.db.collection(collection)
+                        .order(by: "timestamp", descending: true)
+                        .limit(to: limit)
+                    
+                    if let lastDoc = lastDocument {
+                        query = query.start(afterDocument: lastDoc)
                     }
                     
-                    guard let blockedUsers = documentSnapshot?.data()?["blockedUsers"] as? [String] else { return }
-                    
-                    self?.db.collection(collection)
-                        .order(by: "timestamp", descending: true)
-                        .getDocuments(source: .server) { querySnapshot, error in
-                            if let error = error {
-                                print("Error fetching documents: \(error)")
-                                single(.failure(error))
-                            } else {
-                                for document in querySnapshot!.documents {
-                                    let data = document.data()
-                                    if let userid = data["userid"] as? String,
-                                       !blockedUsers.contains(userid),
-                                       let geoPoint = data["location"] as? GeoPoint,
-                                       let content = data["content"] as? String,
-                                       let timestamp = data["timestamp"] as? Timestamp {
-                                        
-                                        let location = CLLocationCoordinate2D(latitude: geoPoint.latitude, longitude: geoPoint.longitude)
-                                        let time = timestamp.dateValue()
-                                        let postid = document.documentID
-                                        
-                                        let tingFeed = TingFeedModel(userid: userid, postid: postid, location: location, content: content, time: time)
-                                        dataList.append(tingFeed)
-                                    }
-                                }
-                                single(.success(dataList))
+                    query.getDocuments(source: .server) { querySnapshot, error in
+                        if let error = error {
+                            print("Error fetching documents: \(error)")
+                            single(.failure(error))
+                        } else {
+                            guard let snapshot = querySnapshot else {
+                                single(.success(([], false)))
+                                return
                             }
+                            
+                            for document in snapshot.documents {
+                                let data = document.data()
+                                if let userid = data["userid"] as? String,
+                                   !blockedUsers.contains(userid),
+                                   let geoPoint = data["location"] as? GeoPoint,
+                                   let content = data["content"] as? String,
+                                   let timestamp = data["timestamp"] as? Timestamp {
+                                    
+                                    let location = CLLocationCoordinate2D(latitude: geoPoint.latitude, longitude: geoPoint.longitude)
+                                    let time = timestamp.dateValue()
+                                    let postid = document.documentID
+                                    
+                                    let tingFeed = TingFeedModel(userid: userid, postid: postid, location: location, content: content, time: time)
+                                    dataList.append(tingFeed)
+                                }
+                            }
+                            self?.lastDocuments = snapshot.documents.last
+                            
+                            let hasMore = snapshot.documents.count >= limit
+                            single(.success((dataList, hasMore)))
                         }
+                    }
+                } else {
+                    print("blockedUsers 필드가 없습니다.")
+                    single(.success(([], false)))
                 }
+            }
+            
             return Disposables.create()
         }
     }
