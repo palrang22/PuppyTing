@@ -73,23 +73,21 @@ class TingViewModel {
         request.addValue("KakaoAK \(apiKey)", forHTTPHeaderField: "Authorization")
         return request
     }
-    
-    // 데이터 전달 메서드
-    func fetchFeed(collection: String, userId: String, limit: Int, lastDocument: DocumentSnapshot?) -> Single<([TingFeedModel], Bool)> {
-        return Single.create { [weak self] single in
-            var dataList: [TingFeedModel] = []
-            
+        
+    // 피드를 불러오는 메서드
+    func fetchFeed(collection: String, userId: String, limit: Int, lastDocument: DocumentSnapshot?) -> Observable<([TingFeedModel], DocumentSnapshot?, Bool)> {
+        return Observable.create { [weak self] observer in
             guard let strongSelf = self else {
-                single(.failure(NSError(domain: "Self is nil", code: -1, userInfo: nil)))
+                observer.onError(NSError(domain: "Self is nil", code: -1, userInfo: nil))
                 return Disposables.create()
             }
             
             let membersDocRef = strongSelf.db.collection("member").document(userId)
             
+            // 사용자의 차단 목록을 먼저 가져오기 (필요할 경우)
             membersDocRef.getDocument { documentSnapshot, error in
                 if let error = error {
-                    print("fetch 오류: \(error)")
-                    single(.failure(error))
+                    observer.onError(error)
                     return
                 }
                 
@@ -98,20 +96,22 @@ class TingViewModel {
                         .order(by: "timestamp", descending: true)
                         .limit(to: limit)
                     
+                    // 마지막 문서가 있을 경우 해당 문서 이후로 데이터를 가져옴
                     if let lastDoc = lastDocument {
                         query = query.start(afterDocument: lastDoc)
                     }
                     
-                    query.getDocuments(source: .server) { querySnapshot, error in
+                    // Firestore에서 쿼리 실행
+                    query.getDocuments { querySnapshot, error in
                         if let error = error {
-                            print("Error fetching documents: \(error)")
-                            single(.failure(error))
+                            observer.onError(error)
                         } else {
                             guard let snapshot = querySnapshot else {
-                                single(.success(([], false)))
+                                observer.onNext(([], nil, false))
                                 return
                             }
                             
+                            var dataList: [TingFeedModel] = []
                             for document in snapshot.documents {
                                 let data = document.data()
                                 if let userid = data["userid"] as? String,
@@ -128,19 +128,19 @@ class TingViewModel {
                                     dataList.append(tingFeed)
                                 }
                             }
-                            self?.lastDocuments = snapshot.documents.last
                             
+                            let lastDocument = snapshot.documents.last
                             let hasMore = snapshot.documents.count >= limit
-                            single(.success((dataList, hasMore)))
+                            observer.onNext((dataList, lastDocument, hasMore))
                         }
                     }
                 } else {
-                    print("blockedUsers 필드가 없습니다.")
-                    single(.success(([], false)))
+                    observer.onNext(([], nil, false))
                 }
             }
             
             return Disposables.create()
         }
     }
+
 }

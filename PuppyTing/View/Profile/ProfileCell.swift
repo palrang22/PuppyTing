@@ -71,7 +71,6 @@ class ProfileCell: UICollectionViewCell {
         button.backgroundColor = UIColor.puppyPurple
         button.layer.cornerRadius = 10
         button.setTitleColor(.white, for: .normal)
-        button.addTarget(self, action: #selector(footButtonTapped), for: .touchUpInside)
         return button
     }()
     
@@ -84,23 +83,21 @@ class ProfileCell: UICollectionViewCell {
         return button
     }()
     
-    private lazy var favoriteButton: UIButton = {
+    private let favoriteButton: UIButton = {
         let button = UIButton(type: .system)
         button.setTitle("즐겨찾기", for: .normal)
         button.backgroundColor = UIColor.puppyPurple
         button.layer.cornerRadius = 10
         button.setTitleColor(.white, for: .normal)
-        button.addTarget(self, action: #selector(favoriteButtonTapped), for: .touchUpInside)
         return button
     }()
     
-    private lazy var myinfoEditButton: UIButton = {
+    private let myinfoEditButton: UIButton = {
         let button = UIButton(type: .system)
         button.setTitle("마이페이지", for: .normal)
         button.backgroundColor = UIColor.puppyPurple
         button.layer.cornerRadius = 10
         button.setTitleColor(.white, for: .normal)
-        button.addTarget(self, action: #selector(myinfoEditButtonTapped), for: .touchUpInside)
         return button
     }()
     
@@ -113,12 +110,25 @@ class ProfileCell: UICollectionViewCell {
         return stackView
     }()
     
+    private func buttonActionSetting() {
+        favoriteButton.addTarget(self, action: #selector(favoriteButtonTapped), for: .touchUpInside)
+        blockButton.addTarget(self, action: #selector(blockButtonTapped), for: .touchUpInside)
+        footButton.addTarget(self, action: #selector(footButtonTapped), for: .touchUpInside)
+        myinfoEditButton.addTarget(self, action: #selector(myinfoEditButtonTapped), for: .touchUpInside)
+    }
+    
     // 즐겨찾기 버튼
     @objc private func favoriteButtonTapped() {
         guard let bookmarkId = memberId else { return }
         viewModel?.addBookmark(bookmarkId: bookmarkId)
     }
     
+    // 유저 차단 버튼 - psh
+    @objc
+    private func blockButtonTapped() {
+        guard let userId = memberId else { return }
+        viewModel?.blockedUser(uuid: userId)
+    }
     //ksh
     @objc private func footButtonTapped() {
         guard let memberId = memberId else { return }
@@ -141,7 +151,7 @@ class ProfileCell: UICollectionViewCell {
     func configure(with member: Member) {
         nicknameLabel.text = member.nickname
         footNumberLabel.text = "\(member.footPrint)개"
-        
+        buttonActionSetting()
         // 프로필 이미지 로드 - 킹피셔매니저 코드 사용
         if !member.profileImage.isEmpty {
             KingFisherManager.shared.loadProfileImage(urlString: member.profileImage, into: profileImageView)

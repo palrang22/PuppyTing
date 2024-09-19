@@ -25,6 +25,11 @@ class MyFeedManageViewController: UIViewController { // kkh
         tableView.register(MyFeedTableViewCell.self, forCellReuseIdentifier: MyFeedTableViewCell.identifier)
         tableView.dataSource = self
         tableView.delegate = self
+        
+        // Separator를 좌우에서 동일하게 떨어트리기 - jgh
+        tableView.separatorInset = UIEdgeInsets(top: 0, left: 10, bottom: 0, right: 10)
+        tableView.layoutMargins = UIEdgeInsets.zero
+        tableView.cellLayoutMarginsFollowReadableWidth = false
     }
 
     override func viewDidLoad() {
@@ -67,6 +72,7 @@ extension MyFeedManageViewController: UITableViewDataSource, UITableViewDelegate
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true) // 셀선택 배경 사라지게 - jgh
         let selectedFeed = feeds[indexPath.row]
        
         let detailVC = DetailTingViewController()

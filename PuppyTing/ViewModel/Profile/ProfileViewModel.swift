@@ -30,6 +30,14 @@ class ProfileViewModel {
             }).disposed(by: disposeBag)
     }
     
+    func blockedUser(uuid: String) {
+        FireStoreDatabaseManager.shared.blockUser(userId: uuid).observe(on: MainScheduler.instance).subscribe(onSuccess: { _ in
+            // 성공
+        }, onFailure: { error in
+            // 실패
+        }).disposed(by: disposeBag)
+    }
+    
     func addFootPrint(footPrintId: String) {
         FireStoreDatabaseManager.shared.addFootPrint(toUserId: footPrintId)
             .observe(on: MainScheduler.instance)
