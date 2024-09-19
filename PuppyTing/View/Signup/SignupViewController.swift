@@ -20,6 +20,17 @@ class SignupViewController: UIViewController {
     let pwRegex = "^(?=.*[A-Za-z])(?=.*[0-9])(?=.*[!@#$%^&*()_+=-]).{8,50}" // 8자리 ~ 50자리 영어+숫자+특수문자
     
     let signUpViewModel = SignUpViewModel()
+    
+    private let scrollView: UIScrollView = {
+        let scroll = UIScrollView()
+        scroll.showsVerticalScrollIndicator = false
+        return scroll
+    }()
+    
+    private let contentView: UIView = {
+        let view = UIView()
+        return view
+    }()
 
     // 버튼 이미지로 변경 - jgh
     let cancleButton: UIButton = {
@@ -226,13 +237,24 @@ class SignupViewController: UIViewController {
     }
     
     private func configureUI() {
+        view.addSubview(scrollView)
+        scrollView.addSubview(contentView)
+        
+        scrollView.snp.makeConstraints {
+            $0.edges.equalTo(view.safeAreaLayoutGuide)
+        }
+        contentView.snp.makeConstraints {
+            $0.edges.equalToSuperview()
+            $0.width.equalToSuperview()
+        }
+        
         [cancleButton, signTitle, emailLabel, emailCheck, emailTextField, pwLabel, pwCheck, pwTextField, guideLine, eTrueLable, eFalseLable, pTrueLable, pFalseLable, confirmLabel, confirmCheck, confirmPwTextField, cTrueLable, cFalseLable, nickLabel, nickCheck, nickTextField, nTrueLable, nFalseLable, signUpButton].forEach {
-            view.addSubview($0)
+            contentView.addSubview($0)
         }
         
         cancleButton.snp.makeConstraints {
-            $0.top.equalTo(view.safeAreaLayoutGuide)
-            $0.leading.equalTo(view.safeAreaLayoutGuide).offset(10)
+            $0.top.equalToSuperview()
+            $0.leading.equalToSuperview().offset(10)
             $0.height.width.equalTo(44)
         }
         
@@ -242,7 +264,7 @@ class SignupViewController: UIViewController {
         }
         
         emailLabel.snp.makeConstraints {
-            $0.bottom.equalTo(emailTextField.snp.top).offset(-7)
+            $0.top.equalTo(signTitle.snp.bottom).offset(40)
             $0.leading.equalTo(emailTextField.snp.leading)
         }
         
@@ -252,15 +274,15 @@ class SignupViewController: UIViewController {
         }
         
         emailTextField.snp.makeConstraints {
-            $0.bottom.equalTo(pwTextField.snp.top).offset(-60)
-            $0.leading.equalTo(view.safeAreaLayoutGuide).offset(20)
-            $0.trailing.equalTo(view.safeAreaLayoutGuide).offset(-20)
+            $0.top.equalTo(emailLabel.snp.bottom).offset(5)
+            $0.leading.equalToSuperview().offset(20)
+            $0.trailing.equalToSuperview().offset(-20)
             $0.height.equalTo(40)
         }
         
         pwLabel.snp.makeConstraints {
-            $0.bottom.equalTo(pwTextField.snp.top).offset(-7)
-            $0.leading.equalTo(pwTextField)
+            $0.top.equalTo(emailTextField.snp.bottom).offset(20)
+            $0.leading.equalTo(emailTextField.snp.leading)
         }
         
         pwCheck.snp.makeConstraints {
@@ -269,11 +291,10 @@ class SignupViewController: UIViewController {
         }
         
         pwTextField.snp.makeConstraints {
-            $0.bottom.equalTo(confirmPwTextField.snp.top).offset(-90)
+            $0.top.equalTo(pwLabel.snp.bottom).offset(5)
             $0.leading.equalTo(emailTextField.snp.leading)
-            $0.height.equalTo(40)
-            $0.centerX.equalToSuperview()
             $0.trailing.equalTo(emailTextField.snp.trailing)
+            $0.height.equalTo(40)
         }
         
         guideLine.snp.makeConstraints {
@@ -306,8 +327,8 @@ class SignupViewController: UIViewController {
         }
         
         confirmLabel.snp.makeConstraints {
-            $0.bottom.equalTo(confirmPwTextField.snp.top).offset(-7)
-            $0.leading.equalTo(pwTextField)
+            $0.top.equalTo(guideLine.snp.bottom).offset(20)
+             $0.leading.equalTo(pwTextField.snp.leading)
         }
         
         confirmCheck.snp.makeConstraints {
@@ -316,11 +337,10 @@ class SignupViewController: UIViewController {
         }
         
         confirmPwTextField.snp.makeConstraints {
-            $0.bottom.equalTo(nickTextField.snp.top).offset(-60)
+            $0.top.equalTo(confirmLabel.snp.bottom).offset(5)
             $0.leading.equalTo(emailTextField.snp.leading)
-            $0.height.equalTo(40)
-            $0.centerX.equalToSuperview()
             $0.trailing.equalTo(emailTextField.snp.trailing)
+            $0.height.equalTo(40)
         }
         
         cTrueLable.snp.makeConstraints {
@@ -336,8 +356,8 @@ class SignupViewController: UIViewController {
         }
         
         nickLabel.snp.makeConstraints {
-            $0.bottom.equalTo(nickTextField.snp.top).offset(-7)
-            $0.leading.equalTo(pwTextField)
+            $0.top.equalTo(confirmPwTextField.snp.bottom).offset(20)
+            $0.leading.equalTo(pwTextField.snp.leading)
         }
         
         nickCheck.snp.makeConstraints {
@@ -346,11 +366,10 @@ class SignupViewController: UIViewController {
         }
         
         nickTextField.snp.makeConstraints {
-            $0.bottom.equalTo(signUpButton.snp.top).offset(-70)
+            $0.top.equalTo(nickLabel.snp.bottom).offset(5)
             $0.leading.equalTo(emailTextField.snp.leading)
-            $0.height.equalTo(40)
-            $0.centerX.equalToSuperview()
             $0.trailing.equalTo(emailTextField.snp.trailing)
+            $0.height.equalTo(40)
         }
         
         nTrueLable.snp.makeConstraints {
@@ -366,10 +385,10 @@ class SignupViewController: UIViewController {
         }
         
         signUpButton.snp.makeConstraints {
-            $0.bottom.equalTo(view.safeAreaLayoutGuide).offset(-130)
-            $0.centerX.equalTo(view.safeAreaLayoutGuide)
-            $0.leading.equalTo(view.safeAreaLayoutGuide).offset(20)
-            $0.trailing.equalTo(view.safeAreaLayoutGuide).offset(-20)
+            $0.top.equalTo(nickTextField.snp.bottom).offset(70)
+            $0.bottom.equalToSuperview().offset(-30)
+            $0.leading.equalToSuperview().offset(20)
+            $0.trailing.equalToSuperview().offset(-20)
             $0.height.equalTo(44)
         }
     }
