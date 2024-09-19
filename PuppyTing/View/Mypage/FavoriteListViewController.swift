@@ -41,6 +41,11 @@ class FavoriteListViewController: UIViewController {
         
         tableView.rowHeight = UITableView.automaticDimension
         tableView.estimatedRowHeight = 80
+        
+        // Separator를 좌우에서 동일하게 떨어트리기
+        tableView.separatorInset = UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 20)
+        tableView.layoutMargins = UIEdgeInsets.zero
+        tableView.cellLayoutMarginsFollowReadableWidth = false
     }
     
     private func bindViewModel() {
