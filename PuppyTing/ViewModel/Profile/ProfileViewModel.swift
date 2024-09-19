@@ -36,6 +36,8 @@ class ProfileViewModel {
         }, onFailure: { error in
             // 실패
         }).disposed(by: disposeBag)
+    }
+    
     func addFootPrint(footPrintId: String) {
         FireStoreDatabaseManager.shared.addFootPrint(toUserId: footPrintId)
             .observe(on: MainScheduler.instance)

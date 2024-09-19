@@ -71,7 +71,6 @@ class ProfileCell: UICollectionViewCell {
         button.backgroundColor = UIColor.puppyPurple
         button.layer.cornerRadius = 10
         button.setTitleColor(.white, for: .normal)
-        button.addTarget(self, action: #selector(footButtonTapped), for: .touchUpInside)
         return button
     }()
     
@@ -84,7 +83,7 @@ class ProfileCell: UICollectionViewCell {
         return button
     }()
     
-    private lazy var favoriteButton: UIButton = {
+    private let favoriteButton: UIButton = {
         let button = UIButton(type: .system)
         button.setTitle("즐겨찾기", for: .normal)
         button.backgroundColor = UIColor.puppyPurple
@@ -93,13 +92,12 @@ class ProfileCell: UICollectionViewCell {
         return button
     }()
     
-    private lazy var myinfoEditButton: UIButton = {
+    private let myinfoEditButton: UIButton = {
         let button = UIButton(type: .system)
         button.setTitle("마이페이지", for: .normal)
         button.backgroundColor = UIColor.puppyPurple
         button.layer.cornerRadius = 10
         button.setTitleColor(.white, for: .normal)
-        button.addTarget(self, action: #selector(myinfoEditButtonTapped), for: .touchUpInside)
         return button
     }()
     
@@ -115,6 +113,8 @@ class ProfileCell: UICollectionViewCell {
     private func buttonActionSetting() {
         favoriteButton.addTarget(self, action: #selector(favoriteButtonTapped), for: .touchUpInside)
         blockButton.addTarget(self, action: #selector(blockButtonTapped), for: .touchUpInside)
+        footButton.addTarget(self, action: #selector(footButtonTapped), for: .touchUpInside)
+        myinfoEditButton.addTarget(self, action: #selector(myinfoEditButtonTapped), for: .touchUpInside)
     }
     
     // 즐겨찾기 버튼
