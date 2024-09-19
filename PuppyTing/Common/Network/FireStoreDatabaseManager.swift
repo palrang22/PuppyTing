@@ -278,6 +278,23 @@ class FireStoreDatabaseManager {
         }
     }
     
+    //MARK: UPDATE
+    
+    func addFootPrint(toUserId: String) -> Single<Void> {
+        return Single.create { [weak self] single in
+            let ref = self?.db.collection("member").document(toUserId)
+            
+            ref?.updateData(["footPrint": FieldValue.increment(Int64(1))]) { error in
+                if let error = error {
+                    single(.failure(error))
+                } else {
+                    single(.success(()))
+                }
+            }
+            return Disposables.create()
+        }
+    }
+    
     //MARK: DELETE
     
     func deleteDocument(from collection: String, documentId: String) -> Single<Void> {

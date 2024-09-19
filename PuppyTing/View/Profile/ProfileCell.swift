@@ -13,7 +13,7 @@ import SnapKit
 class ProfileCell: UICollectionViewCell {
     
     var viewModel: ProfileViewModel?
-    var bookmarkId: String? // 즐겨찾기 할 유저 Id
+    var memberId: String? // 즐겨찾기 할 유저 Id
     
     private let disposeBag = DisposeBag()
     
@@ -58,19 +58,19 @@ class ProfileCell: UICollectionViewCell {
     
     private let footNumberLabel: UILabel = {
         let label = UILabel()
-        label.text = "nn개"
+        label.text = "0개"
         return label
     }()
     
     private let evaluateView = UIView()
     
-    private let footButton: UIButton = {
+    private lazy var footButton: UIButton = {
         let button = UIButton(type: .system)
         button.setTitle("발도장 꾹 🐾", for: .normal)
         button.backgroundColor = UIColor.puppyPurple
         button.layer.cornerRadius = 10
         button.setTitleColor(.white, for: .normal)
-//        button.addTarget(self, action: #selector(footButtonTapped), for: .touchUpInside)
+        button.addTarget(self, action: #selector(footButtonTapped), for: .touchUpInside)
         return button
     }()
     
@@ -83,7 +83,7 @@ class ProfileCell: UICollectionViewCell {
         return button
     }()
     
-    private let favoriteButton: UIButton = {
+    private lazy var favoriteButton: UIButton = {
         let button = UIButton(type: .system)
         button.setTitle("즐겨찾기", for: .normal)
         button.backgroundColor = UIColor.puppyPurple
@@ -104,8 +104,17 @@ class ProfileCell: UICollectionViewCell {
     
     // 즐겨찾기 버튼
     @objc private func favoriteButtonTapped() {
-        guard let bookmarkId = bookmarkId else { return }
+        guard let bookmarkId = memberId else { return }
         viewModel?.addBookmark(bookmarkId: bookmarkId)
+    }
+    
+    @objc private func footButtonTapped() {
+        guard let memberId = memberId else { return }
+        viewModel?.addFootPrint(footPrintId: memberId)
+        
+        if let currentFootPrintCount = Int(footNumberLabel.text?.components(separatedBy: "개").first ?? "0") {
+            footNumberLabel.text = "\(currentFootPrintCount + 1)개"
+        }
     }
     
     func configure(with member: Member) {
