@@ -102,5 +102,4 @@ class PuppyCollectionViewCell: UICollectionViewCell {
         
         KingFisherManager.shared.loadProfileImage(urlString: puppy.petImage, into: puppyImageView)
     }
-
 }

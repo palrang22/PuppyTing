@@ -17,9 +17,9 @@
 		2369F3AB2C97FC93006040B3 /* Report.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2369F3AA2C97FC93006040B3 /* Report.swift */; };
 		2369F3AD2C97FDC1006040B3 /* FirebaseDynamicLinks in Frameworks */ = {isa = PBXBuildFile; productRef = 2369F3AC2C97FDC1006040B3 /* FirebaseDynamicLinks */; };
 		2369F3AF2C980222006040B3 /* KingFisherManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2369F3AE2C980222006040B3 /* KingFisherManager.swift */; };
+		2369F3B52C99AB1A006040B3 /* FirebaseMessaging in Frameworks */ = {isa = PBXBuildFile; productRef = 2369F3B42C99AB1A006040B3 /* FirebaseMessaging */; };
 		5602B05E2C8A82E50060F03B /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5602B05D2C8A82E50060F03B /* ProfileViewController.swift */; };
 		5602B0692C8AEA340060F03B /* ProfileCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5602B0682C8AEA340060F03B /* ProfileCell.swift */; };
-		5602B0712C8AF4EF0060F03B /* PuppyHeaderCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5602B0702C8AF4EF0060F03B /* PuppyHeaderCell.swift */; };
 		5602B0862C8E0C6F0060F03B /* ProfileViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5602B0852C8E0C6F0060F03B /* ProfileViewModel.swift */; };
 		5602B08A2C8E91B30060F03B /* FavoriteListTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5602B0892C8E91B20060F03B /* FavoriteListTableViewCell.swift */; };
 		5602B08C2C8E9AD90060F03B /* FavoriteListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5602B08B2C8E9AD90060F03B /* FavoriteListViewController.swift */; };
@@ -103,7 +103,6 @@
 		2369F3AE2C980222006040B3 /* KingFisherManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KingFisherManager.swift; sourceTree = "<group>"; };
 		5602B05D2C8A82E50060F03B /* ProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
 		5602B0682C8AEA340060F03B /* ProfileCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileCell.swift; sourceTree = "<group>"; };
-		5602B0702C8AF4EF0060F03B /* PuppyHeaderCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PuppyHeaderCell.swift; sourceTree = "<group>"; };
 		5602B0852C8E0C6F0060F03B /* ProfileViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewModel.swift; sourceTree = "<group>"; };
 		5602B0892C8E91B20060F03B /* FavoriteListTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteListTableViewCell.swift; sourceTree = "<group>"; };
 		5602B08B2C8E9AD90060F03B /* FavoriteListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteListViewController.swift; sourceTree = "<group>"; };
@@ -184,6 +183,7 @@
 			files = (
 				2369F3A92C97F889006040B3 /* Kingfisher in Frameworks */,
 				A2085DA52C7D678400698923 /* GoogleSignInSwift in Frameworks */,
+				2369F3B52C99AB1A006040B3 /* FirebaseMessaging in Frameworks */,
 				A2085DA32C7D678400698923 /* GoogleSignIn in Frameworks */,
 				E738FBB42C7C7074004696BD /* RxSwift in Frameworks */,
 				2369F3A42C97F829006040B3 /* FirebaseFirestore in Frameworks */,
@@ -206,7 +206,6 @@
 			children = (
 				5602B05D2C8A82E50060F03B /* ProfileViewController.swift */,
 				5602B0682C8AEA340060F03B /* ProfileCell.swift */,
-				5602B0702C8AF4EF0060F03B /* PuppyHeaderCell.swift */,
 			);
 			path = Profile;
 			sourceTree = "<group>";
@@ -491,6 +490,7 @@
 				2369F3A52C97F829006040B3 /* FirebaseStorage */,
 				2369F3A82C97F889006040B3 /* Kingfisher */,
 				2369F3AC2C97FDC1006040B3 /* FirebaseDynamicLinks */,
+				2369F3B42C99AB1A006040B3 /* FirebaseMessaging */,
 			);
 			productName = PuppyTing;
 			productReference = E738FB732C7C62EE004696BD /* PuppyTing.app */;
@@ -576,7 +576,6 @@
 				2369F3AB2C97FC93006040B3 /* Report.swift in Sources */,
 				56EF72442C9445CB00CC919F /* Favorite.swift in Sources */,
 				23607BFA2C8978E600A23716 /* PostingViewModel.swift in Sources */,
-				5602B0712C8AF4EF0060F03B /* PuppyHeaderCell.swift in Sources */,
 				5602B08A2C8E91B30060F03B /* FavoriteListTableViewCell.swift in Sources */,
 				C29FCF662C7DB37E00F8951D /* PuppyCollectionViewCell.swift in Sources */,
 				E7F5983B2C8866CE00FE8900 /* AddressView.swift in Sources */,
@@ -934,6 +933,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 2369F39E2C97F829006040B3 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
 			productName = FirebaseDynamicLinks;
+		};
+		2369F3B42C99AB1A006040B3 /* FirebaseMessaging */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 2369F39E2C97F829006040B3 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseMessaging;
 		};
 		A2085DA22C7D678400698923 /* GoogleSignIn */ = {
 			isa = XCSwiftPackageProductDependency;
