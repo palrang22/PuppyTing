@@ -46,24 +46,31 @@ class FavoriteListViewModel {
                 return
             }
             
-            // 여러 유저의 정보를 가져오기 위해 DispatchGroup 사용
-            var favoriteList = [Favorite]()
-            let dispatchGroup = DispatchGroup()
-            
-            bookmarkUserIds.forEach { userId in
-                dispatchGroup.enter()
-                self.db.collection("member").document(userId).getDocument { (userDoc, error) in
-                    if let userData = userDoc?.data() {
-                        let favorite = Favorite(data: userData)
-                        favoriteList.append(favorite)
+            // Observable.create로 Firestore의 비동기 작업을 감싸고, zip을 사용하여 모든 즐겨찾기 유저 정보를 한 번에 처리
+            // Firestore에서 유저 정보 불러오기
+            let favoriteObservables = bookmarkUserIds.map { userId in
+                return Observable<Favorite>.create { observer in
+                    self.db.collection("member").document(userId).getDocument { (userDoc, error) in
+                        if let userData = userDoc?.data() {
+                            let favorite = Favorite(data: userData)
+                            observer.onNext(favorite)
+                        } else if let error = error {
+                            observer.onError(error)
+                        }
+                        observer.onCompleted()
                     }
-                    dispatchGroup.leave()
+                    return Disposables.create()
                 }
             }
             
-            dispatchGroup.notify(queue: .main) {
-                self.favorites.onNext(favoriteList)
-            }
+            // 모든 유저 정보가 불러와질 때까지 기다리기
+            Observable.zip(favoriteObservables)
+                .subscribe(onNext: { favoriteList in
+                    self.favorites.onNext(favoriteList)
+                }, onError: { error in
+                    print("즐겨찾기 목록 불러오기 실패: \(error.localizedDescription)")
+                })
+                .disposed(by: self.disposeBag)
         }
     }
 }
