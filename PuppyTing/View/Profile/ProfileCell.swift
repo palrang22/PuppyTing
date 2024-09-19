@@ -23,7 +23,7 @@ class ProfileCell: UICollectionViewCell {
         view.layer.borderWidth = 1.0
         view.layer.borderColor = UIColor.puppyPurple.withAlphaComponent(0.1).cgColor
         view.layer.masksToBounds = false
-        view.backgroundColor = UIColor.puppyPurple.withAlphaComponent(0.1)
+        view.backgroundColor = UIColor(red: 247/255, green: 245/255, blue: 255/255, alpha: 1)
         view.layer.shadowColor = UIColor.black.cgColor
         view.layer.shadowOpacity = 0.2
         view.layer.shadowOffset = CGSize(width: 0, height: 2)
@@ -61,8 +61,6 @@ class ProfileCell: UICollectionViewCell {
         label.text = "nn개"
         return label
     }()
-    
-    private let evaluateView = UIView()
     
     private let footButton: UIButton = {
         let button = UIButton(type: .system)
