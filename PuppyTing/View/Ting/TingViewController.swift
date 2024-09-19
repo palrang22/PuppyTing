@@ -62,11 +62,17 @@ class TingViewController: UIViewController {
     }
     
     private func readFeedData() {
-        viewModel.readAll(collection: "tingFeeds") { [weak self] data in
-            self?.tingFeedModels = data
-            DispatchQueue.main.async {
-                self?.feedCollectionView.reloadData()
-            }}
+        viewModel.readAll(collection: "tingFeeds", userId: currentUserID)
+            .observe(on: MainScheduler.instance)
+            .subscribe(
+                onSuccess: { [weak self] data in
+                    self?.tingFeedModels = data
+                    self?.feedCollectionView.reloadData()
+                },
+                onFailure: { error in
+                    print("데이터 로드 실패: \(error.localizedDescription)")
+                }
+            ).disposed(by: disposeBag)
     }
     
     //MARK: Rx

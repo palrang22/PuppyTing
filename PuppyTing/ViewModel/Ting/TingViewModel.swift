@@ -74,37 +74,49 @@ class TingViewModel {
     }
     
     // 데이터 전달 메서드
-    
-    func readAll(collection: String, completion: @escaping ([TingFeedModel]) -> Void) {
-        var dataList: [TingFeedModel] = []
-
-        db.collection(collection)
-            .order(by: "timestamp", descending: true)
-            .getDocuments(source: .server) { querySnapshot, error in
-            if let error = error {
-                print("Error fetching documents: \(error)")
-            } else {
-                for document in querySnapshot!.documents {
-                    let data = document.data()
-                    
-                    if let userid = data["userid"] as? String,
-                       let geoPoint = data["location"] as? GeoPoint,
-                       let content = data["content"] as? String,
-                       let timestamp = data["timestamp"] as? Timestamp {
-                        
-                        let location = CLLocationCoordinate2D(latitude: geoPoint.latitude, longitude: geoPoint.longitude)
-                        let time = timestamp.dateValue()
-                        
-                        let postid = document.documentID
-                        
-                        let tingFeed = TingFeedModel(userid: userid, postid: postid, location: location, content: content, time: time)
-                        dataList.append(tingFeed)
-                    } else {
-                        print("Error converting document to TingFeedModel")
+    func readAll(collection: String, userId: String) -> Single<[TingFeedModel]> {
+            return Single.create { [weak self] single in
+                var dataList: [TingFeedModel] = []
+                
+                let membersDocRef = self?.db.collection("member").document(userId)
+                
+                membersDocRef?.getDocument { documentSnapshot, error in
+                    if let error = error {
+                        print("fetch 오류: \(error)")
+                        single(.failure(error))
+                        return
                     }
+                    
+                    guard let blockedUsers = documentSnapshot?.data()?["blockedUsers"] as? [String] else { return }
+                    
+                    self?.db.collection(collection)
+                        .order(by: "timestamp", descending: true)
+                        .getDocuments(source: .server) { querySnapshot, error in
+                            if let error = error {
+                                print("Error fetching documents: \(error)")
+                                single(.failure(error))
+                            } else {
+                                for document in querySnapshot!.documents {
+                                    let data = document.data()
+                                    if let userid = data["userid"] as? String,
+                                       !blockedUsers.contains(userid),
+                                       let geoPoint = data["location"] as? GeoPoint,
+                                       let content = data["content"] as? String,
+                                       let timestamp = data["timestamp"] as? Timestamp {
+                                        
+                                        let location = CLLocationCoordinate2D(latitude: geoPoint.latitude, longitude: geoPoint.longitude)
+                                        let time = timestamp.dateValue()
+                                        let postid = document.documentID
+                                        
+                                        let tingFeed = TingFeedModel(userid: userid, postid: postid, location: location, content: content, time: time)
+                                        dataList.append(tingFeed)
+                                    }
+                                }
+                                single(.success(dataList))
+                            }
+                        }
                 }
-                completion(dataList)
-            }
+            return Disposables.create()
         }
     }
 }
