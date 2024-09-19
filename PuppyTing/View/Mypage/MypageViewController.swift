@@ -683,3 +683,11 @@ extension MypageViewController: UICollectionViewDelegateFlowLayout {
         return CGSize(width: collectionView.bounds.width, height: collectionView.bounds.height - 20)
     }
 }
+
+extension MypageViewController: UIScrollViewDelegate {
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        let offset = scrollView.contentOffset
+        let pageIndex = Int(offset.x / self.puppyCollectionView.frame.size.width)
+        pageControl.currentPage = pageIndex
+    }
+}
