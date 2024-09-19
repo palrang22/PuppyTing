@@ -17,21 +17,17 @@ class ProfileCell: UICollectionViewCell {
     
     private let disposeBag = DisposeBag()
     
-    private let stackView: UIStackView = {
-        let stackView = UIStackView()
-        stackView.axis = .vertical
-        stackView.spacing = 10
-        stackView.distribution = .fill
-        return stackView
-    }()
-    
     private let profileContainerView: UIView = {
         let view = UIView()
-        view.layer.cornerRadius = 15
+        view.layer.cornerRadius = 10
         view.layer.borderWidth = 1.0
         view.layer.borderColor = UIColor.puppyPurple.withAlphaComponent(0.1).cgColor
-        view.layer.masksToBounds = true
+        view.layer.masksToBounds = false
         view.backgroundColor = UIColor.puppyPurple.withAlphaComponent(0.1)
+        view.layer.shadowColor = UIColor.black.cgColor
+        view.layer.shadowOpacity = 0.2
+        view.layer.shadowOffset = CGSize(width: 0, height: 2)
+        view.layer.shadowRadius = 4
         return view
     }()
     
@@ -119,8 +115,7 @@ class ProfileCell: UICollectionViewCell {
     override init(frame: CGRect) {
         super.init(frame: frame)
         
-        contentView.addSubview(stackView)
-        stackView.addArrangedSubview(profileContainerView)
+        contentView.addSubview(profileContainerView)
         
         [profileImageView, nicknameLabel, footView, evaluateView].forEach {
             profileContainerView.addSubview($0)
@@ -134,18 +129,13 @@ class ProfileCell: UICollectionViewCell {
             evaluateView.addSubview($0)
         }
         
-        stackView.snp.makeConstraints {
+        profileContainerView.snp.makeConstraints {
             $0.edges.equalToSuperview().inset(20)
         }
         
-        profileContainerView.snp.makeConstraints {
-            $0.width.equalToSuperview()
-            $0.top.equalTo(stackView.snp.top)
-        }
-        
         profileImageView.snp.makeConstraints {
-            $0.top.equalToSuperview().offset(10)
-            $0.leading.equalToSuperview().offset(10)
+            $0.top.equalToSuperview().offset(30)
+            $0.leading.equalToSuperview().offset(15)
             $0.width.height.equalTo(60)
         }
         
@@ -163,7 +153,7 @@ class ProfileCell: UICollectionViewCell {
         
         footStampLabel.snp.makeConstraints {
             $0.top.equalToSuperview()
-            $0.leading.equalToSuperview().offset(10)
+            $0.leading.equalToSuperview().offset(15)
         }
         
         footNumberLabel.snp.makeConstraints {
