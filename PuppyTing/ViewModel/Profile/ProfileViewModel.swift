@@ -17,6 +17,9 @@ class ProfileViewModel {
     let bookmarkSuccess = PublishSubject<Void>()
     let bookmarkError = PublishSubject<Error>()
     
+    let footPrintSuccess = PublishSubject<Void>()
+    let footPrintError = PublishSubject<Error>()
+    
     func addBookmark(bookmarkId: String) {
         FireStoreDatabaseManager.shared.addBookmark(forUserId: Auth.auth().currentUser?.uid ?? "", bookmarkId: bookmarkId)
             .observe(on: MainScheduler.instance)
@@ -26,5 +29,16 @@ class ProfileViewModel {
                 self?.bookmarkError.onNext(error)
             }).disposed(by: disposeBag)
     }
+    
+    func addFootPrint(footPrintId: String) {
+        FireStoreDatabaseManager.shared.addFootPrint(toUserId: footPrintId)
+            .observe(on: MainScheduler.instance)
+            .subscribe(onSuccess: { [weak self] in
+                self?.footPrintSuccess.onNext(())
+            }, onFailure: { [weak self] error in
+                self?.footPrintError.onNext(error)
+            }).disposed(by: disposeBag)
+    }
+
 }
 
