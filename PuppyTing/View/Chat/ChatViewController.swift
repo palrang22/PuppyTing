@@ -72,8 +72,8 @@ class ChatViewController: UIViewController {
         view.backgroundColor = .white
         
         // 키보드 알림 등록
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShowInChatting), name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHideInChatting), name: UIResponder.keyboardWillHideNotification, object: nil)
         
         [chattingTableView, messageInputView].forEach {
             view.addSubview($0)
@@ -85,18 +85,14 @@ class ChatViewController: UIViewController {
         
         messageTextView.delegate = self
         
-        // 키보드 포커싱 해제 메서드 호출
         setupKeyboardDismissRecognizer()
-        
         setupConstraints()
-        
-        // Rx 바인딩
         setupBindings()
         
     }
     
     // 키보드가 나타날 때 호출되는 메서드
-    @objc func keyboardWillShow(notification: NSNotification) {
+    @objc func keyboardWillShowInChatting(notification: NSNotification) {
         if let keyboardFrame = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue {
             let keyboardHeight = keyboardFrame.cgRectValue.height
             messageInputViewBottomConstraint.update(offset: -keyboardHeight + view.safeAreaInsets.bottom)
@@ -108,7 +104,7 @@ class ChatViewController: UIViewController {
     }
     
     // 키보드가 사라질 때 호출되는 메서드
-    @objc func keyboardWillHide(notification: NSNotification) {
+    @objc func keyboardWillHideInChatting(notification: NSNotification) {
         messageInputViewBottomConstraint.update(offset: 0)
         UIView.animate(withDuration: 0.3) {
             self.view.layoutIfNeeded()
@@ -119,7 +115,6 @@ class ChatViewController: UIViewController {
     deinit {
         NotificationCenter.default.removeObserver(self)
     }
-    
     
     private func setupBindings() {
         let input = ChatViewModel.Input(
