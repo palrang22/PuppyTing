@@ -451,7 +451,7 @@ class MypageViewController: UIViewController {
     
     // MARK: - Setup Menu Items
     private func setupMenuItems() {
-        let menuItems = ["내 피드 관리", "받은 산책 후기", "즐겨 찾는 친구", "차단 목록"]
+        let menuItems = ["내 피드 관리", "즐겨 찾는 친구", "차단 목록"]
         var previousItem: UIView? = nil
 
         for (index, itemName) in menuItems.enumerated() {
@@ -516,11 +516,9 @@ class MypageViewController: UIViewController {
         case 0:
             navigateToMyFeedManagement()
         case 1:
-            break
-        case 2:
             let favorireListVC = FavoriteListViewController()
             navigationController?.pushViewController(favorireListVC, animated: true)
-        case 3:
+        case 2:
             navigateToMyBlockList()
         default:
             break
@@ -615,7 +613,7 @@ class MypageViewController: UIViewController {
         }
 
         menuContainerView.snp.makeConstraints {
-            $0.height.equalTo(250)
+            $0.height.equalTo(190)
         }
 
         let upperButtonsStackView = UIStackView(arrangedSubviews: [customerSupportButton, faqButton, noticeButton])
