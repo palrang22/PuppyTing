@@ -234,6 +234,9 @@ class SignupViewController: UIViewController {
         
         // 키보드 포커싱 해제 메서드 호출
         setupKeyboardDismissRecognizer()
+        
+        // 키보드 높이 조절 메서드 호출
+        setupKeyboardObservers()
     }
     
     private func configureUI() {
