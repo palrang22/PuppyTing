@@ -21,11 +21,10 @@ class PptLoginViewController: UIViewController {
     let eRegex = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,64}"
     let pRegex = "^(?=.*[A-Za-z])(?=.*[0-9])(?=.*[!@#$%^&*()_+=-]).{8,50}" // 8자리 ~ 50자리 영어+숫자+특수문자
     
+    // 버튼 이미지로 변경 - jgh
     let closeButton: UIButton = {
         let button = UIButton(type: .system)
-        button.setTitle("✕", for: .normal)
-        button.titleLabel?.font = .systemFont(ofSize: 20)
-        button.setTitleColor(.black, for: .normal)
+        button.setImage(UIImage(named: "closeButton")?.withRenderingMode(.alwaysOriginal), for: .normal)
         return button
     }()
     
@@ -40,7 +39,7 @@ class PptLoginViewController: UIViewController {
         let textField = UITextField()
         textField.placeholder = "이메일을 입력하세요."
         textField.borderStyle = .roundedRect
-        textField.layer.borderColor = UIColor.darkGray.cgColor
+        textField.layer.borderColor = UIColor.gray.cgColor
         textField.layer.borderWidth = 1.0
         textField.layer.cornerRadius = 5
         return textField
@@ -50,7 +49,7 @@ class PptLoginViewController: UIViewController {
         let textField = UITextField()
         textField.placeholder = "비밀번호를 입력하세요."
         textField.borderStyle = .roundedRect
-        textField.layer.borderColor = UIColor.darkGray.cgColor
+        textField.layer.borderColor = UIColor.gray.cgColor
         textField.layer.borderWidth = 1.0
         textField.layer.cornerRadius = 5
         textField.isSecureTextEntry = true // 비밀번호 입력 숨기기
@@ -59,16 +58,18 @@ class PptLoginViewController: UIViewController {
     
     let loginButton: UIButton = {
         let button = UIButton(type: .system)
-        button.backgroundColor = UIColor.puppyPurple
+//        button.backgroundColor = UIColor.puppyPurple
+        button.layer.borderColor = UIColor.puppyPurple.cgColor
+        button.layer.borderWidth = 2
         button.setTitle("로그인", for: .normal)
-        button.setTitleColor(.white, for: .normal)
+        button.setTitleColor(.black, for: .normal)
         button.layer.cornerRadius = 5
         return button
     }()
     
     let signupButton: UIButton = {
         let button = UIButton(type: .system)
-        button.backgroundColor = UIColor.puppyPurple
+        button.backgroundColor = UIColor.darkPuppyPurple
         button.setTitle("회원가입", for: .normal)
         button.setTitleColor(.white, for: .normal)
         button.layer.cornerRadius = 5
@@ -106,8 +107,9 @@ class PptLoginViewController: UIViewController {
         }
         
         logoImageView.snp.makeConstraints {
-            $0.top.equalTo(view.safeAreaLayoutGuide).offset(150)
+            $0.top.equalTo(view.safeAreaLayoutGuide).offset(50)
             $0.centerX.equalTo(view.safeAreaLayoutGuide)
+            $0.width.height.equalTo(300)
         }
         
         emailfield.snp.makeConstraints {
@@ -117,7 +119,7 @@ class PptLoginViewController: UIViewController {
         }
         
         pwfield.snp.makeConstraints {
-            $0.bottom.equalTo(loginButton.snp.top).offset(-15)
+            $0.bottom.equalTo(loginButton.snp.top).offset(-40)
             $0.centerX.equalTo(view.safeAreaLayoutGuide)
             $0.leading.trailing.height.equalTo(signupButton)
         }
