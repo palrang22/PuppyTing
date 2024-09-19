@@ -41,6 +41,7 @@ class ProfileViewController: UIViewController {
         FireStoreDatabaseManager.shared.findMemeber(uuid: userid)
             .subscribe(onSuccess: { [weak self] member in
                 self?.member = member
+                self?.profileCell.parentViewController = self
                 self?.profileCell.configure(with: member)
                 self?.profileCell.memberId = member.uuid
                 self?.profileCell.viewModel = ProfileViewModel()
