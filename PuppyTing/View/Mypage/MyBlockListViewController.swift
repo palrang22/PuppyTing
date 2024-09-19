@@ -14,8 +14,8 @@ class MyBlockListViewController: UIViewController {
     private func setupNavigationBar() {
         navigationItem.title = "차단 목록"
         
-        let deleteButton = UIBarButtonItem(title: "선택 삭제", style: .plain, target: self, action: #selector(handleEditButtonTapped))
-        navigationItem.rightBarButtonItem = deleteButton
+//        let deleteButton = UIBarButtonItem(title: "선택 삭제", style: .plain, target: self, action: #selector(handleEditButtonTapped))
+//        navigationItem.rightBarButtonItem = deleteButton
     }
 
     @objc private func handleEditButtonTapped() {
