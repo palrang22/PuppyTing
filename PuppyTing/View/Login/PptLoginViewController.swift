@@ -59,11 +59,11 @@ class PptLoginViewController: UIViewController {
     
     let loginButton: UIButton = {
         let button = UIButton(type: .system)
-//        button.backgroundColor = UIColor.lightPuppyPurple
-        button.layer.borderColor = UIColor.puppyPurple.cgColor
-        button.layer.borderWidth = 2
+        button.backgroundColor = UIColor.puppyPurple
+//        button.layer.borderColor = UIColor.puppyPurple.cgColor
+//        button.layer.borderWidth = 2
         button.setTitle("로그인", for: .normal)
-        button.setTitleColor(.black, for: .normal)
+        button.setTitleColor(.white, for: .normal)
         button.layer.cornerRadius = 5
         return button
     }()
@@ -108,8 +108,9 @@ class PptLoginViewController: UIViewController {
         }
         
         logoImageView.snp.makeConstraints {
-            $0.top.equalTo(view.safeAreaLayoutGuide).offset(150)
+            $0.top.equalTo(view.safeAreaLayoutGuide).offset(50)
             $0.centerX.equalTo(view.safeAreaLayoutGuide)
+            $0.width.height.equalTo(300)
         }
         
         emailfield.snp.makeConstraints {

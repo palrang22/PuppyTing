@@ -63,9 +63,9 @@ class LoginViewController: UIViewController {
 
         
         logoImageView.snp.makeConstraints {
-            $0.top.equalTo(view.safeAreaLayoutGuide).offset(200)
+            $0.top.equalTo(view.safeAreaLayoutGuide).offset(50)
             $0.centerX.equalTo(view.safeAreaLayoutGuide)
-            $0.width.height.equalTo(100)
+            $0.width.height.equalTo(300)
         }
         
         appleLogButton.snp.makeConstraints {
