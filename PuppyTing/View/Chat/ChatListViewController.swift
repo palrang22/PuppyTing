@@ -12,7 +12,6 @@ import FirebaseAuth
 import RxCocoa
 import RxSwift
 
-
 class ChatListViewController: UIViewController, UITableViewDelegate, UISearchBarDelegate {
     
     private let disposeBag = DisposeBag()
