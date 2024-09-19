@@ -129,6 +129,15 @@ class FireStoreDatabaseManager {
         }
     }
     
+    func getBlockedUsers(uuid: String, complection: @escaping ([String]) -> Void) {
+        let ref = db.collection("member").document(uuid)
+        ref.getDocument { document, error in
+            if let document = document, let data = document.data(), let blockedUsers = data["blockedUsers"] as? [String] {
+                complection(blockedUsers)
+            }
+        }
+    }
+    
     func getBlockedUsers() -> Single<[Member]> { // kkh
         guard let currentUser = Auth.auth().currentUser?.uid else {
             return Single.error(NSError(domain: "", code: -1, userInfo: [NSLocalizedDescriptionKey: "사용자 인증 실패"]))
@@ -240,6 +249,18 @@ class FireStoreDatabaseManager {
     
     func checkUserData(user: User, completion: @escaping (Bool) -> Void) {
         let docRef = db.collection("member").document(user.uid)
+        
+        docRef.getDocument { document, error in
+            if let document = document, document.exists {
+                completion(true)
+            } else {
+                completion(false)
+            }
+        }
+    }
+    
+    func checkUserData(uuid: String, completion: @escaping (Bool) -> Void) {
+        let docRef = db.collection("member").document(uuid)
         
         docRef.getDocument { document, error in
             if let document = document, document.exists {

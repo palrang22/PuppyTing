@@ -161,6 +161,7 @@ class ChatTableViewCell: UITableViewCell {
     }
     
     private func fetchImage(image: String) {
+        outerStackView.arrangedSubviews.forEach { $0.removeFromSuperview() }
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFill
         imageView.clipsToBounds = true
@@ -168,13 +169,8 @@ class ChatTableViewCell: UITableViewCell {
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.heightAnchor.constraint(equalToConstant: 28).isActive = true
         imageView.widthAnchor.constraint(equalToConstant: 28).isActive = true
-        NetworkManager.shared.fetchImage(url: image) { image in
-            DispatchQueue.main.async {
-                self.outerStackView.arrangedSubviews.forEach { $0.removeFromSuperview() }
-                imageView.image = image
-                self.outerStackView.addArrangedSubview(imageView)
-            }
-        }
+        KingFisherManager.shared.loadProfileImage(urlString: image, into: imageView)
+        outerStackView.addArrangedSubview(imageView)
     }
     
     private func createImageView(with image: UIImage) -> UIImageView {
