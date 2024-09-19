@@ -32,6 +32,7 @@
 		56FD04912C80172B00EBCDCD /* ChattingTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56FD04902C80172B00EBCDCD /* ChattingTableViewCell.swift */; };
 		56FD04932C856C4200EBCDCD /* FindingPasswordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56FD04922C856C4200EBCDCD /* FindingPasswordViewController.swift */; };
 		56FD04952C856C6E00EBCDCD /* ChangePasswordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56FD04942C856C6E00EBCDCD /* ChangePasswordViewController.swift */; };
+		A2024BB92C9CD6D60049DD8A /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = A2024BB82C9CD6D60049DD8A /* GoogleService-Info.plist */; };
 		A2085DA32C7D678400698923 /* GoogleSignIn in Frameworks */ = {isa = PBXBuildFile; productRef = A2085DA22C7D678400698923 /* GoogleSignIn */; };
 		A2085DA52C7D678400698923 /* GoogleSignInSwift in Frameworks */ = {isa = PBXBuildFile; productRef = A2085DA42C7D678400698923 /* GoogleSignInSwift */; };
 		A2085DC62C7EB37400698923 /* ChatListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2085DC52C7EB37400698923 /* ChatListViewController.swift */; };
@@ -48,7 +49,6 @@
 		A2F9FE532C89D9CE004D7FF6 /* FirebaseRealtimeDatabaseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2F9FE522C89D9CE004D7FF6 /* FirebaseRealtimeDatabaseManager.swift */; };
 		A2F9FE552C89E082004D7FF6 /* ChatRoomViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2F9FE542C89E082004D7FF6 /* ChatRoomViewModel.swift */; };
 		A2F9FE592C8C2193004D7FF6 /* MyInfoEditVIewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2F9FE582C8C2193004D7FF6 /* MyInfoEditVIewModel.swift */; };
-		A2F9FE5B2C8C4D8C004D7FF6 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = A2F9FE5A2C8C4D8C004D7FF6 /* GoogleService-Info.plist */; };
 		A2F9FE602C8C4DC8004D7FF6 /* FirebaseStorageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2F9FE5F2C8C4DC8004D7FF6 /* FirebaseStorageManager.swift */; };
 		A2F9FE6C2C8DAF18004D7FF6 /* Pet.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2F9FE6B2C8DAF18004D7FF6 /* Pet.swift */; };
 		A2F9FE6E2C8DAFD8004D7FF6 /* PuppyRegistrationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2F9FE6D2C8DAFD8004D7FF6 /* PuppyRegistrationViewModel.swift */; };
@@ -117,6 +117,7 @@
 		56FD04922C856C4200EBCDCD /* FindingPasswordViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FindingPasswordViewController.swift; sourceTree = "<group>"; };
 		56FD04942C856C6E00EBCDCD /* ChangePasswordViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChangePasswordViewController.swift; sourceTree = "<group>"; };
 		A2024BB32C9023030049DD8A /* PuppyTing.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = PuppyTing.entitlements; sourceTree = "<group>"; };
+		A2024BB82C9CD6D60049DD8A /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		A2085DC52C7EB37400698923 /* ChatListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatListViewController.swift; sourceTree = "<group>"; };
 		A2085DC72C7EB4BA00698923 /* ChatTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatTableViewCell.swift; sourceTree = "<group>"; };
 		A2085DC92C80395B00698923 /* Member.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Member.swift; sourceTree = "<group>"; };
@@ -131,7 +132,6 @@
 		A2F9FE522C89D9CE004D7FF6 /* FirebaseRealtimeDatabaseManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseRealtimeDatabaseManager.swift; sourceTree = "<group>"; };
 		A2F9FE542C89E082004D7FF6 /* ChatRoomViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatRoomViewModel.swift; sourceTree = "<group>"; };
 		A2F9FE582C8C2193004D7FF6 /* MyInfoEditVIewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyInfoEditVIewModel.swift; sourceTree = "<group>"; };
-		A2F9FE5A2C8C4D8C004D7FF6 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		A2F9FE5F2C8C4DC8004D7FF6 /* FirebaseStorageManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseStorageManager.swift; sourceTree = "<group>"; };
 		A2F9FE6B2C8DAF18004D7FF6 /* Pet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Pet.swift; sourceTree = "<group>"; };
 		A2F9FE6D2C8DAFD8004D7FF6 /* PuppyRegistrationViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PuppyRegistrationViewModel.swift; sourceTree = "<group>"; };
@@ -148,7 +148,6 @@
 		C29FD01C2C9BFEA900F8951D /* MyBlockListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyBlockListViewController.swift; sourceTree = "<group>"; };
 		C29FD01E2C9BFEDC00F8951D /* BlockListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlockListViewModel.swift; sourceTree = "<group>"; };
 		C29FD0202C9C408400F8951D /* MyFeedManageViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyFeedManageViewModel.swift; sourceTree = "<group>"; };
-		C29FD0962C9C995000F8951D /* PuppyTing copy-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "PuppyTing copy-Info.plist"; path = "/Users/t2023-m0112/Desktop/MyRepository/PuppyTing/PuppyTing copy-Info.plist"; sourceTree = "<absolute>"; };
 		E70DB3442C7F0CB60073B3F8 /* PostTingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostTingViewController.swift; sourceTree = "<group>"; };
 		E70DB3462C7F0CD00073B3F8 /* DetailTingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailTingViewController.swift; sourceTree = "<group>"; };
 		E70DB3482C7F3F060073B3F8 /* UIViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIViewController.swift; sourceTree = "<group>"; };
@@ -298,7 +297,6 @@
 				E738FB752C7C62EE004696BD /* PuppyTing */,
 				E738FB742C7C62EE004696BD /* Products */,
 				A2F9FE5C2C8C4DAD004D7FF6 /* Frameworks */,
-				C29FD0962C9C995000F8951D /* PuppyTing copy-Info.plist */,
 			);
 			sourceTree = "<group>";
 		};
@@ -322,7 +320,7 @@
 				E738FBA72C7C696C004696BD /* Assets */,
 				E738FB812C7C62F0004696BD /* LaunchScreen.storyboard */,
 				E738FB842C7C62F0004696BD /* Info.plist */,
-				A2F9FE5A2C8C4D8C004D7FF6 /* GoogleService-Info.plist */,
+				A2024BB82C9CD6D60049DD8A /* GoogleService-Info.plist */,
 			);
 			path = PuppyTing;
 			sourceTree = "<group>";
@@ -564,9 +562,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				E738FB802C7C62F0004696BD /* Assets.xcassets in Resources */,
+				A2024BB92C9CD6D60049DD8A /* GoogleService-Info.plist in Resources */,
 				A2F9FE772C8DF3CB004D7FF6 /* Config.xcconfig in Resources */,
 				E738FBAA2C7C6BB3004696BD /* .gitignore in Resources */,
-				A2F9FE5B2C8C4D8C004D7FF6 /* GoogleService-Info.plist in Resources */,
 				E738FB832C7C62F0004696BD /* Base in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

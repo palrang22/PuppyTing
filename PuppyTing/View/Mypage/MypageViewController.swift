@@ -474,8 +474,12 @@ class MypageViewController: UIViewController {
             print("회원 탈퇴 실패 \(error)")
             self.okAlert(title: "회원 탈퇴", message: "알 수 없는 이유로 회원 탈퇴에 실패했습니다.\n다시 한번 진행해주세요.")
         }).disposed(by: disposeBag)
+        viewModel.errorSubject.observe(on: MainScheduler.instance).subscribe(onNext: { error in
+            print("회원 탈퇴 실패 \(error)")
+            self.okAlert(title: "회원 탈퇴", message: "알 수 없는 이유로 회원 탈퇴에 실패했습니다.\n다시 한번 진행해주세요.")
+        })
         guard let user = Auth.auth().currentUser else { return }
-        viewModel.leaveMember(uuid: user.uid)
+        viewModel.deleteUser(user: user, vc: self)
     }
     
     // MARK: - Setup Menu Items
