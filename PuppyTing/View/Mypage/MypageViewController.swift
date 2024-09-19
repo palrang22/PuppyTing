@@ -35,7 +35,6 @@ class MypageViewController: UIViewController {
     private let viewModel = MyPageViewModel()
     private var memeber: Member? = nil {
         didSet {
-            // 데이터가 들어오면유저가 있는거임
             guard let member = memeber else { return }
             nickNameLabel.text = member.nickname
             myFootLabel.text = "내 발도장 \(member.footPrint)개"
@@ -103,7 +102,7 @@ class MypageViewController: UIViewController {
     
     private let puppyCollectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
-        layout.scrollDirection = .horizontal  // 가로 스크롤로 설정
+        layout.scrollDirection = .horizontal
         layout.minimumLineSpacing = 0
         layout.minimumInteritemSpacing = 0
 
@@ -242,8 +241,7 @@ class MypageViewController: UIViewController {
             .disposed(by: disposeBag)
         
         puppys.bind(to: puppyCollectionView.rx
-            .items(cellIdentifier: PuppyCollectionViewCell.identifier
-                   , cellType: PuppyCollectionViewCell.self)) { index, pet, cell in
+            .items(cellIdentifier: PuppyCollectionViewCell.identifier, cellType: PuppyCollectionViewCell.self)) { index, pet, cell in
                 cell.config(puppy: pet)
             }.disposed(by: disposeBag)
         
@@ -313,7 +311,6 @@ class MypageViewController: UIViewController {
             present(puppyRegistrationVC, animated: true, completion: nil)
         }
     }
-
 
     private func addPuppy(name: String, info: String, imageUrl: String?) {
         let tag = "태그 예시"
@@ -409,7 +406,6 @@ class MypageViewController: UIViewController {
         viewModel.fetchMemberInfo(uuid: user.uid)
     }
     
-    
     //MARK: 로그아웃 관련 메서드
     private func addButtonAction() {
         logOutButton.addTarget(self, action: #selector(logOut), for: .touchUpInside)
@@ -426,8 +422,6 @@ class MypageViewController: UIViewController {
         })
     }
     
-    
-    //MARK: Menu관련 메서드
     // MARK: - Setup Menu Items
     private func setupMenuItems() {
         let menuItems = ["내 피드 관리", "받은 산책 후기", "즐겨 찾는 친구", "차단 목록"]
@@ -439,7 +433,7 @@ class MypageViewController: UIViewController {
 
             // 버튼에 대한 탭 제스처 추가
             let tapGesture = UITapGestureRecognizer(target: self, action: #selector(menuItemTapped(_:)))
-            menuItem.tag = index
+            menuItem.tag = index // 메뉴 항목에 태그 부여
             menuItem.addGestureRecognizer(tapGesture)
 
             menuItem.snp.makeConstraints {
@@ -493,16 +487,14 @@ class MypageViewController: UIViewController {
 
         switch selectedIndex {
         case 0:
-            navigateToMyFeedManagement() // 내 피드 관리 페이지로 이동
+            navigateToMyFeedManagement()
         case 1:
-            // 다른 페이지로 이동 (받은 산책 후기)
             break
         case 2:
             let favorireListVC = FavoriteListViewController()
             navigationController?.pushViewController(favorireListVC, animated: true)
         case 3:
-            // 다른 페이지로 이동 (차단 목록)
-            break
+            navigateToMyBlockList()
         default:
             break
         }
@@ -518,8 +510,15 @@ class MypageViewController: UIViewController {
         }
     }
     
-    
-    
+    // MARK: - 내 차단 목록으로 이동
+    private func navigateToMyBlockList() { // kkh
+        let myBlockListViewController = MyBlockListViewController()
+        if let navigationController = self.navigationController {
+            navigationController.pushViewController(myBlockListViewController, animated: true)
+        } else {
+            present(myBlockListViewController, animated: true, completion: nil)
+        }
+    }
     
     // MARK: - Setup UI
     private func setupUI() {
@@ -641,7 +640,6 @@ class MypageViewController: UIViewController {
             $0.width.height.equalTo(logOutButton)
         }
 
-        //collectionView.dataSource = self
         puppyCollectionView.register(PuppyCollectionViewCell.self, forCellWithReuseIdentifier: PuppyCollectionViewCell.identifier)
 
         setupMenuItems() // 메뉴 항목을 설정하는 함수 호출
@@ -650,15 +648,7 @@ class MypageViewController: UIViewController {
 
 // MARK: - UICollectionViewDelegateFlowLayout
 extension MypageViewController: UICollectionViewDelegateFlowLayout {
-    
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         return CGSize(width: collectionView.bounds.width, height: collectionView.bounds.height - 20)
     }
 }
-
-//extension MypageViewController: UICollectionViewDelegate {
-//    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-//        print("클릭됨")
-//        navigateToPuppyEdit(at: indexPath)
-//    }
-//}
