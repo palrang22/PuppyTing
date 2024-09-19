@@ -11,15 +11,20 @@ import FirebaseAuth
 import RxCocoa
 import RxSwift
 
+protocol DetailTingViewControllerDelegate: AnyObject {
+    func didDeleteFeed()
+}
+
 class DetailTingViewController: UIViewController {
     
     var tingFeedModels: TingFeedModel?
+    weak var delegate: DetailTingViewControllerDelegate? // Delegate 프로퍼티
     let fireStoreDatabase = FireStoreDatabaseManager.shared
     private let disposeBag = DisposeBag()
     
     private let kakaoMapViewController = KakaoMapViewController()
-    
-    //MARK: Component 선언
+
+    // MARK: Component 선언
     private let scrollView: UIScrollView = {
         let scroll = UIScrollView()
         scroll.showsVerticalScrollIndicator = false
@@ -72,20 +77,10 @@ class DetailTingViewController: UIViewController {
     
     private let content: UILabel = {
         let label = UILabel()
-        let style = NSMutableParagraphStyle()
-        style.lineSpacing = 6
-        let styleText = NSAttributedString(string:
-                                            "내용1\n내용2\n내용3\n내용4",
-                                           attributes: [
-                                            .font: UIFont.systemFont(ofSize: 16, weight: .medium),
-                                            .paragraphStyle: style])
-        label.attributedText = styleText
         label.numberOfLines = 0
         label.textAlignment = .left
-        label.lineBreakMode = .byTruncatingTail
         return label
     }()
-
     
     private lazy var blockButton: UIButton = {
         let button = UIButton()
@@ -199,21 +194,21 @@ class DetailTingViewController: UIViewController {
             }
             
             FireStoreDatabaseManager.shared.findMemeber(uuid: model.userid)
-                            .subscribe(onSuccess: { [weak self] member in
-                                self?.nameLabel.text = member.nickname
-                                self?.footPrintLabel.text = "🐾 발도장 \(member.footPrint)개"
-                                
-                                if member.profileImage == "defaultProfileImage" {
-                                                    self?.profilePic.image = UIImage(named: "defaultProfileImage")
-                                } else {
-                                    if let profilePic = self?.profilePic {
-                                        KingFisherManager.shared.loadProfileImage(urlString: member.profileImage, into: profilePic, placeholder: UIImage(named: "defaultProfileImage"))
-                                    }
-                                }
-                                
-                            }, onFailure: { error in
-                                print("멤버 찾기 실패: \(error)")
-                            }).disposed(by: disposeBag)
+                .subscribe(onSuccess: { [weak self] member in
+                    self?.nameLabel.text = member.nickname
+                    self?.footPrintLabel.text = "🐾 발도장 \(member.footPrint)개"
+                    
+                    if member.profileImage == "defaultProfileImage" {
+                        self?.profilePic.image = UIImage(named: "defaultProfileImage")
+                    } else {
+                        if let profilePic = self?.profilePic {
+                            KingFisherManager.shared.loadProfileImage(urlString: member.profileImage, into: profilePic, placeholder: UIImage(named: "defaultProfileImage"))
+                        }
+                    }
+                    
+                }, onFailure: { error in
+                    print("멤버 찾기 실패: \(error)")
+                }).disposed(by: disposeBag)
             
             setButton(model: model)
         }
@@ -255,31 +250,32 @@ class DetailTingViewController: UIViewController {
     private func bind() {
         deleteButton.rx.tap
             .subscribe(onNext: { [weak self] in
-                    self?.okAlertWithCancel(
-                        title: "게시물 삭제",
-                        message: "게시물을 삭제하시겠습니까?",
-                        okActionTitle: "삭제",
-                        cancelActionTitle: "취소",
-                        okActionHandler: { _ in
-                            guard let postid = self?.tingFeedModels?.postid else { return }
-                            self?.fireStoreDatabase.deleteDocument(from: "tingFeeds", documentId: postid)
-                                .subscribe(onSuccess: { [weak self] in
-                                    self?.okAlert(
-                                        title: "삭제 완료",
-                                        message: "게시물이 성공적으로 삭제되었습니다.",
-                                        okActionHandler: { _ in
-                                            self?.navigationController?.popViewController(animated: true)
-                                        }
-                                    )
-                                }, onFailure: { error in
-                                    print("삭제 실패: \(error)")
-                                    self?.okAlert(
-                                        title: "삭제 실패",
-                                        message: "게시물 삭제에 실패했습니다. 다시 시도해주세요. 해당 문제가 지속될 경우 문의 게시판에 제보해주세요."
-                                    )
-                                }).disposed(by: self?.disposeBag ?? DisposeBag())
-                        }
-                    )
+                self?.okAlertWithCancel(
+                    title: "게시물 삭제",
+                    message: "게시물을 삭제하시겠습니까?",
+                    okActionTitle: "삭제",
+                    cancelActionTitle: "취소",
+                    okActionHandler: { _ in
+                        guard let postid = self?.tingFeedModels?.postid else { return }
+                        self?.fireStoreDatabase.deleteDocument(from: "tingFeeds", documentId: postid)
+                            .subscribe(onSuccess: { [weak self] in
+                                self?.delegate?.didDeleteFeed() // Delegate 호출
+                                self?.okAlert(
+                                    title: "삭제 완료",
+                                    message: "게시물이 성공적으로 삭제되었습니다.",
+                                    okActionHandler: { _ in
+                                        self?.navigationController?.popViewController(animated: true)
+                                    }
+                                )
+                            }, onFailure: { error in
+                                print("삭제 실패: \(error)")
+                                self?.okAlert(
+                                    title: "삭제 실패",
+                                    message: "게시물 삭제에 실패했습니다. 다시 시도해주세요."
+                                )
+                            }).disposed(by: self?.disposeBag ?? DisposeBag())
+                    }
+                )
             }).disposed(by: disposeBag)
         
         blockButton.rx.tap
@@ -288,15 +284,15 @@ class DetailTingViewController: UIViewController {
                 self?.fireStoreDatabase.blockUser(userId: userid)
                     .subscribe(onSuccess: { [weak self] in
                         self?.okAlertWithCancel(
-                                        title: "사용자 차단",
-                                        message: "사용자를 차단하시겠습니까? 차단 이후 사용자의 게시물이 보이지 않습니다.",
-                                        okActionTitle: "차단",
-                                        okActionHandler: { _ in
-                                        self!.okAlert(title: "차단 완료", message: "사용자가 성공적으로 차단되었습니다.")
-                                    })
+                            title: "사용자 차단",
+                            message: "사용자를 차단하시겠습니까? 차단 이후 사용자의 게시물이 보이지 않습니다.",
+                            okActionTitle: "차단",
+                            okActionHandler: { _ in
+                                self!.okAlert(title: "차단 완료", message: "사용자가 성공적으로 차단되었습니다.")
+                            })
                     }, onFailure: { error in
                         print("차단 실패")
-                        self!.okAlert(title: "차단 실패", message: "사용자 차단에 실패했습니다. 다시 시도해주세요.\n해당 문제가 지속될 경우 문의 게시판에 제보해주세요.")
+                        self!.okAlert(title: "차단 실패", message: "사용자 차단에 실패했습니다. 다시 시도해주세요.")
                     }).disposed(by: self!.disposeBag)
             }).disposed(by: disposeBag)
         
@@ -325,8 +321,8 @@ class DetailTingViewController: UIViewController {
                                     self?.navigationController?.popViewController(animated: true)
                                 })
                             }, onFailure: { error in
-                            print("신고 실패")
-                                self?.okAlert(title: "신고 실패", message: "게시글 신고에 실패했습니다. 다시 시도해주세요.\n해당 문제가 지속될 경우 문의 게시판에 제보해주세요.")
+                                print("신고 실패")
+                                self?.okAlert(title: "신고 실패", message: "게시글 신고에 실패했습니다. 다시 시도해주세요.")
                             }).disposed(by: self!.disposeBag)
                     }
                     reportAlert.addAction(action)
