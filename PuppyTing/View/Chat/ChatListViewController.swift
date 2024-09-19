@@ -44,10 +44,6 @@ class ChatListViewController: UIViewController, UITableViewDelegate, UISearchBar
         
         navigationController?.navigationBar.prefersLargeTitles = true
         navigationItem.title = "채팅"
-
-        // Search Button 추가
-        let searchButton = UIBarButtonItem(barButtonSystemItem: .search, target: self, action: #selector(showSearchBar))
-        navigationItem.rightBarButtonItem = searchButton
         
         view.backgroundColor = .white
         view.addSubview(tableView)
