@@ -62,6 +62,9 @@
 		C29FCFC12C88566000F8951D /* MyFeedManageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C29FCFC02C88566000F8951D /* MyFeedManageViewController.swift */; };
 		C29FCFC32C88610600F8951D /* MyFeedTableViCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C29FCFC22C88610600F8951D /* MyFeedTableViCell.swift */; };
 		C29FCFC92C8DF25300F8951D /* DetailTingViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C29FCFC82C8DF25300F8951D /* DetailTingViewModel.swift */; };
+		C29FD01B2C9BFE5F00F8951D /* MyBlockListTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C29FD01A2C9BFE5F00F8951D /* MyBlockListTableViewCell.swift */; };
+		C29FD01D2C9BFEA900F8951D /* MyBolckListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C29FD01C2C9BFEA900F8951D /* MyBolckListViewController.swift */; };
+		C29FD01F2C9BFEDC00F8951D /* BlockListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C29FD01E2C9BFEDC00F8951D /* BlockListViewModel.swift */; };
 		E70DB3452C7F0CB60073B3F8 /* PostTingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E70DB3442C7F0CB60073B3F8 /* PostTingViewController.swift */; };
 		E70DB3472C7F0CD00073B3F8 /* DetailTingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E70DB3462C7F0CD00073B3F8 /* DetailTingViewController.swift */; };
 		E70DB3492C7F3F060073B3F8 /* UIViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E70DB3482C7F3F060073B3F8 /* UIViewController.swift */; };
@@ -142,6 +145,9 @@
 		C29FCFC02C88566000F8951D /* MyFeedManageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyFeedManageViewController.swift; sourceTree = "<group>"; };
 		C29FCFC22C88610600F8951D /* MyFeedTableViCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyFeedTableViCell.swift; sourceTree = "<group>"; };
 		C29FCFC82C8DF25300F8951D /* DetailTingViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailTingViewModel.swift; sourceTree = "<group>"; };
+		C29FD01A2C9BFE5F00F8951D /* MyBlockListTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyBlockListTableViewCell.swift; sourceTree = "<group>"; };
+		C29FD01C2C9BFEA900F8951D /* MyBolckListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyBolckListViewController.swift; sourceTree = "<group>"; };
+		C29FD01E2C9BFEDC00F8951D /* BlockListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlockListViewModel.swift; sourceTree = "<group>"; };
 		E70DB3442C7F0CB60073B3F8 /* PostTingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostTingViewController.swift; sourceTree = "<group>"; };
 		E70DB3462C7F0CD00073B3F8 /* DetailTingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailTingViewController.swift; sourceTree = "<group>"; };
 		E70DB3482C7F3F060073B3F8 /* UIViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIViewController.swift; sourceTree = "<group>"; };
@@ -312,6 +318,7 @@
 				A2F9FE582C8C2193004D7FF6 /* MyInfoEditVIewModel.swift */,
 				A2F9FE6D2C8DAFD8004D7FF6 /* PuppyRegistrationViewModel.swift */,
 				56EF72412C94315C00CC919F /* FavoriteListViewModel.swift */,
+				C29FD01E2C9BFEDC00F8951D /* BlockListViewModel.swift */,
 			);
 			path = MyPage;
 			sourceTree = "<group>";
@@ -406,6 +413,8 @@
 				C29FCFC22C88610600F8951D /* MyFeedTableViCell.swift */,
 				5602B08B2C8E9AD90060F03B /* FavoriteListViewController.swift */,
 				5602B0892C8E91B20060F03B /* FavoriteListTableViewCell.swift */,
+				C29FD01A2C9BFE5F00F8951D /* MyBlockListTableViewCell.swift */,
+				C29FD01C2C9BFEA900F8951D /* MyBolckListViewController.swift */,
 			);
 			path = Mypage;
 			sourceTree = "<group>";
@@ -582,6 +591,7 @@
 				23607C022C8A930100A23716 /* UIButton.swift in Sources */,
 				A2085DC82C7EB4BA00698923 /* ChatTableViewCell.swift in Sources */,
 				E738FBAD2C7C6D2E004696BD /* TabBarController.swift in Sources */,
+				C29FD01B2C9BFE5F00F8951D /* MyBlockListTableViewCell.swift in Sources */,
 				E7F598322C8475CC00FE8900 /* NetworkManager.swift in Sources */,
 				A2085DC62C7EB37400698923 /* ChatListViewController.swift in Sources */,
 				56EF72422C94315C00CC919F /* FavoriteListViewModel.swift in Sources */,
@@ -612,9 +622,11 @@
 				56D686CC2C7DC88700B00880 /* PptLoginViewController.swift in Sources */,
 				5602B08C2C8E9AD90060F03B /* FavoriteListViewController.swift in Sources */,
 				A2F9FE4D2C896EE0004D7FF6 /* AppController.swift in Sources */,
+				C29FD01D2C9BFEA900F8951D /* MyBolckListViewController.swift in Sources */,
 				E738FB792C7C62EE004696BD /* SceneDelegate.swift in Sources */,
 				5602B0692C8AEA340060F03B /* ProfileCell.swift in Sources */,
 				C29FCFC92C8DF25300F8951D /* DetailTingViewModel.swift in Sources */,
+				C29FD01F2C9BFEDC00F8951D /* BlockListViewModel.swift in Sources */,
 				E70DB34D2C8067B50073B3F8 /* SearchAddressViewController.swift in Sources */,
 				A2085DCF2C804C7300698923 /* FirebaseAuthManager.swift in Sources */,
 			);

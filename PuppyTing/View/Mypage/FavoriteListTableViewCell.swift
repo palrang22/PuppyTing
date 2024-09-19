@@ -13,6 +13,8 @@ class FavoriteListTableViewCell: UITableViewCell {
     
     static let identifier = "FavoriteListTableViewCell"
     
+    var onUnfavoriteButtonTapped: (() -> Void)?
+    
     private let profileImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFill
@@ -34,6 +36,7 @@ class FavoriteListTableViewCell: UITableViewCell {
         button.backgroundColor = UIColor.puppyPurple
         button.layer.cornerRadius = 10
         button.setTitleColor(.white, for: .normal)
+        button.addTarget(self, action: #selector(unfavoriteButtonTapped), for: .touchUpInside)
         return button
     }()
     
@@ -45,21 +48,22 @@ class FavoriteListTableViewCell: UITableViewCell {
         contentView.addSubview(unfavoriteButton)
         
         profileImageView.snp.makeConstraints {
-            $0.top.leading.equalTo(contentView).offset(10)
+            $0.top.equalTo(contentView).offset(10)
+            $0.leading.equalTo(contentView).offset(20)
             $0.width.height.equalTo(60)
         }
         
         nicknameLabel.snp.makeConstraints {
-            $0.leading.equalTo(profileImageView.snp.trailing).offset(10)
+            $0.leading.equalTo(profileImageView.snp.trailing).offset(15)
             $0.centerY.equalTo(profileImageView)
             $0.trailing.lessThanOrEqualTo(unfavoriteButton.snp.leading).offset(-10)
         }
         
         unfavoriteButton.snp.makeConstraints {
-            $0.trailing.equalTo(contentView).offset(-10)
+            $0.trailing.equalTo(contentView).offset(-20)
             $0.centerY.equalTo(profileImageView)
             $0.width.equalTo(80)
-            $0.height.equalTo(30)
+            $0.height.equalTo(44)
         }
         
         contentView.snp.makeConstraints {
@@ -72,32 +76,17 @@ class FavoriteListTableViewCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func configure(with favorite: Favorite) {
-        nicknameLabel.text = favorite.nickname
-        // 프로필 이미지 불러오기
-        if let profileImageURL = favorite.profileImageURL, !profileImageURL.isEmpty {
-            loadImage(from: profileImageURL)
-        } else {
-            profileImageView.image = UIImage(named: "defaultProfileImage") // 기본 이미지
-        }
+    @objc private func unfavoriteButtonTapped() {
+        onUnfavoriteButtonTapped?()
     }
     
-    // URL로부터 이미지를 비동기적으로 불러오는 함수 
-    private func loadImage(from urlString: String) {
-        guard let url = URL(string: urlString) else { return }
-        
-        URLSession.shared.dataTask(with: url) { [weak self] data, response, error in
-            if let error = error {
-                print("이미지 로딩 실패: \(error)")
-                return
-            }
-            
-            guard let data = data, let image = UIImage(data: data) else { return }
-            
-            // UI 업데이트는 메인 스레드에서 수행
-            DispatchQueue.main.async {
-                self?.profileImageView.image = image
-            }
-        }.resume()
+    func configure(with favorite: Favorite) {
+        nicknameLabel.text = favorite.nickname
+        // 프로필 이미지 불러오기 - 킹피셔 코드 사용
+        if let profileImageURL = favorite.profileImageURL, !profileImageURL.isEmpty {
+            KingFisherManager.shared.loadProfileImage(urlString: profileImageURL, into: profileImageView)
+        } else {
+            profileImageView.image = UIImage(named: "defaultProfileImage")
+        }
     }
 }
