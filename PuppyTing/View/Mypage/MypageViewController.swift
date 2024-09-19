@@ -37,7 +37,7 @@ class MypageViewController: UIViewController {
         didSet {
             guard let member = memeber else { return }
             nickNameLabel.text = member.nickname
-            myFootLabel.text = "내 발도장 \(member.footPrint)개"
+            myFootLabel.text = "🐾 내 발도장 \(member.footPrint)개"
         }
     }
 
@@ -179,23 +179,29 @@ class MypageViewController: UIViewController {
     
     private let logOutButton: UIButton = {
         let button = UIButton()
-        button.setTitle("로그아웃", for: .normal)
-        button.titleLabel?.font = UIFont.systemFont(ofSize: 16)
-        button.layer.cornerRadius = 10
-        button.layer.masksToBounds = true
-        button.setTitleColor(.white, for: .normal)
-        button.backgroundColor = .puppyPurple
+        let attributedTitle = NSAttributedString(string: "로그아웃", attributes: [
+            .font: UIFont.systemFont(ofSize: 16),
+            .foregroundColor: UIColor.darkGray,
+            .underlineStyle: NSUnderlineStyle.single.rawValue
+        ])
+        
+        button.setAttributedTitle(attributedTitle, for: .normal)
+        button.backgroundColor = .clear // 배경색 투명
+        button.layer.cornerRadius = 0 // 모서리 둥글기 제거
         return button
     }()
     
     private let memberLeaveButton: UIButton = {
         let button = UIButton()
-        button.setTitle("회원탈퇴", for: .normal)
-        button.titleLabel?.font = UIFont.systemFont(ofSize: 16)
-        button.layer.cornerRadius = 10
-        button.layer.masksToBounds = true
-        button.setTitleColor(.white, for: .normal)
-        button.backgroundColor = .puppyPurple
+        let attributedTitle = NSAttributedString(string: "회원탈퇴", attributes: [
+            .font: UIFont.systemFont(ofSize: 16),
+            .foregroundColor: UIColor.darkGray,
+            .underlineStyle: NSUnderlineStyle.single.rawValue
+        ])
+        
+        button.setAttributedTitle(attributedTitle, for: .normal)
+        button.backgroundColor = .clear
+        button.layer.cornerRadius = 0
         return button
     }()
     
@@ -451,7 +457,7 @@ class MypageViewController: UIViewController {
     
     // MARK: - Setup Menu Items
     private func setupMenuItems() {
-        let menuItems = ["내 피드 관리", "받은 산책 후기", "즐겨 찾는 친구", "차단 목록"]
+        let menuItems = ["내 피드 관리", "즐겨 찾는 친구", "차단 목록"]
         var previousItem: UIView? = nil
 
         for (index, itemName) in menuItems.enumerated() {
@@ -516,11 +522,9 @@ class MypageViewController: UIViewController {
         case 0:
             navigateToMyFeedManagement()
         case 1:
-            break
-        case 2:
             let favorireListVC = FavoriteListViewController()
             navigationController?.pushViewController(favorireListVC, animated: true)
-        case 3:
+        case 2:
             navigateToMyBlockList()
         default:
             break
@@ -615,7 +619,7 @@ class MypageViewController: UIViewController {
         }
 
         menuContainerView.snp.makeConstraints {
-            $0.height.equalTo(250)
+            $0.height.equalTo(190)
         }
 
         let upperButtonsStackView = UIStackView(arrangedSubviews: [customerSupportButton, faqButton, noticeButton])

@@ -35,8 +35,16 @@ class TabBarController: UITabBarController {
         )
         
         self.setViewControllers([tingVC, chatVC, myPageVC], animated: true)
-        // Do any additional setup after loading the view.
         
+        NotificationCenter.default.addObserver(self, selector: #selector(switchToMyPageTab), name: NSNotification.Name("SwitchToMyPage"), object: nil)
+    }
+    
+    @objc func switchToMyPageTab() {
+        self.selectedIndex = 2
+    }
+        
+    deinit {
+        NotificationCenter.default.removeObserver(self)
     }
     
 }

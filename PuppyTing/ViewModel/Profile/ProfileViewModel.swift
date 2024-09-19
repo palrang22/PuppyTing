@@ -17,8 +17,8 @@ class ProfileViewModel {
     let bookmarkSuccess = PublishSubject<Void>()
     let bookmarkError = PublishSubject<Error>()
     
-    let blockSuccess = PublishSubject<Void>()
-    let blockError = PublishSubject<Error>()
+    let footPrintSuccess = PublishSubject<Void>()
+    let footPrintError = PublishSubject<Error>()
     
     func addBookmark(bookmarkId: String) {
         FireStoreDatabaseManager.shared.addBookmark(forUserId: Auth.auth().currentUser?.uid ?? "", bookmarkId: bookmarkId)
@@ -30,12 +30,23 @@ class ProfileViewModel {
             }).disposed(by: disposeBag)
     }
     
-    func blockUser(userId: String) {
-        FireStoreDatabaseManager.shared.blockUser(userId: userId).observe(on: MainScheduler.instance).subscribe(onSuccess: { [weak self] in
-            self?.blockSuccess.onNext(())
-        }, onFailure: { [weak self] error in
-            self?.blockError.onNext(error)
+    func blockedUser(uuid: String) {
+        FireStoreDatabaseManager.shared.blockUser(userId: uuid).observe(on: MainScheduler.instance).subscribe(onSuccess: { _ in
+            // 성공
+        }, onFailure: { error in
+            // 실패
         }).disposed(by: disposeBag)
     }
+    
+    func addFootPrint(footPrintId: String) {
+        FireStoreDatabaseManager.shared.addFootPrint(toUserId: footPrintId)
+            .observe(on: MainScheduler.instance)
+            .subscribe(onSuccess: { [weak self] in
+                self?.footPrintSuccess.onNext(())
+            }, onFailure: { [weak self] error in
+                self?.footPrintError.onNext(error)
+            }).disposed(by: disposeBag)
+    }
+
 }
 

@@ -41,8 +41,9 @@ class ProfileViewController: UIViewController {
         FireStoreDatabaseManager.shared.findMemeber(uuid: userid)
             .subscribe(onSuccess: { [weak self] member in
                 self?.member = member
+                self?.profileCell.parentViewController = self
                 self?.profileCell.configure(with: member)
-                self?.profileCell.bookmarkId = member.uuid
+                self?.profileCell.memberId = member.uuid
                 self?.profileCell.viewModel = ProfileViewModel()
             }, onFailure: { error in
                 print("멤버 찾기 실패: \(error)")

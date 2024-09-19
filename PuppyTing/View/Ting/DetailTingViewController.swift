@@ -149,6 +149,8 @@ class DetailTingViewController: UIViewController {
         let nameTapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapProfile))
         nameLabel.isUserInteractionEnabled = true
         nameLabel.addGestureRecognizer(nameTapGesture)
+        
+        addButtonAction()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -209,9 +211,61 @@ class DetailTingViewController: UIViewController {
                 }, onFailure: { error in
                     print("멤버 찾기 실패: \(error)")
                 }).disposed(by: disposeBag)
-            
+            writerId = model.userid
+            settingData()
             setButton(model: model)
         }
+    }
+    
+    var writerId: String? = nil
+    let userid = Auth.auth().currentUser?.uid
+    var users:[String] = []
+    private func settingData() {
+        guard let writerId = writerId, let userId = userid else { return }
+        users = [userId, writerId]
+    }
+    
+    private func findUserId() -> String {
+        guard let user = Auth.auth().currentUser else { return "" }
+        return user.uid
+    }
+    
+    private func createChatRoom(chatRoomName: String, users: [String]) {
+        FirebaseRealtimeDatabaseManager.shared.checkIfChatRoomExists(userIds: users) { exists, chatId in
+            if exists {
+                if let roomId = chatId {
+                    self.moveChatRoom(roomId: roomId, users: users)
+                }
+            } else {
+                FirebaseRealtimeDatabaseManager.shared.createChatRoom(name: chatRoomName, users: users)
+                    .observe(on: MainScheduler.instance).subscribe(onSuccess: { [weak self] roomId in
+                    self?.moveChatRoom(roomId: roomId, users: users)
+                }).disposed(by: self.disposeBag)
+            }
+        }
+    }
+    
+    private func moveChatRoom(roomId: String, users: [String]) {
+        let chatVC = ChatViewController()
+        chatVC.roomId = roomId
+        let userId = findUserId()
+        let otherUser = users.first == userId ? users.last : users.first
+        if let otherUser = otherUser {
+            FireStoreDatabaseManager.shared.findMemberNickname(uuid: otherUser) { nickname in
+                chatVC.titleText = nickname
+                self.navigationController?.pushViewController(chatVC, animated: true)
+            }
+        }
+    }
+    
+    private func addButtonAction() {
+        messageSendButton.addTarget(self, action: #selector(createRoom), for: .touchUpInside)
+    }
+    
+    @objc
+    private func createRoom() {
+        guard let name = nameLabel.text else { return }
+        createChatRoom(chatRoomName: name, users: users)
     }
     
     private func configMap(with coordinate: CLLocationCoordinate2D) {

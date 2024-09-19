@@ -29,7 +29,7 @@ class TingViewController: UIViewController {
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collectionView.register(TingCollectionViewCell.self,
                                 forCellWithReuseIdentifier: TingCollectionViewCell.id)
-        collectionView.refreshControl = refreshControl
+        //collectionView.refreshControl = refreshControl
         collectionView.delegate = self
         collectionView.dataSource = self
         return collectionView
