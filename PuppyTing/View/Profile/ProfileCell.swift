@@ -103,36 +103,18 @@ class ProfileCell: UICollectionViewCell {
     }
     
     func configure(with member: Member) {
-           nicknameLabel.text = member.nickname
-           footNumberLabel.text = "\(member.footPrint)개"
-           
-           // 프로필 이미지가 있으면 가져오고 없으면 기본프로필로 설정
-           if !member.profileImage.isEmpty {
-               loadImage(from: member.profileImage)
-           } else {
-               profileImageView.image = UIImage(named: "defaultProfileImage") // 기본 이미지
-           }
-       }
+        nicknameLabel.text = member.nickname
+        footNumberLabel.text = "\(member.footPrint)개"
         
-    // 프로필 이미지가 있을 때 이미지를 불러옴
-       private func loadImage(from urlString: String) {
-           guard let url = URL(string: urlString) else { return }
-           
-           URLSession.shared.dataTask(with: url) { [weak self] data, response, error in
-               if let error = error {
-                   print("이미지 로딩 실패: \(error)")
-                   return
-               }
-               
-               guard let data = data, let image = UIImage(data: data) else { return }
-               
-               // UI는 메인 스레드에서 업데이트
-               DispatchQueue.main.async {
-                   self?.profileImageView.image = image
-               }
-           }.resume()
-       }
-    
+        // 프로필 이미지 로드 - 킹피셔매니저 코드 사용
+        if !member.profileImage.isEmpty {
+            KingFisherManager.shared.loadProfileImage(urlString: member.profileImage, into: profileImageView)
+        } else {
+            profileImageView.image = UIImage(named: "defaultProfileImage")
+        }
+            
+    }
+            
     override init(frame: CGRect) {
         super.init(frame: frame)
         
