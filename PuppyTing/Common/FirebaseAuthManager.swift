@@ -250,4 +250,19 @@ class FirebaseAuthManager {
         return hashedData.map { String(format: "%02x", $0) }.joined()
     }
     
+    // 승환파크
+    func memberDelete() -> Single<Bool> {
+        return Single.create { single in
+            let user = Auth.auth().currentUser
+            user?.delete(completion: { error in
+                if let error = error {
+                    single(.failure(error))
+                } else {
+                    single(.success(true))
+                }
+            })
+            return Disposables.create()
+        }
+    }
+    
 }
