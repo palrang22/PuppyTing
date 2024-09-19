@@ -1,3 +1,4 @@
+import SafariServices
 import UIKit
 
 import FirebaseAuth
@@ -412,14 +413,37 @@ class MypageViewController: UIViewController {
         viewModel.fetchMemberInfo(uuid: user.uid)
     }
     
-    //MARK: 로그아웃 관련 메서드
+    //MARK: Button 관련 메서드
     private func addButtonAction() {
+        customerSupportButton.addTarget(self, action: #selector(customerSupportButtonTapped), for: .touchUpInside)
+        faqButton.addTarget(self, action: #selector(faqButtonTapped), for: .touchUpInside)
+        noticeButton.addTarget(self, action: #selector(noticeButtonTapped), for: .touchUpInside)
+        
         logOutButton.addTarget(self, action: #selector(logOut), for: .touchUpInside)
         memberLeaveButton.addTarget(self, action: #selector(leaveMemberButtonTap), for: .touchUpInside)
     }
     
-    @objc
-    private func logOut() {
+    private func openSafariViewController(with urlString: String) {
+        if let url = URL(string: urlString) {
+            let safariVC = SFSafariViewController(url: url)
+            safariVC.modalPresentationStyle = .overFullScreen
+            present(safariVC, animated: true, completion: nil)
+        }
+    }
+
+    @objc private func customerSupportButtonTapped() {
+        openSafariViewController(with: "https://www.notion.so/puppyting/10607b04241580978441db48ee43051e?v=10607b04241580909c97000c9a8c5d7c&pvs=4")
+    }
+
+    @objc private func faqButtonTapped() {
+        openSafariViewController(with: "https://www.notion.so/puppyting/10607b04241580629ff1cce4943f69d5?v=fff07b04241581059fe0000c26caa43e&pvs=4")
+    }
+
+    @objc private func noticeButtonTapped() {
+        openSafariViewController(with: "https://www.notion.so/puppyting/10607b04241580238ca9f2488d375fc2?v=4a5aa6199a8f4a949fad58b78a4d1913&pvs=4")
+    }
+    
+    @objc private func logOut() {
         okAlertWithCancel(title: "로그아웃",
                           message: "정말로 로그아웃 하시겠습니까?",
                           okActionTitle: "아니오",
@@ -430,8 +454,7 @@ class MypageViewController: UIViewController {
     }
     
     //MARK: 회원 탈퇴 관련 메서드
-    @objc
-    private func leaveMemberButtonTap() {
+    @objc private func leaveMemberButtonTap() {
         okAlertWithCancel(title: "회원 탈퇴",
                 message: "정말로 탈퇴하겠습니까?",
                 okActionTitle: "아니요",
@@ -681,5 +704,13 @@ class MypageViewController: UIViewController {
 extension MypageViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         return CGSize(width: collectionView.bounds.width, height: collectionView.bounds.height - 20)
+    }
+}
+
+extension MypageViewController: UIScrollViewDelegate {
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        let offset = scrollView.contentOffset
+        let pageIndex = Int(offset.x / self.puppyCollectionView.frame.size.width)
+        pageControl.currentPage = pageIndex
     }
 }
