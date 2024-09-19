@@ -4,20 +4,27 @@
 //
 //  Created by 김승희 on 8/28/24.
 //
-
+import CoreLocation
 import UIKit
 
 import FirebaseAuth
 import RxCocoa
 import RxSwift
 
+protocol DetailTingViewControllerDelegate: AnyObject {
+    func didDeleteFeed()
+}
+
 class DetailTingViewController: UIViewController {
     
     var tingFeedModels: TingFeedModel?
+    weak var delegate: DetailTingViewControllerDelegate? // Delegate 프로퍼티
     let fireStoreDatabase = FireStoreDatabaseManager.shared
     private let disposeBag = DisposeBag()
     
-    //MARK: Component 선언
+    private let kakaoMapViewController = KakaoMapViewController()
+
+    // MARK: Component 선언
     private let scrollView: UIScrollView = {
         let scroll = UIScrollView()
         scroll.showsVerticalScrollIndicator = false
@@ -32,6 +39,9 @@ class DetailTingViewController: UIViewController {
     private let profilePic: UIImageView = {
         let imageView = UIImageView()
         imageView.image = UIImage(named: "defaultProfileImage")
+        imageView.layer.cornerRadius = 30
+        imageView.clipsToBounds = true
+        imageView.contentMode = .scaleAspectFill
         return imageView
     }()
     
@@ -67,24 +77,9 @@ class DetailTingViewController: UIViewController {
     
     private let content: UILabel = {
         let label = UILabel()
-        let style = NSMutableParagraphStyle()
-        style.lineSpacing = 6
-        let styleText = NSAttributedString(string:
-                                            "내용1\n내용2\n내용3\n내용4"
-                                           , attributes: [
-            .font: UIFont.systemFont(ofSize: 16, weight: .medium),
-            .paragraphStyle: style])
-        label.attributedText = styleText
         label.numberOfLines = 0
         label.textAlignment = .left
-        label.lineBreakMode = .byTruncatingTail
         return label
-    }()
-    
-    private let mapView: UIImageView = {
-        let map = UIImageView()
-        map.image = UIImage(named: "mapPhoto")
-        return map
     }()
     
     private lazy var blockButton: UIButton = {
@@ -93,8 +88,6 @@ class DetailTingViewController: UIViewController {
         button.setTitleColor(.darkGray, for: .normal)
         button.titleLabel?.font = .systemFont(ofSize: 14, weight: .semibold)
         button.backgroundColor = .white
-        
-//        button.addTarget(self, action: #selector(blockButtonTapped), for: .touchUpInside)
         return button
     }()
     
@@ -104,8 +97,6 @@ class DetailTingViewController: UIViewController {
         button.setTitleColor(.darkGray, for: .normal)
         button.titleLabel?.font = .systemFont(ofSize: 14, weight: .semibold)
         button.backgroundColor = .white
-        
-//        button.addTarget(self, action: #selector(reportButtonTapped), for: .touchUpInside)
         return button
     }()
     
@@ -115,8 +106,6 @@ class DetailTingViewController: UIViewController {
         button.setTitleColor(.darkGray, for: .normal)
         button.titleLabel?.font = .systemFont(ofSize: 14, weight: .semibold)
         button.backgroundColor = .white
-//        
-//        button.addTarget(self, action: #selector(deleteButtonTapped), for: .touchUpInside)
         return button
     }()
     
@@ -143,41 +132,115 @@ class DetailTingViewController: UIViewController {
         return button
     }()
 
-    //MARK: View 생명주기
+    // MARK: View 생명주기
     override func viewDidLoad() {
         super.viewDidLoad()
         setUI()
         setConstraints()
         setData()
         bind()
+        
+        // profilePic에 탭 추가 -> ProfileViewController 연결
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapProfile))
+        profilePic.isUserInteractionEnabled = true
+        profilePic.addGestureRecognizer(tapGesture)
+        
+        // 닉네임에도 탭 추가
+        let nameTapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapProfile))
+        nameLabel.isUserInteractionEnabled = true
+        nameLabel.addGestureRecognizer(nameTapGesture)
     }
     
-    //MARK: bind
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        kakaoMapViewController.activateEngine()
+    }
     
-    func setData() {
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        kakaoMapViewController.pauseEngine()
+    }
+    
+    @objc private func didTapProfile() {
+        let profileVC = ProfileViewController()
+        profileVC.modalPresentationStyle = .pageSheet
+        
+        // 선택된 사용자의 uuid 전달
+        if let userid = tingFeedModels?.userid {
+            profileVC.userid = userid
+        }
+        
+        // 하프모달로 띄우기
+        if let sheet = profileVC.sheetPresentationController {
+            sheet.detents = [.medium()] // 모달크기 설정
+            sheet.prefersGrabberVisible = true // 위에 바 나오게 하기
+        }
+        
+        present(profileVC, animated: true)
+    }
+    
+    // MARK: bind
+    
+    private func setData() {
         if let model = tingFeedModels {
             content.text = model.content
             let dateFormatter = DateFormatter()
             dateFormatter.dateFormat = "yyyy-MM-dd HH:mm"
             timeLabel.text = dateFormatter.string(from: model.time)
-            setButton(model: model)
+            
+            let coordinate = model.location
+            if coordinate.latitude != 0.0, coordinate.longitude != 0.0 {
+                configMap(with: coordinate)
+            }
             
             FireStoreDatabaseManager.shared.findMemeber(uuid: model.userid)
                 .subscribe(onSuccess: { [weak self] member in
                     self?.nameLabel.text = member.nickname
                     self?.footPrintLabel.text = "🐾 발도장 \(member.footPrint)개"
+                    
+                    if member.profileImage == "defaultProfileImage" {
+                        self?.profilePic.image = UIImage(named: "defaultProfileImage")
+                    } else {
+                        if let profilePic = self?.profilePic {
+                            KingFisherManager.shared.loadProfileImage(urlString: member.profileImage, into: profilePic, placeholder: UIImage(named: "defaultProfileImage"))
+                        }
+                    }
+                    
                 }, onFailure: { error in
                     print("멤버 찾기 실패: \(error)")
                 }).disposed(by: disposeBag)
+            
+            setButton(model: model)
         }
+    }
+    
+    private func configMap(with coordinate: CLLocationCoordinate2D) {
+        addChild(kakaoMapViewController)
+        view.addSubview(kakaoMapViewController.view)
+        
+        kakaoMapViewController.view.snp.makeConstraints {
+            $0.top.equalTo(content.snp.bottom).offset(20)
+            $0.leading.trailing.equalToSuperview().inset(20)
+            $0.height.equalTo(150)
+        }
+        
+        view.layoutIfNeeded()
+        
+        mapTrueConstraints()
+        
+        kakaoMapViewController.didMove(toParent: self)
+        kakaoMapViewController.setCoordinate(coordinate)
+        kakaoMapViewController.addPoi(at: coordinate)
     }
     
     private func setButton(model: TingFeedModel) {
         if Auth.auth().currentUser?.uid == model.userid {
+            self.messageSendButton.isHidden = true
             self.deleteButton.isHidden = false
             self.blockButton.isHidden = true
             self.reportButton.isHidden = true
         } else {
+            self.messageSendButton.isHidden = false
             self.deleteButton.isHidden = true
             self.blockButton.isHidden = false
             self.reportButton.isHidden = false
@@ -187,16 +250,32 @@ class DetailTingViewController: UIViewController {
     private func bind() {
         deleteButton.rx.tap
             .subscribe(onNext: { [weak self] in
-                guard let postid = self?.tingFeedModels?.postid else { return }
-                self?.fireStoreDatabase.deleteDocument(from: "tingFeeds", documentId: postid)
-                    .subscribe(onSuccess: { [weak self] in
-                        self?.okAlert(title: "삭제 완료", message: "게시물이 성공적으로 삭제되었습니다.", okActionHandler: { _ in
-                            self?.navigationController?.popViewController(animated: true)
-                        })
-                    }, onFailure: { error in
-                        print("삭제 실패: \(error)")
-                        self?.okAlert(title: "삭제 실패", message: "게시물 삭제에 실패했습니다. 다시 시도해주세요. 해당 문제가 지속될 경우 문의 게시판에 제보해주세요.")
-                    }).disposed(by: self!.disposeBag)
+                self?.okAlertWithCancel(
+                    title: "게시물 삭제",
+                    message: "게시물을 삭제하시겠습니까?",
+                    okActionTitle: "삭제",
+                    cancelActionTitle: "취소",
+                    okActionHandler: { _ in
+                        guard let postid = self?.tingFeedModels?.postid else { return }
+                        self?.fireStoreDatabase.deleteDocument(from: "tingFeeds", documentId: postid)
+                            .subscribe(onSuccess: { [weak self] in
+                                self?.delegate?.didDeleteFeed() // Delegate 호출
+                                self?.okAlert(
+                                    title: "삭제 완료",
+                                    message: "게시물이 성공적으로 삭제되었습니다.",
+                                    okActionHandler: { _ in
+                                        self?.navigationController?.popViewController(animated: true)
+                                    }
+                                )
+                            }, onFailure: { error in
+                                print("삭제 실패: \(error)")
+                                self?.okAlert(
+                                    title: "삭제 실패",
+                                    message: "게시물 삭제에 실패했습니다. 다시 시도해주세요."
+                                )
+                            }).disposed(by: self?.disposeBag ?? DisposeBag())
+                    }
+                )
             }).disposed(by: disposeBag)
         
         blockButton.rx.tap
@@ -205,15 +284,15 @@ class DetailTingViewController: UIViewController {
                 self?.fireStoreDatabase.blockUser(userId: userid)
                     .subscribe(onSuccess: { [weak self] in
                         self?.okAlertWithCancel(
-                                        title: "사용자 차단",
-                                        message: "사용자를 차단하시겠습니까? 차단 이후 사용자의 게시물이 보이지 않습니다.",
-                                        okActionTitle: "차단",
-                                        okActionHandler: { _ in
-                                        self!.okAlert(title: "차단 완료", message: "사용자가 성공적으로 차단되었습니다.")
-                                    })
+                            title: "사용자 차단",
+                            message: "사용자를 차단하시겠습니까? 차단 이후 사용자의 게시물이 보이지 않습니다.",
+                            okActionTitle: "차단",
+                            okActionHandler: { _ in
+                                self!.okAlert(title: "차단 완료", message: "사용자가 성공적으로 차단되었습니다.")
+                            })
                     }, onFailure: { error in
                         print("차단 실패")
-                        self!.okAlert(title: "차단 실패", message: "사용자 차단에 실패했습니다. 다시 시도해주세요.\n해당 문제가 지속될 경우 문의 게시판에 제보해주세요.")
+                        self!.okAlert(title: "차단 실패", message: "사용자 차단에 실패했습니다. 다시 시도해주세요.")
                     }).disposed(by: self!.disposeBag)
             }).disposed(by: disposeBag)
         
@@ -233,15 +312,17 @@ class DetailTingViewController: UIViewController {
                 ]
                 
                 reasons.forEach { reason in
-                    let action = UIAlertAction(title: reason, style: .default) { _ in
-                        self?.fireStoreDatabase.reportPost(postId: postid, reason: reason)
+                    let action = UIAlertAction(title: reason, style: .default) { [weak self] _ in
+                        let report = Report(postId: postid, reason: reason, timeStamp: Date())
+                        
+                        self?.fireStoreDatabase.reportPost(report: report)
                             .subscribe(onSuccess: {
                                 self!.okAlert(title: "신고 접수", message: "신고가 접수되었습니다. 관리자가 24시간 이내로 검토할 예정이며, 추가 신고/문의는 nnn@naver.com 으로 보내주세요.", okActionHandler: { _ in
                                     self?.navigationController?.popViewController(animated: true)
                                 })
                             }, onFailure: { error in
-                            print("신고 실패")
-                                self?.okAlert(title: "신고 실패", message: "게시글 신고에 실패했습니다. 다시 시도해주세요.\n해당 문제가 지속될 경우 문의 게시판에 제보해주세요.")
+                                print("신고 실패")
+                                self?.okAlert(title: "신고 실패", message: "게시글 신고에 실패했습니다. 다시 시도해주세요.")
                             }).disposed(by: self!.disposeBag)
                     }
                     reportAlert.addAction(action)
@@ -253,7 +334,7 @@ class DetailTingViewController: UIViewController {
             }).disposed(by: disposeBag)
     }
     
-    //MARK: UI 설정 및 제약조건 등
+    // MARK: UI 설정 및 제약조건 등
     private func setUI() {
         view.backgroundColor = .white
     }
@@ -280,7 +361,6 @@ class DetailTingViewController: UIViewController {
          footPrintLabel,
          content,
          buttonStack,
-         mapView,
          messageSendButton].forEach { contentView.addSubview($0) }
         
         profilePic.snp.makeConstraints {
@@ -304,14 +384,8 @@ class DetailTingViewController: UIViewController {
             $0.leading.trailing.equalTo(view.safeAreaLayoutGuide).inset(30)
         }
         
-        mapView.snp.makeConstraints {
-            $0.top.equalTo(content.snp.bottom).offset(20)
-            $0.leading.trailing.equalToSuperview().inset(20)
-            $0.height.equalTo(150)
-        }
-        
         buttonStack.snp.makeConstraints {
-            $0.top.equalTo(mapView.snp.bottom).offset(20)
+            $0.top.equalTo(content.snp.bottom).offset(20)
             $0.trailing.equalToSuperview().offset(-20)
         }
         
@@ -320,6 +394,13 @@ class DetailTingViewController: UIViewController {
             $0.leading.trailing.equalToSuperview().inset(20)
             $0.height.equalTo(44)
             $0.bottom.equalToSuperview().offset(-30)
+        }
+    }
+    
+    private func mapTrueConstraints() {
+        buttonStack.snp.makeConstraints {
+            $0.top.equalTo(kakaoMapViewController.view.snp.bottom).offset(20)
+            $0.trailing.equalToSuperview().offset(-20)
         }
     }
 }

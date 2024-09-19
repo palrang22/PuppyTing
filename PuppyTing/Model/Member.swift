@@ -15,8 +15,11 @@ struct Member: Codable {
     let profileImage: String
     let footPrint: Int
     let isSocial: Bool
+    let blockedUsers: [String]
+    let bookMarkUsers: [String]
+    let puppies: [String]
     
-    init(uuid: String, email: String, password: String, nickname: String, profileImage: String, footPrint: Int, isSocial: Bool) {
+    init(uuid: String, email: String, password: String, nickname: String, profileImage: String, footPrint: Int, isSocial: Bool, blockedUsers: [String] = [], bookMarkUsers: [String] = [], puppies: [String] = []) {
         self.uuid = uuid
         self.email = email
         self.password = password
@@ -24,6 +27,9 @@ struct Member: Codable {
         self.profileImage = profileImage
         self.footPrint = footPrint
         self.isSocial = isSocial
+        self.blockedUsers = blockedUsers
+        self.bookMarkUsers = bookMarkUsers
+        self.puppies = puppies
     }
     
     init?(dictionary: [String: Any]) {
@@ -33,7 +39,10 @@ struct Member: Codable {
               let nickname = dictionary["nickname"] as? String,
               let profileImage = dictionary["profileImage"] as? String,
               let footPrint = dictionary["footPrint"] as? Int,
-              let isSocial = dictionary["isSocial"] as? Bool else { return nil }
+              let isSocial = dictionary["isSocial"] as? Bool,
+              let blockedUsers = dictionary["blockedUsers"],
+              let bookMarkUsers = dictionary["bookMarkUsers"],
+              let puppies = dictionary["puppies"] else { return nil }
         
         self.uuid = uuid
         self.email = email
@@ -42,6 +51,9 @@ struct Member: Codable {
         self.profileImage = profileImage
         self.footPrint = footPrint
         self.isSocial = isSocial
+        self.blockedUsers = dictionary["blockedUsers"] as? [String] ?? []
+        self.bookMarkUsers = dictionary["bookMarkUsers"] as? [String] ?? []
+        self.puppies = dictionary["puppies"] as? [String] ?? []
     }
     
     var dictionary: [String: Any] {
@@ -52,7 +64,10 @@ struct Member: Codable {
             "nickname": nickname,
             "profileImage": profileImage,
             "footPrint": footPrint,
-            "isSocial": isSocial
+            "isSocial": isSocial,
+            "blockedUsers": blockedUsers,
+            "bookMarkUsers": bookMarkUsers,
+            "puppies": puppies
         ]
     }
 }

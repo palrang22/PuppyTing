@@ -34,14 +34,41 @@ class ChatViewModel {
     func transform(input: Input) -> Output {
         let messages = input.fetchMessages
             .flatMapLatest { [weak self] _ -> Observable<[ChatMessage]> in
-                guard let self = self else { return Observable.just([]) } // self가 nil인 경우 빈 배열 반환
+                guard let self = self else { return Observable.just([]) }
                 return FirebaseRealtimeDatabaseManager.shared.observeMessages(in: input.roomId)
                     .scan([]) { (oldMessages, newMessage) in
                         var messages = oldMessages
+                        
+                        if let lastMessage = messages.last {
+                            let lastDate = Date(timeIntervalSince1970: lastMessage.timestamp)
+                            let newDate = Date(timeIntervalSince1970: newMessage.timestamp)
+                            let calendar = Calendar.current
+                            
+                            // 날짜가 다르면 날짜 메시지를 추가
+                            if !calendar.isDate(lastDate, inSameDayAs: newDate) {
+                                let dateMessage = ChatMessage(
+                                    id: UUID().uuidString,
+                                    senderId: "date", // 특별한 ID로 표시 (ex. 날짜 메시지)
+                                    text: newDate.toDateString(), // 날짜 형식으로 표시
+                                    timestamp: newMessage.timestamp
+                                )
+                                messages.append(dateMessage)
+                            }
+                        } else {
+                            // 첫 메시지라면 날짜 메시지를 추가
+                            let dateMessage = ChatMessage(
+                                id: UUID().uuidString,
+                                senderId: "date",
+                                text: Date(timeIntervalSince1970: newMessage.timestamp).toDateString(),
+                                timestamp: newMessage.timestamp
+                            )
+                            messages.append(dateMessage)
+                        }
+                        
                         messages.append(newMessage)
                         return messages
                     }
-                    .catchAndReturn([]) // 에러 발생 시 빈 배열 반환
+                    .catchAndReturn([])
             }
         
         let messageSent = input.sendMessage

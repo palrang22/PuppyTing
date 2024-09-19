@@ -26,6 +26,7 @@ class ChatViewController: UIViewController {
         let tableView = UITableView()
         tableView.register(MyChattingTableViewCell.self, forCellReuseIdentifier: MyChattingTableViewCell.identifier)
         tableView.register(ChattingTableViewCell.self, forCellReuseIdentifier: ChattingTableViewCell.identifier)
+        tableView.register(ChatDateTableViewCell.self, forCellReuseIdentifier: ChatDateTableViewCell.identifier)
         tableView.separatorStyle = .none
         return tableView
     }()
@@ -71,8 +72,8 @@ class ChatViewController: UIViewController {
         view.backgroundColor = .white
         
         // 키보드 알림 등록
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShowInChatting), name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHideInChatting), name: UIResponder.keyboardWillHideNotification, object: nil)
         
         [chattingTableView, messageInputView].forEach {
             view.addSubview($0)
@@ -84,18 +85,14 @@ class ChatViewController: UIViewController {
         
         messageTextView.delegate = self
         
-        // 키보드 포커싱 해제 메서드 호출
         setupKeyboardDismissRecognizer()
-        
         setupConstraints()
-        
-        // Rx 바인딩
         setupBindings()
         
     }
     
     // 키보드가 나타날 때 호출되는 메서드
-    @objc func keyboardWillShow(notification: NSNotification) {
+    @objc func keyboardWillShowInChatting(notification: NSNotification) {
         if let keyboardFrame = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue {
             let keyboardHeight = keyboardFrame.cgRectValue.height
             messageInputViewBottomConstraint.update(offset: -keyboardHeight + view.safeAreaInsets.bottom)
@@ -105,20 +102,19 @@ class ChatViewController: UIViewController {
         }
         scrollToBottom() // 키보드가 나타날 때 자동으로 스크롤
     }
-
+    
     // 키보드가 사라질 때 호출되는 메서드
-    @objc func keyboardWillHide(notification: NSNotification) {
+    @objc func keyboardWillHideInChatting(notification: NSNotification) {
         messageInputViewBottomConstraint.update(offset: 0)
         UIView.animate(withDuration: 0.3) {
             self.view.layoutIfNeeded()
         }
     }
-
+    
     // 메모리 해제를 위해 노티피케이션 제거
     deinit {
         NotificationCenter.default.removeObserver(self)
     }
-
     
     private func setupBindings() {
         let input = ChatViewModel.Input(
@@ -126,6 +122,7 @@ class ChatViewController: UIViewController {
             fetchMessages: Observable.just(()),
             sendMessage: sendButton.rx.tap
                 .withLatestFrom(messageTextView.rx.text.orEmpty)
+                .filter { !$0.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty } // 빈메세지 필터링 - jgh
                 .asObservable()
         )
         
@@ -133,31 +130,38 @@ class ChatViewController: UIViewController {
         
         output.messages
             .bind(to: chattingTableView.rx.items) { (tableView: UITableView, row: Int, message: ChatMessage) in
-                if message.senderId == self.userId {
-                    guard let cell = tableView.dequeueReusableCell(withIdentifier: MyChattingTableViewCell.identifier, for: IndexPath(row: row, section: 0)) as? MyChattingTableViewCell else {
-                        return UITableViewCell()
-                    }
-                    cell.messageBox.text = message.text
+                if message.senderId == "date" {
+                    // 날짜 메시지일 경우, 날짜만 표시하는 셀을 구성
+                    let cell = tableView.dequeueReusableCell(withIdentifier: ChatDateTableViewCell.identifier, for: IndexPath(row: row, section: 0)) as! ChatDateTableViewCell
+                    cell.config(dateText: message.text) // 날짜만 표시
+                    return cell
+                } else if message.senderId == self.userId {
+                    // 일반 메시지인 경우, 기존 로직 그대로 사용
+                    let cell = tableView.dequeueReusableCell(withIdentifier: MyChattingTableViewCell.identifier, for: IndexPath(row: row, section: 0)) as! MyChattingTableViewCell
                     let date = Date(timeIntervalSince1970: message.timestamp)
                     let dateFormatter = DateFormatter()
-                    dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+                    dateFormatter.dateFormat = "HH:mm"
                     let dateString = dateFormatter.string(from: date)
-                    cell.date.text = dateString
+                    cell.config(message: message.text, time: dateString)
                     return cell
                 } else {
-                    guard let cell = tableView.dequeueReusableCell(withIdentifier: ChattingTableViewCell.identifier, for: IndexPath(row: row, section: 0)) as? ChattingTableViewCell else {
-                        return UITableViewCell()
-                    }
-                    self.viewModel.findMember(uuid: message.senderId)
-                    self.viewModel.memberSubject.observe(on: MainScheduler.instance).subscribe(onNext: { member in
-                        cell.name.text = member.nickname
-                    }).disposed(by: self.disposeBag)
-                    cell.messageBox.text = message.text
+                    // 상대방의 일반 메시지인 경우, 기존 로직 그대로 사용
+                    let cell = tableView.dequeueReusableCell(withIdentifier: ChattingTableViewCell.identifier, for: IndexPath(row: row, section: 0)) as! ChattingTableViewCell
                     let date = Date(timeIntervalSince1970: message.timestamp)
                     let dateFormatter = DateFormatter()
-                    dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+                    dateFormatter.dateFormat = "HH:mm"
                     let dateString = dateFormatter.string(from: date)
-                    cell.date.text = dateString
+                    cell.config(image: "nil", message: message.text, time: dateString, nickname: "알 수 없음")
+                    self.viewModel.findMember(uuid: message.senderId)
+                    self.viewModel.memberSubject
+                        .observe(on: MainScheduler.instance)
+                        .subscribe(onNext: { member in
+                            cell.config(image: member.profileImage, message: message.text, time: dateString, nickname: member.nickname)
+                            // 프로필 이미지 탭 시 액션 설정 - jgh
+                            cell.profileImageTapped = { [weak self] in
+                                self?.presentProfileViewController(senderId: message.senderId)
+                            }
+                        }).disposed(by: self.disposeBag)
                     return cell
                 }
             }
@@ -175,6 +179,18 @@ class ChatViewController: UIViewController {
                 self?.scrollToBottom()
             })
             .disposed(by: disposeBag)
+    }
+    
+    // 하프모달로 띄우기 - jgh
+    private func presentProfileViewController(senderId: String) {
+        let profileVC = ProfileViewController()
+        profileVC.modalPresentationStyle = .pageSheet
+        profileVC.userid = senderId
+        if let sheet = profileVC.sheetPresentationController {
+            sheet.detents = [.medium()]
+            sheet.prefersGrabberVisible = true
+        }
+        present(profileVC, animated: true, completion: nil)
     }
     
     // 제일 밑 채팅 보이기

@@ -8,16 +8,17 @@
 import UIKit
 
 class ChattingTableViewCell: UITableViewCell {
-
+    
     static let identifier = "ChattingViewCell"
     
-   let profileImage: UIImageView = {
+    let profileImage: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFill
         imageView.clipsToBounds = true
         imageView.layer.cornerRadius = 17
         imageView.layer.borderColor = UIColor.puppyPurple.cgColor
         imageView.layer.borderWidth = 1
+        imageView.isUserInteractionEnabled = true // 제스처 추가 위해 상호작용 가능하게
         return imageView
     }()
     
@@ -50,16 +51,26 @@ class ChattingTableViewCell: UITableViewCell {
         return label
     }()
     
+    var profileImageTapped: (() -> Void)? // 프로필 이미지 클릭 클로저
+    
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
         selectionStyle = .none
         
         setupUI()
+        
+        // 프로필이미지 탭 제스처 추가
+        let chatImageTapGesture = UITapGestureRecognizer(target: self, action: #selector(profileTap))
+        profileImage.addGestureRecognizer(chatImageTapGesture)
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    @objc private func profileTap() {
+        profileImageTapped?() // 탭 클로저 호출
     }
     
     func setupUI() {
@@ -93,5 +104,12 @@ class ChattingTableViewCell: UITableViewCell {
         }
         
     }
-
+    
+    func config(image: String, message: String, time: String, nickname: String) {
+        KingFisherManager.shared.loadProfileImage(urlString: image, into: profileImage)
+        
+        messageBox.text = message
+        date.text = time
+        name.text = nickname
+    }
 }

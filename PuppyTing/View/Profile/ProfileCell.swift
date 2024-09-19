@@ -7,25 +7,27 @@
 
 import UIKit
 
+import RxSwift
 import SnapKit
 
 class ProfileCell: UICollectionViewCell {
     
-    private let stackView: UIStackView = {
-        let stackView = UIStackView()
-        stackView.axis = .vertical
-        stackView.spacing = 10
-        stackView.distribution = .fill
-        return stackView
-    }()
+    var viewModel: ProfileViewModel?
+    var bookmarkId: String? // 즐겨찾기 할 유저 Id
+    
+    private let disposeBag = DisposeBag()
     
     private let profileContainerView: UIView = {
         let view = UIView()
-        view.layer.cornerRadius = 15
+        view.layer.cornerRadius = 10
         view.layer.borderWidth = 1.0
         view.layer.borderColor = UIColor.puppyPurple.withAlphaComponent(0.1).cgColor
-        view.layer.masksToBounds = true
-        view.backgroundColor = UIColor.puppyPurple.withAlphaComponent(0.1)
+        view.layer.masksToBounds = false
+        view.backgroundColor = UIColor(red: 247/255, green: 245/255, blue: 255/255, alpha: 1)
+        view.layer.shadowColor = UIColor.black.cgColor
+        view.layer.shadowOpacity = 0.2
+        view.layer.shadowOffset = CGSize(width: 0, height: 2)
+        view.layer.shadowRadius = 4
         return view
     }()
     
@@ -34,7 +36,8 @@ class ProfileCell: UICollectionViewCell {
         imageView.contentMode = .scaleAspectFill
         imageView.clipsToBounds = true
         imageView.tintColor = .black
-        imageView.image = UIImage(systemName: "person.crop.circle")
+        imageView.image = UIImage(named: "defaultProfileImage")
+        imageView.layer.cornerRadius = 30
         return imageView
     }()
     
@@ -59,15 +62,13 @@ class ProfileCell: UICollectionViewCell {
         return label
     }()
     
-    private let evaluateView = UIView()
-    
     private let footButton: UIButton = {
         let button = UIButton(type: .system)
         button.setTitle("발도장 꾹 🐾", for: .normal)
         button.backgroundColor = UIColor.puppyPurple
         button.layer.cornerRadius = 10
         button.setTitleColor(.white, for: .normal)
-        button.addTarget(self, action: #selector(footButtonTapped), for: .touchUpInside)
+//        button.addTarget(self, action: #selector(footButtonTapped), for: .touchUpInside)
         return button
     }()
     
@@ -86,21 +87,44 @@ class ProfileCell: UICollectionViewCell {
         button.backgroundColor = UIColor.puppyPurple
         button.layer.cornerRadius = 10
         button.setTitleColor(.white, for: .normal)
+        button.addTarget(self, action: #selector(favoriteButtonTapped), for: .touchUpInside)
         return button
     }()
     
-    // 작동되는지 확인
-    @objc private func footButtonTapped() {
-        print("발도장 남기기 버튼 눌림")
+    private let buttonStackView: UIStackView = {
+        let stackView = UIStackView()
+        stackView.axis = .horizontal
+        stackView.distribution = .fillEqually
+        stackView.spacing = 10
+        stackView.alignment = .fill
+        return stackView
+    }()
+    
+    // 즐겨찾기 버튼
+    @objc private func favoriteButtonTapped() {
+        guard let bookmarkId = bookmarkId else { return }
+        viewModel?.addBookmark(bookmarkId: bookmarkId)
     }
     
+    func configure(with member: Member) {
+        nicknameLabel.text = member.nickname
+        footNumberLabel.text = "\(member.footPrint)개"
+        
+        // 프로필 이미지 로드 - 킹피셔매니저 코드 사용
+        if !member.profileImage.isEmpty {
+            KingFisherManager.shared.loadProfileImage(urlString: member.profileImage, into: profileImageView)
+        } else {
+            profileImageView.image = UIImage(named: "defaultProfileImage")
+        }
+            
+    }
+            
     override init(frame: CGRect) {
         super.init(frame: frame)
         
-        contentView.addSubview(stackView)
-        stackView.addArrangedSubview(profileContainerView)
+        contentView.addSubview(profileContainerView)
         
-        [profileImageView, nicknameLabel, footView, evaluateView].forEach {
+        [profileImageView, nicknameLabel, footView, buttonStackView].forEach {
             profileContainerView.addSubview($0)
         }
         
@@ -109,26 +133,21 @@ class ProfileCell: UICollectionViewCell {
         }
         
         [footButton, favoriteButton, blockButton].forEach {
-            evaluateView.addSubview($0)
-        }
-        
-        stackView.snp.makeConstraints {
-            $0.edges.equalToSuperview().inset(20)
+            buttonStackView.addArrangedSubview($0)
         }
         
         profileContainerView.snp.makeConstraints {
-            $0.width.equalToSuperview()
-            $0.top.equalTo(stackView.snp.top)
+            $0.edges.equalToSuperview().inset(20)
         }
         
         profileImageView.snp.makeConstraints {
-            $0.top.equalToSuperview().offset(10)
-            $0.left.equalToSuperview().offset(10)
+            $0.top.equalToSuperview().offset(30)
+            $0.leading.equalToSuperview().offset(15)
             $0.width.height.equalTo(60)
         }
         
         nicknameLabel.snp.makeConstraints {
-            $0.left.equalTo(profileImageView.snp.right).offset(10)
+            $0.left.equalTo(profileImageView.snp.right).offset(15)
             $0.centerY.equalTo(profileImageView.snp.centerY)
         }
         
@@ -141,7 +160,7 @@ class ProfileCell: UICollectionViewCell {
         
         footStampLabel.snp.makeConstraints {
             $0.top.equalToSuperview()
-            $0.leading.equalToSuperview().offset(10)
+            $0.leading.equalToSuperview().offset(15)
         }
         
         footNumberLabel.snp.makeConstraints {
@@ -149,32 +168,10 @@ class ProfileCell: UICollectionViewCell {
             $0.leading.equalTo(footStampLabel.snp.trailing).offset(20)
         }
         
-        evaluateView.snp.makeConstraints {
+        buttonStackView.snp.makeConstraints {
             $0.top.equalTo(footView.snp.bottom).offset(10)
-            $0.centerX.equalToSuperview()
-            $0.leading.trailing.equalToSuperview()
+            $0.leading.trailing.equalToSuperview().inset(10)
             $0.height.equalTo(44)
-        }
-        
-        footButton.snp.makeConstraints {
-            $0.top.equalToSuperview()
-            $0.trailing.equalTo(favoriteButton.snp.leading).offset(-5)
-            $0.height.equalTo(44)
-            $0.width.equalTo(110)
-        }
-        
-        favoriteButton.snp.makeConstraints {
-            $0.top.equalToSuperview()
-            $0.centerX.equalToSuperview()
-            $0.height.equalTo(44)
-            $0.width.equalTo(110)
-        }
-        
-        blockButton.snp.makeConstraints {
-            $0.top.equalToSuperview()
-            $0.leading.equalTo(favoriteButton.snp.trailing).offset(5)
-            $0.height.equalTo(44)
-            $0.width.equalTo(110)
         }
     }
     

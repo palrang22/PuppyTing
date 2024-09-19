@@ -11,12 +11,30 @@ class MypageViewController: UIViewController {
     private let disposeBag = DisposeBag()
     private let scrollView = UIScrollView()
     private let contentView = UIView()
-    private var puppies: [(name: String, info: String, tag: String, image: UIImage?)] = [] // 이미지 추가
+    private let puppys = BehaviorRelay<[Pet]>(value: [])
+    private var petList: [Pet] = [] {
+        didSet {
+            puppys.accept(petList)
+
+            if !petList.isEmpty {
+                pageControl.numberOfPages = petList.count
+                puppyCollectionView.isHidden = false
+                pageControl.isHidden = false
+                
+                puppyCollectionView.snp.updateConstraints {
+                    $0.height.equalTo(150)
+                }
+                
+                UIView.animate(withDuration: 0.3) {
+                    self.view.layoutIfNeeded()
+                }
+            }
+        }
+    }
     
     private let viewModel = MyPageViewModel()
     private var memeber: Member? = nil {
         didSet {
-            // 데이터가 들어오면유저가 있는거임
             guard let member = memeber else { return }
             nickNameLabel.text = member.nickname
             myFootLabel.text = "내 발도장 \(member.footPrint)개"
@@ -48,6 +66,8 @@ class MypageViewController: UIViewController {
         profileImage.backgroundColor = .clear
         profileImage.tintColor = .black
         profileImage.image = UIImage(systemName: "person.crop.circle")
+        profileImage.layer.cornerRadius = 30
+        profileImage.layer.masksToBounds = true
         return profileImage
     }()
     
@@ -80,9 +100,9 @@ class MypageViewController: UIViewController {
         return label
     }()
     
-    private let collectionView: UICollectionView = {
+    private let puppyCollectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
-        layout.scrollDirection = .horizontal  // 가로 스크롤로 설정
+        layout.scrollDirection = .horizontal
         layout.minimumLineSpacing = 0
         layout.minimumInteritemSpacing = 0
 
@@ -178,132 +198,255 @@ class MypageViewController: UIViewController {
         button.backgroundColor = .puppyPurple
         return button
     }()
-
-    // MARK: - Setup UI
-    private func setupUI() {
-        view.addSubview(scrollView)
-        scrollView.snp.makeConstraints {
-            $0.edges.equalTo(view.safeAreaLayoutGuide) // 안전 영역을 기준으로 설정
-        }
-
-        scrollView.addSubview(contentView)
-        contentView.snp.makeConstraints {
-            $0.edges.equalToSuperview()
-            $0.width.equalToSuperview() // 세로 스크롤만 가능하도록 가로 크기를 동일하게 설정
-        }
-
-        contentView.addSubview(stackView)
-        stackView.snp.makeConstraints {
-            $0.edges.equalToSuperview().inset(20)
-        }
-
-        [profileContainerView, collectionView, pageControl, addPuppyButton, menuContainerView].forEach {
-            stackView.addArrangedSubview($0)
-        }
-
-        [profileImageView, nickNameLabel, profileEditButton, myFootLabel].forEach {
-            profileContainerView.addSubview($0)
-        }
-
-        profileContainerView.snp.makeConstraints {
-            $0.height.equalTo(150)
-        }
-
-        profileImageView.snp.makeConstraints {
-            $0.top.equalToSuperview().offset(10)
-            $0.left.equalToSuperview().offset(10)
-            $0.width.height.equalTo(60)
-        }
-
-        nickNameLabel.snp.makeConstraints {
-            $0.left.equalTo(profileImageView.snp.right).offset(10)
-            $0.centerY.equalTo(profileImageView.snp.centerY)
-        }
-
-        profileEditButton.snp.makeConstraints {
-            $0.top.equalToSuperview().offset(20)
-            $0.right.equalToSuperview().offset(-20)
-            $0.width.equalTo(70)
-            $0.height.equalTo(44)
-        }
-
-        myFootLabel.snp.makeConstraints {
-            $0.centerX.equalToSuperview()
-            $0.top.equalTo(nickNameLabel.snp.bottom).offset(30)
-            $0.height.equalTo(44)
-        }
-
-        collectionView.snp.makeConstraints {
-            $0.height.equalTo(0)
-            $0.left.right.equalToSuperview()
-        }
-
-        pageControl.snp.makeConstraints {
-            $0.height.equalTo(20)
-        }
-
-        addPuppyButton.snp.makeConstraints {
-            $0.height.equalTo(44)
-        }
-
-        menuContainerView.snp.makeConstraints {
-            $0.height.equalTo(250)
-        }
-
-        let upperButtonsStackView = UIStackView(arrangedSubviews: [customerSupportButton, faqButton, noticeButton])
-        upperButtonsStackView.axis = .horizontal
-        upperButtonsStackView.spacing = 20
-        upperButtonsStackView.distribution = .equalSpacing
-
-        let lowerButtonsStackView = UIStackView(arrangedSubviews: [logOutButton, memberLeaveButton])
-        lowerButtonsStackView.axis = .horizontal
-        lowerButtonsStackView.spacing = 20
-        lowerButtonsStackView.distribution = .equalSpacing
-
-        let olympicButtonsContainer = UIStackView(arrangedSubviews: [upperButtonsStackView, lowerButtonsStackView])
-        olympicButtonsContainer.axis = .vertical
-        olympicButtonsContainer.spacing = 20
-        olympicButtonsContainer.alignment = .center
-
-        stackView.addArrangedSubview(olympicButtonsContainer)
-
-        customerSupportButton.snp.makeConstraints {
-            $0.top.equalTo(menuContainerView.snp.bottom).offset(30)
-            $0.right.equalTo(faqButton.snp.left).offset(-20)
-            $0.width.equalTo(100)
-            $0.height.equalTo(44)
-        }
+    
+    //MARK: View 생명주기
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        view.backgroundColor = .white
+        setupKeyboardDismissRecognizer()
+        setGesture()
+        setupUI()
+        setupBindings()
+        fetchMemberInfo()
+        addButtonAction()
+        loadUserInfo()
+        loadPuppyInfo()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        loadUserInfo()
+        loadPuppyInfo()
+    }
+    
+    //MARK: Gesture
+    private func setGesture() {
+        let tapGesture = UITapGestureRecognizer(target: self, action: nil)
+        tapGesture.cancelsTouchesInView = false
+        puppyCollectionView.addGestureRecognizer(tapGesture)
+    }
+    
+    // MARK: - Setup Bindings
+    private func setupBindings() {
+        addPuppyButton.rx.tap
+            .bind { [weak self] in
+                self?.navigateToPuppyRegistration()
+            }
+            .disposed(by: disposeBag)
         
-        faqButton.snp.makeConstraints {
-            $0.top.equalTo(customerSupportButton)
-            $0.centerX.equalToSuperview()
-            $0.width.height.equalTo(customerSupportButton)
-        }
+        profileEditButton.rx.tap
+            .bind { [weak self] in
+                self?.navigateToMyInfoEdit()
+            }
+            .disposed(by: disposeBag)
         
-        noticeButton.snp.makeConstraints {
-            $0.top.equalTo(customerSupportButton)
-            $0.left.equalTo(faqButton.snp.right).offset(20)
-            $0.width.height.equalTo(customerSupportButton)
-        }
+        puppys.bind(to: puppyCollectionView.rx
+            .items(cellIdentifier: PuppyCollectionViewCell.identifier, cellType: PuppyCollectionViewCell.self)) { index, pet, cell in
+                cell.config(puppy: pet)
+            }.disposed(by: disposeBag)
         
-        logOutButton.snp.makeConstraints {
-            $0.top.equalTo(customerSupportButton.snp.bottom).offset(30)
-            $0.left.equalToSuperview().offset(0)
-            $0.width.equalTo(135)
-            $0.height.equalTo(44)
-        }
+        puppyCollectionView.rx.itemSelected
+            .subscribe(onNext: { [weak self] indexPath in
+                print("셀 선택됨: \(indexPath.row)")  // 선택된 셀의 인덱스를 출력
+                self?.navigateToPuppyEdit(at: indexPath)
+            }).disposed(by: disposeBag)
         
-        memberLeaveButton.snp.makeConstraints {
-            $0.top.equalTo(logOutButton)
-            $0.left.equalTo(logOutButton.snp.right).offset(30)
-            $0.width.height.equalTo(logOutButton)
+        puppyCollectionView.rx.setDelegate(self)
+            .disposed(by: disposeBag)
+    }
+    
+    //MARK: Puppy 관련 메서드
+    private func findUserId() -> String {
+        guard let user = Auth.auth().currentUser else { return "" }
+        return user.uid
+    }
+
+    private func navigateToPuppyRegistration() {
+        let puppyRegistrationVC = PuppyRegistrationViewController()
+
+        puppyRegistrationVC.puppyRegisteredSubject
+            .observe(on: MainScheduler.instance) // 메인 스레드에서 처리
+            .subscribe(onNext: { [weak self] name, info, imageUrl in
+                let newPet = Pet(id: UUID().uuidString, userId: self?.findUserId() ?? "", name: name, age: Int(info) ?? 0, petImage: imageUrl ?? "", tag: ["태그"])
+                self?.petList.append(newPet)
+                self?.puppyCollectionView.reloadData()
+                self?.pageControl.numberOfPages = self?.petList.count ?? 0
+                self?.pageControl.isHidden = false
+
+                self?.puppyCollectionView.snp.updateConstraints {
+                    $0.height.equalTo(150)
+                }
+
+                UIView.animate(withDuration: 0.3) {
+                    self?.view.layoutIfNeeded()
+                }
+            }).disposed(by: disposeBag)
+
+        if let navigationController = self.navigationController {
+            navigationController.pushViewController(puppyRegistrationVC, animated: true)
+        } else {
+            present(puppyRegistrationVC, animated: true, completion: nil)
+        }
+    }
+
+    private func navigateToPuppyEdit(at indexPath: IndexPath) {
+        let puppy = petList[indexPath.row]
+        let puppyRegistrationVC = PuppyRegistrationViewController()
+        puppyRegistrationVC.isEditMode = true
+        puppyRegistrationVC.setPet(pet: puppy)
+        puppyRegistrationVC.setupWithPuppy(name: puppy.name, info: "\(puppy.age)", tag: puppy.tag.joined(separator: ", "), imageUrl: puppy.petImage)
+
+        puppyRegistrationVC.puppyUpdatedSubject
+            .observe(on: MainScheduler.instance)
+            .subscribe(onNext: { [weak self] name, info, imageUrl in
+                let updatedPuppy = Pet(id: puppy.id, userId: puppy.userId, name: name, age: Int(info) ?? puppy.age, petImage: imageUrl ?? puppy.petImage, tag: puppy.tag)
+                self?.petList[indexPath.row] = updatedPuppy
+                self?.puppyCollectionView.reloadItems(at: [indexPath])
+            })
+            .disposed(by: disposeBag)
+
+        if let navigationController = self.navigationController {
+            navigationController.pushViewController(puppyRegistrationVC, animated: true)
+        } else {
+            present(puppyRegistrationVC, animated: true, completion: nil)
+        }
+    }
+
+    private func addPuppy(name: String, info: String, imageUrl: String?) {
+        let tag = "태그 예시"
+        guard let imageUrl = imageUrl else { return }
+
+        let newPet = Pet(id: UUID().uuidString, userId: findUserId(), name: name, age: Int(info) ?? 0, petImage: imageUrl, tag: [tag])
+        petList.append(newPet) // petList에 추가
+        puppyCollectionView.reloadData()
+        pageControl.numberOfPages = petList.count // 페이지 수 업데이트
+        pageControl.isHidden = false
+
+        puppyCollectionView.snp.updateConstraints {
+            $0.height.equalTo(150) // 컬렉션 뷰의 콘텐츠에 맞는 높이 설정
         }
 
-        collectionView.dataSource = self
-        collectionView.delegate = self
-        collectionView.register(PuppyCollectionViewCell.self, forCellWithReuseIdentifier: PuppyCollectionViewCell.identifier)
+        UIView.animate(withDuration: 0.3) {
+            self.view.layoutIfNeeded()
+        }
+    }
+    
+    private func loadPuppyInfo() {
+        let userId = findUserId()
+        print("현재 로그인된 사용자 UUID: \(userId)")
 
-        setupMenuItems() // 메뉴 항목을 설정하는 함수 호출
+        viewModel.fetchMemberPets(memberId: userId)
+            .observe(on: MainScheduler.instance)
+            .subscribe(onSuccess: { [weak self] petList in
+                self?.handlePetList(petList)
+            }, onFailure: { error in
+                print("Error fetching pets: \(error.localizedDescription)")
+            }).disposed(by: disposeBag)
+    }
+    
+    private func handlePetList(_ petList: [Pet]) {
+        if !petList.isEmpty {
+            self.petList = petList
+            self.puppyCollectionView.isHidden = false
+            self.pageControl.isHidden = false
+            self.pageControl.numberOfPages = petList.count
+        } else {
+            self.puppyCollectionView.isHidden = true
+            self.pageControl.isHidden = true
+        }
+    }
+    
+    //MARK: Myinfo 관련 메서드
+    
+    private func navigateToMyInfoEdit() {
+        let myInfoEditVC = MyInfoEditViewController()
+        myInfoEditVC.setMember(member: self.memeber)
+
+        myInfoEditVC.updateSubject
+            .observe(on: MainScheduler.instance)
+            .subscribe(onNext: { [weak self] isUpdated in
+                print("updatesubject호출됨, \(isUpdated)")
+                guard let self = self else { return }
+                if isUpdated {
+                    print("loaduserinfo 처리됨")
+                    self.loadUserInfo()
+                }
+            })
+            .disposed(by: disposeBag)
+
+        if let navigationController = self.navigationController {
+            navigationController.pushViewController(myInfoEditVC, animated: true)
+        } else {
+            present(myInfoEditVC, animated: true, completion: nil)
+        }
+    }
+    
+    private func loadUserInfo() {
+        print("loaduserinfo 호출됨")
+        fetchMemberInfo()
+        
+        viewModel.memberSubject
+                .observe(on: MainScheduler.instance)
+                .subscribe(onNext: { [weak self] member in
+                    DispatchQueue.main.async {
+                        self?.memeber = member
+                        self?.nickNameLabel.text = member.nickname
+                        self?.myFootLabel.text = "내 발도장: \(member.footPrint)개"
+                        self?.loadProfileImage(urlString: member.profileImage)
+                    }
+                }).disposed(by: disposeBag)
+    }
+    
+    private func loadProfileImage(urlString: String) {
+        KingFisherManager.shared.loadProfileImage(urlString: urlString, into: profileImageView, placeholder: UIImage(named: "defaultProfileImage"))
+    }
+    
+    private func fetchMemberInfo() {
+        guard let user = Auth.auth().currentUser else { return }
+        viewModel.fetchMemberInfo(uuid: user.uid)
+    }
+    
+    //MARK: 로그아웃 관련 메서드
+    private func addButtonAction() {
+        logOutButton.addTarget(self, action: #selector(logOut), for: .touchUpInside)
+        memberLeaveButton.addTarget(self, action: #selector(leaveMemberButtonTap), for: .touchUpInside)
+    }
+    
+    @objc
+    private func logOut() {
+        okAlertWithCancel(title: "로그아웃",
+                          message: "정말로 로그아웃 하시겠습니까?",
+                          okActionTitle: "아니오",
+                          cancelActionTitle: "예",
+                          cancelActionHandler:  { _ in
+            AppController.shared.logOut()
+        })
+    }
+    
+    //MARK: 회원 탈퇴 관련 메서드
+    @objc
+    private func leaveMemberButtonTap() {
+        okAlertWithCancel(title: "회원 탈퇴",
+                message: "정말로 탈퇴하겠습니까?",
+                okActionTitle: "아니요",
+                cancelActionTitle: "예",
+                cancelActionHandler: { _ in
+            self.leaveMember()
+        })
+    }
+    
+    private func leaveMember() {
+        viewModel.resultSubject.observe(on: MainScheduler.instance).subscribe(onNext: { _ in
+            print("회원탈퇴 완료")
+            self.okAlert(title: "회원 탈퇴", message: "회원 탈퇴가 완료되었습니다.\n지금까지 퍼피팅을 이용해주셔서 감사합니다.", okActionHandler: { _ in
+                AppController.shared.logOut()
+            })
+        }, onError: { error in
+            print("회원 탈퇴 실패 \(error)")
+            self.okAlert(title: "회원 탈퇴", message: "알 수 없는 이유로 회원 탈퇴에 실패했습니다.\n다시 한번 진행해주세요.")
+        }).disposed(by: disposeBag)
+        guard let user = Auth.auth().currentUser else { return }
+        viewModel.leaveMember(uuid: user.uid)
     }
     
     // MARK: - Setup Menu Items
@@ -371,16 +514,14 @@ class MypageViewController: UIViewController {
 
         switch selectedIndex {
         case 0:
-            navigateToMyFeedManagement() // 내 피드 관리 페이지로 이동
+            navigateToMyFeedManagement()
         case 1:
-            // 다른 페이지로 이동 (받은 산책 후기)
             break
         case 2:
-            // 다른 페이지로 이동 (즐겨 찾는 친구)
-            break
+            let favorireListVC = FavoriteListViewController()
+            navigationController?.pushViewController(favorireListVC, animated: true)
         case 3:
-            // 다른 페이지로 이동 (차단 목록)
-            break
+            navigateToMyBlockList()
         default:
             break
         }
@@ -396,139 +537,144 @@ class MypageViewController: UIViewController {
         }
     }
     
-    // MARK: - Setup Bindings
-    private func setupBindings() {
-        addPuppyButton.rx.tap
-            .bind { [weak self] in
-                self?.navigateToPuppyRegistration()
-            }
-            .disposed(by: disposeBag)
-        
-        profileEditButton.rx.tap
-            .bind { [weak self] in
-                self?.navigateToMyInfoEdit()
-            }
-            .disposed(by: disposeBag)
-        
-        collectionView.rx.itemSelected
-            .bind { [weak self] indexPath in
-                self?.navigateToPuppyEdit(at: indexPath)
-            }
-            .disposed(by: disposeBag)
-    }
-
-    private func navigateToPuppyRegistration() {
-        let puppyRegistrationVC = PuppyRegistrationViewController()
-        puppyRegistrationVC.completionHandler = { [weak self] name, info, image in
-            self?.addPuppy(name: name, info: info, image: image)
-        }
+    // MARK: - 내 차단 목록으로 이동
+    private func navigateToMyBlockList() { // kkh
+        let myBlockListViewController = MyBlockListViewController()
         if let navigationController = self.navigationController {
-            navigationController.pushViewController(puppyRegistrationVC, animated: true)
+            navigationController.pushViewController(myBlockListViewController, animated: true)
         } else {
-            present(puppyRegistrationVC, animated: true, completion: nil)
+            present(myBlockListViewController, animated: true, completion: nil)
         }
-    }
-
-    private func navigateToMyInfoEdit() {
-        let myInfoEditVC = MyInfoEditViewController()
-        if let navigationController = self.navigationController {
-            navigationController.pushViewController(myInfoEditVC, animated: true)
-        } else {
-            present(myInfoEditVC, animated: true, completion: nil)
-        }
-    }
-
-    private func navigateToPuppyEdit(at indexPath: IndexPath) {
-        let puppy = puppies[indexPath.row]
-        let puppyRegistrationVC = PuppyRegistrationViewController()
-        puppyRegistrationVC.isEditMode = true
-        puppyRegistrationVC.setupWithPuppy(name: puppy.name, info: puppy.info, tag: puppy.tag)
-        puppyRegistrationVC.completionHandler = { [weak self] name, info, image in
-            self?.puppies[indexPath.row] = (name: name, info: info, tag: puppy.tag, image: image)
-            self?.collectionView.reloadItems(at: [indexPath])
-        }
-        if let navigationController = self.navigationController {
-            navigationController.pushViewController(puppyRegistrationVC, animated: true)
-        } else {
-            present(puppyRegistrationVC, animated: true, completion: nil)
-        }
-    }
-
-    private func addPuppy(name: String, info: String, image: UIImage?) {
-        let tag = "태그 예시" // 태그는 예시로 고정값을 사용
-        puppies.append((name: name, info: info, tag: tag, image: image)) // 데이터 추가
-        collectionView.reloadData()
-        pageControl.numberOfPages = puppies.count // 페이지 수 업데이트
-        collectionView.isHidden = false
-        pageControl.isHidden = false
-
-        collectionView.snp.updateConstraints {
-            $0.height.equalTo(150) // 컬렉션 뷰의 콘텐츠에 맞는 높이 설정
-        }
-
-        UIView.animate(withDuration: 0.3) {
-            self.view.layoutIfNeeded()
-        }
-    }
-
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        view.backgroundColor = .white
-        setupUI()
-        setupBindings()
-        findMember()
-        setData()
-        addButtonAction()
     }
     
-    private func setData() {
-        viewModel.memberSubject.observe(on: MainScheduler.instance).subscribe(onNext: { [weak self] member in
-            self?.memeber = member
-        }).disposed(by: disposeBag)
-    }
-    
-    private func findMember() {
-        guard let user = Auth.auth().currentUser else { return }
-        viewModel.findMember(uuid: user.uid)
-    }
-    
-    private func addButtonAction() {
-        logOutButton.addTarget(self, action: #selector(logOut), for: .touchUpInside)
-    }
-    
-    @objc
-    private func logOut() {
-        do {
-            try Auth.auth().signOut()
-            AppController.shared.logOut()
-        } catch {
-            print("로그아웃 실패")
+    // MARK: - Setup UI
+    private func setupUI() {
+        view.addSubview(scrollView)
+        scrollView.snp.makeConstraints {
+            $0.edges.equalTo(view.safeAreaLayoutGuide) // 안전 영역을 기준으로 설정
         }
 
-    }
-}
+        scrollView.addSubview(contentView)
+        contentView.snp.makeConstraints {
+            $0.edges.equalToSuperview()
+            $0.width.equalToSuperview() // 세로 스크롤만 가능하도록 가로 크기를 동일하게 설정
+        }
 
-// MARK: - UICollectionViewDataSource
-extension MypageViewController: UICollectionViewDataSource {
+        contentView.addSubview(stackView)
+        stackView.snp.makeConstraints {
+            $0.edges.equalToSuperview().inset(20)
+        }
 
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return puppies.count
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PuppyCollectionViewCell.identifier, for: indexPath) as? PuppyCollectionViewCell else {
-            return UICollectionViewCell()
+        [profileContainerView, puppyCollectionView, pageControl, addPuppyButton, menuContainerView].forEach {
+            stackView.addArrangedSubview($0)
+        }
+
+        [profileImageView, nickNameLabel, profileEditButton, myFootLabel].forEach {
+            profileContainerView.addSubview($0)
+        }
+
+        profileContainerView.snp.makeConstraints {
+            $0.height.equalTo(150)
+        }
+
+        profileImageView.snp.makeConstraints {
+            $0.top.equalToSuperview().offset(10)
+            $0.left.equalToSuperview().offset(10)
+            $0.width.height.equalTo(60)
+        }
+
+        nickNameLabel.snp.makeConstraints {
+            $0.left.equalTo(profileImageView.snp.right).offset(10)
+            $0.centerY.equalTo(profileImageView.snp.centerY)
+        }
+
+        profileEditButton.snp.makeConstraints {
+            $0.top.equalToSuperview().offset(20)
+            $0.right.equalToSuperview().offset(-20)
+            $0.width.equalTo(70)
+            $0.height.equalTo(44)
+        }
+
+        myFootLabel.snp.makeConstraints {
+            $0.centerX.equalToSuperview()
+            $0.top.equalTo(nickNameLabel.snp.bottom).offset(30)
+            $0.height.equalTo(44)
+        }
+
+        puppyCollectionView.snp.makeConstraints {
+            $0.height.equalTo(0)
+            $0.left.right.equalToSuperview()
+        }
+
+        pageControl.snp.makeConstraints {
+            $0.height.equalTo(20)
+        }
+
+        addPuppyButton.snp.makeConstraints {
+            $0.height.equalTo(44)
+        }
+
+        menuContainerView.snp.makeConstraints {
+            $0.height.equalTo(250)
+        }
+
+        let upperButtonsStackView = UIStackView(arrangedSubviews: [customerSupportButton, faqButton, noticeButton])
+        upperButtonsStackView.axis = .horizontal
+        upperButtonsStackView.spacing = 20
+        upperButtonsStackView.distribution = .equalSpacing
+
+        let lowerButtonsStackView = UIStackView(arrangedSubviews: [logOutButton, memberLeaveButton])
+        lowerButtonsStackView.axis = .horizontal
+        lowerButtonsStackView.spacing = 20
+        lowerButtonsStackView.distribution = .equalSpacing
+
+        let olympicButtonsContainer = UIStackView(arrangedSubviews: [upperButtonsStackView, lowerButtonsStackView])
+        olympicButtonsContainer.axis = .vertical
+        olympicButtonsContainer.spacing = 20
+        olympicButtonsContainer.alignment = .center
+
+        stackView.addArrangedSubview(olympicButtonsContainer)
+
+        customerSupportButton.snp.makeConstraints {
+            $0.top.equalTo(menuContainerView.snp.bottom).offset(30)
+            $0.right.equalTo(faqButton.snp.left).offset(-20)
+            $0.width.equalTo(100)
+            $0.height.equalTo(44)
         }
         
-        let puppy = puppies[indexPath.row]
-        cell.configure(with: puppy)
-        return cell
+        faqButton.snp.makeConstraints {
+            $0.top.equalTo(customerSupportButton)
+            $0.centerX.equalToSuperview()
+            $0.width.height.equalTo(customerSupportButton)
+        }
+        
+        noticeButton.snp.makeConstraints {
+            $0.top.equalTo(customerSupportButton)
+            $0.left.equalTo(faqButton.snp.right).offset(20)
+            $0.width.height.equalTo(customerSupportButton)
+        }
+        
+        logOutButton.snp.makeConstraints {
+            $0.top.equalTo(customerSupportButton.snp.bottom).offset(30)
+            $0.left.equalToSuperview().offset(0)
+            $0.width.equalTo(135)
+            $0.height.equalTo(44)
+        }
+        
+        memberLeaveButton.snp.makeConstraints {
+            $0.top.equalTo(logOutButton)
+            $0.left.equalTo(logOutButton.snp.right).offset(30)
+            $0.width.height.equalTo(logOutButton)
+        }
+
+        puppyCollectionView.register(PuppyCollectionViewCell.self, forCellWithReuseIdentifier: PuppyCollectionViewCell.identifier)
+
+        setupMenuItems() // 메뉴 항목을 설정하는 함수 호출
     }
 }
 
 // MARK: - UICollectionViewDelegateFlowLayout
 extension MypageViewController: UICollectionViewDelegateFlowLayout {
-    
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         return CGSize(width: collectionView.bounds.width, height: collectionView.bounds.height - 20)
     }

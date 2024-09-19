@@ -4,7 +4,6 @@
 //
 //  Created by 김승희 on 8/27/24.
 //
-
 import UIKit
 
 import FirebaseAuth
@@ -16,6 +15,8 @@ class TingCollectionViewCell: UICollectionViewCell {
     private let disposeBag = DisposeBag()
     
     var viewController: UIViewController?
+    let calendar = Calendar.current
+    let currentDate = Date()
     
     //MARK: 컴포넌트 선언
     private let shadowContainerView: UIView = {
@@ -33,6 +34,9 @@ class TingCollectionViewCell: UICollectionViewCell {
     private let profilePic: UIImageView = {
         let imageView = UIImageView()
         imageView.image = UIImage(named: "defaultProfileImage")
+        imageView.layer.cornerRadius = 25
+        imageView.layer.masksToBounds = true
+        imageView.clipsToBounds = true
         return imageView
     }()
     
@@ -73,16 +77,17 @@ class TingCollectionViewCell: UICollectionViewCell {
         let styleText = NSAttributedString(string:
                                             "오늘 어디어디에서 산책하실 분 있나요? 경로는 아직 구체적으로 정해지지 않았지만 대략적인 방향은 잡아두었습니다. 산책시간은 오후 늦게쯤을 생각하고 있어요. 함께 산책하면 더욱 즐거운 시간이 될 것 같아요! 강아지와 함께 가볍게 산책하며 좋은 시간을 보내고 싶다면 꼭 함께해 주세요. 이따가 만나서 즐거운 시간을 보내면 좋겠습니다! 날씨도 좋으니, 산책 후에는 근처 카페에서 차 한 잔 하며 쉬어가도 좋을 것 같아요."
                                            , attributes: [
-            .font: UIFont.systemFont(ofSize: 14, weight: .medium),
-            .paragraphStyle: style])
+                                            .font: UIFont.systemFont(ofSize: 14, weight: .medium),
+                                            .paragraphStyle: style])
         label.attributedText = styleText
         label.numberOfLines = 3
         label.textAlignment = .left
         label.lineBreakMode = .byTruncatingTail
+//        label.setContentCompressionResistancePriority(.required, for: .vertical)
+//        label.setContentHuggingPriority(.required, for: .vertical)
         return label
     }()
     
-    // 추후 mapKit으로 수정예정
     private let mapView: UIImageView = {
         let map = UIImageView()
         map.image = UIImage(named: "mapPhoto")
@@ -105,6 +110,13 @@ class TingCollectionViewCell: UICollectionViewCell {
         return button
     }()
     
+    private let hidableStack: UIStackView = {
+        let stack = UIStackView()
+        stack.spacing = 20
+        stack.axis = .vertical
+        return stack
+    }()
+    
     //MARK: View 생명주기
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -118,19 +130,27 @@ class TingCollectionViewCell: UICollectionViewCell {
     }
     
     //MARK: config 메서드
-    func configure(with model: TingFeedModel) {
+    func configure(with model: TingFeedModel, currentUserID: String) {
         self.nameLabel.text = model.userid
         self.content.text = model.content
-
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy-MM-dd HH:mm"
-        self.timeLabel.text = dateFormatter.string(from: model.time)
+        messageSendButton.isHidden = model.userid == currentUserID
+        
+        changeDateFormat(time: model.time)
+        
         self.footPrintLabel.text = "🐾 발도장 \(model.postid)개"
         
         FireStoreDatabaseManager.shared.findMemeber(uuid: model.userid)
             .subscribe(onSuccess: { [weak self] member in
                 self?.nameLabel.text = member.nickname
                 self?.footPrintLabel.text = "🐾 발도장 \(member.footPrint)개"
+                
+                if member.profileImage == "defaultProfileImage" {
+                            self?.profilePic.image = UIImage(named: "defaultProfileImage")
+                } else {
+                    if let profilePic = self?.profilePic {
+                        KingFisherManager.shared.loadProfileImage(urlString: member.profileImage, into: profilePic, placeholder: UIImage(named: "defaultProfileImage"))
+                    }
+                }
             }, onFailure: { error in
                 print("멤버 찾기 실패: \(error)")
             }).disposed(by: disposeBag)
@@ -154,6 +174,24 @@ class TingCollectionViewCell: UICollectionViewCell {
     private func createRoom() {
         guard let name = nameLabel.text else { return }
         createChatRoom(chatRoomName: name, users: users)
+    }
+    
+    private func changeDateFormat(time: Date) {
+        let dateFormatter = DateFormatter()
+        let timeDifference = calendar.dateComponents([.minute, .hour, .day], from: time, to: currentDate)
+            
+        if let minute = timeDifference.minute, let hour = timeDifference.hour, let day = timeDifference.day {
+            if day > 0 {
+                dateFormatter.dateFormat = "yyyy-MM-dd"
+                self.timeLabel.text = dateFormatter.string(from: time)
+            } else if hour > 0 {
+                self.timeLabel.text = "\(hour)시간 전"
+            } else if minute > 0 {
+                self.timeLabel.text = "\(minute)분 전"
+            } else {
+                self.timeLabel.text = "방금 전"
+            }
+        }
     }
     
     private func findUserId() -> String {
@@ -199,12 +237,14 @@ class TingCollectionViewCell: UICollectionViewCell {
     private func setConstraints() {
         [nameLabel,
          timeLabel].forEach { infoStack.addArrangedSubview($0) }
+        
+        [content,
+         messageSendButton].forEach { hidableStack.addArrangedSubview($0) }
+        
         [shadowContainerView, profilePic,
          infoStack,
          footPrintLabel,
-         content,
-         mapView,
-         messageSendButton].forEach { contentView.addSubview($0) }
+         hidableStack].forEach { contentView.addSubview($0) }
         
         shadowContainerView.snp.makeConstraints {
             $0.edges.equalToSuperview().inset(5)
@@ -226,22 +266,19 @@ class TingCollectionViewCell: UICollectionViewCell {
             $0.centerY.equalTo(profilePic)
         }
         
-        content.snp.makeConstraints {
-            $0.top.equalTo(profilePic.snp.bottom).offset(20)
+        hidableStack.snp.makeConstraints {
+            $0.top.equalTo(infoStack.snp.bottom).offset(20)
             $0.leading.trailing.equalToSuperview().inset(20)
+            $0.bottom.equalToSuperview().offset(-20)
         }
         
-        mapView.snp.makeConstraints {
-            $0.top.equalTo(content.snp.bottom).offset(20)
-            $0.leading.trailing.equalToSuperview().inset(20)
-            $0.height.equalTo(70)
-        }
+//        content.snp.makeConstraints {
+//            $0.leading.trailing.equalToSuperview().inset(20)
+//        }
         
         messageSendButton.snp.makeConstraints {
-            $0.top.equalTo(mapView.snp.bottom).offset(20)
-            $0.leading.trailing.equalToSuperview().inset(20)
+            // $0.leading.trailing.equalToSuperview().inset(20)
             $0.height.equalTo(44)
-            $0.bottom.equalToSuperview().offset(-30)
         }
     }
 }

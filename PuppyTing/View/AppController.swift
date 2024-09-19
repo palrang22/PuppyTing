@@ -9,14 +9,17 @@ import Foundation
 import UIKit
 
 import FirebaseAuth
+import FirebaseAuthInternal
 import FirebaseCore
 
 final class AppController {
     static let shared = AppController()
     
+    var isPasswordUpdating = false
+    private var authStateListenerHandle: AuthStateDidChangeListenerHandle?
+    
     private init() {
-        FirebaseApp.configure()
-        registerAuthStateDidChangeEvent()
+//        FirebaseApp.configure()
     }
     
     private var window: UIWindow!
@@ -32,30 +35,41 @@ final class AppController {
         window.backgroundColor = .systemBackground
         window.makeKeyAndVisible()
         
-        if Auth.auth().currentUser == nil {
-            routeToLogin()
-        }
+        checkLoginStatus()
+        removeAuthStateListener()
     }
     
-    private func registerAuthStateDidChangeEvent() {
-        NotificationCenter.default.addObserver(self, selector: #selector(checkLogin), name: .AuthStateDidChange, object: nil)
-    }
-    
-    @objc
-    private func checkLogin() {
-        if let user = Auth.auth().currentUser {
-            print("user = \(user.email)")
-            if user.isEmailVerified {
-                setHome()
+    private func checkLoginStatus() {
+        authStateListenerHandle = Auth.auth().addStateDidChangeListener { auth, user in
+            if let user = user {
+                if user.isEmailVerified {
+                    self.checkUserData(user: user)
+                } else {
+                    self.routeToLogin()
+                }
             } else {
-                routeToLogin()
+                self.routeToLogin()
             }
-        } else {
-            routeToLogin()
         }
     }
     
-    private func setHome() {
+    private func checkUserData(user: User) {
+        FireStoreDatabaseManager.shared.checkUserData(user: user) { result in
+            if result {
+                self.setHome()
+            } else {
+                self.logOut()
+            }
+        }
+    }
+    
+    private func removeAuthStateListener() {
+        if let handle = authStateListenerHandle {
+            Auth.auth().removeStateDidChangeListener(handle)
+        }
+    }
+    
+    func setHome() {
         let homeVC = TabBarController()
         rootViewController = homeVC
     }
@@ -65,7 +79,12 @@ final class AppController {
     }
     
     func logOut() {
-        routeToLogin()
+        do {
+            try Auth.auth().signOut()
+            routeToLogin()
+        } catch {
+            print("로그아웃 실패")
+        }
     }
     
 }

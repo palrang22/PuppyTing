@@ -92,4 +92,14 @@ class PuppyCollectionViewCell: UICollectionViewCell {
         puppyTagLabel.text = puppy.tag
         puppyImageView.image = puppy.image ?? UIImage(systemName: "person.crop.circle")
     }
+    
+    func config(puppy: Pet) {
+        puppyNameLabel.text = puppy.name
+        puppyInfoLabel.text = "\(puppy.age)살"
+        
+        let tag = puppy.tag.joined(separator: ", ")
+        puppyTagLabel.text = tag
+        
+        KingFisherManager.shared.loadProfileImage(urlString: puppy.petImage, into: puppyImageView)
+    }
 }
