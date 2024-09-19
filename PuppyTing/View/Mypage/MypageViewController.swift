@@ -409,6 +409,7 @@ class MypageViewController: UIViewController {
     //MARK: 로그아웃 관련 메서드
     private func addButtonAction() {
         logOutButton.addTarget(self, action: #selector(logOut), for: .touchUpInside)
+        memberLeaveButton.addTarget(self, action: #selector(leaveMemberButtonTap), for: .touchUpInside)
     }
     
     @objc
@@ -420,6 +421,32 @@ class MypageViewController: UIViewController {
                           cancelActionHandler:  { _ in
             AppController.shared.logOut()
         })
+    }
+    
+    //MARK: 회원 탈퇴 관련 메서드
+    @objc
+    private func leaveMemberButtonTap() {
+        okAlertWithCancel(title: "회원 탈퇴",
+                message: "정말로 탈퇴하겠습니까?",
+                okActionTitle: "아니요",
+                cancelActionTitle: "예",
+                cancelActionHandler: { _ in
+            self.leaveMember()
+        })
+    }
+    
+    private func leaveMember() {
+        viewModel.resultSubject.observe(on: MainScheduler.instance).subscribe(onNext: { _ in
+            print("회원탈퇴 완료")
+            self.okAlert(title: "회원 탈퇴", message: "회원 탈퇴가 완료되었습니다.\n지금까지 퍼피팅을 이용해주셔서 감사합니다.", okActionHandler: { _ in
+                AppController.shared.logOut()
+            })
+        }, onError: { error in
+            print("회원 탈퇴 실패 \(error)")
+            self.okAlert(title: "회원 탈퇴", message: "알 수 없는 이유로 회원 탈퇴에 실패했습니다.\n다시 한번 진행해주세요.")
+        }).disposed(by: disposeBag)
+        guard let user = Auth.auth().currentUser else { return }
+        viewModel.leaveMember(uuid: user.uid)
     }
     
     // MARK: - Setup Menu Items
