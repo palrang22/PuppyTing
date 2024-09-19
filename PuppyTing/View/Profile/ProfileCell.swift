@@ -41,6 +41,7 @@ class ProfileCell: UICollectionViewCell {
         imageView.clipsToBounds = true
         imageView.tintColor = .black
         imageView.image = UIImage(named: "defaultProfileImage")
+        imageView.layer.cornerRadius = 30
         return imageView
     }()
     
@@ -144,12 +145,12 @@ class ProfileCell: UICollectionViewCell {
         
         profileImageView.snp.makeConstraints {
             $0.top.equalToSuperview().offset(10)
-            $0.left.equalToSuperview().offset(10)
+            $0.leading.equalToSuperview().offset(10)
             $0.width.height.equalTo(60)
         }
         
         nicknameLabel.snp.makeConstraints {
-            $0.left.equalTo(profileImageView.snp.right).offset(10)
+            $0.left.equalTo(profileImageView.snp.right).offset(15)
             $0.centerY.equalTo(profileImageView.snp.centerY)
         }
         
@@ -179,23 +180,25 @@ class ProfileCell: UICollectionViewCell {
         
         footButton.snp.makeConstraints {
             $0.top.equalToSuperview()
-            $0.trailing.equalTo(favoriteButton.snp.leading).offset(-5)
+            $0.centerY.equalTo(favoriteButton.snp.centerY)
+            $0.leading.equalToSuperview().offset(10)
             $0.height.equalTo(44)
-            $0.width.equalTo(110)
+            $0.width.equalTo(100)
         }
         
         favoriteButton.snp.makeConstraints {
             $0.top.equalToSuperview()
             $0.centerX.equalToSuperview()
             $0.height.equalTo(44)
-            $0.width.equalTo(110)
+            $0.width.equalTo(100)
         }
         
         blockButton.snp.makeConstraints {
             $0.top.equalToSuperview()
-            $0.leading.equalTo(favoriteButton.snp.trailing).offset(5)
+            $0.centerY.equalTo(favoriteButton.snp.centerY)
+            $0.trailing.equalToSuperview().offset(-10)
             $0.height.equalTo(44)
-            $0.width.equalTo(110)
+            $0.width.equalTo(100)
         }
     }
     
