@@ -40,7 +40,7 @@ class PptLoginViewController: UIViewController {
         let textField = UITextField()
         textField.placeholder = "이메일을 입력하세요."
         textField.borderStyle = .roundedRect
-        textField.layer.borderColor = UIColor.darkGray.cgColor
+        textField.layer.borderColor = UIColor.gray.cgColor
         textField.layer.borderWidth = 1.0
         textField.layer.cornerRadius = 5
         return textField
@@ -50,7 +50,7 @@ class PptLoginViewController: UIViewController {
         let textField = UITextField()
         textField.placeholder = "비밀번호를 입력하세요."
         textField.borderStyle = .roundedRect
-        textField.layer.borderColor = UIColor.darkGray.cgColor
+        textField.layer.borderColor = UIColor.gray.cgColor
         textField.layer.borderWidth = 1.0
         textField.layer.cornerRadius = 5
         textField.isSecureTextEntry = true // 비밀번호 입력 숨기기
@@ -59,16 +59,18 @@ class PptLoginViewController: UIViewController {
     
     let loginButton: UIButton = {
         let button = UIButton(type: .system)
-        button.backgroundColor = UIColor.puppyPurple
+//        button.backgroundColor = UIColor.lightPuppyPurple
+        button.layer.borderColor = UIColor.puppyPurple.cgColor
+        button.layer.borderWidth = 2
         button.setTitle("로그인", for: .normal)
-        button.setTitleColor(.white, for: .normal)
+        button.setTitleColor(.black, for: .normal)
         button.layer.cornerRadius = 5
         return button
     }()
     
     let signupButton: UIButton = {
         let button = UIButton(type: .system)
-        button.backgroundColor = UIColor.puppyPurple
+        button.backgroundColor = UIColor.darkPuppyPurple
         button.setTitle("회원가입", for: .normal)
         button.setTitleColor(.white, for: .normal)
         button.layer.cornerRadius = 5
@@ -117,7 +119,7 @@ class PptLoginViewController: UIViewController {
         }
         
         pwfield.snp.makeConstraints {
-            $0.bottom.equalTo(loginButton.snp.top).offset(-15)
+            $0.bottom.equalTo(loginButton.snp.top).offset(-40)
             $0.centerX.equalTo(view.safeAreaLayoutGuide)
             $0.leading.trailing.height.equalTo(signupButton)
         }
