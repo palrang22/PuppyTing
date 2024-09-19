@@ -64,6 +64,7 @@
 		C29FD01B2C9BFE5F00F8951D /* MyBlockListTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C29FD01A2C9BFE5F00F8951D /* MyBlockListTableViewCell.swift */; };
 		C29FD01D2C9BFEA900F8951D /* MyBolckListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C29FD01C2C9BFEA900F8951D /* MyBolckListViewController.swift */; };
 		C29FD01F2C9BFEDC00F8951D /* BlockListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C29FD01E2C9BFEDC00F8951D /* BlockListViewModel.swift */; };
+		C29FD0212C9C408400F8951D /* MyFeedManageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C29FD0202C9C408400F8951D /* MyFeedManageViewModel.swift */; };
 		E70DB3452C7F0CB60073B3F8 /* PostTingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E70DB3442C7F0CB60073B3F8 /* PostTingViewController.swift */; };
 		E70DB3472C7F0CD00073B3F8 /* DetailTingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E70DB3462C7F0CD00073B3F8 /* DetailTingViewController.swift */; };
 		E70DB3492C7F3F060073B3F8 /* UIViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E70DB3482C7F3F060073B3F8 /* UIViewController.swift */; };
@@ -146,6 +147,7 @@
 		C29FD01A2C9BFE5F00F8951D /* MyBlockListTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyBlockListTableViewCell.swift; sourceTree = "<group>"; };
 		C29FD01C2C9BFEA900F8951D /* MyBolckListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyBolckListViewController.swift; sourceTree = "<group>"; };
 		C29FD01E2C9BFEDC00F8951D /* BlockListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlockListViewModel.swift; sourceTree = "<group>"; };
+		C29FD0202C9C408400F8951D /* MyFeedManageViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyFeedManageViewModel.swift; sourceTree = "<group>"; };
 		E70DB3442C7F0CB60073B3F8 /* PostTingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostTingViewController.swift; sourceTree = "<group>"; };
 		E70DB3462C7F0CD00073B3F8 /* DetailTingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailTingViewController.swift; sourceTree = "<group>"; };
 		E70DB3482C7F3F060073B3F8 /* UIViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIViewController.swift; sourceTree = "<group>"; };
@@ -338,6 +340,7 @@
 			children = (
 				E738FBA52C7C66C9004696BD /* MyPageViewModel.swift */,
 				A2F9FE582C8C2193004D7FF6 /* MyInfoEditVIewModel.swift */,
+				C29FD0202C9C408400F8951D /* MyFeedManageViewModel.swift */,
 				A2F9FE6D2C8DAFD8004D7FF6 /* PuppyRegistrationViewModel.swift */,
 				56EF72412C94315C00CC919F /* FavoriteListViewModel.swift */,
 				C29FD01E2C9BFEDC00F8951D /* BlockListViewModel.swift */,
@@ -613,6 +616,7 @@
 				E738FB952C7C64BA004696BD /* UIColor.swift in Sources */,
 				C29FCF772C8171FA00F8951D /* MyInfoEditViewController.swift in Sources */,
 				E738FB9E2C7C668D004696BD /* MypageViewController.swift in Sources */,
+				C29FD0212C9C408400F8951D /* MyFeedManageViewModel.swift in Sources */,
 				A2F9FE552C89E082004D7FF6 /* ChatRoomViewModel.swift in Sources */,
 				A2085DCD2C804C3600698923 /* SignUpViewModel.swift in Sources */,
 				E738FBA22C7C66AC004696BD /* TingViewModel.swift in Sources */,

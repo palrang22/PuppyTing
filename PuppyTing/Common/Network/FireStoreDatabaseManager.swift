@@ -7,10 +7,12 @@
 
 import Foundation
 
+import CoreLocation
 import FirebaseAuth
 import FirebaseCore
 import FirebaseFirestore
 import RxSwift
+
 
 class FireStoreDatabaseManager {
     
@@ -194,6 +196,40 @@ class FireStoreDatabaseManager {
         }
     }
     
+    func fetchFeeds(forUserId userId: String) -> Single<[TingFeedModel]> { // kkh
+        return Single.create { [weak self] single in
+            self?.db.collection("tingFeeds")
+                .whereField("userid", isEqualTo: userId) // userid로 필터링
+                .getDocuments { snapshot, error in
+                    if let error = error {
+                        single(.failure(error))
+                    } else {
+                        var feeds: [TingFeedModel] = []
+                        
+                        snapshot?.documents.forEach { document in
+                            let data = document.data()
+                            if let content = data["content"] as? String,
+                               let timestamp = data["timestamp"] as? Timestamp {
+                                
+                                let feed = TingFeedModel(
+                                    userid: userId,
+                                    postid: document.documentID,
+                                    location: CLLocationCoordinate2D(latitude: 0, longitude: 0),
+                                    content: content,
+                                    time: timestamp.dateValue()
+                                )
+                                
+                                feeds.append(feed)
+                            }
+                        }
+                        
+                        single(.success(feeds))
+                    }
+                }
+            return Disposables.create()
+        }
+    }
+
     func reportPost(report: Report) -> Single<Void> {
         return Single.create { [weak self] single in
             self?.db.collection("report").addDocument(data: report.dictionary) { error in
@@ -312,5 +348,15 @@ class FireStoreDatabaseManager {
             }
             return Disposables.create()
         }
+    }
+    
+    func deleteFeed(withId feedId: String, completion: @escaping (Error?) -> Void) { // kkh
+            deleteDocument(from: "tingFeeds", documentId: feedId)
+                .subscribe(onSuccess: {
+                    completion(nil) // 삭제 성공 시 nil 반환
+                }, onError: { error in
+                    completion(error)
+                })
+                .disposed(by: disposeBag)
     }
 }
