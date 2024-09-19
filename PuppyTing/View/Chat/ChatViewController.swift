@@ -127,6 +127,7 @@ class ChatViewController: UIViewController {
             fetchMessages: Observable.just(()),
             sendMessage: sendButton.rx.tap
                 .withLatestFrom(messageTextView.rx.text.orEmpty)
+                .filter { !$0.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty } // 빈메세지 필터링 - jgh
                 .asObservable()
         )
         
