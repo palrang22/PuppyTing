@@ -21,11 +21,10 @@ class PptLoginViewController: UIViewController {
     let eRegex = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,64}"
     let pRegex = "^(?=.*[A-Za-z])(?=.*[0-9])(?=.*[!@#$%^&*()_+=-]).{8,50}" // 8자리 ~ 50자리 영어+숫자+특수문자
     
+    // 버튼 이미지로 변경 - jgh
     let closeButton: UIButton = {
         let button = UIButton(type: .system)
-        button.setTitle("✕", for: .normal)
-        button.titleLabel?.font = .systemFont(ofSize: 20)
-        button.setTitleColor(.black, for: .normal)
+        button.setImage(UIImage(named: "closeButton")?.withRenderingMode(.alwaysOriginal), for: .normal)
         return button
     }()
     
@@ -59,11 +58,11 @@ class PptLoginViewController: UIViewController {
     
     let loginButton: UIButton = {
         let button = UIButton(type: .system)
-        button.backgroundColor = UIColor.puppyPurple
-//        button.layer.borderColor = UIColor.puppyPurple.cgColor
-//        button.layer.borderWidth = 2
+//        button.backgroundColor = UIColor.puppyPurple
+        button.layer.borderColor = UIColor.puppyPurple.cgColor
+        button.layer.borderWidth = 2
         button.setTitle("로그인", for: .normal)
-        button.setTitleColor(.white, for: .normal)
+        button.setTitleColor(.black, for: .normal)
         button.layer.cornerRadius = 5
         return button
     }()

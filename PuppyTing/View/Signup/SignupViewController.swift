@@ -21,12 +21,19 @@ class SignupViewController: UIViewController {
     
     let signUpViewModel = SignUpViewModel()
 
+    // 버튼 이미지로 변경 - jgh
     let cancleButton: UIButton = {
         let button = UIButton(type: .system)
-        button.setTitle("✕", for: .normal)
-        button.titleLabel?.font = .systemFont(ofSize: 20)
-        button.setTitleColor(.black, for: .normal)
+        button.setImage(UIImage(named: "closeButton")?.withRenderingMode(.alwaysOriginal), for: .normal)
         return button
+    }()
+    
+    // 회원가입 타이틀 - jgh
+    let signTitle: UILabel = {
+        let label = UILabel()
+        label.text = "회원가입"
+        label.font = UIFont.boldSystemFont(ofSize: 25)
+        return label
     }()
     
     let emailLabel: UILabel = {
@@ -50,6 +57,7 @@ class SignupViewController: UIViewController {
         textField.layer.borderColor = UIColor.darkGray.cgColor
         textField.layer.borderWidth = 1.0
         textField.layer.cornerRadius = 5
+        textField.placeholder = "example@mail.com"
         return textField
     }()
     
@@ -75,6 +83,7 @@ class SignupViewController: UIViewController {
         textField.layer.borderWidth = 1.0
         textField.layer.cornerRadius = 5
         textField.isSecureTextEntry = true // 비밀번호 입력 숨기기
+        textField.placeholder = "examplepw1@"
         return textField
     }()
     
@@ -138,6 +147,7 @@ class SignupViewController: UIViewController {
         textField.layer.borderWidth = 1.0
         textField.layer.cornerRadius = 5
         textField.isSecureTextEntry = true // 비밀번호 입력 숨기기
+        textField.placeholder = "examplepw1@"
         return textField
     }()
     
@@ -216,7 +226,7 @@ class SignupViewController: UIViewController {
     }
     
     private func configureUI() {
-        [cancleButton, emailLabel, emailCheck, emailTextField, pwLabel, pwCheck, pwTextField, guideLine, eTrueLable, eFalseLable, pTrueLable, pFalseLable, confirmLabel, confirmCheck, confirmPwTextField, cTrueLable, cFalseLable, nickLabel, nickCheck, nickTextField, nTrueLable, nFalseLable, signUpButton].forEach {
+        [cancleButton, signTitle, emailLabel, emailCheck, emailTextField, pwLabel, pwCheck, pwTextField, guideLine, eTrueLable, eFalseLable, pTrueLable, pFalseLable, confirmLabel, confirmCheck, confirmPwTextField, cTrueLable, cFalseLable, nickLabel, nickCheck, nickTextField, nTrueLable, nFalseLable, signUpButton].forEach {
             view.addSubview($0)
         }
         
@@ -224,6 +234,11 @@ class SignupViewController: UIViewController {
             $0.top.equalTo(view.safeAreaLayoutGuide)
             $0.leading.equalTo(view.safeAreaLayoutGuide).offset(10)
             $0.height.width.equalTo(44)
+        }
+        
+        signTitle.snp.makeConstraints {
+            $0.top.equalTo(cancleButton.snp.bottom).offset(10)
+            $0.leading.equalTo(emailLabel.snp.leading)
         }
         
         emailLabel.snp.makeConstraints {
