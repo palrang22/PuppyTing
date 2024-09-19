@@ -1,10 +1,3 @@
-//
-//  PuppyVRegistrationViewModel.swift
-//  PuppyTing
-//
-//  Created by 박승환 on 9/8/24.
-//
-
 import UIKit
 
 import FirebaseFirestore

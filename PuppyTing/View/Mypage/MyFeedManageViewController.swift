@@ -4,20 +4,15 @@ import RxCocoa
 import RxSwift
 import SnapKit
 
-class MyFeedManageViewController: UIViewController {
+class MyFeedManageViewController: UIViewController { // kkh
     
     private let disposeBag = DisposeBag()
     private let tableView = UITableView()
-    
+    private var feeds: [TingFeedModel] = []
+    private let viewModel = MyFeedManageViewModel()
+
     private func setupNavigationBar() {
         navigationItem.title = "내 피드 관리"
-        
-        let editButton = UIBarButtonItem(title: "삭제", style: .plain, target: self, action: #selector(handleEditButtonTapped))
-        navigationItem.rightBarButtonItem = editButton
-    }
-
-    @objc private func handleEditButtonTapped() {
-        print("Edit button tapped")
     }
 
     private func setupTableView() {
@@ -27,9 +22,7 @@ class MyFeedManageViewController: UIViewController {
             $0.leading.trailing.bottom.equalToSuperview()
         }
         
-        // 커스텀 셀 등록
         tableView.register(MyFeedTableViewCell.self, forCellReuseIdentifier: MyFeedTableViewCell.identifier)
-        
         tableView.dataSource = self
         tableView.delegate = self
     }
@@ -40,40 +33,52 @@ class MyFeedManageViewController: UIViewController {
         
         setupNavigationBar()
         setupTableView()
+        bindViewModel()
+        viewModel.fetchFeeds()
+    }
+
+    private func bindViewModel() {
+        viewModel.feedsSubject
+            .subscribe(onNext: { [weak self] feeds in
+                print("Received feeds: \(feeds)")
+                self?.feeds = feeds
+                self?.tableView.reloadData()
+            }, onError: { error in
+                print("Error receiving feeds: \(error.localizedDescription)")
+            })
+            .disposed(by: disposeBag)
     }
 }
 
 extension MyFeedManageViewController: UITableViewDataSource, UITableViewDelegate {
     
-    // 셀 수
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 10 // 예시로 10개의 셀을 반환
+        return feeds.count
     }
     
-    // 셀 구성
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: MyFeedTableViewCell.identifier, for: indexPath) as? MyFeedTableViewCell else {
             return UITableViewCell()
         }
         
-        // 데이터 설정 (임의의 데이터)
-        let title = "피드 제목 \(indexPath.row + 1)"
-        let date = "2024-09-0\(indexPath.row + 1)"
-        let description = "이것은 게시글의 내용이 들어갈 곳 여러 줄을 입력할 수 있으며 텍스트가 길면 자동으로 줄바꿈이 됨"
-        
-        // 셀에 제목, 날짜, 설명 데이터 설정
-        cell.configure(with: title, description: description, datelabel: date)
-        
+        let feed = feeds[indexPath.row]
+        cell.configure(with: feed)
         return cell
     }
     
-    // 셀 높이 자동 조정
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return UITableView.automaticDimension
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let selectedFeed = feeds[indexPath.row]
+       
+        let detailVC = DetailTingViewController()
+        detailVC.tingFeedModels = selectedFeed
+        detailVC.delegate = self // Delegate 설정
+        
+        navigationController?.pushViewController(detailVC, animated: true)
     }
-    
-    // 셀 높이 예측
-    func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 100
+}
+
+extension MyFeedManageViewController: DetailTingViewControllerDelegate {
+    func didDeleteFeed() {
+        viewModel.fetchFeeds()
     }
 }
