@@ -148,7 +148,6 @@
 		C29FD01C2C9BFEA900F8951D /* MyBlockListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyBlockListViewController.swift; sourceTree = "<group>"; };
 		C29FD01E2C9BFEDC00F8951D /* BlockListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlockListViewModel.swift; sourceTree = "<group>"; };
 		C29FD0202C9C408400F8951D /* MyFeedManageViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyFeedManageViewModel.swift; sourceTree = "<group>"; };
-		C29FD0962C9C995000F8951D /* PuppyTing copy-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "PuppyTing copy-Info.plist"; path = "/Users/t2023-m0112/Desktop/MyRepository/PuppyTing/PuppyTing copy-Info.plist"; sourceTree = "<absolute>"; };
 		E70DB3442C7F0CB60073B3F8 /* PostTingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostTingViewController.swift; sourceTree = "<group>"; };
 		E70DB3462C7F0CD00073B3F8 /* DetailTingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailTingViewController.swift; sourceTree = "<group>"; };
 		E70DB3482C7F3F060073B3F8 /* UIViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIViewController.swift; sourceTree = "<group>"; };
@@ -298,7 +297,6 @@
 				E738FB752C7C62EE004696BD /* PuppyTing */,
 				E738FB742C7C62EE004696BD /* Products */,
 				A2F9FE5C2C8C4DAD004D7FF6 /* Frameworks */,
-				C29FD0962C9C995000F8951D /* PuppyTing copy-Info.plist */,
 			);
 			sourceTree = "<group>";
 		};
