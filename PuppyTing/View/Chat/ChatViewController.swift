@@ -155,6 +155,7 @@ class ChatViewController: UIViewController {
                     let dateFormatter = DateFormatter()
                     dateFormatter.dateFormat = "HH:mm"
                     let dateString = dateFormatter.string(from: date)
+                    cell.config(image: "nil", message: message.text, time: dateString, nickname: "알 수 없음")
                     self.viewModel.findMember(uuid: message.senderId)
                     self.viewModel.memberSubject
                         .observe(on: MainScheduler.instance)

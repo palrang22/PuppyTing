@@ -250,6 +250,18 @@ class FireStoreDatabaseManager {
         }
     }
     
+    func checkUserData(uuid: String, completion: @escaping (Bool) -> Void) {
+        let docRef = db.collection("member").document(uuid)
+        
+        docRef.getDocument { document, error in
+            if let document = document, document.exists {
+                completion(true)
+            } else {
+                completion(false)
+            }
+        }
+    }
+    
     func findMember(uuid: String, completion: @escaping (Member) -> Void) {
         var member: Member? = nil
         let docRef = db.collection("member").document(uuid)
