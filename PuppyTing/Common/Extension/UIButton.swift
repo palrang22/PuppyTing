@@ -9,7 +9,7 @@ import UIKit
 
 extension UIButton {
     func makeTag(word: String, target: Any?, action: Selector) {
-        self.setTitle("# \(word)", for: .normal)
+        self.setTitle(word, for: .normal)
         self.backgroundColor = .randomColor
         self.titleLabel?.font = .systemFont(ofSize: 14, weight: .bold)
         self.setTitleColor(.white, for: .normal)
