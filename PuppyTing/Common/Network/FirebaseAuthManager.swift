@@ -27,13 +27,13 @@ enum AuthError: Error {
     case invalidEmailError
 }
 
-class FirebaseAuthManager {
+class FirebaseAuthManager: NSObject, ASAuthorizationControllerDelegate {
     
     static let shared = FirebaseAuthManager()
     
     private var currentNonce: String?
     
-    private init() {
+    private override init() {
         
     }
     
@@ -265,4 +265,169 @@ class FirebaseAuthManager {
         }
     }
     
+    // Apple 계정 삭제에 필요한 자격 증명 생성
+   func getAppleCredentials() -> Single<AuthCredential> {
+       return Single<AuthCredential>.create { single in
+           let provider = ASAuthorizationAppleIDProvider()
+           let request = provider.createRequest()
+           request.requestedScopes = [.fullName, .email]
+
+           let authorizationController = ASAuthorizationController(authorizationRequests: [request])
+           authorizationController.delegate = self
+           authorizationController.performRequests()
+
+           self.handleAppleSignIn = { idToken, authorizationCode, error in
+               if let error = error {
+                   single(.failure(error))
+                   return
+               }
+               
+               guard let idToken = idToken, let authorizationCode = authorizationCode else {
+                   single(.failure(NSError(domain: "Apple ID 토큰 또는 Authorization Code를 가져올 수 없습니다.", code: -1, userInfo: nil)))
+                   return
+               }
+               let nonce = self.currentNonce ?? ""
+               let appleCredential = OAuthProvider.credential(withProviderID: "apple.com", idToken: idToken, rawNonce: nonce, accessToken: authorizationCode)
+               single(.success(appleCredential))
+           }
+
+           return Disposables.create()
+       }
+   }
+
+   // Apple 계정 삭제 처리
+   func deleteUserWithApple(appleCredential: AuthCredential) -> Single<Bool> {
+       return Single<Bool>.create { single in
+           guard let user = Auth.auth().currentUser else {
+               single(.failure(NSError(domain: "User is nil", code: -1, userInfo: nil)))
+               return Disposables.create()
+           }
+
+           // 재인증 후 삭제 처리
+           user.reauthenticate(with: appleCredential) { authResult, error in
+               if let error = error {
+                   single(.failure(error))
+               } else {
+                   user.delete { error in
+                       if let error = error {
+                           single(.failure(error))
+                       } else {
+                           single(.success(true))  // 삭제 성공 시
+                       }
+                   }
+               }
+           }
+
+           return Disposables.create()
+       }
+   }
+
+   // Google 자격 증명 가져오기
+    func getGoogleCredentials(presentingViewController: UIViewController) -> Single<(idToken: String, accessToken: String)> {
+        return Single<(idToken: String, accessToken: String)>.create { single in
+            // 현재 로그인된 사용자가 있는지 확인
+            if let currentUser = GIDSignIn.sharedInstance.currentUser {
+                guard let idToken = currentUser.idToken?.tokenString else {
+                    single(.failure(NSError(domain: "Google ID 토큰을 가져올 수 없습니다.", code: -1, userInfo: nil)))
+                    return Disposables.create()
+                }
+                let accessToken = currentUser.accessToken.tokenString
+                single(.success((idToken, accessToken)))
+            } else {
+                // 로그인된 사용자가 없을 경우, Google 로그인 시도
+                guard let clientID = FirebaseApp.app()?.options.clientID else {
+                    single(.failure(NSError(domain: "Firebase ClientID가 없습니다.", code: -1, userInfo: nil)))
+                    return Disposables.create()
+                }
+
+                let config = GIDConfiguration(clientID: clientID)
+                GIDSignIn.sharedInstance.signIn(withPresenting: presentingViewController) { signInResult, error in
+                    if let error = error {
+                        single(.failure(error))
+                        return
+                    }
+
+                    guard let signInResult = signInResult, let idToken = signInResult.user.idToken?.tokenString else {
+                        single(.failure(NSError(domain: "Google 로그인 정보를 가져올 수 없습니다.", code: -1, userInfo: nil)))
+                        return
+                    }
+                    let accessToken = signInResult.user.accessToken.tokenString
+                    // 로그인 성공 후, 자격 증명 반환
+                    single(.success((idToken, accessToken)))
+                }
+            }
+
+            return Disposables.create()
+        }
+    }
+
+   // Google 계정 삭제 처리
+   func deleteUserWithGoogle(idToken: String, accessToken: String) -> Single<Bool> {
+       return Single<Bool>.create { single in
+           guard let user = Auth.auth().currentUser else {
+               single(.failure(NSError(domain: "User is nil", code: -1, userInfo: nil)))
+               return Disposables.create()
+           }
+           
+           let credential = GoogleAuthProvider.credential(withIDToken: idToken, accessToken: accessToken)
+           
+           user.reauthenticate(with: credential) { authResult, error in
+               if let error = error {
+                   single(.failure(error))
+               } else {
+                   user.delete { error in
+                       if let error = error {
+                           single(.failure(error))
+                       } else {
+                           single(.success(true))
+                       }
+                   }
+               }
+           }
+
+           return Disposables.create()
+       }
+   }
+
+   // 이메일 계정 삭제 처리
+   func deleteUserWithEmail(password: String) -> Single<Bool> {
+       return Single<Bool>.create { single in
+           guard let user = Auth.auth().currentUser, let email = user.email else {
+               single(.failure(NSError(domain: "User or Email is nil", code: -1, userInfo: nil)))
+               return Disposables.create()
+           }
+
+           let credential = EmailAuthProvider.credential(withEmail: email, password: password)
+           
+           user.reauthenticate(with: credential) { authResult, error in
+               if let error = error {
+                   single(.failure(error))
+               } else {
+                   user.delete { error in
+                       if let error = error {
+                           single(.failure(error))
+                       } else {
+                           single(.success(true))
+                       }
+                   }
+               }
+           }
+           return Disposables.create()
+       }
+   }
+
+   // Apple 로그인 성공 시 처리할 클로저
+   private var handleAppleSignIn: ((String?, String?, Error?) -> Void)?
+   
+   func authorizationController(controller: ASAuthorizationController, didCompleteWithAuthorization authorization: ASAuthorization) {
+       if let appleIDCredential = authorization.credential as? ASAuthorizationAppleIDCredential {
+           let idToken = String(data: appleIDCredential.identityToken ?? Data(), encoding: .utf8)
+           let authorizationCode = String(data: appleIDCredential.authorizationCode ?? Data(), encoding: .utf8)
+           self.handleAppleSignIn?(idToken, authorizationCode, nil)
+       }
+   }
+
+   func authorizationController(controller: ASAuthorizationController, didCompleteWithError error: Error) {
+       self.handleAppleSignIn?(nil, nil, error)
+   }
 }

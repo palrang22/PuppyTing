@@ -322,6 +322,19 @@ class FireStoreDatabaseManager {
         }
     }
     
+    func findMember(uuid: String) -> Member? {
+        var member: Member? = nil
+        let docRef = db.collection("member").document(uuid)
+        docRef.getDocument { result, error in
+            if let result = result, result.exists, let data = result.data() {
+                if let dataMember = Member(dictionary: data) {
+                    member = dataMember
+                }
+            }
+        }
+        return member
+    }
+    
     func findMemberNickname(uuid: String, completion: @escaping (String) -> Void) {
         var nickName = ""
         let docRef = db.collection("member").document(uuid)

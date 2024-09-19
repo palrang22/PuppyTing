@@ -1,5 +1,6 @@
 import Foundation
 
+import FirebaseAuth
 import FirebaseFirestore
 import RxSwift
 
@@ -10,6 +11,7 @@ class MyPageViewModel {
     let petListSubject = PublishSubject<[Pet]>()
     private let disposeBag = DisposeBag()
     let resultSubject = PublishSubject<Bool>()
+    let errorSubject = PublishSubject<Error>()
     
     // 멤버 정보 가져오기
     func fetchMemberInfo(uuid: String) {
@@ -23,15 +25,62 @@ class MyPageViewModel {
     // 회원 탈퇴
     func leaveMember(uuid: String) {
         FireStoreDatabaseManager.shared.deleteDocument(from: "member", documentId: uuid).observe(on: MainScheduler.instance).subscribe(onSuccess: {
-            FirebaseAuthManager.shared.memberDelete().observe(on: MainScheduler.instance).subscribe(onSuccess: { [weak self] result in
-                // 삭제 완료
-                self?.resultSubject.onNext(result)
-            }, onFailure: { error in
-                // 삭제 실패
-            }).disposed(by: self.disposeBag)
+            self.resultSubject.onNext(true)
         }, onFailure: { error in
-            
+            self.errorSubject.onNext(error)
         }).disposed(by: disposeBag)
+    }
+    
+    func deleteUser(user: User, vc: UIViewController) {
+        FireStoreDatabaseManager.shared.findMember(uuid: user.uid) { member in
+            if let providerID = user.providerData.first?.providerID {
+                print(providerID)
+                switch providerID {
+                case GoogleAuthProviderID:
+                    // Google 계정 삭제 처리
+                    FirebaseAuthManager.shared.getGoogleCredentials(presentingViewController: vc)
+                        .flatMap { credentials in
+                            FirebaseAuthManager.shared.deleteUserWithGoogle(idToken: credentials.idToken, accessToken: credentials.accessToken)
+                        }
+                        .subscribe(onSuccess: { result in
+                            self.leaveMember(uuid: user.uid)
+                        }, onFailure: { error in
+                            self.errorSubject.onNext(error)
+                        })
+                        .disposed(by: self.disposeBag)
+
+                case "apple.com":
+                    // Apple 계정 삭제 처리
+                    FirebaseAuthManager.shared.getAppleCredentials()
+                        .flatMap { credential in
+                            FirebaseAuthManager.shared.deleteUserWithApple(appleCredential: credential)
+                        }
+                        .subscribe(onSuccess: { result in
+                            self.leaveMember(uuid: user.uid)
+                        }, onFailure: { error in
+                            self.errorSubject.onNext(error)
+                        })
+                        .disposed(by: self.disposeBag)
+
+                case EmailAuthProviderID:
+                    // 이메일 계정 삭제 처리
+                    let password = member.password // 비밀번호 입력을 받아야 합니다.
+                    FirebaseAuthManager.shared.deleteUserWithEmail(password: password)
+                        .subscribe(onSuccess: { result in
+                            self.leaveMember(uuid: user.uid)
+                        }, onFailure: { error in
+                            self.errorSubject.onNext(error)
+                        })
+                        .disposed(by: self.disposeBag)
+                default:
+                    let error = NSError(domain: "지원되지 않는 로그인 제공자입니다.", code: -1, userInfo: nil)
+                    self.errorSubject.onNext(error)
+                }
+            } else {
+                let error = NSError(domain: "로그인 제공자를 확인할 수 없습니다.", code: -1, userInfo: nil)
+                self.errorSubject.onNext(error)
+            }
+        }
     }
     
     // 가져온 멤버 문서 중 puppies 정보 가져오기
