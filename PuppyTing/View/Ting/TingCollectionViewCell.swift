@@ -34,6 +34,7 @@ class TingCollectionViewCell: UICollectionViewCell {
     private let profilePic: UIImageView = {
         let imageView = UIImageView()
         imageView.image = UIImage(named: "defaultProfileImage")
+        imageView.contentMode = .scaleAspectFill
         imageView.layer.cornerRadius = 25
         imageView.layer.masksToBounds = true
         imageView.clipsToBounds = true
