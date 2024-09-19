@@ -17,20 +17,20 @@ class FireStoreDatabaseManager {
     static let shared = FireStoreDatabaseManager()
     
     private let db = Firestore.firestore()
-    private init () {
-        
-    }
+    private let disposeBag = DisposeBag() // kkh
+    
+    private init() {}
     
     //MARK: CREATE
     
     func emailSignUp(uuid: String, email: String, pw: String, nickname: String) -> Single<Member> {
-        return Single.create{ [weak self] single in
-            let memeber = Member(uuid: uuid, email: email, password: pw, nickname: nickname, profileImage: "defaultProfileImage", footPrint: 0, isSocial: false)
-            self?.db.collection("member").document(uuid).setData(memeber.dictionary) { error in
+        return Single.create { [weak self] single in
+            let member = Member(uuid: uuid, email: email, password: pw, nickname: nickname, profileImage: "defaultProfileImage", footPrint: 0, isSocial: false)
+            self?.db.collection("member").document(uuid).setData(member.dictionary) { error in
                 if let error = error {
                     single(.failure(error))
                 } else {
-                    single(.success(memeber))
+                    single(.success(member))
                 }
             }
             return Disposables.create()
@@ -54,7 +54,7 @@ class FireStoreDatabaseManager {
     func updateMember(member: Member) -> Single<Bool> {
         return Single.create { single in
             let docRef = self.db.collection("member").document(member.uuid)
-            docRef.updateData(["nickname" : member.nickname, "profileImage" : member.profileImage]) { error in
+            docRef.updateData(["nickname": member.nickname, "profileImage": member.profileImage]) { error in
                 if let error = error {
                     single(.failure(error))
                 } else {
@@ -68,7 +68,7 @@ class FireStoreDatabaseManager {
     func updatePassword(uuid: String, password: String) -> Single<Bool> {
         return Single.create { single in
             let docRef = self.db.collection("member").document(uuid)
-            docRef.updateData(["password" : password]) { error in
+            docRef.updateData(["password": password]) { error in
                 if let error = error {
                     single(.failure(error))
                 } else {
@@ -118,7 +118,63 @@ class FireStoreDatabaseManager {
         
         return Single.create { [weak self] single in
             let ref = self?.db.collection("member").document(currentUser)
-            ref?.updateData(["blockedUsers" : FieldValue.arrayUnion([userId])]) { error in
+            ref?.updateData(["blockedUsers": FieldValue.arrayUnion([userId])]) { error in
+                if let error = error {
+                    single(.failure(error))
+                } else {
+                    single(.success(()))
+                }
+            }
+            return Disposables.create()
+        }
+    }
+    
+    func getBlockedUsers() -> Single<[Member]> { // kkh
+        guard let currentUser = Auth.auth().currentUser?.uid else {
+            return Single.error(NSError(domain: "", code: -1, userInfo: [NSLocalizedDescriptionKey: "사용자 인증 실패"]))
+        }
+
+        return Single.create { [weak self] single in
+            let ref = self?.db.collection("member").document(currentUser)
+            ref?.getDocument { document, error in
+                if let error = error {
+                    print("Firestore에서 차단 목록 가져오기 실패: \(error)")
+                    single(.failure(error))
+                } else if let document = document, let data = document.data(), let blockedUsers = data["blockedUsers"] as? [String] {
+                    print("차단된 사용자 목록: \(blockedUsers)")
+                    var members: [Member] = []
+                    let group = DispatchGroup()
+                    
+                    for userId in blockedUsers {
+                        group.enter()
+                        self?.findMemeber(uuid: userId).subscribe(onSuccess: { member in
+                            members.append(member)
+                            group.leave()
+                        }, onFailure: { _ in
+                            group.leave()
+                        }).disposed(by: self?.disposeBag ?? DisposeBag())
+                    }
+                    
+                    group.notify(queue: .main) {
+                        single(.success(members))
+                    }
+                } else {
+                    print("차단된 사용자 목록을 가져오지 못했습니다.")
+                    single(.success([]))
+                }
+            }
+            return Disposables.create()
+        }
+    }
+    
+    func unblockUser(userId: String) -> Single<Void> { // kkh
+        guard let currentUser = Auth.auth().currentUser?.uid else {
+            return Single.error(NSError(domain: "", code: -1, userInfo: [NSLocalizedDescriptionKey: "사용자 인증 실패"]))
+        }
+        
+        return Single.create { [weak self] single in
+            let ref = self?.db.collection("member").document(currentUser)
+            ref?.updateData(["blockedUsers": FieldValue.arrayRemove([userId])]) { error in
                 if let error = error {
                     single(.failure(error))
                 } else {
@@ -141,7 +197,7 @@ class FireStoreDatabaseManager {
             return Disposables.create()
         }
     }
-
+    
     // 즐겨찾기 추가 메서드 - jgh
     func addBookmark(forUserId userId: String, bookmarkId: String) -> Single<Void> {
         guard let currentUser = Auth.auth().currentUser?.uid else {
@@ -180,7 +236,6 @@ class FireStoreDatabaseManager {
         }
     }
 
-    
     //MARK: Read
     
     func checkUserData(user: User, completion: @escaping (Bool) -> Void) {
@@ -198,7 +253,7 @@ class FireStoreDatabaseManager {
     func findMember(uuid: String, completion: @escaping (Member) -> Void) {
         var member: Member? = nil
         let docRef = db.collection("member").document(uuid)
-        docRef.getDocument{ result, error in
+        docRef.getDocument { result, error in
             if let result = result, result.exists, let data = result.data() {
                 if let dataMember = Member(dictionary: data) {
                     member = dataMember
@@ -213,7 +268,7 @@ class FireStoreDatabaseManager {
     func findMemberNickname(uuid: String, completion: @escaping (String) -> Void) {
         var nickName = ""
         let docRef = db.collection("member").document(uuid)
-        docRef.getDocument{ result, error in
+        docRef.getDocument { result, error in
             if let result = result, result.exists, let data = result.data() {
                 if let member = Member(dictionary: data) {
                     nickName = member.nickname
