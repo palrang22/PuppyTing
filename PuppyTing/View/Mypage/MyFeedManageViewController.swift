@@ -67,6 +67,7 @@ extension MyFeedManageViewController: UITableViewDataSource, UITableViewDelegate
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true) // 셀선택 배경 사라지게 - jgh
         let selectedFeed = feeds[indexPath.row]
        
         let detailVC = DetailTingViewController()

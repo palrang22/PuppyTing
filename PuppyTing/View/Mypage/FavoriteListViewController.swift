@@ -85,6 +85,7 @@ extension FavoriteListViewController: UITableViewDataSource, UITableViewDelegate
         cell.onUnfavoriteButtonTapped = { [weak self] in
             self?.unfavoriteUser(at: indexPath)
         }
+        cell.selectionStyle = .none // 셀선택 배경 안바뀌게
         
         return cell
     }
