@@ -17,21 +17,17 @@ class ProfileCell: UICollectionViewCell {
     
     private let disposeBag = DisposeBag()
     
-    private let stackView: UIStackView = {
-        let stackView = UIStackView()
-        stackView.axis = .vertical
-        stackView.spacing = 10
-        stackView.distribution = .fill
-        return stackView
-    }()
-    
     private let profileContainerView: UIView = {
         let view = UIView()
-        view.layer.cornerRadius = 15
+        view.layer.cornerRadius = 10
         view.layer.borderWidth = 1.0
         view.layer.borderColor = UIColor.puppyPurple.withAlphaComponent(0.1).cgColor
-        view.layer.masksToBounds = true
+        view.layer.masksToBounds = false
         view.backgroundColor = UIColor.puppyPurple.withAlphaComponent(0.1)
+        view.layer.shadowColor = UIColor.black.cgColor
+        view.layer.shadowOpacity = 0.2
+        view.layer.shadowOffset = CGSize(width: 0, height: 2)
+        view.layer.shadowRadius = 4
         return view
     }()
     
@@ -41,6 +37,7 @@ class ProfileCell: UICollectionViewCell {
         imageView.clipsToBounds = true
         imageView.tintColor = .black
         imageView.image = UIImage(named: "defaultProfileImage")
+        imageView.layer.cornerRadius = 30
         return imageView
     }()
     
@@ -96,6 +93,15 @@ class ProfileCell: UICollectionViewCell {
         return button
     }()
     
+    private let buttonStackView: UIStackView = {
+        let stackView = UIStackView()
+        stackView.axis = .horizontal
+        stackView.distribution = .fillEqually
+        stackView.spacing = 10
+        stackView.alignment = .fill
+        return stackView
+    }()
+    
     // 즐겨찾기 버튼
     @objc private func favoriteButtonTapped() {
         guard let bookmarkId = bookmarkId else { return }
@@ -118,10 +124,9 @@ class ProfileCell: UICollectionViewCell {
     override init(frame: CGRect) {
         super.init(frame: frame)
         
-        contentView.addSubview(stackView)
-        stackView.addArrangedSubview(profileContainerView)
+        contentView.addSubview(profileContainerView)
         
-        [profileImageView, nicknameLabel, footView, evaluateView].forEach {
+        [profileImageView, nicknameLabel, footView, buttonStackView].forEach {
             profileContainerView.addSubview($0)
         }
         
@@ -130,26 +135,21 @@ class ProfileCell: UICollectionViewCell {
         }
         
         [footButton, favoriteButton, blockButton].forEach {
-            evaluateView.addSubview($0)
-        }
-        
-        stackView.snp.makeConstraints {
-            $0.edges.equalToSuperview().inset(20)
+            buttonStackView.addArrangedSubview($0)
         }
         
         profileContainerView.snp.makeConstraints {
-            $0.width.equalToSuperview()
-            $0.top.equalTo(stackView.snp.top)
+            $0.edges.equalToSuperview().inset(20)
         }
         
         profileImageView.snp.makeConstraints {
-            $0.top.equalToSuperview().offset(10)
-            $0.left.equalToSuperview().offset(10)
+            $0.top.equalToSuperview().offset(30)
+            $0.leading.equalToSuperview().offset(15)
             $0.width.height.equalTo(60)
         }
         
         nicknameLabel.snp.makeConstraints {
-            $0.left.equalTo(profileImageView.snp.right).offset(10)
+            $0.left.equalTo(profileImageView.snp.right).offset(15)
             $0.centerY.equalTo(profileImageView.snp.centerY)
         }
         
@@ -162,7 +162,7 @@ class ProfileCell: UICollectionViewCell {
         
         footStampLabel.snp.makeConstraints {
             $0.top.equalToSuperview()
-            $0.leading.equalToSuperview().offset(10)
+            $0.leading.equalToSuperview().offset(15)
         }
         
         footNumberLabel.snp.makeConstraints {
@@ -170,32 +170,10 @@ class ProfileCell: UICollectionViewCell {
             $0.leading.equalTo(footStampLabel.snp.trailing).offset(20)
         }
         
-        evaluateView.snp.makeConstraints {
+        buttonStackView.snp.makeConstraints {
             $0.top.equalTo(footView.snp.bottom).offset(10)
-            $0.centerX.equalToSuperview()
-            $0.leading.trailing.equalToSuperview()
+            $0.leading.trailing.equalToSuperview().inset(10)
             $0.height.equalTo(44)
-        }
-        
-        footButton.snp.makeConstraints {
-            $0.top.equalToSuperview()
-            $0.trailing.equalTo(favoriteButton.snp.leading).offset(-5)
-            $0.height.equalTo(44)
-            $0.width.equalTo(110)
-        }
-        
-        favoriteButton.snp.makeConstraints {
-            $0.top.equalToSuperview()
-            $0.centerX.equalToSuperview()
-            $0.height.equalTo(44)
-            $0.width.equalTo(110)
-        }
-        
-        blockButton.snp.makeConstraints {
-            $0.top.equalToSuperview()
-            $0.leading.equalTo(favoriteButton.snp.trailing).offset(5)
-            $0.height.equalTo(44)
-            $0.width.equalTo(110)
         }
     }
     
