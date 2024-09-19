@@ -12,7 +12,6 @@ import FirebaseAuth
 import RxCocoa
 import RxSwift
 
-
 class ChatListViewController: UIViewController, UITableViewDelegate, UISearchBarDelegate {
     
     private let disposeBag = DisposeBag()
@@ -81,11 +80,21 @@ class ChatListViewController: UIViewController, UITableViewDelegate, UISearchBar
             .bind(to: tableView.rx.items(cellIdentifier: ChatTableViewCell.identifier, cellType: ChatTableViewCell.self)) { index, data, cell in
                 let otherUser = data.users.first == userId ? data.users.last : data.users.first
                 if let otherUser = otherUser {
-                    FireStoreDatabaseManager.shared.findMember(uuid: otherUser) { member in
-                        if let lastChat = data.lastChat?.text {
-                            cell.config(image: member.profileImage, title: member.nickname, content: lastChat)
+                    FireStoreDatabaseManager.shared.checkUserData(uuid: otherUser) { result in
+                        if result {
+                            FireStoreDatabaseManager.shared.findMember(uuid: otherUser) { member in
+                                if let lastChat = data.lastChat?.text {
+                                    cell.config(image: member.profileImage, title: member.nickname, content: lastChat)
+                                } else {
+                                    cell.config(image: member.profileImage, title: member.nickname, content: "내용 없음")
+                                }
+                            }
                         } else {
-                            cell.config(image: member.profileImage, title: member.nickname, content: "내용 없음")
+                            if let lastChat = data.lastChat?.text {
+                                cell.config(image: "nil", title: "알 수 없음", content: lastChat)
+                            } else {
+                                cell.config(image: "nil", title: "알 수 없음", content: "내용 없음")
+                            }
                         }
                     }
                 }
