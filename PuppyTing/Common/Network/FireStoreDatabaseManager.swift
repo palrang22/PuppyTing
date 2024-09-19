@@ -7,10 +7,12 @@
 
 import Foundation
 
+import CoreLocation
 import FirebaseAuth
 import FirebaseCore
 import FirebaseFirestore
 import RxSwift
+
 
 class FireStoreDatabaseManager {
     
@@ -129,6 +131,15 @@ class FireStoreDatabaseManager {
         }
     }
     
+    func getBlockedUsers(uuid: String, complection: @escaping ([String]) -> Void) {
+        let ref = db.collection("member").document(uuid)
+        ref.getDocument { document, error in
+            if let document = document, let data = document.data(), let blockedUsers = data["blockedUsers"] as? [String] {
+                complection(blockedUsers)
+            }
+        }
+    }
+    
     func getBlockedUsers() -> Single<[Member]> { // kkh
         guard let currentUser = Auth.auth().currentUser?.uid else {
             return Single.error(NSError(domain: "", code: -1, userInfo: [NSLocalizedDescriptionKey: "사용자 인증 실패"]))
@@ -185,6 +196,40 @@ class FireStoreDatabaseManager {
         }
     }
     
+    func fetchFeeds(forUserId userId: String) -> Single<[TingFeedModel]> { // kkh
+        return Single.create { [weak self] single in
+            self?.db.collection("tingFeeds")
+                .whereField("userid", isEqualTo: userId) // userid로 필터링
+                .getDocuments { snapshot, error in
+                    if let error = error {
+                        single(.failure(error))
+                    } else {
+                        var feeds: [TingFeedModel] = []
+                        
+                        snapshot?.documents.forEach { document in
+                            let data = document.data()
+                            if let content = data["content"] as? String,
+                               let timestamp = data["timestamp"] as? Timestamp {
+                                
+                                let feed = TingFeedModel(
+                                    userid: userId,
+                                    postid: document.documentID,
+                                    location: CLLocationCoordinate2D(latitude: 0, longitude: 0),
+                                    content: content,
+                                    time: timestamp.dateValue()
+                                )
+                                
+                                feeds.append(feed)
+                            }
+                        }
+                        
+                        single(.success(feeds))
+                    }
+                }
+            return Disposables.create()
+        }
+    }
+
     func reportPost(report: Report) -> Single<Void> {
         return Single.create { [weak self] single in
             self?.db.collection("report").addDocument(data: report.dictionary) { error in
@@ -240,6 +285,18 @@ class FireStoreDatabaseManager {
     
     func checkUserData(user: User, completion: @escaping (Bool) -> Void) {
         let docRef = db.collection("member").document(user.uid)
+        
+        docRef.getDocument { document, error in
+            if let document = document, document.exists {
+                completion(true)
+            } else {
+                completion(false)
+            }
+        }
+    }
+    
+    func checkUserData(uuid: String, completion: @escaping (Bool) -> Void) {
+        let docRef = db.collection("member").document(uuid)
         
         docRef.getDocument { document, error in
             if let document = document, document.exists {
@@ -308,5 +365,15 @@ class FireStoreDatabaseManager {
             }
             return Disposables.create()
         }
+    }
+    
+    func deleteFeed(withId feedId: String, completion: @escaping (Error?) -> Void) { // kkh
+            deleteDocument(from: "tingFeeds", documentId: feedId)
+                .subscribe(onSuccess: {
+                    completion(nil) // 삭제 성공 시 nil 반환
+                }, onError: { error in
+                    completion(error)
+                })
+                .disposed(by: disposeBag)
     }
 }

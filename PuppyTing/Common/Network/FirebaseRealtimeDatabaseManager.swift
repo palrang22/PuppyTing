@@ -62,45 +62,68 @@ class FirebaseRealtimeDatabaseManager {
     // 모든 채팅방 목록을 가져오는 메서드
     func fetchChatRooms(userId: String) -> Observable<[ChatRoom]> {
         return Observable.create { observer in
-            self.databaseRef.child("chatRooms").observe(.value) { snapshot in
-                var chatRooms: [ChatRoom] = []
-                
-                for child in snapshot.children {
-                    if let childSnapshot = child as? DataSnapshot,
-                       let dict = childSnapshot.value as? [String: Any],
-                       let name = dict["name"] as? String,
-                       let users = dict["users"] as? [String] {
-                        var lastChat: ChatMessage? = nil
-                        if let messageSnapshot = childSnapshot
-                            .childSnapshot(forPath: "messages")
-                            .children.allObjects as? [DataSnapshot] {
-                            if let lastMessageSnapshot = messageSnapshot.last,
-                               let messageDict = lastMessageSnapshot.value as? [String: Any],
-                               let senderId = messageDict["senderId"] as? String,
-                               let text = messageDict["text"] as? String,
-                               let timestamp = messageDict["timestamp"] as? TimeInterval {
-                                lastChat = ChatMessage(id: lastMessageSnapshot.key,
-                                                       senderId: senderId,
-                                                       text: text,
-                                                       timestamp: timestamp)
+            
+            // 1. 차단한 유저 목록 가져오기
+            FireStoreDatabaseManager.shared.getBlockedUsers(uuid: userId) { blockedUsers in
+                // 2. 차단한 유저 목록을 가져온 후, 채팅방 데이터를 가져오기
+                self.databaseRef.child("chatRooms").observe(.value) { snapshot in
+                    var chatRooms: [ChatRoom] = []
+                    for child in snapshot.children {
+                        if let childSnapshot = child as? DataSnapshot,
+                           let dict = childSnapshot.value as? [String: Any],
+                           let name = dict["name"] as? String,
+                           let users = dict["users"] as? [String] {
+                            // 3. 차단한 유저가 포함된 방은 제외
+                            let isBlocked = users.contains { blockedUsers.contains($0) }
+                            if isBlocked {
+                                continue // 차단한 유저가 포함된 방이면 건너뜀
+                            }
+                            // 4. 채팅방의 마지막 메시지 처리
+                            var lastChat: ChatMessage? = nil
+                            if let messageSnapshot = childSnapshot
+                                .childSnapshot(forPath: "messages")
+                                .children.allObjects as? [DataSnapshot] {
+                                if let lastMessageSnapshot = messageSnapshot.last,
+                                   let messageDict = lastMessageSnapshot.value as? [String: Any],
+                                   let senderId = messageDict["senderId"] as? String,
+                                   let text = messageDict["text"] as? String,
+                                   let timestamp = messageDict["timestamp"] as? TimeInterval {
+                                    lastChat = ChatMessage(id: lastMessageSnapshot.key,
+                                                           senderId: senderId,
+                                                           text: text,
+                                                           timestamp: timestamp)
+                                }
+                            }
+                            // 5. 차단한 유저가 포함되지 않은 채팅방만 추가
+                            if users.contains(userId) {
+                                let room = ChatRoom(id: childSnapshot.key,
+                                                    name: name,
+                                                    users: users,
+                                                    lastChat: lastChat)
+                                chatRooms.append(room)
                             }
                         }
-                        if users.contains(userId) {
-                            let room = ChatRoom(id: childSnapshot.key,
-                                                name: name,
-                                                users: users,
-                                                lastChat: lastChat)
-                            chatRooms.append(room)
-                        }
                     }
+                    // 6. 마지막 채팅 시간으로 정렬
+                    chatRooms.sort { (room1, room2) -> Bool in
+                        guard let timestamp1 = room1.lastChat?.timestamp,
+                              let timestamp2 = room2.lastChat?.timestamp else {
+                            return false
+                        }
+                        return timestamp1 > timestamp2
+                    }
+                    
+                    // 7. 필터링 및 정렬된 채팅방 목록 전달
+                    observer.onNext(chatRooms)
                 }
-                observer.onNext(chatRooms) // 채팅방 목록 전달
             }
+            
             return Disposables.create {
                 self.databaseRef.child("chatRooms").removeAllObservers()
             }
         }
     }
+
     
     // 특정 채팅방에 메시지를 전송하는 메서드
     func sendMessage(to roomId: String, senderId: String, text: String) -> Observable<Void> {
