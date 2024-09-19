@@ -19,7 +19,7 @@ final class AppController {
     private var authStateListenerHandle: AuthStateDidChangeListenerHandle?
     
     private init() {
-        FirebaseApp.configure()
+//        FirebaseApp.configure()
     }
     
     private var window: UIWindow!

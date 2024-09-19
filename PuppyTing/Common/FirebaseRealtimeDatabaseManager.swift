@@ -41,6 +41,24 @@ class FirebaseRealtimeDatabaseManager {
         }
     }
     
+    // FCM 토큰을 Realtime Database에 저장하는 메서드 - ksh
+    func saveFCMToken(userId: String, fcmToken: String) -> Single<Void> {
+        return Single<Void>.create { single in
+            let userRef = self.databaseRef.child("users").child(userId)
+            
+            // FCM 토큰을 저장하는 데이터 구조
+            userRef.child("fcmToken").setValue(fcmToken) { error, _ in
+                if let error = error {
+                    single(.failure(error)) // 실패 시 에러 반환
+                } else {
+                    single(.success(())) // 성공 시 성공 반환
+                }
+            }
+            
+            return Disposables.create()
+        }
+    }
+    
     // 모든 채팅방 목록을 가져오는 메서드
     func fetchChatRooms(userId: String) -> Observable<[ChatRoom]> {
         return Observable.create { observer in
