@@ -5,6 +5,7 @@
 //  Created by 내꺼다 on 8/27/24.
 //
 
+import AuthenticationServices
 import UIKit
 
 import FirebaseAuth
@@ -111,6 +112,7 @@ class LoginViewController: UIViewController {
     private func setButtonAction() {
         pptLogButton.addTarget(self, action: #selector(didTapPuppytingLogin), for: .touchUpInside)
         ggLogButton.addTarget(self, action: #selector(didTapGoogleLoginButton), for: .touchUpInside)
+        appleLogButton.addTarget(self, action: #selector(didTapAppleLoginButton), for: .touchUpInside)
     }
     
     @objc
@@ -123,6 +125,19 @@ class LoginViewController: UIViewController {
     @objc
     private func didTapGoogleLoginButton() {
         loginViewModel.googleSignIn(viewController: self)
+    }
+    
+    @objc
+    private func didTapAppleLoginButton() {
+        let nonce = loginViewModel.startAppleLogin()
+        let request = ASAuthorizationAppleIDProvider().createRequest()
+        request.requestedScopes = [.fullName, .email]
+        request.nonce = nonce
+        
+        let authorizationController = ASAuthorizationController(authorizationRequests: [request])
+        authorizationController.delegate = self
+        authorizationController.presentationContextProvider = self
+        authorizationController.performRequests()
     }
     
     private func isExistsUser(uuid: String) {
@@ -155,4 +170,25 @@ class LoginViewController: UIViewController {
         }
     }
     
+}
+
+extension LoginViewController: ASAuthorizationControllerDelegate {
+    func authorizationController(controller: ASAuthorizationController, didCompleteWithAuthorization authorization: ASAuthorization) {
+        if let appleIDCredential = authorization.credential as? ASAuthorizationAppleIDCredential {
+            // 성공적으로 Apple ID 자격 증명을 받으면 ViewModel을 통해 Firebase와 연동
+            loginViewModel.appleSignIn(credential: appleIDCredential)
+        }
+    }
+    
+    func authorizationController(controller: ASAuthorizationController, didCompleteWithError error: Error) {
+        // 에러 로그 출력
+        print("Apple SignIn Failed: \(error.localizedDescription)")
+    }
+}
+extension LoginViewController: ASAuthorizationControllerPresentationContextProviding {
+    
+    // 로그인 화면을 표시할 창을 반환
+    func presentationAnchor(for controller: ASAuthorizationController) -> ASPresentationAnchor {
+        return self.view.window! // 현재 ViewController의 창을 반환
+    }
 }
