@@ -133,30 +133,9 @@ class PuppyRegistrationViewController: UIViewController {
         bind()
     }
     
-    // 키보드 관련 옵저버 설정
-    private func setupKeyboardObservers() {
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(_:)), name: UIResponder.keyboardWillShowNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(_:)), name: UIResponder.keyboardWillHideNotification, object: nil)
-    }
-
-    // 키보드가 나타날 때 호출되는 메서드
-    @objc private func keyboardWillShow(_ notification: Notification) {
-        guard let userInfo = notification.userInfo,
-              let keyboardFrame = userInfo[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect else { return }
-        let keyboardHeight = keyboardFrame.height
-        scrollView.contentInset.bottom = keyboardHeight
-        scrollView.scrollIndicatorInsets.bottom = keyboardHeight
-    }
-
-    // 키보드가 사라질 때 호출되는 메서드
-    @objc private func keyboardWillHide(_ notification: Notification) {
-        scrollView.contentInset.bottom = 0
-        scrollView.scrollIndicatorInsets.bottom = 0
-    }
-
-    // 뷰가 사라질 때 옵저버 제거
+    //extension으로 뺐습니다 - ksh
     deinit {
-        NotificationCenter.default.removeObserver(self)
+        removeKeyboardObservers()
     }
 
     // MARK: - Setup UI
