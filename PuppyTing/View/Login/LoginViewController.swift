@@ -21,7 +21,7 @@ class LoginViewController: UIViewController {
     
     let logoImageView: UIImageView = {
         let imageView = UIImageView()
-        imageView.image = UIImage(named: "appleLogin") // 이후 수정
+        imageView.image = UIImage(named: "puppytingTextLogo") // 이후 수정
         imageView.contentMode = .scaleAspectFit
         return imageView
     }()

@@ -7,13 +7,16 @@
 
 import UIKit
 
+import FirebaseAuth
 import RxSwift
 import SnapKit
 
 class ProfileCell: UICollectionViewCell {
     
     var viewModel: ProfileViewModel?
-    var bookmarkId: String? // 즐겨찾기 할 유저 Id
+    var memberId: String? // 즐겨찾기 할 유저 Id
+    private let userId = Auth.auth().currentUser?.uid
+    weak var parentViewController: UIViewController?
     
     private let disposeBag = DisposeBag()
     
@@ -58,7 +61,7 @@ class ProfileCell: UICollectionViewCell {
     
     private let footNumberLabel: UILabel = {
         let label = UILabel()
-        label.text = "nn개"
+        label.text = "0개"
         return label
     }()
     
@@ -68,7 +71,7 @@ class ProfileCell: UICollectionViewCell {
         button.backgroundColor = UIColor.puppyPurple
         button.layer.cornerRadius = 10
         button.setTitleColor(.white, for: .normal)
-//        button.addTarget(self, action: #selector(footButtonTapped), for: .touchUpInside)
+        button.addTarget(self, action: #selector(footButtonTapped), for: .touchUpInside)
         return button
     }()
     
@@ -81,13 +84,23 @@ class ProfileCell: UICollectionViewCell {
         return button
     }()
     
-    private let favoriteButton: UIButton = {
+    private lazy var favoriteButton: UIButton = {
         let button = UIButton(type: .system)
         button.setTitle("즐겨찾기", for: .normal)
         button.backgroundColor = UIColor.puppyPurple
         button.layer.cornerRadius = 10
         button.setTitleColor(.white, for: .normal)
         button.addTarget(self, action: #selector(favoriteButtonTapped), for: .touchUpInside)
+        return button
+    }()
+    
+    private lazy var myinfoEditButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.setTitle("마이페이지", for: .normal)
+        button.backgroundColor = UIColor.puppyPurple
+        button.layer.cornerRadius = 10
+        button.setTitleColor(.white, for: .normal)
+        button.addTarget(self, action: #selector(myinfoEditButtonTapped), for: .touchUpInside)
         return button
     }()
     
@@ -102,9 +115,28 @@ class ProfileCell: UICollectionViewCell {
     
     // 즐겨찾기 버튼
     @objc private func favoriteButtonTapped() {
-        guard let bookmarkId = bookmarkId else { return }
+        guard let bookmarkId = memberId else { return }
         viewModel?.addBookmark(bookmarkId: bookmarkId)
     }
+    
+    //ksh
+    @objc private func footButtonTapped() {
+        guard let memberId = memberId else { return }
+        viewModel?.addFootPrint(footPrintId: memberId)
+        
+        if let currentFootPrintCount = Int(footNumberLabel.text?.components(separatedBy: "개").first ?? "0") {
+            footNumberLabel.text = "\(currentFootPrintCount + 1)개"
+        }
+    }
+    
+    @objc private func myinfoEditButtonTapped() {
+        guard let parentVC = parentViewController else { return }
+
+        parentVC.dismiss(animated: true) {
+            NotificationCenter.default.post(name: NSNotification.Name("SwitchToMyPage"), object: nil)
+        }
+    }
+
     
     func configure(with member: Member) {
         nicknameLabel.text = member.nickname
@@ -116,7 +148,19 @@ class ProfileCell: UICollectionViewCell {
         } else {
             profileImageView.image = UIImage(named: "defaultProfileImage")
         }
-            
+        
+        // ksh
+        if userId == member.uuid {
+            footButton.isHidden = true
+            favoriteButton.isHidden = true
+            blockButton.isHidden = true
+            myinfoEditButton.isHidden = false
+        } else {
+            footButton.isHidden = false
+            favoriteButton.isHidden = false
+            blockButton.isHidden = false
+            myinfoEditButton.isHidden = true
+        }
     }
             
     override init(frame: CGRect) {
@@ -132,7 +176,7 @@ class ProfileCell: UICollectionViewCell {
             footView.addSubview($0)
         }
         
-        [footButton, favoriteButton, blockButton].forEach {
+        [footButton, favoriteButton, blockButton, myinfoEditButton].forEach {
             buttonStackView.addArrangedSubview($0)
         }
         
