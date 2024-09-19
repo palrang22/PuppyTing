@@ -161,6 +161,10 @@ class ChatViewController: UIViewController {
                         .observe(on: MainScheduler.instance)
                         .subscribe(onNext: { member in
                             cell.config(image: member.profileImage, message: message.text, time: dateString, nickname: member.nickname)
+                            // 프로필 이미지 탭 시 액션 설정 - jgh
+                            cell.profileImageTapped = { [weak self] in
+                                self?.presentProfileViewController(senderId: message.senderId)
+                            }
                         }).disposed(by: self.disposeBag)
                     return cell
                 }
@@ -181,10 +185,11 @@ class ChatViewController: UIViewController {
             .disposed(by: disposeBag)
     }
     
-    // 하프모달로 띄우기
-    private func presentProfileViewController() {
+    // 하프모달로 띄우기 - jgh
+    private func presentProfileViewController(senderId: String) {
         let profileVC = ProfileViewController()
         profileVC.modalPresentationStyle = .pageSheet
+        profileVC.userid = senderId
         if let sheet = profileVC.sheetPresentationController {
             sheet.detents = [.medium()]
             sheet.prefersGrabberVisible = true
