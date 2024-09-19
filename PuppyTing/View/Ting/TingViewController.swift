@@ -23,6 +23,7 @@ class TingViewController: UIViewController {
     private lazy var feedCollectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .vertical
+        //layout.estimatedItemSize = UICollectionViewFlowLayout.automaticSize
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collectionView.register(TingCollectionViewCell.self,
                                 forCellWithReuseIdentifier: TingCollectionViewCell.id)
@@ -50,12 +51,7 @@ class TingViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setUI()
-        setLayout()
-        
-        if let layout = feedCollectionView.collectionViewLayout as? UICollectionViewFlowLayout {
-            layout.estimatedItemSize = UICollectionViewFlowLayout.automaticSize
-        }
-        
+        setLayout()        
         bind()
         readFeedData()
     }
@@ -127,20 +123,19 @@ class TingViewController: UIViewController {
 
 //MARK: CollectionView
 extension TingViewController: UICollectionViewDelegateFlowLayout {
-
-//    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-//        let width = collectionView.frame.width
-//        let dummyCell = TingCollectionViewCell()
-//        let feedModel = tingFeedModels[indexPath.row]
-//        dummyCell.configure(with: feedModel, currentUserID: currentUserID)
-//        
-//        dummyCell.setNeedsLayout()
-//        dummyCell.layoutIfNeeded()
-//        
-//        let height = dummyCell.systemLayoutSizeFitting(CGSize(width: width, height: UIView.layoutFittingCompressedSize.height)).height
-//        
-//        return CGSize(width: width, height: height)
-//    }
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        let width = collectionView.frame.width
+        let dummyCell = TingCollectionViewCell()
+        let feedModel = tingFeedModels[indexPath.row]
+        dummyCell.configure(with: feedModel, currentUserID: currentUserID)
+        
+        dummyCell.setNeedsLayout()
+        dummyCell.layoutIfNeeded()
+        
+        let height = dummyCell.systemLayoutSizeFitting(CGSize(width: width, height: UIView.layoutFittingCompressedSize.height)).height + 30
+        
+        return CGSize(width: width, height: height)
+    }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
         return 20
