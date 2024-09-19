@@ -77,6 +77,7 @@ class ChatTableViewCell: UITableViewCell {
         
     }
     
+    
     func config(image: String, title: String, content: String) {
         outerStackView.arrangedSubviews.forEach { $0.removeFromSuperview() }
         chatRoomLabel.text = title
