@@ -9,6 +9,7 @@ import UIKit
 
 import FirebaseAuth
 import FirebaseDynamicLinks
+import GoogleSignIn
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     
@@ -20,6 +21,17 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         self.window = window
         AppController.shared.show(in: window)
     }
+    
+    func scene(_ scene: UIScene, continue userActivity: NSUserActivity) {
+        // NSUserActivity에서 webpageURL을 가져와서 Google Sign-In에 전달
+        if let incomingURL = userActivity.webpageURL {
+            if GIDSignIn.sharedInstance.handle(incomingURL) {
+                return
+            }
+        }
+    }
+
+    
     // 딥링크 관련 코드 아직 사용 안함
     // AppDelegate 에서 처리를 할 필요가 없는건가..?
 //    func scene(_ scene: UIScene, continue userActivity: NSUserActivity) {

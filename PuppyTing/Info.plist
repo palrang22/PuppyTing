@@ -12,17 +12,9 @@
 				<string>com.googleusercontent.apps.1085034846099-8ngum1qsm3hn3gi9a777nejgafoj8a83</string>
 			</array>
 		</dict>
-		<dict>
-			<key>CFBundleTypeRole</key>
-			<string>Editor</string>
-			<key>CFBundleURLName</key>
-			<string>Open_App</string>
-			<key>CFBundleURLSchemes</key>
-			<array>
-				<string>com.sh.PuppyTing</string>
-			</array>
-		</dict>
 	</array>
+    <key>GIDClientID</key>
+    <string>1085034846099-8ngum1qsm3hn3gi9a777nejgafoj8a83.apps.googleusercontent.com</string>
 	<key>KAKAO_APP_KEY</key>
 	<string>2be397d1ad8fcbf7a9d93e68c3f268b1</string>
 	<key>KAKAO_PHASE</key>
