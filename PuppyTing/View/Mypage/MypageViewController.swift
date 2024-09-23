@@ -398,7 +398,7 @@ class MypageViewController: UIViewController {
                     DispatchQueue.main.async {
                         self?.memeber = member
                         self?.nickNameLabel.text = member.nickname
-                        self?.myFootLabel.text = "내 발도장: \(member.footPrint)개"
+                        self?.myFootLabel.text = "🐾 내 발도장: \(member.footPrint)개"
                         self?.loadProfileImage(urlString: member.profileImage)
                     }
                 }).disposed(by: disposeBag)
