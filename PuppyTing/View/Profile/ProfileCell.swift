@@ -117,10 +117,12 @@ class ProfileCell: UICollectionViewCell {
         myinfoEditButton.addTarget(self, action: #selector(myinfoEditButtonTapped), for: .touchUpInside)
     }
     
-    // 즐겨찾기 버튼
+    // 즐겨찾기 버튼 , 얼럿추가 - jgh
     @objc private func favoriteButtonTapped() {
         guard let bookmarkId = memberId else { return }
         viewModel?.addBookmark(bookmarkId: bookmarkId)
+        guard let parentVC = parentViewController as? ProfileViewController else { return }
+        parentVC.autoDismissAlertWithTimer(title: "알림", message: "즐겨찾기에 추가되었습니다.", duration: 1.0) // 시간 변경 가능
     }
     
     // 유저 차단 버튼 - psh
