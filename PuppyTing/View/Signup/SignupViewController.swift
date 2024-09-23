@@ -517,7 +517,7 @@ class SignupViewController: UIViewController {
     }
     
     private func endSignUp() {
-        okAlert(title: "회원가입 완료", message: "회원가입이 완료되었습니다.\n이메일 인증을 하고 로그인을 진행해주세요!") { [weak self] _ in
+        okAlert(title: SignUpMessage().signUpSuccess, message: SignUpMessage().signUpSuccessMessage) { [weak self] _ in
             self?.dismiss(animated: true)
         }
     }
@@ -526,14 +526,14 @@ class SignupViewController: UIViewController {
         if let error = error as? AuthError {
             switch error {
             case .CreateFailError:
-                okAlert(title: "회원가입 실패", message: "회원가입에 실패했습니다.", okActionTitle: "ok")
+                okAlert(title: SignUpFailMessage().signUpFail, message: SignUpFailMessage().createFailMessage)
             case .SendEmailFailError:
-                okAlert(title: "회원가입 실패", message: "이메일 전송에 실패했습니다.", okActionTitle: "ok")
+                okAlert(title: SignUpFailMessage().signUpFail, message: SignUpFailMessage().sendEmailFailMessage)
             default:
-                okAlert(title: "회원가입 실패", message: "알 수 없는 이유로 회원가입에 실패했습니다.", okActionTitle: "ok")
+                okAlert(title: SignUpFailMessage().signUpFail, message: SignUpFailMessage().otherFailMessage)
             }
         } else {
-            okAlert(title: "회원가입 실패", message: "알 수 없는 이유로 회원가입에 실패했습니다.", okActionTitle: "ok")
+            okAlert(title: SignUpFailMessage().signUpFail, message: SignUpFailMessage().otherFailMessage)
         }
     }
 }
