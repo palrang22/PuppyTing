@@ -127,8 +127,31 @@ class ProfileCell: UICollectionViewCell {
     @objc
     private func blockButtonTapped() {
         guard let userId = memberId else { return }
-        viewModel?.blockedUser(uuid: userId)
+        
+        // 차단 얼럿 띄우기 위한 코드 추가 - jgh
+        guard let parentVC = parentViewController as? ProfileViewController else { return }
+        // 차단 확인 얼럿 띄우기
+        parentVC.okAlertWithCancel(
+            title: "사용자 차단",
+            message: "사용자를 차단하시겠습니까? 차단 이후 사용자의 게시물이 보이지 않습니다.",
+            okActionTitle: "차단",
+            cancelActionTitle: "취소",
+            okActionHandler: { [weak self] (action: UIAlertAction) in
+                self?.viewModel?.blockedUser(uuid: userId)
+                parentVC.okAlert(
+                    title: "차단 완료",
+                    message: "사용자가 성공적으로 차단되었습니다.",
+                    okActionTitle: "확인",
+                    okActionHandler: nil
+                )
+            },
+            cancelActionHandler: { (action: UIAlertAction) in
+                // 취소버튼일때는 다른 작업 없어서 로그만 출력
+                print("차단 취소됨")
+            }
+        )
     }
+    
     //ksh
     @objc private func footButtonTapped() {
         guard let memberId = memberId else { return }

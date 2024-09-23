@@ -332,22 +332,25 @@ class DetailTingViewController: UIViewController {
                 )
             }).disposed(by: disposeBag)
         
+        // 차단 버튼 수정 - jgh
         blockButton.rx.tap
             .subscribe(onNext: { [weak self] in
                 guard let userid = self?.tingFeedModels?.userid else { return }
-                self?.fireStoreDatabase.blockUser(userId: userid)
-                    .subscribe(onSuccess: { [weak self] in
-                        self?.okAlertWithCancel(
-                            title: "사용자 차단",
-                            message: "사용자를 차단하시겠습니까? 차단 이후 사용자의 게시물이 보이지 않습니다.",
-                            okActionTitle: "차단",
-                            okActionHandler: { _ in
-                                self!.okAlert(title: "차단 완료", message: "사용자가 성공적으로 차단되었습니다.")
-                            })
-                    }, onFailure: { error in
-                        print("차단 실패")
-                        self!.okAlert(title: "차단 실패", message: "사용자 차단에 실패했습니다. 다시 시도해주세요.")
-                    }).disposed(by: self!.disposeBag)
+                // 얼럿 창을 먼저 띄우기
+                self?.okAlertWithCancel(
+                    title: "사용자 차단",
+                    message: "사용자를 차단하시겠습니까? 차단 이후 사용자의 게시물이 보이지 않습니다.",
+                    okActionTitle: "차단",
+                    okActionHandler: { [weak self] _ in
+                        // 차단 버튼을 눌렀을 때 차단 로직을 실행
+                        self?.fireStoreDatabase.blockUser(userId: userid)
+                            .subscribe(onSuccess: { [weak self] in
+                                self?.okAlert(title: "차단 완료", message: "사용자가 성공적으로 차단되었습니다.")
+                            }, onFailure: { error in
+                                print("차단 실패")
+                                self?.okAlert(title: "차단 실패", message: "사용자 차단에 실패했습니다. 다시 시도해주세요.")
+                            }).disposed(by: self!.disposeBag)
+                    })
             }).disposed(by: disposeBag)
         
         reportButton.rx.tap
