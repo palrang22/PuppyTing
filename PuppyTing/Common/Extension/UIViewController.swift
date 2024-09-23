@@ -71,6 +71,15 @@ extension UIViewController {
         alertController.addAction(cancelAction)
         self.present(alertController, animated: true, completion: nil)
     }
+    
+    // 자동으로 사라지는 Alert 메서드 - jgh
+    func autoDismissAlertWithTimer(title: String? = nil, message: String, duration: TimeInterval = 2.0) { // title은 원하는대로 생략가능(제목이 애매한것들이 있을까봐 넣었습니다.) duration은 원하는대로 조정가능 따로 지정하지 않으면 2초뒤에 사라짐
+        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        self.present(alert, animated: true, completion: nil)
+        Timer.scheduledTimer(withTimeInterval: duration, repeats: false, block: { _ in
+            alert.dismiss(animated: true, completion: nil)
+        })
+    }
 
 }
 
