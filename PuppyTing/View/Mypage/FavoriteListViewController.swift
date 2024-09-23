@@ -58,19 +58,19 @@ class FavoriteListViewController: UIViewController {
             .disposed(by: disposeBag)
     }
     
-    private func unfavoriteUser(at indexPath: IndexPath) {
-        let favorite = favoriteList[indexPath.row]
-        let bookmarkId = favorite.uuid
-        
-        viewModel.removeBookmark(bookmarkId: bookmarkId)
-            .subscribe(onSuccess: { [weak self] in
-                self?.favoriteList.remove(at: indexPath.row)
-                self?.tableView.deleteRows(at: [indexPath], with: .automatic)
-            }, onError: { error in
-                print("즐겨찾기 해제 오류: \(error)")
-            })
-            .disposed(by: disposeBag)
-    }
+//    private func unfavoriteUser(at indexPath: IndexPath) {
+//        let favorite = favoriteList[indexPath.row]
+//        let bookmarkId = favorite.uuid
+//        
+//        viewModel.removeBookmark(bookmarkId: bookmarkId)
+//            .subscribe(onSuccess: { [weak self] in
+//                self?.favoriteList.remove(at: indexPath.row)
+//                self?.tableView.deleteRows(at: [indexPath], with: .automatic)
+//            }, onError: { error in
+//                print("즐겨찾기 해제 오류: \(error)")
+//            })
+//            .disposed(by: disposeBag)
+//    }
 }
 
 extension FavoriteListViewController: UITableViewDataSource, UITableViewDelegate {
@@ -87,15 +87,27 @@ extension FavoriteListViewController: UITableViewDataSource, UITableViewDelegate
         let favorite = favoriteList[indexPath.row]
         cell.configure(with: favorite)
         
-        cell.onUnfavoriteButtonTapped = { [weak self] in
-            self?.unfavoriteUser(at: indexPath)
-        }
+//        cell.onUnfavoriteButtonTapped = { [weak self] in
+//            self?.unfavoriteUser(at: indexPath)
+//        }
         cell.selectionStyle = .none // 셀선택 배경 안바뀌게
         
         return cell
     }
     
+    // 셀 선택시 프로필모달 띄우기
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        // 선택 시 처리 로직
+        let selectedFavorite = favoriteList[indexPath.row]
+        let profileVC = ProfileViewController()
+        
+        profileVC.modalPresentationStyle = .pageSheet
+        profileVC.userid = selectedFavorite.uuid
+        
+        if let sheet = profileVC.sheetPresentationController {
+            sheet.detents = [.medium()]
+            sheet.prefersGrabberVisible = true
+        }
+        
+        present(profileVC, animated: true, completion: nil)
     }
 }
