@@ -33,51 +33,43 @@ class MyPageViewModel {
     
     func deleteUser(user: User, vc: UIViewController) {
         FireStoreDatabaseManager.shared.findMember(uuid: user.uid) { member in
-            if let providerID = user.providerData.first?.providerID {
-                print(providerID)
-                switch providerID {
-                case GoogleAuthProviderID:
-                    // Google 계정 삭제 처리
-                    FirebaseAuthManager.shared.getGoogleCredentials(presentingViewController: vc)
-                        .flatMap { credentials in
-                            FirebaseAuthManager.shared.deleteUserWithGoogle(idToken: credentials.idToken, accessToken: credentials.accessToken)
-                        }
-                        .subscribe(onSuccess: { result in
-                            self.leaveMember(uuid: user.uid)
-                        }, onFailure: { error in
-                            self.errorSubject.onNext(error)
-                        })
-                        .disposed(by: self.disposeBag)
-
-                case "apple.com":
-                    // Apple 계정 삭제 처리
-                    FirebaseAuthManager.shared.getAppleCredentials()
-                        .flatMap { credential in
-                            FirebaseAuthManager.shared.deleteUserWithApple(appleCredential: credential)
-                        }
-                        .subscribe(onSuccess: { result in
-                            self.leaveMember(uuid: user.uid)
-                        }, onFailure: { error in
-                            self.errorSubject.onNext(error)
-                        })
-                        .disposed(by: self.disposeBag)
-
-                case EmailAuthProviderID:
-                    // 이메일 계정 삭제 처리
-                    let password = member.password // 비밀번호 입력을 받아야 합니다.
-                    FirebaseAuthManager.shared.deleteUserWithEmail(password: password)
-                        .subscribe(onSuccess: { result in
-                            self.leaveMember(uuid: user.uid)
-                        }, onFailure: { error in
-                            self.errorSubject.onNext(error)
-                        })
-                        .disposed(by: self.disposeBag)
-                default:
-                    let error = NSError(domain: "지원되지 않는 로그인 제공자입니다.", code: -1, userInfo: nil)
-                    self.errorSubject.onNext(error)
-                }
+            var providerIDList: [String] = []
+            user.providerData.forEach { data in
+                providerIDList.append(data.providerID)
+            }
+            if providerIDList.contains(GoogleAuthProviderID) {
+                FirebaseAuthManager.shared.getGoogleCredentials(presentingViewController: vc)
+                    .flatMap { credentials in
+                        FirebaseAuthManager.shared.deleteUserWithGoogle(idToken: credentials.idToken, accessToken: credentials.accessToken)
+                    }
+                    .subscribe(onSuccess: { result in
+                        self.leaveMember(uuid: user.uid)
+                    }, onFailure: { error in
+                        self.errorSubject.onNext(error)
+                    })
+                    .disposed(by: self.disposeBag)
+            } else if providerIDList.contains("apple.com") {
+                FirebaseAuthManager.shared.getAppleCredentials()
+                    .flatMap { credential in
+                        FirebaseAuthManager.shared.deleteUserWithApple(appleCredential: credential)
+                    }
+                    .subscribe(onSuccess: { result in
+                        self.leaveMember(uuid: user.uid)
+                    }, onFailure: { error in
+                        self.errorSubject.onNext(error)
+                    })
+                    .disposed(by: self.disposeBag)
+            } else if providerIDList.contains(EmailAuthProviderID) {
+                let password = member.password // 비밀번호 입력을 받아야 합니다.
+                FirebaseAuthManager.shared.deleteUserWithEmail(password: password)
+                    .subscribe(onSuccess: { result in
+                        self.leaveMember(uuid: user.uid)
+                    }, onFailure: { error in
+                        self.errorSubject.onNext(error)
+                    })
+                    .disposed(by: self.disposeBag)
             } else {
-                let error = NSError(domain: "로그인 제공자를 확인할 수 없습니다.", code: -1, userInfo: nil)
+                let error = NSError(domain: "지원되지 않는 로그인 제공자입니다.", code: -1, userInfo: nil)
                 self.errorSubject.onNext(error)
             }
         }

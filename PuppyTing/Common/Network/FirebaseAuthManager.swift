@@ -339,14 +339,12 @@ class FirebaseAuthManager: NSObject, ASAuthorizationControllerDelegate {
                     single(.failure(NSError(domain: "Firebase ClientID가 없습니다.", code: -1, userInfo: nil)))
                     return Disposables.create()
                 }
-
                 let config = GIDConfiguration(clientID: clientID)
                 GIDSignIn.sharedInstance.signIn(withPresenting: presentingViewController) { signInResult, error in
                     if let error = error {
                         single(.failure(error))
                         return
                     }
-
                     guard let signInResult = signInResult, let idToken = signInResult.user.idToken?.tokenString else {
                         single(.failure(NSError(domain: "Google 로그인 정보를 가져올 수 없습니다.", code: -1, userInfo: nil)))
                         return

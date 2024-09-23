@@ -32,7 +32,8 @@
 		56FD04912C80172B00EBCDCD /* ChattingTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56FD04902C80172B00EBCDCD /* ChattingTableViewCell.swift */; };
 		56FD04932C856C4200EBCDCD /* FindingPasswordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56FD04922C856C4200EBCDCD /* FindingPasswordViewController.swift */; };
 		56FD04952C856C6E00EBCDCD /* ChangePasswordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56FD04942C856C6E00EBCDCD /* ChangePasswordViewController.swift */; };
-		A2024BB92C9CD6D60049DD8A /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = A2024BB82C9CD6D60049DD8A /* GoogleService-Info.plist */; };
+		A2024BBC2CA1378B0049DD8A /* LoginMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2024BBB2CA1378B0049DD8A /* LoginMessage.swift */; };
+		A2024BBE2CA148FC0049DD8A /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = A2024BBD2CA148FC0049DD8A /* GoogleService-Info.plist */; };
 		A2085DA32C7D678400698923 /* GoogleSignIn in Frameworks */ = {isa = PBXBuildFile; productRef = A2085DA22C7D678400698923 /* GoogleSignIn */; };
 		A2085DA52C7D678400698923 /* GoogleSignInSwift in Frameworks */ = {isa = PBXBuildFile; productRef = A2085DA42C7D678400698923 /* GoogleSignInSwift */; };
 		A2085DC62C7EB37400698923 /* ChatListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2085DC52C7EB37400698923 /* ChatListViewController.swift */; };
@@ -117,7 +118,8 @@
 		56FD04922C856C4200EBCDCD /* FindingPasswordViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FindingPasswordViewController.swift; sourceTree = "<group>"; };
 		56FD04942C856C6E00EBCDCD /* ChangePasswordViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChangePasswordViewController.swift; sourceTree = "<group>"; };
 		A2024BB32C9023030049DD8A /* PuppyTing.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = PuppyTing.entitlements; sourceTree = "<group>"; };
-		A2024BB82C9CD6D60049DD8A /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		A2024BBB2CA1378B0049DD8A /* LoginMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginMessage.swift; sourceTree = "<group>"; };
+		A2024BBD2CA148FC0049DD8A /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		A2085DC52C7EB37400698923 /* ChatListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatListViewController.swift; sourceTree = "<group>"; };
 		A2085DC72C7EB4BA00698923 /* ChatTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatTableViewCell.swift; sourceTree = "<group>"; };
 		A2085DC92C80395B00698923 /* Member.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Member.swift; sourceTree = "<group>"; };
@@ -264,6 +266,14 @@
 			path = Login;
 			sourceTree = "<group>";
 		};
+		A2024BBA2CA136F70049DD8A /* Text */ = {
+			isa = PBXGroup;
+			children = (
+				A2024BBB2CA1378B0049DD8A /* LoginMessage.swift */,
+			);
+			path = Text;
+			sourceTree = "<group>";
+		};
 		A2085DCB2C804C1A00698923 /* SignUp */ = {
 			isa = PBXGroup;
 			children = (
@@ -320,7 +330,7 @@
 				E738FBA72C7C696C004696BD /* Assets */,
 				E738FB812C7C62F0004696BD /* LaunchScreen.storyboard */,
 				E738FB842C7C62F0004696BD /* Info.plist */,
-				A2024BB82C9CD6D60049DD8A /* GoogleService-Info.plist */,
+				A2024BBD2CA148FC0049DD8A /* GoogleService-Info.plist */,
 			);
 			path = PuppyTing;
 			sourceTree = "<group>";
@@ -402,6 +412,7 @@
 		E738FB922C7C6490004696BD /* Common */ = {
 			isa = PBXGroup;
 			children = (
+				A2024BBA2CA136F70049DD8A /* Text */,
 				23DC0A872C9C7189000B97EB /* Extension */,
 				23DC0A862C9C717B000B97EB /* Network */,
 			);
@@ -562,8 +573,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				E738FB802C7C62F0004696BD /* Assets.xcassets in Resources */,
-				A2024BB92C9CD6D60049DD8A /* GoogleService-Info.plist in Resources */,
 				A2F9FE772C8DF3CB004D7FF6 /* Config.xcconfig in Resources */,
+				A2024BBE2CA148FC0049DD8A /* GoogleService-Info.plist in Resources */,
 				E738FBAA2C7C6BB3004696BD /* .gitignore in Resources */,
 				E738FB832C7C62F0004696BD /* Base in Resources */,
 			);
@@ -635,6 +646,7 @@
 				E70DB3472C7F0CD00073B3F8 /* DetailTingViewController.swift in Sources */,
 				E70DB3452C7F0CB60073B3F8 /* PostTingViewController.swift in Sources */,
 				E7F598392C885D5300FE8900 /* KakaoMapViewController.swift in Sources */,
+				A2024BBC2CA1378B0049DD8A /* LoginMessage.swift in Sources */,
 				56D686CC2C7DC88700B00880 /* PptLoginViewController.swift in Sources */,
 				5602B08C2C8E9AD90060F03B /* FavoriteListViewController.swift in Sources */,
 				A2F9FE4D2C896EE0004D7FF6 /* AppController.swift in Sources */,

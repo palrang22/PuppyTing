@@ -19,9 +19,9 @@ class FindingPasswordViewController: UIViewController {
             if let error = error as? AuthError {
                 switch error {
                 case .invalidEmailError:
-                    okAlert(title: "로그인 실패", message: "존재하지 않는 이메일 입니다.\n다시 확인해주세요.", okActionTitle: "ok")
+                    okAlert(title: FindPasswordFailMessage().findPasswordFail, message: FindPasswordFailMessage().invalidEmailMessage)
                 default:
-                    okAlert(title: "로그인 실패", message: "알 수 없는 이유로 비밀번호 재설정에 실패했습니다.", okActionTitle: "다시 시도하기")
+                    okAlert(title: FindPasswordFailMessage().findPasswordFail, message: FindPasswordFailMessage().otherFailMessage)
                 }
             }
         }
@@ -116,7 +116,7 @@ class FindingPasswordViewController: UIViewController {
     private func bindData() {
         findingPasswordViewModel.sendEmailSubject.observe(on: MainScheduler.instance).subscribe(onNext: { [weak self] emailSend in
             // 이메일 전송 완료
-            self?.okAlert(title: "비밀번호 재설정", message: "등록하신 이메일을 확인해주세요.\n이메일을 확인 후 비밀번호 재설정을 진행해주세요.")
+            self?.okAlert(title: FindPasswordMessage().findPasswordSuccess, message: FindPasswordMessage().findPasswordSuccessMessage)
         }).disposed(by: disposeBag)
         findingPasswordViewModel.errorSubject.observe(on: MainScheduler.instance).subscribe(onNext: { [weak self] error in
             // 이메일 전송 실패
