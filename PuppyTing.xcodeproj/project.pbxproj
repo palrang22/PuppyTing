@@ -795,7 +795,8 @@
 				DEVELOPMENT_TEAM = SS444RV4LU;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = PuppyTing/Info.plist;
-				INFOPLIST_KEY_NSCameraUsageDescription = "이 앱이 카메라를 사용하여 사진을 찍는 것을 허용합니다.";
+				INFOPLIST_KEY_CFBundleDisplayName = "퍼피팅";
+				INFOPLIST_KEY_NSCameraUsageDescription = "프로필 사진 및 강아지 사진 등록 등을 위해 카메라 엑세스가 필요합니다.";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "현재 위치를 기반으로 근처 만남의 장소를 검색하기 위해 위치 정보가 필요합니다.";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
@@ -832,7 +833,8 @@
 				DEVELOPMENT_TEAM = SS444RV4LU;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = PuppyTing/Info.plist;
-				INFOPLIST_KEY_NSCameraUsageDescription = "이 앱이 카메라를 사용하여 사진을 찍는 것을 허용합니다.";
+				INFOPLIST_KEY_CFBundleDisplayName = "퍼피팅";
+				INFOPLIST_KEY_NSCameraUsageDescription = "프로필 사진 및 강아지 사진 등록 등을 위해 카메라 엑세스가 필요합니다.";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "현재 위치를 기반으로 근처 만남의 장소를 검색하기 위해 위치 정보가 필요합니다.";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
