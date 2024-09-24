@@ -15,14 +15,14 @@ class FeedTableViewCell: UITableViewCell {
     
     private let dateLabel: UILabel = {
         let label = UILabel()
-        label.font = UIFont.systemFont(ofSize: 16)
+        label.font = UIFont.systemFont(ofSize: 19)
         label.textColor = .black
         return label
     }()
     
     private let descriptionLabel: UILabel = {
         let label = UILabel()
-        label.font = UIFont.systemFont(ofSize: 18)
+        label.font = UIFont.systemFont(ofSize: 16)
         label.textColor = .black
         label.numberOfLines = 0
         return label
@@ -37,14 +37,13 @@ class FeedTableViewCell: UITableViewCell {
         
         dateLabel.snp.makeConstraints {
             $0.top.equalToSuperview().offset(10)
-            $0.trailing.equalToSuperview().offset(-5)
-            $0.width.equalTo(100)
+            $0.leading.equalToSuperview().offset(15)
         }
         
         descriptionLabel.snp.makeConstraints {
-            $0.top.equalTo(dateLabel)
+            $0.top.equalTo(dateLabel.snp.bottom).offset(5)
             $0.leading.equalToSuperview().offset(15)
-            $0.trailing.equalTo(dateLabel.snp.leading).offset(-10)
+            $0.trailing.equalToSuperview().offset(-15)
             $0.bottom.equalToSuperview().offset(-10)
             $0.height.lessThanOrEqualTo(80)
                 
@@ -59,7 +58,7 @@ class FeedTableViewCell: UITableViewCell {
         descriptionLabel.text = feed.content
         
         let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy/MM/dd"
+        dateFormatter.dateFormat = "yyyy.MM.dd"
         dateLabel.text = dateFormatter.string(from: feed.time)
     }
 }
