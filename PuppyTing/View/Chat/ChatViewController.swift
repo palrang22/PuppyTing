@@ -220,7 +220,7 @@ class ChatViewController: UIViewController {
             $0.trailing.equalTo(sendButton.snp.leading).offset(-8)
             $0.centerY.equalToSuperview()
             $0.bottom.equalToSuperview().inset(8)
-            $0.height.lessThanOrEqualTo(100).priority(.required)
+            $0.height.lessThanOrEqualTo(200).priority(.required)
         }
         
         sendButton.snp.makeConstraints {
@@ -250,7 +250,6 @@ class ChatViewController: UIViewController {
     }
 }
 
-
 extension ChatViewController: UITextViewDelegate {
     func textViewDidChange(_ textView: UITextView) {
         let size = CGSize(width: textView.frame.width, height: .infinity)
@@ -267,3 +266,4 @@ extension ChatViewController: UITextViewDelegate {
         }
     }
 }
+

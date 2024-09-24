@@ -35,13 +35,10 @@ class ChatListViewController: UIViewController, UITableViewDelegate, UISearchBar
         
         tableView.rowHeight = UITableView.automaticDimension
         tableView.estimatedRowHeight = 100
-        
         tableView.refreshControl = refreshControl
-        
     }
     
     private func setupUI() {
-        
         navigationController?.navigationBar.prefersLargeTitles = true
         navigationItem.title = "채팅"
         
