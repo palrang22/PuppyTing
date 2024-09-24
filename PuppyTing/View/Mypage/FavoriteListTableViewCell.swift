@@ -13,7 +13,7 @@ class FavoriteListTableViewCell: UITableViewCell {
     
     static let identifier = "FavoriteListTableViewCell"
     
-    var onUnfavoriteButtonTapped: (() -> Void)?
+    var onViewPostsButtonTapped: (() -> Void)? // "작성글 보기" 버튼 클릭 시 호출될 클로저
     
     private let profileImageView: UIImageView = {
         let imageView = UIImageView()
@@ -41,23 +41,12 @@ class FavoriteListTableViewCell: UITableViewCell {
         return button
     }()
     
-//    private let unfavoriteButton: UIButton = {
-//        let button = UIButton(type: .system)
-//        button.setTitle("해제", for: .normal)
-//        button.backgroundColor = UIColor.puppyPurple
-//        button.layer.cornerRadius = 10
-//        button.setTitleColor(.white, for: .normal)
-//        button.addTarget(self, action: #selector(unfavoriteButtonTapped), for: .touchUpInside)
-//        return button
-//    }()
-    
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
         contentView.addSubview(profileImageView)
         contentView.addSubview(nicknameLabel)
         contentView.addSubview(listButton)
-//        contentView.addSubview(unfavoriteButton)
         
         profileImageView.snp.makeConstraints {
             $0.top.equalTo(contentView).offset(10)
@@ -78,13 +67,6 @@ class FavoriteListTableViewCell: UITableViewCell {
                         $0.height.equalTo(44)
         }
         
-//        unfavoriteButton.snp.makeConstraints {
-//            $0.trailing.equalTo(contentView).offset(-20)
-//            $0.centerY.equalTo(profileImageView)
-//            $0.width.equalTo(80)
-//            $0.height.equalTo(44)
-//        }
-        
         contentView.snp.makeConstraints {
             $0.bottom.equalTo(profileImageView.snp.bottom).offset(10)
             $0.leading.trailing.equalToSuperview()
@@ -98,8 +80,8 @@ class FavoriteListTableViewCell: UITableViewCell {
     // 메뉴 생성 메서드
     private func createMenu() -> UIMenu {
         // 각 메뉴 항목 생성
-        let viewPostsAction = UIAction(title: "작성글 보기", image: UIImage(systemName: "doc.text")) { _ in
-            // 로직 연결 해야함
+        let viewPostsAction = UIAction(title: "작성글 보기", image: UIImage(systemName: "doc.text")) { [weak self] _ in
+            self?.onViewPostsButtonTapped?() // 클로저 호출
         }
         
         let chatAction = UIAction(title: "채팅 바로가기", image: UIImage(systemName: "message")) { _ in
@@ -109,10 +91,6 @@ class FavoriteListTableViewCell: UITableViewCell {
         // 여러 메뉴를 담는 UIMenu 생성
         return UIMenu(title: "옵션", children: [viewPostsAction, chatAction])
     }
-    
-//    @objc private func unfavoriteButtonTapped() {
-//        onUnfavoriteButtonTapped?()
-//    }
     
     func configure(with favorite: Favorite) {
         nicknameLabel.text = favorite.nickname
