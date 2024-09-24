@@ -7,6 +7,7 @@
 
 import UIKit
 
+import FirebaseAuth
 import RxSwift
 
 class FavoriteListViewController: UIViewController {
@@ -58,19 +59,34 @@ class FavoriteListViewController: UIViewController {
             .disposed(by: disposeBag)
     }
     
-    private func unfavoriteUser(at indexPath: IndexPath) {
-        let favorite = favoriteList[indexPath.row]
-        let bookmarkId = favorite.uuid
-        
-        viewModel.removeBookmark(bookmarkId: bookmarkId)
-            .subscribe(onSuccess: { [weak self] in
-                self?.favoriteList.remove(at: indexPath.row)
-                self?.tableView.deleteRows(at: [indexPath], with: .automatic)
-            }, onError: { error in
-                print("즐겨찾기 해제 오류: \(error)")
-            })
-            .disposed(by: disposeBag)
+    private func createChatRoom(chatRoomName: String, users: [String], userId: String) {
+        FirebaseRealtimeDatabaseManager.shared.checkIfChatRoomExists(userIds: users) { exists, chatId in
+            if exists {
+                if let roomId = chatId {
+                    self.moveChatRoom(roomId: roomId, users: users, userId: userId)
+                }
+            } else {
+                FirebaseRealtimeDatabaseManager.shared.createChatRoom(name: chatRoomName, users: users)
+                    .observe(on: MainScheduler.instance).subscribe(onSuccess: { [weak self] roomId in
+                    self?.moveChatRoom(roomId: roomId, users: users, userId: userId)
+                }).disposed(by: self.disposeBag)
+            }
+        }
     }
+    
+    private func moveChatRoom(roomId: String, users: [String], userId: String) {
+        let chatVC = ChatViewController()
+        chatVC.roomId = roomId
+        let userId = userId
+        let otherUser = users.first == userId ? users.last : users.first
+        if let otherUser = otherUser {
+            FireStoreDatabaseManager.shared.findMemberNickname(uuid: otherUser) { nickname in
+                chatVC.titleText = nickname
+                self.navigationController?.pushViewController(chatVC, animated: true)
+            }
+        }
+    }
+    
 }
 
 extension FavoriteListViewController: UITableViewDataSource, UITableViewDelegate {
@@ -87,15 +103,42 @@ extension FavoriteListViewController: UITableViewDataSource, UITableViewDelegate
         let favorite = favoriteList[indexPath.row]
         cell.configure(with: favorite)
         
-        cell.onUnfavoriteButtonTapped = { [weak self] in
-            self?.unfavoriteUser(at: indexPath)
+        // "작성글 보기" 버튼이 눌렸을 때 실행될 클로저
+        cell.onViewPostsButtonTapped = { [weak self] in
+            guard let self = self else { return }
+            
+            let feedListVC = FeedListViewController()
+            feedListVC.userid = favorite.uuid // 해당 유저의 글 목록을 보여주기 위한 userId 전달
+            
+            navigationController?.pushViewController(feedListVC, animated: true)
         }
+        
+        cell.onChatActionButtonTapped = { [weak self] in
+            let userId = Auth.auth().currentUser?.uid
+            let otherUserId = favorite.uuid
+            guard let userId = userId else { return }
+            let users = [userId, otherUserId]
+            self?.createChatRoom(chatRoomName: favorite.nickname, users: users, userId: userId)
+        }
+        
         cell.selectionStyle = .none // 셀선택 배경 안바뀌게
         
         return cell
     }
     
+    // 셀 선택시 프로필모달 띄우기
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        // 선택 시 처리 로직
+        let selectedFavorite = favoriteList[indexPath.row]
+        let profileVC = ProfileViewController()
+        
+        profileVC.modalPresentationStyle = .pageSheet
+        profileVC.userid = selectedFavorite.uuid
+        
+        if let sheet = profileVC.sheetPresentationController {
+            sheet.detents = [.medium()]
+            sheet.prefersGrabberVisible = true
+        }
+        
+        present(profileVC, animated: true, completion: nil)
     }
 }

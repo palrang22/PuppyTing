@@ -23,6 +23,9 @@
 		5602B0862C8E0C6F0060F03B /* ProfileViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5602B0852C8E0C6F0060F03B /* ProfileViewModel.swift */; };
 		5602B08A2C8E91B30060F03B /* FavoriteListTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5602B0892C8E91B20060F03B /* FavoriteListTableViewCell.swift */; };
 		5602B08C2C8E9AD90060F03B /* FavoriteListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5602B08B2C8E9AD90060F03B /* FavoriteListViewController.swift */; };
+		56A640782CA17AE100950B0B /* FeedListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56A640772CA17AE100950B0B /* FeedListViewController.swift */; };
+		56A6407C2CA17BCB00950B0B /* FeedTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56A6407B2CA17BCB00950B0B /* FeedTableViewCell.swift */; };
+		56A640802CA17ECE00950B0B /* FeedListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56A6407F2CA17ECE00950B0B /* FeedListViewModel.swift */; };
 		56D686C52C7DA88500B00880 /* SignupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56D686C42C7DA88500B00880 /* SignupViewController.swift */; };
 		56D686C82C7DB09600B00880 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56D686C72C7DB09600B00880 /* LoginViewController.swift */; };
 		56D686CC2C7DC88700B00880 /* PptLoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56D686CB2C7DC88600B00880 /* PptLoginViewController.swift */; };
@@ -108,6 +111,9 @@
 		5602B0852C8E0C6F0060F03B /* ProfileViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewModel.swift; sourceTree = "<group>"; };
 		5602B0892C8E91B20060F03B /* FavoriteListTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteListTableViewCell.swift; sourceTree = "<group>"; };
 		5602B08B2C8E9AD90060F03B /* FavoriteListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteListViewController.swift; sourceTree = "<group>"; };
+		56A640772CA17AE100950B0B /* FeedListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedListViewController.swift; sourceTree = "<group>"; };
+		56A6407B2CA17BCB00950B0B /* FeedTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedTableViewCell.swift; sourceTree = "<group>"; };
+		56A6407F2CA17ECE00950B0B /* FeedListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedListViewModel.swift; sourceTree = "<group>"; };
 		56D686C42C7DA88500B00880 /* SignupViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignupViewController.swift; sourceTree = "<group>"; };
 		56D686C72C7DB09600B00880 /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 		56D686CB2C7DC88600B00880 /* PptLoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PptLoginViewController.swift; sourceTree = "<group>"; };
@@ -354,6 +360,7 @@
 				A2F9FE6D2C8DAFD8004D7FF6 /* PuppyRegistrationViewModel.swift */,
 				56EF72412C94315C00CC919F /* FavoriteListViewModel.swift */,
 				C29FD01E2C9BFEDC00F8951D /* BlockListViewModel.swift */,
+				56A6407F2CA17ECE00950B0B /* FeedListViewModel.swift */,
 			);
 			path = MyPage;
 			sourceTree = "<group>";
@@ -442,6 +449,8 @@
 				5602B0892C8E91B20060F03B /* FavoriteListTableViewCell.swift */,
 				C29FD01A2C9BFE5F00F8951D /* MyBlockListTableViewCell.swift */,
 				C29FD01C2C9BFEA900F8951D /* MyBlockListViewController.swift */,
+				56A640772CA17AE100950B0B /* FeedListViewController.swift */,
+				56A6407B2CA17BCB00950B0B /* FeedTableViewCell.swift */,
 			);
 			path = Mypage;
 			sourceTree = "<group>";
@@ -589,12 +598,14 @@
 			files = (
 				C29FCFC12C88566000F8951D /* MyFeedManageViewController.swift in Sources */,
 				56FD04952C856C6E00EBCDCD /* ChangePasswordViewController.swift in Sources */,
+				56A640782CA17AE100950B0B /* FeedListViewController.swift in Sources */,
 				E738FBC32C7D8019004696BD /* TingCollectionViewCell.swift in Sources */,
 				2369F3AF2C980222006040B3 /* KingFisherManager.swift in Sources */,
 				A2F9FE512C89D561004D7FF6 /* ChatModel.swift in Sources */,
 				A2F9FE6E2C8DAFD8004D7FF6 /* PuppyRegistrationViewModel.swift in Sources */,
 				A2F9FE532C89D9CE004D7FF6 /* FirebaseRealtimeDatabaseManager.swift in Sources */,
 				E70DB3512C8068460073B3F8 /* SearchedMapViewController.swift in Sources */,
+				56A6407C2CA17BCB00950B0B /* FeedTableViewCell.swift in Sources */,
 				E70DB34F2C8068190073B3F8 /* SearchedAddressTableViewCell.swift in Sources */,
 				A2085DD42C80622B00698923 /* PptLoginViewModel.swift in Sources */,
 				56D686C82C7DB09600B00880 /* LoginViewController.swift in Sources */,
@@ -645,6 +656,7 @@
 				A2F9FE7A2C8E6BBB004D7FF6 /* ChatDateTableViewCell.swift in Sources */,
 				E70DB3472C7F0CD00073B3F8 /* DetailTingViewController.swift in Sources */,
 				E70DB3452C7F0CB60073B3F8 /* PostTingViewController.swift in Sources */,
+				56A640802CA17ECE00950B0B /* FeedListViewModel.swift in Sources */,
 				E7F598392C885D5300FE8900 /* KakaoMapViewController.swift in Sources */,
 				A2024BBC2CA1378B0049DD8A /* LoginMessage.swift in Sources */,
 				56D686CC2C7DC88700B00880 /* PptLoginViewController.swift in Sources */,
