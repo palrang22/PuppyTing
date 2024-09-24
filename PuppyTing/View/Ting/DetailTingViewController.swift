@@ -47,7 +47,7 @@ class DetailTingViewController: UIViewController {
     
     private let nameLabel: UILabel = {
         let label = UILabel()
-        label.text = "이름"
+        label.text = "알 수 없는 사용자"
         label.textColor = .black
         label.font = .systemFont(ofSize: 16, weight: .medium)
         return label
@@ -55,7 +55,7 @@ class DetailTingViewController: UIViewController {
     
     private let timeLabel: UILabel = {
         let label = UILabel()
-        label.text = "n분 전"
+        label.text = "알 수 없음"
         label.textColor = .puppyPurple
         label.font = .systemFont(ofSize: 14, weight: .medium)
         return label
@@ -63,7 +63,7 @@ class DetailTingViewController: UIViewController {
     
     private let footPrintLabel: UILabel = {
         let label = UILabel()
-        label.text = "🐾 발도장 n개"
+        label.text = "알 수 없음"
         label.font = .systemFont(ofSize: 16, weight: .semibold)
         return label
     }()

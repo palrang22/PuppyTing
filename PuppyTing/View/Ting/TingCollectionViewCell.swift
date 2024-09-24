@@ -43,7 +43,7 @@ class TingCollectionViewCell: UICollectionViewCell {
     
     private let nameLabel: UILabel = {
         let label = UILabel()
-        label.text = "이름"
+        label.text = "알 수 없는 사용자"
         label.textColor = .black
         label.font = .systemFont(ofSize: 16, weight: .medium)
         return label
@@ -59,7 +59,7 @@ class TingCollectionViewCell: UICollectionViewCell {
     
     private let footPrintLabel: UILabel = {
         let label = UILabel()
-        label.text = "🐾 발도장 n개"
+        label.text = "알 수 없음"
         label.font = .systemFont(ofSize: 16, weight: .semibold)
         return label
     }()
@@ -132,16 +132,17 @@ class TingCollectionViewCell: UICollectionViewCell {
     
     //MARK: config 메서드
     func configure(with model: TingFeedModel, currentUserID: String) {
-        self.nameLabel.text = model.userid
+        self.nameLabel.text = "알 수 없는 사용자"
+        self.profilePic.image = UIImage(named: "defaultProfileImage")
         self.content.text = model.content
+        self.footPrintLabel.text = "알 수 없음"
         messageSendButton.isHidden = model.userid == currentUserID
         
         changeDateFormat(time: model.time)
         
-        self.footPrintLabel.text = "🐾 발도장 \(model.postid)개"
-        
         FireStoreDatabaseManager.shared.findMemeber(uuid: model.userid)
             .subscribe(onSuccess: { [weak self] member in
+                
                 self?.nameLabel.text = member.nickname
                 self?.footPrintLabel.text = "🐾 발도장 \(member.footPrint)개"
                 
