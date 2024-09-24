@@ -336,7 +336,7 @@ class FireStoreDatabaseManager {
     }
     
     func findMemberNickname(uuid: String, completion: @escaping (String) -> Void) {
-        var nickName = ""
+        var nickName = "알 수 없는 사용자"
         let docRef = db.collection("member").document(uuid)
         docRef.getDocument { result, error in
             if let result = result, result.exists, let data = result.data() {
