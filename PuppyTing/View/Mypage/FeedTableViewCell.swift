@@ -58,7 +58,7 @@ class FeedTableViewCell: UITableViewCell {
         descriptionLabel.text = feed.content
         
         let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy.MM.dd"
+        dateFormatter.dateFormat = "yyyy.MM.dd."
         dateLabel.text = dateFormatter.string(from: feed.time)
     }
 }
