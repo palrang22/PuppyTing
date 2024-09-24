@@ -14,6 +14,7 @@ class FavoriteListTableViewCell: UITableViewCell {
     static let identifier = "FavoriteListTableViewCell"
     
     var onViewPostsButtonTapped: (() -> Void)? // "작성글 보기" 버튼 클릭 시 호출될 클로저
+    var onChatActionButtonTapped: (() -> Void)? // psh - 채팅 버튼 클릭 시 호출될 클로저
     
     private let profileImageView: UIImageView = {
         let imageView = UIImageView()
@@ -84,8 +85,9 @@ class FavoriteListTableViewCell: UITableViewCell {
             self?.onViewPostsButtonTapped?() // 클로저 호출
         }
         
-        let chatAction = UIAction(title: "채팅 바로가기", image: UIImage(systemName: "message")) { _ in
+        let chatAction = UIAction(title: "채팅 바로가기", image: UIImage(systemName: "message")) { [weak self] _ in
             // 로직 연결 해야함
+            self?.onChatActionButtonTapped?()
         }
         
         // 여러 메뉴를 담는 UIMenu 생성
