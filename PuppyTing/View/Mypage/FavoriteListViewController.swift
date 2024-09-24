@@ -7,6 +7,7 @@
 
 import UIKit
 
+import FirebaseAuth
 import RxSwift
 
 class FavoriteListViewController: UIViewController {
@@ -57,6 +58,35 @@ class FavoriteListViewController: UIViewController {
             })
             .disposed(by: disposeBag)
     }
+    
+    private func createChatRoom(chatRoomName: String, users: [String], userId: String) {
+        FirebaseRealtimeDatabaseManager.shared.checkIfChatRoomExists(userIds: users) { exists, chatId in
+            if exists {
+                if let roomId = chatId {
+                    self.moveChatRoom(roomId: roomId, users: users, userId: userId)
+                }
+            } else {
+                FirebaseRealtimeDatabaseManager.shared.createChatRoom(name: chatRoomName, users: users)
+                    .observe(on: MainScheduler.instance).subscribe(onSuccess: { [weak self] roomId in
+                    self?.moveChatRoom(roomId: roomId, users: users, userId: userId)
+                }).disposed(by: self.disposeBag)
+            }
+        }
+    }
+    
+    private func moveChatRoom(roomId: String, users: [String], userId: String) {
+        let chatVC = ChatViewController()
+        chatVC.roomId = roomId
+        let userId = userId
+        let otherUser = users.first == userId ? users.last : users.first
+        if let otherUser = otherUser {
+            FireStoreDatabaseManager.shared.findMemberNickname(uuid: otherUser) { nickname in
+                chatVC.titleText = nickname
+                self.navigationController?.pushViewController(chatVC, animated: true)
+            }
+        }
+    }
+    
 }
 
 extension FavoriteListViewController: UITableViewDataSource, UITableViewDelegate {
@@ -79,9 +109,16 @@ extension FavoriteListViewController: UITableViewDataSource, UITableViewDelegate
             
             let feedListVC = FeedListViewController()
             feedListVC.userid = favorite.uuid // 해당 유저의 글 목록을 보여주기 위한 userId 전달
-            feedListVC.modalPresentationStyle = .fullScreen
             
-            self.present(feedListVC, animated: true, completion: nil)
+            navigationController?.pushViewController(feedListVC, animated: true)
+        }
+        
+        cell.onChatActionButtonTapped = { [weak self] in
+            let userId = Auth.auth().currentUser?.uid
+            let otherUserId = favorite.uuid
+            guard let userId = userId else { return }
+            let users = [userId, otherUserId]
+            self?.createChatRoom(chatRoomName: favorite.nickname, users: users, userId: userId)
         }
         
         cell.selectionStyle = .none // 셀선택 배경 안바뀌게

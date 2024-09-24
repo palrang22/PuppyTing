@@ -20,48 +20,27 @@ class FeedListViewController: UIViewController {
 
     private let disposeBag = DisposeBag()
     
-    private let cancleButton: UIButton = {
-        let button = UIButton(type: .system)
-        button.setImage(UIImage(named: "closeButton")?.withRenderingMode(.alwaysOriginal), for: .normal)
-        button.addTarget(self, action: #selector(didTapCloseButton), for: .touchUpInside)
-        return button
-    }()
-    
-    private let titleLabel: UILabel = {
-        let label = UILabel()
-        label.text = "작성글 목록"
-        label.font = UIFont.boldSystemFont(ofSize: 18)
-        return label
-    }()
+    private func setupNavigationBar() {
+        navigationItem.title = "작성글 목록"
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
         
+        setupNavigationBar()
         setupUI()
         bindViewModel()
         viewModel.fetchFeeds(forUserId: userid)
     }
     
     private func setupUI() {
-        [cancleButton, titleLabel, tableView].forEach {
-            view.addSubview($0)
-        }
         
-        cancleButton.snp.makeConstraints {
-            $0.top.equalTo(view.safeAreaLayoutGuide)
-            $0.leading.equalTo(view.safeAreaLayoutGuide).offset(10)
-            $0.height.width.equalTo(44)
-        }
-        
-        titleLabel.snp.makeConstraints {
-            $0.centerX.equalTo(view.safeAreaLayoutGuide)
-            $0.centerY.equalTo(cancleButton)
-        }
+        view.addSubview(tableView)
         
         tableView.snp.makeConstraints {
-            $0.top.equalTo(cancleButton).offset(35)
-            $0.leading.trailing.bottom.equalTo(view.safeAreaLayoutGuide)
+            $0.top.equalTo(view.safeAreaLayoutGuide.snp.top)
+            $0.leading.trailing.bottom.equalToSuperview()
         }
         
         tableView.register(FeedTableViewCell.self, forCellReuseIdentifier: FeedTableViewCell.identifier)
@@ -72,11 +51,6 @@ class FeedListViewController: UIViewController {
         tableView.separatorInset = UIEdgeInsets(top: 0, left: 10, bottom: 0, right: 10)
         tableView.layoutMargins = UIEdgeInsets.zero
         tableView.cellLayoutMarginsFollowReadableWidth = false
-    }
-    
-    @objc
-    private func didTapCloseButton() {
-        dismiss(animated: true)
     }
     
     private func bindViewModel() {
@@ -116,13 +90,7 @@ extension FeedListViewController: UITableViewDelegate, UITableViewDataSource {
         detailVC.tingFeedModels = selectedFeed
         detailVC.delegate = self // Delegate 설정
         
-        // 모달 설정
-        detailVC.modalPresentationStyle = .pageSheet // 또는 .formSheet 사용하라는데 둘이 똑같이보임 아이패드에서만 다르게 보이는거같음
-        if let sheet = detailVC.sheetPresentationController {
-            sheet.prefersGrabberVisible = true // Grabber 표시
-        }
-        
-        present(detailVC, animated: true, completion: nil) // 모달로 띄우기
+        navigationController?.pushViewController(detailVC, animated: true)
     }
 }
 
