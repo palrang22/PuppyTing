@@ -109,9 +109,8 @@ extension FavoriteListViewController: UITableViewDataSource, UITableViewDelegate
             
             let feedListVC = FeedListViewController()
             feedListVC.userid = favorite.uuid // 해당 유저의 글 목록을 보여주기 위한 userId 전달
-            feedListVC.modalPresentationStyle = .fullScreen
             
-            self.present(feedListVC, animated: true, completion: nil)
+            navigationController?.pushViewController(feedListVC, animated: true)
         }
         
         cell.onChatActionButtonTapped = { [weak self] in
