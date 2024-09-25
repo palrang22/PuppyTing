@@ -30,7 +30,7 @@ class ChatTableViewCell: UITableViewCell {
         let label = UILabel()
         label.text = "채팅방 이름"
         label.textColor = .black
-        label.font = UIFont.systemFont(ofSize: 20, weight: .bold)
+        label.font = UIFont.systemFont(ofSize: 18, weight: .bold)
         return label
     }()
     
@@ -41,6 +41,13 @@ class ChatTableViewCell: UITableViewCell {
         label.textColor = .black
         label.font = UIFont.systemFont(ofSize: 14, weight: .medium)
         return label
+    }()
+    
+    private let messageStack: UIStackView = {
+        let stack = UIStackView()
+        stack.axis = .vertical
+        stack.spacing = 10
+        return stack
     }()
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -54,7 +61,11 @@ class ChatTableViewCell: UITableViewCell {
     }
     
     private func setupUI() {
-        [outerStackView, chatRoomLabel, chatingLogLabel].forEach {
+        [chatRoomLabel, chatingLogLabel].forEach {
+            messageStack.addArrangedSubview($0)
+        }
+        
+        [outerStackView, messageStack].forEach {
             contentView.addSubview($0)
         }
         
@@ -65,18 +76,13 @@ class ChatTableViewCell: UITableViewCell {
             $0.leading.equalToSuperview().offset(10)
         }
         
-        chatRoomLabel.snp.makeConstraints {
-            $0.top.equalToSuperview().offset(20)
-            $0.leading.equalTo(outerStackView.snp.trailing).offset(10)
-        }
-        
-        chatingLogLabel.snp.makeConstraints {
-            $0.top.equalTo(chatRoomLabel.snp.bottom).offset(10)
-            $0.leading.equalTo(outerStackView.snp.trailing).offset(10)
+        messageStack.snp.makeConstraints {
+            $0.centerY.equalTo(outerStackView)
+            $0.leading.equalTo(outerStackView.snp.trailing).offset(20)
+            $0.trailing.equalToSuperview().offset(20)
         }
         
     }
-    
     
     func config(image: String, title: String, content: String) {
         outerStackView.arrangedSubviews.forEach { $0.removeFromSuperview() }
