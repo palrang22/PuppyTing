@@ -5,6 +5,7 @@
 //  Created by 박승환 on 8/29/24.
 //
 
+import AuthenticationServices
 import Foundation
 import UIKit
 
@@ -44,4 +45,18 @@ class LoginViewModel {
             self?.memberErrorSubject.onNext(error)
         }).disposed(by: disposeBag)
     }
+    
+    func appleSignIn(credential: ASAuthorizationAppleIDCredential) {
+        FirebaseAuthManager.shared.appleSignIn(credential: credential).observe(on: MainScheduler.instance).subscribe(onSuccess: { [weak self] user in
+            self?.userSubject.onNext(user)
+            self?.user = user
+        }, onFailure: { error in
+            self.errorSubject.onNext(error)
+        }).disposed(by: disposeBag)
+    }
+    
+    func startAppleLogin() -> String {
+        return FirebaseAuthManager.shared.startAppleSignIn()
+    }
+    
 }

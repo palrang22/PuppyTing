@@ -12,7 +12,6 @@ import FirebaseAuth
 import RxCocoa
 import RxSwift
 
-
 class ChatListViewController: UIViewController, UITableViewDelegate, UISearchBarDelegate {
     
     private let disposeBag = DisposeBag()
@@ -32,6 +31,7 @@ class ChatListViewController: UIViewController, UITableViewDelegate, UISearchBar
         
         setupUI()
         bindTableView()
+        bindData()
         
         tableView.rowHeight = UITableView.automaticDimension
         tableView.estimatedRowHeight = 100
@@ -44,10 +44,6 @@ class ChatListViewController: UIViewController, UITableViewDelegate, UISearchBar
         
         navigationController?.navigationBar.prefersLargeTitles = true
         navigationItem.title = "채팅"
-
-        // Search Button 추가
-        let searchButton = UIBarButtonItem(barButtonSystemItem: .search, target: self, action: #selector(showSearchBar))
-        navigationItem.rightBarButtonItem = searchButton
         
         view.backgroundColor = .white
         view.addSubview(tableView)
@@ -72,14 +68,29 @@ class ChatListViewController: UIViewController, UITableViewDelegate, UISearchBar
         let output = chatRoomViewModel.transform(input: input, userId: userId)
         
         output.chatRooms
+            .subscribe { _ in
+                self.refreshControl.endRefreshing()
+            }.disposed(by: disposeBag)
+        
+        output.chatRooms
             .bind(to: tableView.rx.items(cellIdentifier: ChatTableViewCell.identifier, cellType: ChatTableViewCell.self)) { index, data, cell in
                 let otherUser = data.users.first == userId ? data.users.last : data.users.first
                 if let otherUser = otherUser {
-                    FireStoreDatabaseManager.shared.findMember(uuid: otherUser) { member in
-                        if let lastChat = data.lastChat?.text {
-                            cell.config(image: member.profileImage, title: member.nickname, content: lastChat)
+                    FireStoreDatabaseManager.shared.checkUserData(uuid: otherUser) { result in
+                        if result {
+                            FireStoreDatabaseManager.shared.findMember(uuid: otherUser) { member in
+                                if let lastChat = data.lastChat?.text {
+                                    cell.config(image: member.profileImage, title: member.nickname, content: lastChat)
+                                } else {
+                                    cell.config(image: member.profileImage, title: member.nickname, content: "내용 없음")
+                                }
+                            }
                         } else {
-                            cell.config(image: member.profileImage, title: member.nickname, content: "내용 없음")
+                            if let lastChat = data.lastChat?.text {
+                                cell.config(image: "nil", title: "알 수 없음", content: lastChat)
+                            } else {
+                                cell.config(image: "nil", title: "알 수 없음", content: "내용 없음")
+                            }
                         }
                     }
                 }
@@ -94,6 +105,29 @@ class ChatListViewController: UIViewController, UITableViewDelegate, UISearchBar
                 self?.navigateToChatView(chatRoom: data)
             })
             .disposed(by: disposeBag)
+        
+        tableView.rx.itemDeleted
+            .subscribe(onNext: { [weak self] indexPath in
+                guard let self = self else { return }
+                
+                let chatRooms = try? self.chatRoomViewModel.chatRoomsSubject.value()
+                if let chatRoom = chatRooms?[indexPath.row] {
+                    self.chatRoomViewModel.deleteChatRoom(chatRoom)
+                }
+            })
+            .disposed(by: disposeBag)
+    }
+    
+    private func bindData() {
+        chatRoomViewModel.deleteRoomSubject.observe(on: MainScheduler.instance).subscribe(onNext: { isDelete in
+            if isDelete {
+                //채팅방 삭제
+                self.okAlert(title: "채팅방 삭제", message: "채팅방 삭제 완료")
+            } else {
+                //채팅방 삭제 실패
+                self.okAlert(title: "채팅방 삭제", message: "채팅방 삭제 실패")
+            }
+        }).disposed(by: disposeBag)
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {

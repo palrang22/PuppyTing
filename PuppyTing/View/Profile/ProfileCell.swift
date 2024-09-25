@@ -7,31 +7,30 @@
 
 import UIKit
 
+import FirebaseAuth
 import RxSwift
 import SnapKit
 
 class ProfileCell: UICollectionViewCell {
     
     var viewModel: ProfileViewModel?
-    var bookmarkId: String? // 즐겨찾기 할 유저 Id
+    var memberId: String? // 즐겨찾기 할 유저 Id
+    private let userId = Auth.auth().currentUser?.uid
+    weak var parentViewController: UIViewController?
     
     private let disposeBag = DisposeBag()
     
-    private let stackView: UIStackView = {
-        let stackView = UIStackView()
-        stackView.axis = .vertical
-        stackView.spacing = 10
-        stackView.distribution = .fill
-        return stackView
-    }()
-    
     private let profileContainerView: UIView = {
         let view = UIView()
-        view.layer.cornerRadius = 15
+        view.layer.cornerRadius = 10
         view.layer.borderWidth = 1.0
         view.layer.borderColor = UIColor.puppyPurple.withAlphaComponent(0.1).cgColor
-        view.layer.masksToBounds = true
-        view.backgroundColor = UIColor.puppyPurple.withAlphaComponent(0.1)
+        view.layer.masksToBounds = false
+        view.backgroundColor = UIColor(red: 247/255, green: 245/255, blue: 255/255, alpha: 1)
+        view.layer.shadowColor = UIColor.black.cgColor
+        view.layer.shadowOpacity = 0.2
+        view.layer.shadowOffset = CGSize(width: 0, height: 2)
+        view.layer.shadowRadius = 4
         return view
     }()
     
@@ -41,6 +40,7 @@ class ProfileCell: UICollectionViewCell {
         imageView.clipsToBounds = true
         imageView.tintColor = .black
         imageView.image = UIImage(named: "defaultProfileImage")
+        imageView.layer.cornerRadius = 30
         return imageView
     }()
     
@@ -61,11 +61,9 @@ class ProfileCell: UICollectionViewCell {
     
     private let footNumberLabel: UILabel = {
         let label = UILabel()
-        label.text = "nn개"
+        label.text = "0개"
         return label
     }()
-    
-    private let evaluateView = UIView()
     
     private let footButton: UIButton = {
         let button = UIButton(type: .system)
@@ -73,7 +71,6 @@ class ProfileCell: UICollectionViewCell {
         button.backgroundColor = UIColor.puppyPurple
         button.layer.cornerRadius = 10
         button.setTitleColor(.white, for: .normal)
-//        button.addTarget(self, action: #selector(footButtonTapped), for: .touchUpInside)
         return button
     }()
     
@@ -92,54 +89,121 @@ class ProfileCell: UICollectionViewCell {
         button.backgroundColor = UIColor.puppyPurple
         button.layer.cornerRadius = 10
         button.setTitleColor(.white, for: .normal)
-        button.addTarget(self, action: #selector(favoriteButtonTapped), for: .touchUpInside)
         return button
     }()
     
-    // 즐겨찾기 버튼
-    @objc private func favoriteButtonTapped() {
-        guard let bookmarkId = bookmarkId else { return }
-        viewModel?.addBookmark(bookmarkId: bookmarkId)
+    private let myinfoEditButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.setTitle("마이페이지", for: .normal)
+        button.backgroundColor = UIColor.puppyPurple
+        button.layer.cornerRadius = 10
+        button.setTitleColor(.white, for: .normal)
+        return button
+    }()
+    
+    private let buttonStackView: UIStackView = {
+        let stackView = UIStackView()
+        stackView.axis = .horizontal
+        stackView.distribution = .fillEqually
+        stackView.spacing = 10
+        stackView.alignment = .fill
+        return stackView
+    }()
+    
+    private func buttonActionSetting() {
+        favoriteButton.addTarget(self, action: #selector(favoriteButtonTapped), for: .touchUpInside)
+        blockButton.addTarget(self, action: #selector(blockButtonTapped), for: .touchUpInside)
+        footButton.addTarget(self, action: #selector(footButtonTapped), for: .touchUpInside)
+        myinfoEditButton.addTarget(self, action: #selector(myinfoEditButtonTapped), for: .touchUpInside)
     }
     
-    func configure(with member: Member) {
-           nicknameLabel.text = member.nickname
-           footNumberLabel.text = "\(member.footPrint)개"
-           
-           // 프로필 이미지가 있으면 가져오고 없으면 기본프로필로 설정
-           if !member.profileImage.isEmpty {
-               loadImage(from: member.profileImage)
-           } else {
-               profileImageView.image = UIImage(named: "defaultProfileImage") // 기본 이미지
-           }
-       }
-        
-    // 프로필 이미지가 있을 때 이미지를 불러옴
-       private func loadImage(from urlString: String) {
-           guard let url = URL(string: urlString) else { return }
-           
-           URLSession.shared.dataTask(with: url) { [weak self] data, response, error in
-               if let error = error {
-                   print("이미지 로딩 실패: \(error)")
-                   return
-               }
-               
-               guard let data = data, let image = UIImage(data: data) else { return }
-               
-               // UI는 메인 스레드에서 업데이트
-               DispatchQueue.main.async {
-                   self?.profileImageView.image = image
-               }
-           }.resume()
-       }
+    // 즐겨찾기 버튼 , 얼럿추가 - jgh
+    @objc private func favoriteButtonTapped() {
+        guard let bookmarkId = memberId else { return }
+        viewModel?.addBookmark(bookmarkId: bookmarkId)
+        guard let parentVC = parentViewController as? ProfileViewController else { return }
+        parentVC.autoDismissAlertWithTimer(title: "알림", message: "즐겨찾기에 추가되었습니다.", duration: 1.0) // 시간 변경 가능
+    }
     
+    // 유저 차단 버튼 - psh
+    @objc
+    private func blockButtonTapped() {
+        guard let userId = memberId else { return }
+        
+        // 차단 얼럿 띄우기 위한 코드 추가 - jgh
+        guard let parentVC = parentViewController as? ProfileViewController else { return }
+        // 차단 확인 얼럿 띄우기
+        parentVC.okAlertWithCancel(
+            title: "사용자 차단",
+            message: "사용자를 차단하시겠습니까? 차단 이후 사용자의 게시물이 보이지 않습니다.",
+            okActionTitle: "차단",
+            cancelActionTitle: "취소",
+            okActionHandler: { [weak self] (action: UIAlertAction) in
+                self?.viewModel?.blockedUser(uuid: userId)
+                parentVC.okAlert(
+                    title: "차단 완료",
+                    message: "사용자가 성공적으로 차단되었습니다.",
+                    okActionTitle: "확인",
+                    okActionHandler: nil
+                )
+            },
+            cancelActionHandler: { (action: UIAlertAction) in
+                // 취소버튼일때는 다른 작업 없어서 로그만 출력
+                print("차단 취소됨")
+            }
+        )
+    }
+    
+    //ksh
+    @objc private func footButtonTapped() {
+        guard let memberId = memberId else { return }
+        viewModel?.addFootPrint(footPrintId: memberId)
+        
+        if let currentFootPrintCount = Int(footNumberLabel.text?.components(separatedBy: "개").first ?? "0") {
+            footNumberLabel.text = "\(currentFootPrintCount + 1)개"
+        }
+    }
+    
+    @objc private func myinfoEditButtonTapped() {
+        guard let parentVC = parentViewController else { return }
+
+        parentVC.dismiss(animated: true) {
+            NotificationCenter.default.post(name: NSNotification.Name("SwitchToMyPage"), object: nil)
+        }
+    }
+
+    
+    func configure(with member: Member) {
+        nicknameLabel.text = member.nickname
+        footNumberLabel.text = "\(member.footPrint)개"
+        buttonActionSetting()
+        // 프로필 이미지 로드 - 킹피셔매니저 코드 사용
+        if !member.profileImage.isEmpty {
+            KingFisherManager.shared.loadProfileImage(urlString: member.profileImage, into: profileImageView)
+        } else {
+            profileImageView.image = UIImage(named: "defaultProfileImage")
+        }
+        
+        // ksh
+        if userId == member.uuid {
+            footButton.isHidden = true
+            favoriteButton.isHidden = true
+            blockButton.isHidden = true
+            myinfoEditButton.isHidden = false
+        } else {
+            footButton.isHidden = false
+            favoriteButton.isHidden = false
+            blockButton.isHidden = false
+            myinfoEditButton.isHidden = true
+        }
+    }
+            
     override init(frame: CGRect) {
         super.init(frame: frame)
         
-        contentView.addSubview(stackView)
-        stackView.addArrangedSubview(profileContainerView)
+        contentView.addSubview(profileContainerView)
         
-        [profileImageView, nicknameLabel, footView, evaluateView].forEach {
+        [profileImageView, nicknameLabel, footView, buttonStackView].forEach {
             profileContainerView.addSubview($0)
         }
         
@@ -147,27 +211,22 @@ class ProfileCell: UICollectionViewCell {
             footView.addSubview($0)
         }
         
-        [footButton, favoriteButton, blockButton].forEach {
-            evaluateView.addSubview($0)
-        }
-        
-        stackView.snp.makeConstraints {
-            $0.edges.equalToSuperview().inset(20)
+        [footButton, favoriteButton, blockButton, myinfoEditButton].forEach {
+            buttonStackView.addArrangedSubview($0)
         }
         
         profileContainerView.snp.makeConstraints {
-            $0.width.equalToSuperview()
-            $0.top.equalTo(stackView.snp.top)
+            $0.edges.equalToSuperview().inset(20)
         }
         
         profileImageView.snp.makeConstraints {
-            $0.top.equalToSuperview().offset(10)
-            $0.left.equalToSuperview().offset(10)
+            $0.top.equalToSuperview().offset(30)
+            $0.leading.equalToSuperview().offset(15)
             $0.width.height.equalTo(60)
         }
         
         nicknameLabel.snp.makeConstraints {
-            $0.left.equalTo(profileImageView.snp.right).offset(10)
+            $0.left.equalTo(profileImageView.snp.right).offset(15)
             $0.centerY.equalTo(profileImageView.snp.centerY)
         }
         
@@ -180,7 +239,7 @@ class ProfileCell: UICollectionViewCell {
         
         footStampLabel.snp.makeConstraints {
             $0.top.equalToSuperview()
-            $0.leading.equalToSuperview().offset(10)
+            $0.leading.equalToSuperview().offset(15)
         }
         
         footNumberLabel.snp.makeConstraints {
@@ -188,36 +247,14 @@ class ProfileCell: UICollectionViewCell {
             $0.leading.equalTo(footStampLabel.snp.trailing).offset(20)
         }
         
-        evaluateView.snp.makeConstraints {
+        buttonStackView.snp.makeConstraints {
             $0.top.equalTo(footView.snp.bottom).offset(10)
-            $0.centerX.equalToSuperview()
-            $0.leading.trailing.equalToSuperview()
+            $0.leading.trailing.equalToSuperview().inset(10)
             $0.height.equalTo(44)
-        }
-        
-        footButton.snp.makeConstraints {
-            $0.top.equalToSuperview()
-            $0.trailing.equalTo(favoriteButton.snp.leading).offset(-5)
-            $0.height.equalTo(44)
-            $0.width.equalTo(110)
-        }
-        
-        favoriteButton.snp.makeConstraints {
-            $0.top.equalToSuperview()
-            $0.centerX.equalToSuperview()
-            $0.height.equalTo(44)
-            $0.width.equalTo(110)
-        }
-        
-        blockButton.snp.makeConstraints {
-            $0.top.equalToSuperview()
-            $0.leading.equalTo(favoriteButton.snp.trailing).offset(5)
-            $0.height.equalTo(44)
-            $0.width.equalTo(110)
         }
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
-    }
+    } 
 }

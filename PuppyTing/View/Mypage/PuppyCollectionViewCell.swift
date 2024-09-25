@@ -96,19 +96,10 @@ class PuppyCollectionViewCell: UICollectionViewCell {
     func config(puppy: Pet) {
         puppyNameLabel.text = puppy.name
         puppyInfoLabel.text = "\(puppy.age)살"
-        var tag = ""
-        for i in puppy.tag {
-            tag += "\(i), "
-        }
+        
+        let tag = puppy.tag.joined(separator: ", ")
         puppyTagLabel.text = tag
-        fetchImage(url: puppy.petImage)
-    }
-    
-    private func fetchImage(url: String) {
-        NetworkManager.shared.fetchImage(url: url) { image in
-            DispatchQueue.main.async {
-                self.puppyImageView.image = image
-            }
-        }
+        
+        KingFisherManager.shared.loadProfileImage(urlString: puppy.petImage, into: puppyImageView)
     }
 }

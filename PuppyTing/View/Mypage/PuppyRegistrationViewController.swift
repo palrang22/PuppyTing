@@ -8,16 +8,23 @@ import SnapKit
 class PuppyRegistrationViewController: UIViewController {
 
     // MARK: - Properties
-
-    var completionHandler: ((String, String, UIImage?) -> Void)?
-    var isEditMode: Bool = false
-    private let puppyRegistrationViewModel = PuppyRegistrationViewModel()
     
     var pet: Pet?
-    
+    var isEditMode: Bool = false
+
+    var puppyRegisteredSubject = PublishSubject<(String, String, String?)>()
+    var puppyUpdatedSubject = PublishSubject<(String, String, String?)>()
+    private let puppyRegistrationViewModel = PuppyRegistrationViewModel()
     private let disposeBag = DisposeBag()
     
+    func setPet(pet: Pet) {
+        self.pet = pet
+    }
+    
     // UI Elements
+    private let scrollView = UIScrollView() // kkh
+    private let contentView = UIView() // kkh
+    
     private let puppyImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFill
@@ -25,6 +32,7 @@ class PuppyRegistrationViewController: UIViewController {
         imageView.layer.cornerRadius = 75
         imageView.layer.borderColor = UIColor.puppyPurple.cgColor
         imageView.layer.borderWidth = 1
+        imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()
     
@@ -62,7 +70,6 @@ class PuppyRegistrationViewController: UIViewController {
         return label
     }()
     
-    // 이거 picker로 바꾸거나 정수값만 들어가게 바꿉시다 - sh
     private let ageTextField: UITextField = {
         let textField = UITextField()
         textField.placeholder = "강아지 나이를 정수로 입력해주세요."
@@ -97,8 +104,20 @@ class PuppyRegistrationViewController: UIViewController {
     
     private let tagScrollView: UIScrollView = {
         let scroll = UIScrollView()
-        scroll.showsHorizontalScrollIndicator = true
+        scroll.showsHorizontalScrollIndicator = false
         return scroll
+    }()
+    
+    private let separationButton: UIButton = { // kkh
+        let button = UIButton(type: .system)
+        button.setTitle("강아지와 이별하기", for: .normal)
+        button.setTitleColor(.white, for: .normal)
+        button.titleLabel?.font = UIFont.systemFont(ofSize: 16)
+        button.layer.cornerRadius = 10
+        button.layer.masksToBounds = true
+        button.backgroundColor = .puppyPurple
+        button.isHidden = true
+        return button
     }()
 
     // MARK: - Lifecycle
@@ -106,28 +125,46 @@ class PuppyRegistrationViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
+        setupKeyboardObservers()
         setupKeyboardDismissRecognizer()
         setupUI()
         configureNavigationBar()
         setupBindings()
-        bindData()
+        bind()
+    }
+    
+    //extension으로 뺐습니다 - ksh
+    deinit {
+        removeKeyboardObservers()
     }
 
     // MARK: - Setup UI
 
     private func setupUI() {
-        // UI 요소들을 배열로 묶어 한 번에 addSubview
-        let views = [puppyImageView, puppyImageChangeButton, nameLabel, nameTextField, ageLabel, ageTextField, tagLabel, tagTextField, tagScrollView]
-        views.forEach { view.addSubview($0) }
+        view.addSubview(scrollView)
+        scrollView.addSubview(contentView)
+        
+        scrollView.snp.makeConstraints {
+            $0.edges.equalTo(view.safeAreaLayoutGuide)
+        }
+        
+        contentView.snp.makeConstraints {
+            $0.edges.equalToSuperview()
+            $0.width.equalToSuperview()
+        }
+        
+        // views 배열에 있는 모든 요소를 contentView에 추가
+        let views = [puppyImageView, puppyImageChangeButton, nameLabel, nameTextField, ageLabel, ageTextField, tagLabel, tagTextField, tagScrollView, separationButton]
+        views.forEach { contentView.addSubview($0) }
         
         tagScrollView.addSubview(tagStack)
-
+        
         puppyImageView.snp.makeConstraints {
-            $0.top.equalTo(view.safeAreaLayoutGuide).offset(40)
+            $0.top.equalToSuperview().offset(40)
             $0.centerX.equalToSuperview()
             $0.width.height.equalTo(150)
         }
-
+        
         puppyImageChangeButton.snp.makeConstraints {
             $0.top.equalTo(puppyImageView.snp.bottom).offset(10)
             $0.centerX.equalToSuperview()
@@ -141,7 +178,7 @@ class PuppyRegistrationViewController: UIViewController {
             $0.right.equalToSuperview().offset(-20)
             $0.height.equalTo(40)
         }
-
+        
         nameTextField.snp.makeConstraints {
             $0.top.equalTo(nameLabel.snp.bottom).offset(5)
             $0.left.equalToSuperview().offset(20)
@@ -155,7 +192,7 @@ class PuppyRegistrationViewController: UIViewController {
             $0.right.equalToSuperview().offset(-20)
             $0.height.equalTo(40)
         }
-
+        
         ageTextField.snp.makeConstraints {
             $0.top.equalTo(ageLabel.snp.bottom).offset(5)
             $0.left.right.height.equalTo(nameTextField)
@@ -167,7 +204,7 @@ class PuppyRegistrationViewController: UIViewController {
             $0.right.equalToSuperview().offset(-20)
             $0.height.equalTo(40)
         }
-
+        
         tagTextField.snp.makeConstraints {
             $0.top.equalTo(tagLabel.snp.bottom).offset(5)
             $0.left.right.height.equalTo(ageTextField)
@@ -175,16 +212,28 @@ class PuppyRegistrationViewController: UIViewController {
         
         tagScrollView.snp.makeConstraints {
             $0.top.equalTo(tagTextField.snp.bottom).offset(20)
-            $0.leading.equalTo(tagTextField)
-            $0.trailing.lessThanOrEqualTo(view.safeAreaLayoutGuide.snp.trailing).offset(-20)
-            $0.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom).offset(-20)
+            $0.leading.equalToSuperview().offset(20)
+            $0.trailing.equalToSuperview().offset(-20)
+            $0.height.equalTo(50)
         }
         
         tagStack.snp.makeConstraints {
             $0.edges.equalToSuperview()
             $0.height.equalToSuperview()
         }
+        
+        separationButton.snp.makeConstraints {
+            $0.top.equalTo(tagScrollView.snp.bottom).offset(20)
+            $0.leading.equalToSuperview().offset(20)
+            $0.trailing.equalToSuperview().offset(-20)
+            $0.bottom.equalToSuperview().offset(-20) // 마지막 요소를 기준으로 contentView의 높이 설정
+            $0.height.equalTo(44)
+        }
+        
+//         수정 모드에서만 이별하기 버튼 보이도록 설정
+        separationButton.isHidden = !isEditMode
     }
+
     
     private func findUserId() -> String {
         guard let user = Auth.auth().currentUser else { return "" }
@@ -195,81 +244,19 @@ class PuppyRegistrationViewController: UIViewController {
         puppyRegistrationViewModel.updateImage(image: image)
     }
     
-    private func addPuppy() {
-        // 이름, 나이, 태그 값이 유효한지 확인
-        guard let name = nameTextField.text,
-              let strAge = ageTextField.text,
-              let age = Int(strAge),
-              !name.isEmpty,
-              !strAge.isEmpty else {
-            okAlert(title: "오류", message: "나이는 정수로 입력해주세요.")
-            return
-        }
-        
-        // 사용자 ID 가져오기
-        let userId = findUserId()
-        
-        // 태그 추출
-        var tagArr: [String] = []
-        for view in tagStack.arrangedSubviews {
-            if let button = view as? UIButton, let tag = button.titleLabel?.text {
-                tagArr.append(tag)
-            }
-        }
-        
-        guard !tagArr.isEmpty else {
-            okAlert(title: "오류", message: "태그를 하나 이상 추가해주세요.")
-            return
-        }
-        
-        guard let image = puppyImageView.image else {
-            okAlert(title: "오류", message: "이미지를 선택해주세요.")
-            return
-        }
-        
-        FirebaseStorageManager.shared.uploadImage(image: image)
-            .observe(on: MainScheduler.instance)
-            .subscribe(onSuccess: { [weak self] imageUrl in
-                self?.puppyRegistrationViewModel.createPuppy(userId: userId, name: name, age: age, petImage: imageUrl, tag: tagArr)
-                    .observe(on: MainScheduler.instance)
-                    .subscribe(onSuccess: { pet in
-                        self?.completionHandler?(name, "\(age)살", image)
-                        self?.navigationController?.popViewController(animated: true)
-                    }, onFailure: { error in
-                        print("강아지 정보 저장 실패: \(error)")
-                        self?.okAlert(title: "오류", message: "강아지 정보를 저장할 수 없습니다. 다시 시도해주세요.")
-                    })
-                    .disposed(by: self?.disposeBag ?? DisposeBag())
-            }, onFailure: { error in
-                print("이미지 업로드 실패: \(error)")
-                self.okAlert(title: "오류", message: "이미지 업로드에 실패했습니다. 다시 시도해주세요.")
-            })
-            .disposed(by: disposeBag)
-    }
-    
-//    var pet: Pet? = nil {
-//        didSet {
-//            // 데이터 생성
-//            // 등록 후 이전 화면으로 돌아가기
-//            navigationController?.popViewController(animated: true)
-//        }
-//    }
-    
-    private func bindData() {
-        puppyRegistrationViewModel.imageSubject.observe(on: MainScheduler.instance).subscribe(onNext: { [weak self] image in
-            self?.puppyImageView.image = UIImage(named: image)
-        }).disposed(by: disposeBag)
-
-        puppyRegistrationViewModel.petSubject.observe(on: MainScheduler.instance).subscribe(onNext: { [weak self] pet in
-            self?.pet = pet
-        }).disposed(by: disposeBag)
+    private func bind() {
+        guard let pet = pet else { return }
+        nameTextField.text = pet.name
+        ageTextField.text = "\(pet.age)"
+        pet.tag.forEach { addTag(word: $0) }
+        KingFisherManager.shared.loadAnyImage(urlString: pet.petImage, into: puppyImageView, placeholder: UIImage(named: "defaultImage"))
     }
 
     // MARK: - Configure Navigation Bar
 
     private func configureNavigationBar() {
         // 네비게이션 바의 오른쪽 버튼을 등록 또는 수정으로 설정
-        let rightBarButtonTitle = isEditMode ? "수정" : "등록"
+        let rightBarButtonTitle = isEditMode ? "수정 완료" : "등록"
         let rightBarButton = UIBarButtonItem(title: rightBarButtonTitle, style: .plain, target: self, action: isEditMode ? #selector(handleEditButtonTapped) : #selector(handleSubmitButtonTapped))
         
         navigationItem.rightBarButtonItem = rightBarButton
@@ -290,17 +277,6 @@ class PuppyRegistrationViewController: UIViewController {
             }
             .disposed(by: disposeBag)
         
-//        // 버튼 클릭 이벤트를 Rx로 바인딩
-//        rightBarButtonItem.rx.tap
-//            .bind { [weak self] in
-//                if self?.isEditMode == true {
-//                    self?.handleEditButtonTapped()
-//                } else {
-//                    self?.handleSubmitButtonTapped()
-//                }
-//            }
-//            .disposed(by: disposeBag)
-        
         // 텍스트 필드 입력값을 감지하여 버튼 활성화 상태를 업데이트
         Observable.combineLatest(nameTextField.rx.text.orEmpty, ageTextField.rx.text.orEmpty)
             .map { !$0.isEmpty && !$1.isEmpty }
@@ -320,6 +296,13 @@ class PuppyRegistrationViewController: UIViewController {
                     }
                 }
             }).disposed(by: disposeBag)
+        
+        // 강아지와 이별하기 버튼 클릭 시 Alert 표시
+        separationButton.rx.tap
+            .bind { [weak self] in
+                self?.showSeparationAlert()
+            }
+            .disposed(by: disposeBag)
     }
     
     // UIButton Extension 사용하여 버튼 생성 메서드 - sh
@@ -345,6 +328,7 @@ class PuppyRegistrationViewController: UIViewController {
         sender.removeFromSuperview()
         tagStack.layoutIfNeeded()
     }
+    
 
     // MARK: - Handlers
 
@@ -352,7 +336,7 @@ class PuppyRegistrationViewController: UIViewController {
         guard let name = nameTextField.text, !name.isEmpty,
               let strAge = ageTextField.text, let age = Int(strAge),
               !name.isEmpty, !strAge.isEmpty else {
-            okAlert(title: "오류", message: "2. 모든 필드를 채워주세요.")
+            okAlert(title: "오류", message: "모든 필드를 채워주세요.")
             return
         }
         
@@ -371,21 +355,28 @@ class PuppyRegistrationViewController: UIViewController {
         
         FirebaseStorageManager.shared.uploadImage(image: image)
             .flatMap { imageUrl in
-                self.puppyRegistrationViewModel.createPuppy(userId: userId, name: name, age: age, petImage: imageUrl, tag: tagArr)
+                return self.puppyRegistrationViewModel.createPuppy(userId: userId, name: name, age: age, petImage: imageUrl, tag: tagArr)
             }
             .observe(on: MainScheduler.instance)
             .subscribe(onSuccess: { pet in
+                self.puppyRegisteredSubject.onNext((name, "\(age)", pet.petImage)) // 이벤트 방출
                 self.navigationController?.popViewController(animated: true)
             }, onFailure: { error in
                 print("강아지 등록 실패: \(error)")
             })
             .disposed(by: disposeBag)
+        
     }
 
     @objc private func handleEditButtonTapped() {
-        guard let petId = pet?.id, let name = nameTextField.text, !name.isEmpty,
-              let strAge = ageTextField.text, let age = Int(strAge),
-              !name.isEmpty, !strAge.isEmpty else {
+        print("petId: \(pet?.id ?? "nil")")
+        print("name: \(nameTextField.text ?? "nil")")
+        print("age: \(ageTextField.text ?? "nil")")
+        
+        guard let petId = pet?.id,
+              let name = nameTextField.text, !name.isEmpty,  // 이름 필드 검사
+              let strAge = ageTextField.text, !strAge.isEmpty, // 나이 필드 검사
+              let age = Int(strAge) else {  // 나이 필드를 Int로 변환
             okAlert(title: "오류", message: "1. 모든 필드를 채워주세요.")
             return
         }
@@ -415,13 +406,30 @@ class PuppyRegistrationViewController: UIViewController {
             })
             .disposed(by: disposeBag)
     }
-
-
-//    private func presentAlert(title: String, message: String) {
-//        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
-//        alert.addAction(UIAlertAction(title: "확인", style: .default, handler: nil))
-//        present(alert, animated: true, completion: nil)
-//    }
+    
+    // 이별 알림창
+    private func showSeparationAlert() { // kkh
+        let alert = UIAlertController(title: "정말 이별하시겠습니까?", message: "떠나보내시면 되돌릴 수 없습니다.", preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "취소", style: .cancel, handler: nil))
+            alert.addAction(UIAlertAction(title: "이별하기", style: .destructive, handler: { [weak self] _ in
+                self?.deletePuppy()
+        }))
+        present(alert, animated: true, completion: nil)
+    }
+    
+    private func deletePuppy() { // kkh
+        guard let petId = pet?.id  else { return }
+        let userId = findUserId()
+            
+        puppyRegistrationViewModel.deletePuppy(petId: petId, userId: userId)
+            .observe(on: MainScheduler.instance)
+            .subscribe(onSuccess: {
+                self.navigationController?.popViewController(animated: true)
+            }, onFailure: { error in
+                print("강아지 삭제 실패: \(error)")
+            })
+            .disposed(by: disposeBag)
+    }
 
     // MARK: - Setup Data
 
@@ -430,18 +438,8 @@ class PuppyRegistrationViewController: UIViewController {
         ageTextField.text = info
         tagTextField.text = tag
         
-        if let imageUrl = imageUrl {
-            NetworkManager.shared.loadImageFromURL(urlString: imageUrl)
-                .observe(on: MainScheduler.instance) // UI 업데이트는 메인 스레드에서
-                .subscribe(onSuccess: { [weak self] image in
-                    self?.puppyImageView.image = image ?? UIImage(named: "defaultImage")
-                }, onFailure: { [weak self] error in
-                    print("이미지 로딩 실패: \(error)")
-                    self?.puppyImageView.image = UIImage(named: "defaultImage")
-                }).disposed(by: disposeBag)
-        } else {
-            puppyImageView.image = UIImage(named: "defaultImage")
-        }
+        guard let imageUrl = imageUrl else { return }
+        KingFisherManager.shared.loadAnyImage(urlString: imageUrl, into: puppyImageView, placeholder: UIImage(named: "defaultImage"))
     }
     
     // MARK: - Image Picker

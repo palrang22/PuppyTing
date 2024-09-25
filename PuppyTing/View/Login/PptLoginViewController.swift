@@ -21,17 +21,16 @@ class PptLoginViewController: UIViewController {
     let eRegex = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,64}"
     let pRegex = "^(?=.*[A-Za-z])(?=.*[0-9])(?=.*[!@#$%^&*()_+=-]).{8,50}" // 8자리 ~ 50자리 영어+숫자+특수문자
     
+    // 버튼 이미지로 변경 - jgh
     let closeButton: UIButton = {
         let button = UIButton(type: .system)
-        button.setTitle("✕", for: .normal)
-        button.titleLabel?.font = .systemFont(ofSize: 20)
-        button.setTitleColor(.black, for: .normal)
+        button.setImage(UIImage(named: "closeButton")?.withRenderingMode(.alwaysOriginal), for: .normal)
         return button
     }()
     
     let logoImageView: UIImageView = {
         let imageView = UIImageView()
-        imageView.image = UIImage(named: "appleLogin") // 이후 로고 들어갈 자리
+        imageView.image = UIImage(named: "puppytingTextLogo") // 이후 로고 들어갈 자리
         imageView.contentMode = .scaleAspectFit
         return imageView
     }()
@@ -40,7 +39,7 @@ class PptLoginViewController: UIViewController {
         let textField = UITextField()
         textField.placeholder = "이메일을 입력하세요."
         textField.borderStyle = .roundedRect
-        textField.layer.borderColor = UIColor.darkGray.cgColor
+        textField.layer.borderColor = UIColor.gray.cgColor
         textField.layer.borderWidth = 1.0
         textField.layer.cornerRadius = 5
         return textField
@@ -50,7 +49,7 @@ class PptLoginViewController: UIViewController {
         let textField = UITextField()
         textField.placeholder = "비밀번호를 입력하세요."
         textField.borderStyle = .roundedRect
-        textField.layer.borderColor = UIColor.darkGray.cgColor
+        textField.layer.borderColor = UIColor.gray.cgColor
         textField.layer.borderWidth = 1.0
         textField.layer.cornerRadius = 5
         textField.isSecureTextEntry = true // 비밀번호 입력 숨기기
@@ -59,16 +58,18 @@ class PptLoginViewController: UIViewController {
     
     let loginButton: UIButton = {
         let button = UIButton(type: .system)
-        button.backgroundColor = UIColor.puppyPurple
+//        button.backgroundColor = UIColor.puppyPurple
+        button.layer.borderColor = UIColor.puppyPurple.cgColor
+        button.layer.borderWidth = 2
         button.setTitle("로그인", for: .normal)
-        button.setTitleColor(.white, for: .normal)
+        button.setTitleColor(.black, for: .normal)
         button.layer.cornerRadius = 5
         return button
     }()
     
     let signupButton: UIButton = {
         let button = UIButton(type: .system)
-        button.backgroundColor = UIColor.puppyPurple
+        button.backgroundColor = UIColor.darkPuppyPurple
         button.setTitle("회원가입", for: .normal)
         button.setTitleColor(.white, for: .normal)
         button.layer.cornerRadius = 5
@@ -223,7 +224,7 @@ class PptLoginViewController: UIViewController {
     }
     
     private func login() {
-        okAlert(title: "로그인 완료", message: "로그인이 완료되었습니다.", okActionTitle: "OK") { _ in
+        okAlert(title: LoginMessage().loginSuccess, message: LoginMessage().loginSuccessMessage) { _ in
             AppController.shared.setHome()
         }
     }
@@ -232,11 +233,11 @@ class PptLoginViewController: UIViewController {
         if let error = error as? AuthError {
             switch error {
             case .EmailVerificationFailError:
-                okAlert(title: "로그인 실패", message: "이메일 인증에 실패했습니다.", okActionTitle: "ok")
+                okAlert(title: LoginFailMessage().loginFail, message: LoginFailMessage().emailVerificationFailMessage)
             case .InvalidCredential:
-                okAlert(title: "로그인 실패", message: "이메일 혹은 비밀번호가 잘못 입력 되었습니다.", okActionTitle: "ok")
+                okAlert(title: LoginFailMessage().loginFail, message: LoginFailMessage().invalidCredentialMessage)
             default:
-                okAlert(title: "로그인 실패", message: "알 수 없는 이유로 로그인에 실패했습니다.", okActionTitle: "다시 로그인 시도하기")
+                okAlert(title: LoginFailMessage().loginFail, message: LoginFailMessage().otherFailMessage)
             }
         }
     }

@@ -34,6 +34,7 @@ class TingCollectionViewCell: UICollectionViewCell {
     private let profilePic: UIImageView = {
         let imageView = UIImageView()
         imageView.image = UIImage(named: "defaultProfileImage")
+        imageView.contentMode = .scaleAspectFill
         imageView.layer.cornerRadius = 25
         imageView.layer.masksToBounds = true
         imageView.clipsToBounds = true
@@ -42,7 +43,7 @@ class TingCollectionViewCell: UICollectionViewCell {
     
     private let nameLabel: UILabel = {
         let label = UILabel()
-        label.text = "이름"
+        label.text = "알 수 없는 사용자"
         label.textColor = .black
         label.font = .systemFont(ofSize: 16, weight: .medium)
         return label
@@ -58,7 +59,7 @@ class TingCollectionViewCell: UICollectionViewCell {
     
     private let footPrintLabel: UILabel = {
         let label = UILabel()
-        label.text = "🐾 발도장 n개"
+        label.text = "알 수 없음"
         label.font = .systemFont(ofSize: 16, weight: .semibold)
         return label
     }()
@@ -77,16 +78,17 @@ class TingCollectionViewCell: UICollectionViewCell {
         let styleText = NSAttributedString(string:
                                             "오늘 어디어디에서 산책하실 분 있나요? 경로는 아직 구체적으로 정해지지 않았지만 대략적인 방향은 잡아두었습니다. 산책시간은 오후 늦게쯤을 생각하고 있어요. 함께 산책하면 더욱 즐거운 시간이 될 것 같아요! 강아지와 함께 가볍게 산책하며 좋은 시간을 보내고 싶다면 꼭 함께해 주세요. 이따가 만나서 즐거운 시간을 보내면 좋겠습니다! 날씨도 좋으니, 산책 후에는 근처 카페에서 차 한 잔 하며 쉬어가도 좋을 것 같아요."
                                            , attributes: [
-            .font: UIFont.systemFont(ofSize: 14, weight: .medium),
-            .paragraphStyle: style])
+                                            .font: UIFont.systemFont(ofSize: 14, weight: .medium),
+                                            .paragraphStyle: style])
         label.attributedText = styleText
         label.numberOfLines = 3
         label.textAlignment = .left
         label.lineBreakMode = .byTruncatingTail
+//        label.setContentCompressionResistancePriority(.required, for: .vertical)
+//        label.setContentHuggingPriority(.required, for: .vertical)
         return label
     }()
     
-    // 추후 mapKit으로 수정예정
     private let mapView: UIImageView = {
         let map = UIImageView()
         map.image = UIImage(named: "mapPhoto")
@@ -130,33 +132,26 @@ class TingCollectionViewCell: UICollectionViewCell {
     
     //MARK: config 메서드
     func configure(with model: TingFeedModel, currentUserID: String) {
-        self.nameLabel.text = model.userid
+        self.nameLabel.text = "알 수 없는 사용자"
+        self.profilePic.image = UIImage(named: "defaultProfileImage")
         self.content.text = model.content
+        self.footPrintLabel.text = "알 수 없음"
         messageSendButton.isHidden = model.userid == currentUserID
         
         changeDateFormat(time: model.time)
         
-        self.footPrintLabel.text = "🐾 발도장 \(model.postid)개"
-        
         FireStoreDatabaseManager.shared.findMemeber(uuid: model.userid)
             .subscribe(onSuccess: { [weak self] member in
+                
                 self?.nameLabel.text = member.nickname
                 self?.footPrintLabel.text = "🐾 발도장 \(member.footPrint)개"
                 
                 if member.profileImage == "defaultProfileImage" {
                             self?.profilePic.image = UIImage(named: "defaultProfileImage")
                 } else {
-                    NetworkManager.shared.loadImageFromURL(urlString: member.profileImage)
-                        .subscribe(onSuccess: { [weak self] image in
-                            DispatchQueue.main.async {
-                                self?.profilePic.image = image ?? UIImage(named: "defaultProfileImage")
-                            }
-                        }, onFailure: { error in
-                            print("이미지 로드 실패: \(error)")
-                            DispatchQueue.main.async {
-                                self?.profilePic.image = UIImage(named: "defaultProfileImage")
-                            }
-                        }).disposed(by: self?.disposeBag ?? DisposeBag())
+                    if let profilePic = self?.profilePic {
+                        KingFisherManager.shared.loadProfileImage(urlString: member.profileImage, into: profilePic, placeholder: UIImage(named: "defaultProfileImage"))
+                    }
                 }
             }, onFailure: { error in
                 print("멤버 찾기 실패: \(error)")
@@ -278,13 +273,13 @@ class TingCollectionViewCell: UICollectionViewCell {
             $0.leading.trailing.equalToSuperview().inset(20)
             $0.bottom.equalToSuperview().offset(-20)
         }
-
+        
 //        content.snp.makeConstraints {
 //            $0.leading.trailing.equalToSuperview().inset(20)
 //        }
-
+        
         messageSendButton.snp.makeConstraints {
-            //$0.leading.trailing.equalToSuperview().inset(20)
+            // $0.leading.trailing.equalToSuperview().inset(20)
             $0.height.equalTo(44)
         }
     }

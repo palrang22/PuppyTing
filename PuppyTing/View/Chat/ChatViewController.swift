@@ -72,8 +72,8 @@ class ChatViewController: UIViewController {
         view.backgroundColor = .white
         
         // 키보드 알림 등록
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShowInChatting), name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHideInChatting), name: UIResponder.keyboardWillHideNotification, object: nil)
         
         [chattingTableView, messageInputView].forEach {
             view.addSubview($0)
@@ -85,18 +85,14 @@ class ChatViewController: UIViewController {
         
         messageTextView.delegate = self
         
-        // 키보드 포커싱 해제 메서드 호출
         setupKeyboardDismissRecognizer()
-        
         setupConstraints()
-        
-        // Rx 바인딩
         setupBindings()
         
     }
     
     // 키보드가 나타날 때 호출되는 메서드
-    @objc func keyboardWillShow(notification: NSNotification) {
+    @objc func keyboardWillShowInChatting(notification: NSNotification) {
         if let keyboardFrame = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue {
             let keyboardHeight = keyboardFrame.cgRectValue.height
             messageInputViewBottomConstraint.update(offset: -keyboardHeight + view.safeAreaInsets.bottom)
@@ -108,7 +104,7 @@ class ChatViewController: UIViewController {
     }
     
     // 키보드가 사라질 때 호출되는 메서드
-    @objc func keyboardWillHide(notification: NSNotification) {
+    @objc func keyboardWillHideInChatting(notification: NSNotification) {
         messageInputViewBottomConstraint.update(offset: 0)
         UIView.animate(withDuration: 0.3) {
             self.view.layoutIfNeeded()
@@ -120,13 +116,13 @@ class ChatViewController: UIViewController {
         NotificationCenter.default.removeObserver(self)
     }
     
-    
     private func setupBindings() {
         let input = ChatViewModel.Input(
             roomId: roomId,
             fetchMessages: Observable.just(()),
             sendMessage: sendButton.rx.tap
                 .withLatestFrom(messageTextView.rx.text.orEmpty)
+                .filter { !$0.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty } // 빈메세지 필터링 - jgh
                 .asObservable()
         )
         
@@ -155,11 +151,16 @@ class ChatViewController: UIViewController {
                     let dateFormatter = DateFormatter()
                     dateFormatter.dateFormat = "HH:mm"
                     let dateString = dateFormatter.string(from: date)
+                    cell.config(image: "nil", message: message.text, time: dateString, nickname: "알 수 없음")
                     self.viewModel.findMember(uuid: message.senderId)
                     self.viewModel.memberSubject
                         .observe(on: MainScheduler.instance)
                         .subscribe(onNext: { member in
                             cell.config(image: member.profileImage, message: message.text, time: dateString, nickname: member.nickname)
+                            // 프로필 이미지 탭 시 액션 설정 - jgh
+                            cell.profileImageTapped = { [weak self] in
+                                self?.presentProfileViewController(senderId: message.senderId)
+                            }
                         }).disposed(by: self.disposeBag)
                     return cell
                 }
@@ -180,10 +181,11 @@ class ChatViewController: UIViewController {
             .disposed(by: disposeBag)
     }
     
-    // 하프모달로 띄우기
-    private func presentProfileViewController() {
+    // 하프모달로 띄우기 - jgh
+    private func presentProfileViewController(senderId: String) {
         let profileVC = ProfileViewController()
         profileVC.modalPresentationStyle = .pageSheet
+        profileVC.userid = senderId
         if let sheet = profileVC.sheetPresentationController {
             sheet.detents = [.medium()]
             sheet.prefersGrabberVisible = true

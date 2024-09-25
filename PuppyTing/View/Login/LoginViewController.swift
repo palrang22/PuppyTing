@@ -5,6 +5,7 @@
 //  Created by 내꺼다 on 8/27/24.
 //
 
+import AuthenticationServices
 import UIKit
 
 import FirebaseAuth
@@ -20,7 +21,7 @@ class LoginViewController: UIViewController {
     
     let logoImageView: UIImageView = {
         let imageView = UIImageView()
-        imageView.image = UIImage(named: "appleLogin") // 이후 수정
+        imageView.image = UIImage(named: "puppytingTextLogo") // 이후 수정
         imageView.contentMode = .scaleAspectFit
         return imageView
     }()
@@ -64,9 +65,15 @@ class LoginViewController: UIViewController {
         let screenHeight = UIScreen.main.bounds.height // 화면 높이
         
         logoImageView.snp.makeConstraints {
+<<<<<<< HEAD
             $0.top.equalTo(view.safeAreaLayoutGuide).offset(screenHeight * 0.07)
             $0.centerX.equalTo(view.safeAreaLayoutGuide)
             $0.width.height.equalTo(screenHeight * 0.4)
+=======
+            $0.top.equalTo(view.safeAreaLayoutGuide).offset(50)
+            $0.centerX.equalTo(view.safeAreaLayoutGuide)
+            $0.width.height.equalTo(300)
+>>>>>>> develop
         }
         
         appleLogButton.snp.makeConstraints {
@@ -113,6 +120,7 @@ class LoginViewController: UIViewController {
     private func setButtonAction() {
         pptLogButton.addTarget(self, action: #selector(didTapPuppytingLogin), for: .touchUpInside)
         ggLogButton.addTarget(self, action: #selector(didTapGoogleLoginButton), for: .touchUpInside)
+        appleLogButton.addTarget(self, action: #selector(didTapAppleLoginButton), for: .touchUpInside)
     }
     
     @objc
@@ -127,6 +135,19 @@ class LoginViewController: UIViewController {
         loginViewModel.googleSignIn(viewController: self)
     }
     
+    @objc
+    private func didTapAppleLoginButton() {
+        let nonce = loginViewModel.startAppleLogin()
+        let request = ASAuthorizationAppleIDProvider().createRequest()
+        request.requestedScopes = [.fullName, .email]
+        request.nonce = nonce
+        
+        let authorizationController = ASAuthorizationController(authorizationRequests: [request])
+        authorizationController.delegate = self
+        authorizationController.presentationContextProvider = self
+        authorizationController.performRequests()
+    }
+    
     private func isExistsUser(uuid: String) {
         loginViewModel.isExistsUser(uuid: uuid)
     }
@@ -137,7 +158,7 @@ class LoginViewController: UIViewController {
     }
     
     private func endSignIn() {
-        okAlert(title: "소셜 로그인", message: "로그인이 완료되었습니다.", okActionTitle: "OK") { _ in
+        okAlert(title: LoginMessage().socialLoginSuccess, message: LoginMessage().loginSuccessMessage) { _ in
             AppController.shared.setHome()
         }
     }
@@ -146,15 +167,36 @@ class LoginViewController: UIViewController {
         if let error = error as? AuthError {
             switch error {
             case .ClientIdinvalidError:
-                okAlert(title: "소셜 로그인 실패", message: "관리자 문의 필요함", okActionTitle: "ok")
+                okAlert(title: LoginFailMessage().socialLoginFail, message: LoginFailMessage().otherFailMessage)
             case .GoogleSignInFailError:
-                okAlert(title: "소셜 로그인 실패", message: "관리자 문의 필요함", okActionTitle: "ok")
+                okAlert(title: LoginFailMessage().socialLoginFail, message: LoginFailMessage().otherFailMessage)
             case .TokeninvalidError:
-                okAlert(title: "소셜 로그인 실패", message: "관리자 문의 필요함", okActionTitle: "ok")
+                okAlert(title: LoginFailMessage().socialLoginFail, message: LoginFailMessage().otherFailMessage)
             default:
-                okAlert(title: "로그인 실패", message: "알 수 없는 이유로 로그인에 실패했습니다.", okActionTitle: "다시 로그인 시도하기")
+                okAlert(title: LoginFailMessage().socialLoginFail, message: LoginFailMessage().otherFailMessage)
             }
         }
     }
     
+}
+
+extension LoginViewController: ASAuthorizationControllerDelegate {
+    func authorizationController(controller: ASAuthorizationController, didCompleteWithAuthorization authorization: ASAuthorization) {
+        if let appleIDCredential = authorization.credential as? ASAuthorizationAppleIDCredential {
+            // 성공적으로 Apple ID 자격 증명을 받으면 ViewModel을 통해 Firebase와 연동
+            loginViewModel.appleSignIn(credential: appleIDCredential)
+        }
+    }
+    
+    func authorizationController(controller: ASAuthorizationController, didCompleteWithError error: Error) {
+        // 에러 로그 출력
+        print("Apple SignIn Failed: \(error.localizedDescription)")
+    }
+}
+extension LoginViewController: ASAuthorizationControllerPresentationContextProviding {
+    
+    // 로그인 화면을 표시할 창을 반환
+    func presentationAnchor(for controller: ASAuthorizationController) -> ASPresentationAnchor {
+        return self.view.window! // 현재 ViewController의 창을 반환
+    }
 }

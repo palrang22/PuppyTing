@@ -11,15 +11,20 @@ import FirebaseAuth
 import RxCocoa
 import RxSwift
 
+protocol DetailTingViewControllerDelegate: AnyObject {
+    func didDeleteFeed()
+}
+
 class DetailTingViewController: UIViewController {
     
     var tingFeedModels: TingFeedModel?
+    weak var delegate: DetailTingViewControllerDelegate? // Delegate 프로퍼티
     let fireStoreDatabase = FireStoreDatabaseManager.shared
     private let disposeBag = DisposeBag()
     
     private let kakaoMapViewController = KakaoMapViewController()
-    
-    //MARK: Component 선언
+
+    // MARK: Component 선언
     private let scrollView: UIScrollView = {
         let scroll = UIScrollView()
         scroll.showsVerticalScrollIndicator = false
@@ -42,7 +47,7 @@ class DetailTingViewController: UIViewController {
     
     private let nameLabel: UILabel = {
         let label = UILabel()
-        label.text = "이름"
+        label.text = "알 수 없는 사용자"
         label.textColor = .black
         label.font = .systemFont(ofSize: 16, weight: .medium)
         return label
@@ -50,7 +55,7 @@ class DetailTingViewController: UIViewController {
     
     private let timeLabel: UILabel = {
         let label = UILabel()
-        label.text = "n분 전"
+        label.text = "알 수 없음"
         label.textColor = .puppyPurple
         label.font = .systemFont(ofSize: 14, weight: .medium)
         return label
@@ -58,7 +63,7 @@ class DetailTingViewController: UIViewController {
     
     private let footPrintLabel: UILabel = {
         let label = UILabel()
-        label.text = "🐾 발도장 n개"
+        label.text = "알 수 없음"
         label.font = .systemFont(ofSize: 16, weight: .semibold)
         return label
     }()
@@ -72,20 +77,10 @@ class DetailTingViewController: UIViewController {
     
     private let content: UILabel = {
         let label = UILabel()
-        let style = NSMutableParagraphStyle()
-        style.lineSpacing = 6
-        let styleText = NSAttributedString(string:
-                                            "내용1\n내용2\n내용3\n내용4",
-                                           attributes: [
-                                            .font: UIFont.systemFont(ofSize: 16, weight: .medium),
-                                            .paragraphStyle: style])
-        label.attributedText = styleText
         label.numberOfLines = 0
         label.textAlignment = .left
-        label.lineBreakMode = .byTruncatingTail
         return label
     }()
-
     
     private lazy var blockButton: UIButton = {
         let button = UIButton()
@@ -154,6 +149,8 @@ class DetailTingViewController: UIViewController {
         let nameTapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapProfile))
         nameLabel.isUserInteractionEnabled = true
         nameLabel.addGestureRecognizer(nameTapGesture)
+        
+        addButtonAction()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -199,32 +196,76 @@ class DetailTingViewController: UIViewController {
             }
             
             FireStoreDatabaseManager.shared.findMemeber(uuid: model.userid)
-                            .subscribe(onSuccess: { [weak self] member in
-                                self?.nameLabel.text = member.nickname
-                                self?.footPrintLabel.text = "🐾 발도장 \(member.footPrint)개"
-                                
-                                if member.profileImage == "defaultProfileImage" {
-                                                    self?.profilePic.image = UIImage(named: "defaultProfileImage")
-                                } else {
-                                    NetworkManager.shared.loadImageFromURL(urlString: member.profileImage)
-                                        .subscribe(onSuccess: { [weak self] image in
-                                            DispatchQueue.main.async {
-                                                self?.profilePic.image = image ?? UIImage(named: "defaultProfileImage")
-                                            }
-                                        }, onFailure: { error in
-                                            print("이미지 로드 실패: \(error)")
-                                            DispatchQueue.main.async {
-                                                self?.profilePic.image = UIImage(named: "defaultProfileImage")
-                                            }
-                                        }).disposed(by: self?.disposeBag ?? DisposeBag())
-                                }
-                                
-                            }, onFailure: { error in
-                                print("멤버 찾기 실패: \(error)")
-                            }).disposed(by: disposeBag)
-            
+                .subscribe(onSuccess: { [weak self] member in
+                    self?.nameLabel.text = member.nickname
+                    self?.footPrintLabel.text = "🐾 발도장 \(member.footPrint)개"
+                    
+                    if member.profileImage == "defaultProfileImage" {
+                        self?.profilePic.image = UIImage(named: "defaultProfileImage")
+                    } else {
+                        if let profilePic = self?.profilePic {
+                            KingFisherManager.shared.loadProfileImage(urlString: member.profileImage, into: profilePic, placeholder: UIImage(named: "defaultProfileImage"))
+                        }
+                    }
+                    
+                }, onFailure: { error in
+                    print("멤버 찾기 실패: \(error)")
+                }).disposed(by: disposeBag)
+            writerId = model.userid
+            settingData()
             setButton(model: model)
         }
+    }
+    
+    var writerId: String? = nil
+    let userid = Auth.auth().currentUser?.uid
+    var users:[String] = []
+    private func settingData() {
+        guard let writerId = writerId, let userId = userid else { return }
+        users = [userId, writerId]
+    }
+    
+    private func findUserId() -> String {
+        guard let user = Auth.auth().currentUser else { return "" }
+        return user.uid
+    }
+    
+    private func createChatRoom(chatRoomName: String, users: [String]) {
+        FirebaseRealtimeDatabaseManager.shared.checkIfChatRoomExists(userIds: users) { exists, chatId in
+            if exists {
+                if let roomId = chatId {
+                    self.moveChatRoom(roomId: roomId, users: users)
+                }
+            } else {
+                FirebaseRealtimeDatabaseManager.shared.createChatRoom(name: chatRoomName, users: users)
+                    .observe(on: MainScheduler.instance).subscribe(onSuccess: { [weak self] roomId in
+                    self?.moveChatRoom(roomId: roomId, users: users)
+                }).disposed(by: self.disposeBag)
+            }
+        }
+    }
+    
+    private func moveChatRoom(roomId: String, users: [String]) {
+        let chatVC = ChatViewController()
+        chatVC.roomId = roomId
+        let userId = findUserId()
+        let otherUser = users.first == userId ? users.last : users.first
+        if let otherUser = otherUser {
+            FireStoreDatabaseManager.shared.findMemberNickname(uuid: otherUser) { nickname in
+                chatVC.titleText = nickname
+                self.navigationController?.pushViewController(chatVC, animated: true)
+            }
+        }
+    }
+    
+    private func addButtonAction() {
+        messageSendButton.addTarget(self, action: #selector(createRoom), for: .touchUpInside)
+    }
+    
+    @objc
+    private func createRoom() {
+        guard let name = nameLabel.text else { return }
+        createChatRoom(chatRoomName: name, users: users)
     }
     
     private func configMap(with coordinate: CLLocationCoordinate2D) {
@@ -263,49 +304,53 @@ class DetailTingViewController: UIViewController {
     private func bind() {
         deleteButton.rx.tap
             .subscribe(onNext: { [weak self] in
-                    self?.okAlertWithCancel(
-                        title: "게시물 삭제",
-                        message: "게시물을 삭제하시겠습니까?",
-                        okActionTitle: "삭제",
-                        cancelActionTitle: "취소",
-                        okActionHandler: { _ in
-                            guard let postid = self?.tingFeedModels?.postid else { return }
-                            self?.fireStoreDatabase.deleteDocument(from: "tingFeeds", documentId: postid)
-                                .subscribe(onSuccess: { [weak self] in
-                                    self?.okAlert(
-                                        title: "삭제 완료",
-                                        message: "게시물이 성공적으로 삭제되었습니다.",
-                                        okActionHandler: { _ in
-                                            self?.navigationController?.popViewController(animated: true)
-                                        }
-                                    )
-                                }, onFailure: { error in
-                                    print("삭제 실패: \(error)")
-                                    self?.okAlert(
-                                        title: "삭제 실패",
-                                        message: "게시물 삭제에 실패했습니다. 다시 시도해주세요. 해당 문제가 지속될 경우 문의 게시판에 제보해주세요."
-                                    )
-                                }).disposed(by: self?.disposeBag ?? DisposeBag())
-                        }
-                    )
+                self?.okAlertWithCancel(
+                    title: "게시물 삭제",
+                    message: "게시물을 삭제하시겠습니까?",
+                    okActionTitle: "삭제",
+                    cancelActionTitle: "취소",
+                    okActionHandler: { _ in
+                        guard let postid = self?.tingFeedModels?.postid else { return }
+                        self?.fireStoreDatabase.deleteDocument(from: "tingFeeds", documentId: postid)
+                            .subscribe(onSuccess: { [weak self] in
+                                self?.delegate?.didDeleteFeed() // Delegate 호출
+                                self?.okAlert(
+                                    title: "삭제 완료",
+                                    message: "게시물이 성공적으로 삭제되었습니다.",
+                                    okActionHandler: { _ in
+                                        self?.navigationController?.popViewController(animated: true)
+                                    }
+                                )
+                            }, onFailure: { error in
+                                print("삭제 실패: \(error)")
+                                self?.okAlert(
+                                    title: "삭제 실패",
+                                    message: "게시물 삭제에 실패했습니다. 다시 시도해주세요."
+                                )
+                            }).disposed(by: self?.disposeBag ?? DisposeBag())
+                    }
+                )
             }).disposed(by: disposeBag)
         
+        // 차단 버튼 수정 - jgh
         blockButton.rx.tap
             .subscribe(onNext: { [weak self] in
                 guard let userid = self?.tingFeedModels?.userid else { return }
-                self?.fireStoreDatabase.blockUser(userId: userid)
-                    .subscribe(onSuccess: { [weak self] in
-                        self?.okAlertWithCancel(
-                                        title: "사용자 차단",
-                                        message: "사용자를 차단하시겠습니까? 차단 이후 사용자의 게시물이 보이지 않습니다.",
-                                        okActionTitle: "차단",
-                                        okActionHandler: { _ in
-                                        self!.okAlert(title: "차단 완료", message: "사용자가 성공적으로 차단되었습니다.")
-                                    })
-                    }, onFailure: { error in
-                        print("차단 실패")
-                        self!.okAlert(title: "차단 실패", message: "사용자 차단에 실패했습니다. 다시 시도해주세요.\n해당 문제가 지속될 경우 문의 게시판에 제보해주세요.")
-                    }).disposed(by: self!.disposeBag)
+                // 얼럿 창을 먼저 띄우기
+                self?.okAlertWithCancel(
+                    title: "사용자 차단",
+                    message: "사용자를 차단하시겠습니까? 차단 이후 사용자의 게시물이 보이지 않습니다.",
+                    okActionTitle: "차단",
+                    okActionHandler: { [weak self] _ in
+                        // 차단 버튼을 눌렀을 때 차단 로직을 실행
+                        self?.fireStoreDatabase.blockUser(userId: userid)
+                            .subscribe(onSuccess: { [weak self] in
+                                self?.okAlert(title: "차단 완료", message: "사용자가 성공적으로 차단되었습니다.")
+                            }, onFailure: { error in
+                                print("차단 실패")
+                                self?.okAlert(title: "차단 실패", message: "사용자 차단에 실패했습니다. 다시 시도해주세요.")
+                            }).disposed(by: self!.disposeBag)
+                    })
             }).disposed(by: disposeBag)
         
         reportButton.rx.tap
@@ -324,15 +369,17 @@ class DetailTingViewController: UIViewController {
                 ]
                 
                 reasons.forEach { reason in
-                    let action = UIAlertAction(title: reason, style: .default) { _ in
-                        self?.fireStoreDatabase.reportPost(postId: postid, reason: reason)
+                    let action = UIAlertAction(title: reason, style: .default) { [weak self] _ in
+                        let report = Report(postId: postid, reason: reason, timeStamp: Date())
+                        
+                        self?.fireStoreDatabase.reportPost(report: report)
                             .subscribe(onSuccess: {
                                 self!.okAlert(title: "신고 접수", message: "신고가 접수되었습니다. 관리자가 24시간 이내로 검토할 예정이며, 추가 신고/문의는 nnn@naver.com 으로 보내주세요.", okActionHandler: { _ in
                                     self?.navigationController?.popViewController(animated: true)
                                 })
                             }, onFailure: { error in
-                            print("신고 실패")
-                                self?.okAlert(title: "신고 실패", message: "게시글 신고에 실패했습니다. 다시 시도해주세요.\n해당 문제가 지속될 경우 문의 게시판에 제보해주세요.")
+                                print("신고 실패")
+                                self?.okAlert(title: "신고 실패", message: "게시글 신고에 실패했습니다. 다시 시도해주세요.")
                             }).disposed(by: self!.disposeBag)
                     }
                     reportAlert.addAction(action)
