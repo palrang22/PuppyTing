@@ -89,7 +89,7 @@ class ChattingTableViewCell: UITableViewCell {
             $0.leading.equalTo(profileImage.snp.trailing).offset(10)
             $0.top.equalTo(name.snp.bottom).offset(5)
             $0.bottom.equalToSuperview()
-            $0.height.greaterThanOrEqualTo(40)
+            $0.height.greaterThanOrEqualTo(30)
             $0.width.lessThanOrEqualTo(255)
         }
         

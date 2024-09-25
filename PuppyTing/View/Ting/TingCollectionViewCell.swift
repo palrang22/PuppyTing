@@ -90,11 +90,11 @@ class TingCollectionViewCell: UICollectionViewCell {
         return label
     }()
     
-    private let mapView: UIImageView = {
-        let map = UIImageView()
-        map.image = UIImage(named: "mapPhoto")
-        return map
-    }()
+//    private let mapView: UIImageView = {
+//        let map = UIImageView()
+//        map.image = UIImage(named: "mapPhoto")
+//        return map
+//    }()
     
     private let messageSendButton: UIButton = {
         let button = UIButton(type: .system)

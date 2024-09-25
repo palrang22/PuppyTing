@@ -55,7 +55,7 @@ class MyChattingTableViewCell: UITableViewCell {
         messageBox.snp.makeConstraints {
             $0.trailing.equalToSuperview().inset(15)
             $0.top.bottom.equalToSuperview().inset(10)
-            $0.height.greaterThanOrEqualTo(40)
+            $0.height.greaterThanOrEqualTo(30)
             $0.width.lessThanOrEqualTo(255)
             $0.centerY.equalToSuperview()
         }
