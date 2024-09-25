@@ -59,15 +59,16 @@ class TingCollectionViewCell: UICollectionViewCell {
     
     private let footPrintLabel: UILabel = {
         let label = UILabel()
-        label.text = "🐾 발도장 n개"
-        label.font = .systemFont(ofSize: 16, weight: .semibold)
+        label.text = "발도장 n개 🐾"
+        label.textColor = .gray
+        label.font = .systemFont(ofSize: 13, weight: .medium)
         return label
     }()
     
     private let infoStack: UIStackView = {
         let stack = UIStackView()
         stack.axis = .vertical
-        stack.spacing = 3
+        stack.spacing = 5
         return stack
     }()
     
@@ -138,12 +139,12 @@ class TingCollectionViewCell: UICollectionViewCell {
         
         changeDateFormat(time: model.time)
         
-        self.footPrintLabel.text = "🐾 발도장 \(model.postid)개"
+        self.footPrintLabel.text = "발도장 \(model.postid)개 🐾"
         
         FireStoreDatabaseManager.shared.findMemeber(uuid: model.userid)
             .subscribe(onSuccess: { [weak self] member in
                 self?.nameLabel.text = member.nickname
-                self?.footPrintLabel.text = "🐾 발도장 \(member.footPrint)개"
+                self?.footPrintLabel.text = "발도장 \(member.footPrint)개 🐾"
                 
                 if member.profileImage == "defaultProfileImage" {
                             self?.profilePic.image = UIImage(named: "defaultProfileImage")
@@ -237,14 +238,14 @@ class TingCollectionViewCell: UICollectionViewCell {
     
     private func setConstraints() {
         [nameLabel,
-         timeLabel].forEach { infoStack.addArrangedSubview($0) }
+         timeLabel,
+        footPrintLabel].forEach { infoStack.addArrangedSubview($0) }
         
         [content,
          messageSendButton].forEach { hidableStack.addArrangedSubview($0) }
         
         [shadowContainerView, profilePic,
          infoStack,
-         footPrintLabel,
          hidableStack].forEach { contentView.addSubview($0) }
         
         shadowContainerView.snp.makeConstraints {
@@ -262,10 +263,10 @@ class TingCollectionViewCell: UICollectionViewCell {
             $0.centerY.equalTo(profilePic)
         }
         
-        footPrintLabel.snp.makeConstraints {
-            $0.trailing.equalToSuperview().offset(-20)
-            $0.centerY.equalTo(profilePic)
-        }
+//        footPrintLabel.snp.makeConstraints {
+//            $0.trailing.equalToSuperview().offset(-20)
+//            $0.centerY.equalTo(profilePic)
+//        }
         
         hidableStack.snp.makeConstraints {
             $0.top.equalTo(infoStack.snp.bottom).offset(20)
