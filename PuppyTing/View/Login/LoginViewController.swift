@@ -21,7 +21,7 @@ class LoginViewController: UIViewController {
     
     let logoImageView: UIImageView = {
         let imageView = UIImageView()
-        imageView.image = UIImage(named: "puppytingTextLogo") // 이후 수정
+        imageView.image = UIImage(named: "puppytingTextLogo")
         imageView.contentMode = .scaleAspectFit
         return imageView
     }()
@@ -65,15 +65,9 @@ class LoginViewController: UIViewController {
         let screenHeight = UIScreen.main.bounds.height // 화면 높이
         
         logoImageView.snp.makeConstraints {
-<<<<<<< HEAD
             $0.top.equalTo(view.safeAreaLayoutGuide).offset(screenHeight * 0.07)
             $0.centerX.equalTo(view.safeAreaLayoutGuide)
             $0.width.height.equalTo(screenHeight * 0.4)
-=======
-            $0.top.equalTo(view.safeAreaLayoutGuide).offset(50)
-            $0.centerX.equalTo(view.safeAreaLayoutGuide)
-            $0.width.height.equalTo(300)
->>>>>>> develop
         }
         
         appleLogButton.snp.makeConstraints {

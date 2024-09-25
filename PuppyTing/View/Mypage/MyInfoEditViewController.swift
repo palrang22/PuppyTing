@@ -51,6 +51,10 @@ class MyInfoEditViewController: UIViewController {
     
     //MARK: - Properties
     
+    // 스크롤뷰 추가 - jgh
+    private let scrollView = UIScrollView()
+    private let contentView = UIView()
+    
     private let userProfileImageButton: UIButton = {
         let button = UIButton(type: .custom)
         button.backgroundColor = .clear
@@ -375,6 +379,19 @@ class MyInfoEditViewController: UIViewController {
     
     private func setupUI() {
         
+        // 스크롤뷰 컨텐트뷰 추가
+        view.addSubview(scrollView)
+        scrollView.addSubview(contentView)
+        
+        scrollView.snp.makeConstraints {
+            $0.edges.equalTo(view.safeAreaLayoutGuide)
+        }
+        
+        contentView.snp.makeConstraints {
+            $0.edges.equalTo(scrollView)
+            $0.width.equalTo(scrollView)
+        }
+        
         let views = [
             userProfileImageButton,
             emailTitleLabel,
@@ -388,66 +405,67 @@ class MyInfoEditViewController: UIViewController {
             passwordCheckTitleLabel,
             passwordCheckTextField
         ]
-        views.forEach { view.addSubview($0) }
+        views.forEach { contentView.addSubview($0) }
         
         // 레이아웃 설정
         userProfileImageButton.snp.makeConstraints {
-            $0.top.equalTo(view.safeAreaLayoutGuide.snp.top).offset(20)
-            $0.centerX.equalToSuperview()
+            $0.top.equalTo(contentView).offset(20)
+            $0.centerX.equalTo(contentView)
             $0.width.height.equalTo(150)
         }
         
         emailTitleLabel.snp.makeConstraints {
             $0.top.equalTo(userProfileImageButton.snp.bottom).offset(30)
-            $0.left.equalToSuperview().offset(20)
+            $0.left.equalTo(contentView).offset(20)
         }
         
         emailLabel.snp.makeConstraints {
             $0.top.equalTo(emailTitleLabel.snp.bottom).offset(30)
-            $0.left.equalToSuperview().offset(20)
+            $0.left.equalTo(contentView).offset(20)
         }
         
         nickNameTitleLabel.snp.makeConstraints {
             $0.top.equalTo(emailLabel.snp.bottom).offset(30)
-            $0.left.equalToSuperview().offset(20)
+            $0.left.equalTo(contentView).offset(20)
         }
         
         nickNameTextField.snp.makeConstraints {
             $0.top.equalTo(nickNameTitleLabel.snp.bottom).offset(20)
-            $0.left.equalToSuperview().offset(20)
-            $0.right.equalToSuperview().offset(-20)
+            $0.left.equalTo(contentView).offset(20)
+            $0.right.equalTo(contentView).offset(-20)
             $0.height.equalTo(40)
         }
         
         passwordTitleLabel.snp.makeConstraints {
             $0.top.equalTo(nickNameTextField.snp.bottom).offset(30)
-            $0.left.equalToSuperview().offset(20)
+            $0.left.equalTo(contentView).offset(20)
         }
         
         passwordTextField.snp.makeConstraints {
             $0.top.equalTo(passwordTitleLabel.snp.bottom).offset(20)
-            $0.left.equalToSuperview().offset(20)
-            $0.right.equalToSuperview().offset(-20)
+            $0.left.equalTo(contentView).offset(20)
+            $0.right.equalTo(contentView).offset(-20)
             $0.height.equalTo(40)
         }
         
         passwordChangeButton.snp.makeConstraints {
             $0.centerY.equalTo(passwordTitleLabel.snp.centerY)
-            $0.right.equalToSuperview().offset(-20)
+            $0.right.equalTo(contentView).offset(-20)
             $0.width.equalTo(80)
             $0.height.equalTo(44)
         }
         
         passwordCheckTitleLabel.snp.makeConstraints {
             $0.top.equalTo(passwordTextField.snp.bottom).offset(30)
-            $0.left.equalToSuperview().offset(20)
+            $0.left.equalTo(contentView).offset(20)
         }
         
         passwordCheckTextField.snp.makeConstraints {
             $0.top.equalTo(passwordCheckTitleLabel.snp.bottom).offset(20)
-            $0.left.equalToSuperview().offset(20)
-            $0.right.equalToSuperview().offset(-20)
+            $0.left.equalTo(contentView).offset(20)
+            $0.right.equalTo(contentView).offset(-20)
             $0.height.equalTo(40)
+            $0.bottom.equalTo(contentView).offset(-20)
         }
     }
 }
