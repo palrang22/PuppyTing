@@ -54,31 +54,33 @@ class LoginViewController: UIViewController {
         setButtonAction()
     }
     
+    // UI 작업 - jgh
     func setupUI() {
         
         [logoImageView, appleLogButton, ggLogButton, pptLogButton].forEach {
             view.addSubview($0)
         }
 
+        let screenHeight = UIScreen.main.bounds.height // 화면 높이
         
         logoImageView.snp.makeConstraints {
-            $0.top.equalTo(view.safeAreaLayoutGuide).offset(200)
+            $0.top.equalTo(view.safeAreaLayoutGuide).offset(screenHeight * 0.07)
             $0.centerX.equalTo(view.safeAreaLayoutGuide)
-            $0.width.height.equalTo(100)
+            $0.width.height.equalTo(screenHeight * 0.4)
         }
         
         appleLogButton.snp.makeConstraints {
-            $0.bottom.equalTo(ggLogButton.snp.top).offset(-15)
+            $0.top.equalTo(logoImageView.snp.bottom).offset(screenHeight * 0.06)
             $0.centerX.equalTo(view.safeAreaLayoutGuide)
         }
         
         ggLogButton.snp.makeConstraints {
-            $0.bottom.equalTo(pptLogButton.snp.top).offset(-15)
+            $0.top.equalTo(appleLogButton.snp.bottom).offset(screenHeight * 0.02)
             $0.centerX.equalTo(view.safeAreaLayoutGuide)
         }
         
         pptLogButton.snp.makeConstraints {
-            $0.bottom.equalTo(view.safeAreaLayoutGuide).offset(-130)
+            $0.top.equalTo(ggLogButton.snp.bottom).offset(screenHeight * 0.02)
             $0.centerX.equalTo(view.safeAreaLayoutGuide)
             $0.leading.equalTo(appleLogButton.snp.leading)
             $0.trailing.equalTo(appleLogButton.snp.trailing)

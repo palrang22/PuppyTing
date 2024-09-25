@@ -94,10 +94,14 @@ class PptLoginViewController: UIViewController {
         setupKeyboardDismissRecognizer()
     }
     
+    // UI 작업 - jgh
     private func settingUI() {
+        
         [closeButton, logoImageView, emailfield, pwfield, loginButton, signupButton, findPwButton].forEach {
             view.addSubview($0)
         }
+        
+        let screenHeight = UIScreen.main.bounds.height // 화면 높이
         
         closeButton.snp.makeConstraints {
             $0.top.equalTo(view.safeAreaLayoutGuide)
@@ -106,37 +110,39 @@ class PptLoginViewController: UIViewController {
         }
         
         logoImageView.snp.makeConstraints {
-            $0.top.equalTo(view.safeAreaLayoutGuide).offset(150)
+            $0.bottom.equalTo(emailfield.snp.top).offset(-screenHeight * 0.04)
             $0.centerX.equalTo(view.safeAreaLayoutGuide)
+            $0.width.equalTo(screenHeight * 0.4)
+            $0.height.equalTo(screenHeight * 0.3)
         }
         
         emailfield.snp.makeConstraints {
-            $0.bottom.equalTo(pwfield.snp.top).offset(-15)
+            $0.bottom.equalTo(pwfield.snp.top).offset(-screenHeight * 0.02)
             $0.centerX.equalTo(view.safeAreaLayoutGuide)
             $0.leading.trailing.height.equalTo(signupButton)
         }
         
         pwfield.snp.makeConstraints {
-            $0.bottom.equalTo(loginButton.snp.top).offset(-15)
+            $0.bottom.equalTo(loginButton.snp.top).offset(-screenHeight * 0.04)
             $0.centerX.equalTo(view.safeAreaLayoutGuide)
             $0.leading.trailing.height.equalTo(signupButton)
         }
         
         loginButton.snp.makeConstraints {
-            $0.bottom.equalTo(signupButton.snp.top).offset(-15)
+            $0.bottom.equalTo(signupButton.snp.top).offset(-screenHeight * 0.02)
             $0.centerX.equalTo(view.safeAreaLayoutGuide)
             $0.leading.trailing.height.equalTo(signupButton)
         }
         
         signupButton.snp.makeConstraints {
-            $0.bottom.equalTo(view.safeAreaLayoutGuide).offset(-130) // 모든화면 맨 밑 버튼 고정 위치
+            $0.bottom.equalTo(findPwButton.snp.top).offset(-screenHeight * 0.03)
             $0.centerX.equalTo(view.safeAreaLayoutGuide)
             $0.width.equalTo(281)
             $0.height.equalTo(44)
         }
         
         findPwButton.snp.makeConstraints {
-            $0.bottom.equalTo(view.safeAreaLayoutGuide).offset(-50)
+            $0.bottom.equalTo(view.safeAreaLayoutGuide).offset(-screenHeight * 0.03)
             $0.centerX.equalTo(view.safeAreaLayoutGuide)
             $0.height.equalTo(44)
         }
