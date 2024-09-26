@@ -138,7 +138,7 @@ extension FavoriteListViewController: UITableViewDataSource, UITableViewDelegate
         let profileVC = ProfileViewController()
         
         profileVC.modalPresentationStyle = .pageSheet
-        profileVC.userid = selectedFavorite.uuid
+        profileVC.userId = selectedFavorite.uuid
         
         if let sheet = profileVC.sheetPresentationController {
             sheet.detents = [.medium()]
