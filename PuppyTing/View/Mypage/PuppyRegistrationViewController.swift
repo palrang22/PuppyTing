@@ -36,28 +36,6 @@ class PuppyRegistrationViewController: UIViewController {
         button.layer.borderWidth = 1
         return button
     }()
-    // 주석처리는 일단 뒀습니다 - jgh
-//    private let puppyImageView: UIImageView = {
-//        let imageVie w = UIImageView()
-//        imageView.contentMode = .scaleAspectFill
-//        imageView.clipsToBounds = true
-//        imageView.layer.cornerRadius = 75
-//        imageView.layer.borderColor = UIColor.puppyPurple.cgColor
-//        imageView.layer.borderWidth = 1
-//        imageView.translatesAutoresizingMaskIntoConstraints = false
-//        return imageView
-//    }()
-    
-//    private let puppyImageChangeButton: UIButton = {
-//        let button = UIButton(type: .system)
-//        button.setTitle("프로필 변경", for: .normal)
-//        button.titleLabel?.font = UIFont.systemFont(ofSize: 16)
-//        button.backgroundColor = .puppyPurple
-//        button.setTitleColor(.white, for: .normal)
-//        button.layer.cornerRadius = 15
-//        button.layer.masksToBounds = true
-//        return button
-//    }()
     
     private let nameLabel: UILabel = {
         let label = UILabel()
@@ -120,14 +98,17 @@ class PuppyRegistrationViewController: UIViewController {
         return scroll
     }()
     
-    private let separationButton: UIButton = { // kkh
+    // 이별하기 삭제하기로 변경 - jgh
+    private let separationButton: UIButton = {
         let button = UIButton(type: .system)
-        button.setTitle("강아지와 이별하기", for: .normal)
-        button.setTitleColor(.white, for: .normal)
-        button.titleLabel?.font = UIFont.systemFont(ofSize: 16)
-        button.layer.cornerRadius = 10
-        button.layer.masksToBounds = true
-        button.backgroundColor = .puppyPurple
+        let attributedTitle = NSAttributedString(string: "프로필 삭제하기", attributes: [
+            .font: UIFont.systemFont(ofSize: 16),
+            .foregroundColor: UIColor.lightGray,
+            .underlineStyle: NSUnderlineStyle.single.rawValue
+        ])
+        button.setAttributedTitle(attributedTitle, for: .normal)
+        button.backgroundColor = .clear // 배경색 투명
+        button.layer.cornerRadius = 0 // 모서리 둥글기 제거
         button.isHidden = true
         return button
     }()
@@ -176,19 +157,6 @@ class PuppyRegistrationViewController: UIViewController {
             $0.centerX.equalToSuperview()
             $0.width.height.equalTo(150)
         }
-        
-//        puppyImageView.snp.makeConstraints {
-//            $0.top.equalToSuperview().offset(40)
-//            $0.centerX.equalToSuperview()
-//            $0.width.height.equalTo(150)
-//        }
-//        
-//        puppyImageChangeButton.snp.makeConstraints {
-//            $0.top.equalTo(puppyImageView.snp.bottom).offset(10)
-//            $0.centerX.equalToSuperview()
-//            $0.height.equalTo(44)
-//            $0.width.equalTo(150)
-//        }
         
         nameLabel.snp.makeConstraints {
             $0.top.equalTo(puppyImageChangeButton.snp.bottom).offset(30)
@@ -242,8 +210,7 @@ class PuppyRegistrationViewController: UIViewController {
         
         separationButton.snp.makeConstraints {
             $0.top.equalTo(tagScrollView.snp.bottom).offset(20)
-            $0.leading.equalToSuperview().offset(20)
-            $0.trailing.equalToSuperview().offset(-20)
+            $0.centerX.equalToSuperview()
             $0.bottom.equalToSuperview().offset(-20) // 마지막 요소를 기준으로 contentView의 높이 설정
             $0.height.equalTo(44)
         }
