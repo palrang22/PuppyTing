@@ -20,6 +20,8 @@ class ChatViewController: UIViewController {
     var titleText: String? // 타이틀 저장 변수 ChatListVC에서 가져와야함..
     var roomId: String!
     
+    var cachedOtherMember: Member?
+    
     let userId = Auth.auth().currentUser?.uid
     
     let chattingTableView: UITableView = {
@@ -138,30 +140,25 @@ class ChatViewController: UIViewController {
                 } else if message.senderId == self.userId {
                     // 일반 메시지인 경우, 기존 로직 그대로 사용
                     let cell = tableView.dequeueReusableCell(withIdentifier: MyChattingTableViewCell.identifier, for: IndexPath(row: row, section: 0)) as! MyChattingTableViewCell
-                    let date = Date(timeIntervalSince1970: message.timestamp)
-                    let dateFormatter = DateFormatter()
-                    dateFormatter.dateFormat = "HH:mm"
-                    let dateString = dateFormatter.string(from: date)
-                    cell.config(message: message.text, time: dateString)
+                    let date = self.formatTime(time: message.timestamp)
+                    cell.config(message: message.text, time: date)
                     return cell
                 } else {
                     // 상대방의 일반 메시지인 경우, 기존 로직 그대로 사용
                     let cell = tableView.dequeueReusableCell(withIdentifier: ChattingTableViewCell.identifier, for: IndexPath(row: row, section: 0)) as! ChattingTableViewCell
-                    let date = Date(timeIntervalSince1970: message.timestamp)
-                    let dateFormatter = DateFormatter()
-                    dateFormatter.dateFormat = "HH:mm"
-                    let dateString = dateFormatter.string(from: date)
-                    cell.config(image: "nil", message: message.text, time: dateString, nickname: "알 수 없음")
-                    self.viewModel.findMember(uuid: message.senderId)
-                    self.viewModel.memberSubject
-                        .observe(on: MainScheduler.instance)
-                        .subscribe(onNext: { member in
-                            cell.config(image: member.profileImage, message: message.text, time: dateString, nickname: member.nickname)
-                            // 프로필 이미지 탭 시 액션 설정 - jgh
-                            cell.profileImageTapped = { [weak self] in
-                                self?.presentProfileViewController(senderId: message.senderId)
-                            }
+                    let date = self.formatTime(time: message.timestamp)
+                    if let other = self.cachedOtherMember {
+                        cell.config(image: other.profileImage, message: message.text, time: date, nickname: other.nickname)
+                    } else {
+                        self.viewModel.findMember(uuid: message.senderId)
+                        self.viewModel.memberSubject.observe(on: MainScheduler.instance).subscribe(onNext: { member in
+                            self.cachedOtherMember = member
+                            cell.config(image: member.profileImage, message: message.text, time: date, nickname: member.nickname)
                         }).disposed(by: self.disposeBag)
+                    }
+                    cell.profileImageTapped = { [weak self] in
+                        self?.presentProfileViewController(senderId: message.senderId)
+                    }
                     return cell
                 }
             }
@@ -248,6 +245,16 @@ class ChatViewController: UIViewController {
             $0.height.equalTo(messageTextViewDefaultHeight)
         }
     }
+    
+    // 시간을 내가 원하는 모습의 String 으로 변환
+    func formatTime(time: TimeInterval) -> String {
+        let date = Date(timeIntervalSince1970: time)
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "HH:mm"
+        let dateString = dateFormatter.string(from: date)
+        return dateString
+    }
+    
 }
 
 extension ChatViewController: UITextViewDelegate {

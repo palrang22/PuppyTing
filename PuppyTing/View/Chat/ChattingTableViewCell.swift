@@ -106,10 +106,9 @@ class ChattingTableViewCell: UITableViewCell {
     }
     
     func config(image: String, message: String, time: String, nickname: String) {
-        KingFisherManager.shared.loadProfileImage(urlString: image, into: profileImage)
-        
         messageBox.text = message
         date.text = time
         name.text = nickname
+        KingFisherManager.shared.loadProfileImage(urlString: image, into: profileImage)
     }
 }
