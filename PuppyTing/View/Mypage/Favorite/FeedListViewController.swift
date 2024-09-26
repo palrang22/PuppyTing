@@ -65,7 +65,24 @@ class FeedListViewController: UIViewController {
     }
 }
 
-extension FeedListViewController: UITableViewDelegate, UITableViewDataSource {
+extension FeedListViewController:  UITableViewDelegate {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true) // 셀선택 배경 사라지게 - jgh
+        let selectedFeed = feeds[indexPath.row]
+       
+        let detailVC = DetailTingViewController()
+        detailVC.tingFeedModels = selectedFeed
+        detailVC.delegate = self // Delegate 설정
+        
+        navigationController?.pushViewController(detailVC, animated: true)
+    }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 100
+    }    
+}
+
+extension FeedListViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return feeds.count
     }
@@ -80,17 +97,6 @@ extension FeedListViewController: UITableViewDelegate, UITableViewDataSource {
         cell.configure(with: feed)
         
         return cell
-    }
-    
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        tableView.deselectRow(at: indexPath, animated: true) // 셀선택 배경 사라지게 - jgh
-        let selectedFeed = feeds[indexPath.row]
-       
-        let detailVC = DetailTingViewController()
-        detailVC.tingFeedModels = selectedFeed
-        detailVC.delegate = self // Delegate 설정
-        
-        navigationController?.pushViewController(detailVC, animated: true)
     }
 }
 
