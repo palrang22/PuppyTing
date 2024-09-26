@@ -25,25 +25,15 @@ class PuppyRegistrationViewController: UIViewController {
     private let scrollView = UIScrollView() // kkh
     private let contentView = UIView() // kkh
     
-    private let puppyImageView: UIImageView = {
-        let imageView = UIImageView()
-        imageView.contentMode = .scaleAspectFill
-        imageView.clipsToBounds = true
-        imageView.layer.cornerRadius = 75
-        imageView.layer.borderColor = UIColor.puppyPurple.cgColor
-        imageView.layer.borderWidth = 1
-        imageView.translatesAutoresizingMaskIntoConstraints = false
-        return imageView
-    }()
-    
+    // 이미지뷰삭제, 프로필 변경 버튼 ui 없애고 버튼 자체에 이미지 나오게 - jgh
     private let puppyImageChangeButton: UIButton = {
-        let button = UIButton(type: .system)
-        button.setTitle("프로필 변경", for: .normal)
-        button.titleLabel?.font = UIFont.systemFont(ofSize: 16)
-        button.backgroundColor = .puppyPurple
-        button.setTitleColor(.white, for: .normal)
-        button.layer.cornerRadius = 15
+        let button = UIButton(type: .custom)
+        button.backgroundColor = .clear
+        button.layer.cornerRadius = 75
+        button.contentMode = .scaleAspectFill
         button.layer.masksToBounds = true
+        button.layer.borderColor = UIColor.puppyPurple.cgColor
+        button.layer.borderWidth = 1
         return button
     }()
     
@@ -108,14 +98,17 @@ class PuppyRegistrationViewController: UIViewController {
         return scroll
     }()
     
-    private let separationButton: UIButton = { // kkh
+    // 이별하기 삭제하기로 변경 - jgh
+    private let separationButton: UIButton = {
         let button = UIButton(type: .system)
-        button.setTitle("강아지와 이별하기", for: .normal)
-        button.setTitleColor(.white, for: .normal)
-        button.titleLabel?.font = UIFont.systemFont(ofSize: 16)
-        button.layer.cornerRadius = 10
-        button.layer.masksToBounds = true
-        button.backgroundColor = .puppyPurple
+        let attributedTitle = NSAttributedString(string: "프로필 삭제하기", attributes: [
+            .font: UIFont.systemFont(ofSize: 16),
+            .foregroundColor: UIColor.lightGray,
+            .underlineStyle: NSUnderlineStyle.single.rawValue
+        ])
+        button.setAttributedTitle(attributedTitle, for: .normal)
+        button.backgroundColor = .clear // 배경색 투명
+        button.layer.cornerRadius = 0 // 모서리 둥글기 제거
         button.isHidden = true
         return button
     }()
@@ -154,22 +147,15 @@ class PuppyRegistrationViewController: UIViewController {
         }
         
         // views 배열에 있는 모든 요소를 contentView에 추가
-        let views = [puppyImageView, puppyImageChangeButton, nameLabel, nameTextField, ageLabel, ageTextField, tagLabel, tagTextField, tagScrollView, separationButton]
+        let views = [/*puppyImageView, */puppyImageChangeButton, nameLabel, nameTextField, ageLabel, ageTextField, tagLabel, tagTextField, tagScrollView, separationButton]
         views.forEach { contentView.addSubview($0) }
         
         tagScrollView.addSubview(tagStack)
         
-        puppyImageView.snp.makeConstraints {
+        puppyImageChangeButton.snp.makeConstraints {
             $0.top.equalToSuperview().offset(40)
             $0.centerX.equalToSuperview()
             $0.width.height.equalTo(150)
-        }
-        
-        puppyImageChangeButton.snp.makeConstraints {
-            $0.top.equalTo(puppyImageView.snp.bottom).offset(10)
-            $0.centerX.equalToSuperview()
-            $0.height.equalTo(44)
-            $0.width.equalTo(150)
         }
         
         nameLabel.snp.makeConstraints {
@@ -224,8 +210,7 @@ class PuppyRegistrationViewController: UIViewController {
         
         separationButton.snp.makeConstraints {
             $0.top.equalTo(tagScrollView.snp.bottom).offset(20)
-            $0.leading.equalToSuperview().offset(20)
-            $0.trailing.equalToSuperview().offset(-20)
+            $0.centerX.equalToSuperview()
             $0.bottom.equalToSuperview().offset(-20) // 마지막 요소를 기준으로 contentView의 높이 설정
             $0.height.equalTo(44)
         }
@@ -249,7 +234,9 @@ class PuppyRegistrationViewController: UIViewController {
         nameTextField.text = pet.name
         ageTextField.text = "\(pet.age)"
         pet.tag.forEach { addTag(word: $0) }
-        KingFisherManager.shared.loadAnyImage(urlString: pet.petImage, into: puppyImageView, placeholder: UIImage(named: "defaultImage"))
+        // Kingfisher로 이미지 로딩 후, 버튼에 이미지 설정 - jgh
+        let url = URL(string: pet.petImage)
+        puppyImageChangeButton.kf.setImage(with: url, for: .normal, placeholder: UIImage(named: "defaultImage"))
     }
 
     // MARK: - Configure Navigation Bar
@@ -348,7 +335,7 @@ class PuppyRegistrationViewController: UIViewController {
             }
         }
         
-        guard let image = puppyImageView.image else {
+        guard let image = puppyImageChangeButton.imageView?.image else {
             okAlert(title: "오류", message: "이미지를 선택해주세요.")
             return
         }
@@ -389,7 +376,7 @@ class PuppyRegistrationViewController: UIViewController {
             }
         }
 
-        guard let image = puppyImageView.image else {
+        guard let image = puppyImageChangeButton.imageView?.image else {
             okAlert(title: "오류", message: "이미지를 선택해주세요.")
             return
         }
@@ -431,15 +418,21 @@ class PuppyRegistrationViewController: UIViewController {
             .disposed(by: disposeBag)
     }
 
-    // MARK: - Setup Data
+    // MARK: - Setup Dataf
 
     func setupWithPuppy(name: String, info: String, tag: String, imageUrl: String?) {
         nameTextField.text = name
         ageTextField.text = info
         tagTextField.text = tag
         
-        guard let imageUrl = imageUrl else { return }
-        KingFisherManager.shared.loadAnyImage(urlString: imageUrl, into: puppyImageView, placeholder: UIImage(named: "defaultImage"))
+        // 이미지 URL이 없는 경우는 리턴 - jgh
+        guard let imageUrl = imageUrl, let url = URL(string: imageUrl) else {
+            puppyImageChangeButton.setImage(UIImage(named: "defaultProfileImage"), for: .normal) // 기본 이미지 설정
+            return
+        }
+        
+        // Kingfisher로 버튼에 이미지 설정 - jgh
+        puppyImageChangeButton.kf.setImage(with: url, for: .normal, placeholder: UIImage(named: "defaultProfileImage"))
     }
     
     // MARK: - Image Picker
@@ -484,9 +477,10 @@ class PuppyRegistrationViewController: UIViewController {
 
 extension PuppyRegistrationViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
-        // 선택된 이미지를 puppyImageView에 설정
+        // 선택된 이미지를 puppyImageChangeButton에 설정 - jgh
         if let selectedImage = info[.originalImage] as? UIImage {
-            puppyImageView.image = selectedImage
+            // 버튼의 이미지를 설정
+            puppyImageChangeButton.setImage(selectedImage, for: .normal)
         }
         picker.dismiss(animated: true, completion: nil)
     }
