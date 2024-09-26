@@ -14,12 +14,11 @@ import SnapKit
 
 class ProfileViewController: UIViewController {
     
-    var viewModel: ProfileViewModel?
+    var viewModel = ProfileViewModel()
     var member: Member?
     var petId: String? // 강아지 정보 찾기
     var memberId: String?
-    var userId = Auth.auth().currentUser?.uid
-    var puppies: [Pet] = []
+    var userId: String?
     private let disposeBag = DisposeBag()
     
     //MARK: UI Components - ksh
@@ -80,12 +79,21 @@ class ProfileViewController: UIViewController {
         return stack
     }()
     
+    private let noDataLabel: UILabel = {
+        let label = UILabel()
+        label.text = "등록된 강아지 정보가 없습니다."
+        label.textAlignment = .center
+        label.textColor = .gray
+        label.font = UIFont.systemFont(ofSize: 16)
+        label.isHidden = true // 기본적으로는 숨김 처리
+        return label
+    }()
+    
     private let profilePuppyCollectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         layout.itemSize = CGSize(width: 300, height: 200)
         layout.scrollDirection = .horizontal
-//        layout.minimumInteritemSpacing = 10
-//        layout.minimumLineSpacing = 10
+        layout.minimumLineSpacing = 0
         
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collectionView.register(ProfilePuppyCollectionViewCell.self, forCellWithReuseIdentifier: ProfilePuppyCollectionViewCell.identifier)
@@ -94,6 +102,7 @@ class ProfileViewController: UIViewController {
         collectionView.layer.borderWidth = 1.0
         collectionView.layer.masksToBounds = false
         collectionView.backgroundColor = UIColor.lightPuppyPurple
+        collectionView.isPagingEnabled = true
         return collectionView
     }()
     
@@ -116,9 +125,9 @@ class ProfileViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = UIColor.white.withAlphaComponent(0.8) // 배경 투명도 설정
         // loadData()
-        profilePuppyCollectionView.delegate = self
-        profilePuppyCollectionView.dataSource = self
         setConstraints()
+        loadData()
+        bindCollectionView()
     }
     
     override func viewDidLayoutSubviews() {
@@ -129,35 +138,35 @@ class ProfileViewController: UIViewController {
         layout?.itemSize = CGSize(width: collectionViewWidth, height: 200)
     }
     
-//    private func loadData() {
-//        guard let userId = self.userId else { return }
-//        FireStoreDatabaseManager.shared.findMemeber(uuid: userId)
-//            .subscribe(onSuccess: { [weak self] member in
-//                guard let self = self else { return }
-//                self.member = member
-//                self.profileCell.parentViewController = self
-//                self.profileCell.configure(with: member)
-//                self.profileCell.memberId = member.uuid
-//                self.profileCell.viewModel = ProfileViewModel()
-//                self.profileCell.viewModel?.fetchPetsForUser(userId: member.uuid)
-//            }, onFailure: { error in
-//                print("멤버 찾기 실패: \(error)")
-//            }).disposed(by: disposeBag)
-//    }
+    private func loadData() {
+        guard let userId = self.userId else { return }
+        FireStoreDatabaseManager.shared.findMemeber(uuid: userId)
+            .subscribe(onSuccess: { [weak self] member in
+                guard let self = self else { return }
+                self.member = member
+                self.configure(with: member)
+                self.memberId = member.uuid
+                self.viewModel.fetchPetsForUser(userId: member.uuid)
+            }, onFailure: { error in
+                print("멤버 찾기 실패: \(error)")
+            }).disposed(by: disposeBag)
+    }
     
     //MARK: Button 메서드
     private func buttonActionSetting() {
         favoriteButton.addTarget(self, action: #selector(favoriteButtonTapped), for: .touchUpInside)
         blockButton.addTarget(self, action: #selector(blockButtonTapped), for: .touchUpInside)
         footButton.addTarget(self, action: #selector(footButtonTapped), for: .touchUpInside)
-        //        myinfoEditButton.addTarget(self, action: #selector(myinfoEditButtonTapped), for: .touchUpInside)
     }
     
     // 즐겨찾기 버튼 , 얼럿추가 - jgh
     @objc private func favoriteButtonTapped() {
+        print(1)
         guard let bookmarkId = userId else { return }
-        viewModel?.addBookmark(bookmarkId: bookmarkId)
+        print(2)
+        viewModel.addBookmark(bookmarkId: bookmarkId)
         guard let parentVC = parent as? ProfileViewController else { return }
+        print(3)
         parentVC.autoDismissAlertWithTimer(title: "알림", message: "즐겨찾기에 추가되었습니다.", duration: 1.0) // 시간 변경 가능
     }
     
@@ -175,7 +184,7 @@ class ProfileViewController: UIViewController {
             okActionTitle: "차단",
             cancelActionTitle: "취소",
             okActionHandler: { [weak self] (action: UIAlertAction) in
-                self?.viewModel?.blockedUser(uuid: userId)
+                self?.viewModel.blockedUser(uuid: userId)
                 parentVC.okAlert(
                     title: "차단 완료",
                     message: "사용자가 성공적으로 차단되었습니다.",
@@ -192,7 +201,7 @@ class ProfileViewController: UIViewController {
     //ksh
     @objc private func footButtonTapped() {
         guard let memberId = memberId else { return }
-        viewModel?.addFootPrint(footPrintId: memberId)
+        viewModel.addFootPrint(footPrintId: memberId)
         
         if let text = footStampLabel.text {
             let pattern = "\\d+"
@@ -220,7 +229,7 @@ class ProfileViewController: UIViewController {
         }
         
         // ksh
-        if userId == member.uuid {
+        if userId == Auth.auth().currentUser?.uid {
             footButton.isHidden = true
             favoriteButton.isHidden = true
             blockButton.isHidden = true
@@ -229,10 +238,32 @@ class ProfileViewController: UIViewController {
             favoriteButton.isHidden = false
             blockButton.isHidden = false
         }
-
-        if let memberId = memberId {
-            viewModel?.fetchPetsForUser(userId: memberId)
-        }
+    }
+    
+    // psh
+    private func bindCollectionView() {
+        viewModel.puppySubject
+            .observe(on: MainScheduler.instance)
+            .subscribe(onNext: { [weak self] pets in
+                if pets.isEmpty {
+                    self?.profilePuppyCollectionView.isHidden = true
+                    self?.noDataLabel.isHidden = false
+                } else {
+                    self?.profilePuppyCollectionView.isHidden = false
+                    self?.noDataLabel.isHidden = true
+                }
+            })
+            .disposed(by: disposeBag)
+        
+        viewModel.puppySubject
+            .bind(to: profilePuppyCollectionView
+                .rx
+                .items(cellIdentifier: ProfilePuppyCollectionViewCell.identifier,
+                       cellType: ProfilePuppyCollectionViewCell.self)) { index, data, cell in
+            cell.configure(with: data)
+        }.disposed(by: disposeBag)
+        
+        profilePuppyCollectionView.rx.setDelegate(self).disposed(by: disposeBag)
     }
     
     //MARK: 레이아웃
@@ -249,7 +280,8 @@ class ProfileViewController: UIViewController {
          myInfoStack,
          buttonStack,
          profilePuppyCollectionView,
-         blockButton
+         blockButton,
+         noDataLabel
         ].forEach{ view.addSubview($0) }
         
         profileImageView.snp.makeConstraints {
@@ -288,29 +320,14 @@ class ProfileViewController: UIViewController {
             $0.width.equalTo(80)
             $0.height.equalTo(30)
         }
+        
+        noDataLabel.snp.makeConstraints {
+            $0.center.equalToSuperview()
+        }
     }
-}
 
-extension ProfileViewController: UICollectionViewDelegateFlowLayout {
-    
 }
 
 extension ProfileViewController: UICollectionViewDelegate {
-    
-}
-
-extension ProfileViewController: UICollectionViewDataSource {
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 1
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ProfilePuppyCollectionViewCell.identifier, for: indexPath) as? ProfilePuppyCollectionViewCell else {
-            return UICollectionViewCell()
-        }
-//        let puppy = puppies[indexPath.row]
-//        cell.configure(with: puppy)
-        return cell
-    }
     
 }
