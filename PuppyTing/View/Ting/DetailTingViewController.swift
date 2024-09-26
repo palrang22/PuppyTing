@@ -169,7 +169,7 @@ class DetailTingViewController: UIViewController {
         
         // 선택된 사용자의 uuid 전달
         if let userid = tingFeedModels?.userid {
-            profileVC.userid = userid
+            profileVC.userId = userid
         }
         
         // 하프모달로 띄우기
