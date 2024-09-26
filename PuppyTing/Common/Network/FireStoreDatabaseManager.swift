@@ -144,7 +144,7 @@ class FireStoreDatabaseManager {
         guard let currentUser = Auth.auth().currentUser?.uid else {
             return Single.error(NSError(domain: "", code: -1, userInfo: [NSLocalizedDescriptionKey: "사용자 인증 실패"]))
         }
-
+        
         return Single.create { [weak self] single in
             let ref = self?.db.collection("member").document(currentUser)
             ref?.getDocument { document, error in
@@ -229,7 +229,7 @@ class FireStoreDatabaseManager {
             return Disposables.create()
         }
     }
-
+    
     func reportPost(report: Report) -> Single<Void> {
         return Single.create { [weak self] single in
             self?.db.collection("report").addDocument(data: report.dictionary) { error in
@@ -267,7 +267,7 @@ class FireStoreDatabaseManager {
         guard let currentUser = Auth.auth().currentUser?.uid else {
             return Single.error(NSError(domain: "", code: -1, userInfo: [NSLocalizedDescriptionKey: "사용자 인증 실패"]))
         }
-
+        
         return Single.create { [weak self] single in
             let ref = self?.db.collection("member").document(currentUser)
             ref?.updateData(["bookMarkUsers": FieldValue.arrayRemove([bookmarkId])]) { error in
@@ -280,7 +280,7 @@ class FireStoreDatabaseManager {
             return Disposables.create()
         }
     }
-
+    
     //MARK: Read
     
     func checkUserData(user: User, completion: @escaping (Bool) -> Void) {
@@ -348,6 +348,28 @@ class FireStoreDatabaseManager {
         }
     }
     
+    // MARK: - 유저정보로 강아지 정보 가져오기 메서드
+    
+    // 특정 사용자의 강아지 정보를 userId로 가져오는 메서드
+        func fetchPetsByUserId(userId: String) -> Single<[Pet]> {
+            return Single.create { [weak self] single in
+                // Pet 컬렉션에서 userId가 해당 사용자의 uuid와 일치하는 문서들을 검색
+                self?.db.collection("pet")
+                    .whereField("userId", isEqualTo: userId)
+                    .getDocuments { snapshot, error in
+                        if let error = error {
+                            single(.failure(error))
+                        } else if let documents = snapshot?.documents {
+                            let pets = documents.compactMap { Pet(dictionary: $0.data()) }
+                            single(.success(pets))
+                        } else {
+                            single(.success([])) // 강아지 정보가 없는 경우 빈 배열 반환
+                        }
+                    }
+                return Disposables.create()
+            }
+        }
+    
     //MARK: UPDATE
     
     func addFootPrint(toUserId: String) -> Single<Void> {
@@ -381,12 +403,13 @@ class FireStoreDatabaseManager {
     }
     
     func deleteFeed(withId feedId: String, completion: @escaping (Error?) -> Void) { // kkh
-            deleteDocument(from: "tingFeeds", documentId: feedId)
-                .subscribe(onSuccess: {
-                    completion(nil) // 삭제 성공 시 nil 반환
-                }, onError: { error in
-                    completion(error)
-                })
-                .disposed(by: disposeBag)
+        deleteDocument(from: "tingFeeds", documentId: feedId)
+            .subscribe(onSuccess: {
+                completion(nil) // 삭제 성공 시 nil 반환
+            }, onError: { error in
+                completion(error)
+            })
+            .disposed(by: disposeBag)
+        
     }
 }
