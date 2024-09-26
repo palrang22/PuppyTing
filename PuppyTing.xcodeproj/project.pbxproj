@@ -212,6 +212,52 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		2399E8A92CA5486B00295691 /* Puppy */ = {
+			isa = PBXGroup;
+			children = (
+				C29FCF652C7DB37E00F8951D /* PuppyCollectionViewCell.swift */,
+				C29FCF672C7DBA4F00F8951D /* PuppyRegistrationViewController.swift */,
+			);
+			path = Puppy;
+			sourceTree = "<group>";
+		};
+		2399E8AA2CA5487C00295691 /* MyInfo */ = {
+			isa = PBXGroup;
+			children = (
+				C29FCF762C8171FA00F8951D /* MyInfoEditViewController.swift */,
+			);
+			path = MyInfo;
+			sourceTree = "<group>";
+		};
+		2399E8AB2CA5488700295691 /* MyFeed */ = {
+			isa = PBXGroup;
+			children = (
+				C29FCFC02C88566000F8951D /* MyFeedManageViewController.swift */,
+				C29FCFC22C88610600F8951D /* MyFeedTableViCell.swift */,
+			);
+			path = MyFeed;
+			sourceTree = "<group>";
+		};
+		2399E8AC2CA5488F00295691 /* Favorite */ = {
+			isa = PBXGroup;
+			children = (
+				5602B08B2C8E9AD90060F03B /* FavoriteListViewController.swift */,
+				5602B0892C8E91B20060F03B /* FavoriteListTableViewCell.swift */,
+				56A640772CA17AE100950B0B /* FeedListViewController.swift */,
+				56A6407B2CA17BCB00950B0B /* FeedTableViewCell.swift */,
+			);
+			path = Favorite;
+			sourceTree = "<group>";
+		};
+		2399E8AD2CA5489500295691 /* Block */ = {
+			isa = PBXGroup;
+			children = (
+				C29FD01C2C9BFEA900F8951D /* MyBlockListViewController.swift */,
+				C29FD01A2C9BFE5F00F8951D /* MyBlockListTableViewCell.swift */,
+			);
+			path = Block;
+			sourceTree = "<group>";
+		};
 		23DC0A862C9C717B000B97EB /* Network */ = {
 			isa = PBXGroup;
 			children = (
@@ -441,17 +487,11 @@
 			isa = PBXGroup;
 			children = (
 				E738FB9D2C7C668D004696BD /* MypageViewController.swift */,
-				C29FCF652C7DB37E00F8951D /* PuppyCollectionViewCell.swift */,
-				C29FCF672C7DBA4F00F8951D /* PuppyRegistrationViewController.swift */,
-				C29FCF762C8171FA00F8951D /* MyInfoEditViewController.swift */,
-				C29FCFC02C88566000F8951D /* MyFeedManageViewController.swift */,
-				C29FCFC22C88610600F8951D /* MyFeedTableViCell.swift */,
-				5602B08B2C8E9AD90060F03B /* FavoriteListViewController.swift */,
-				5602B0892C8E91B20060F03B /* FavoriteListTableViewCell.swift */,
-				C29FD01A2C9BFE5F00F8951D /* MyBlockListTableViewCell.swift */,
-				C29FD01C2C9BFEA900F8951D /* MyBlockListViewController.swift */,
-				56A640772CA17AE100950B0B /* FeedListViewController.swift */,
-				56A6407B2CA17BCB00950B0B /* FeedTableViewCell.swift */,
+				2399E8A92CA5486B00295691 /* Puppy */,
+				2399E8AA2CA5487C00295691 /* MyInfo */,
+				2399E8AB2CA5488700295691 /* MyFeed */,
+				2399E8AC2CA5488F00295691 /* Favorite */,
+				2399E8AD2CA5489500295691 /* Block */,
 			);
 			path = Mypage;
 			sourceTree = "<group>";

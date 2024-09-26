@@ -630,13 +630,13 @@ class MypageViewController: UIViewController {
         profileEditButton.snp.makeConstraints {
             $0.centerY.equalTo(profileImageView)
             $0.right.equalToSuperview().offset(-20)
-            $0.width.equalTo(70)
+            $0.width.equalTo(80)
             $0.height.equalTo(44)
         }
 
         myFootLabel.snp.makeConstraints {
             $0.centerX.equalToSuperview()
-            $0.top.equalTo(nickNameLabel.snp.bottom).offset(20)
+            $0.top.equalTo(profileImageView.snp.bottom).offset(10)
         }
 
         puppyCollectionView.snp.makeConstraints {

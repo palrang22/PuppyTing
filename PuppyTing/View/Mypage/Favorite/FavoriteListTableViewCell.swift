@@ -34,8 +34,8 @@ class FavoriteListTableViewCell: UITableViewCell {
     // UIMenu로 여러 아이템 선택할 수 있는 버튼 생성
     private lazy var listButton: UIButton = {
         let button = UIButton(type: .system)
-        // 버튼에 'ellipsis.circle' 아이콘을 설정
         let menuIcon = UIImage(systemName: "ellipsis.circle")
+        button.tintColor = .darkPuppyPurple
         button.setImage(menuIcon, for: .normal)
         button.showsMenuAsPrimaryAction = true
         button.menu = createMenu()

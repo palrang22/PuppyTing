@@ -47,7 +47,6 @@ class MyBlockListViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        
         self.tabBarController?.tabBar.isHidden = true
         
         // 차단된 사용자 목록을 가져옴

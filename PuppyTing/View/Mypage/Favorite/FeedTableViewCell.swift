@@ -1,15 +1,22 @@
+//
+//  FeedTableViewCell.swift
+//  PuppyTing
+//
+//  Created by 내꺼다 on 9/23/24.
+//
+
 import UIKit
 
 import SnapKit
 
-class MyFeedTableViewCell: UITableViewCell { // kkh
+class FeedTableViewCell: UITableViewCell {
     
-    static let identifier = "MyFeedTableViewCell"
+    static let identifier = "FeedTableViewCell"
     
     private let dateLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 16)
-        label.textColor = .black
+        label.textColor = .lightGray
         return label
     }()
     
@@ -29,18 +36,15 @@ class MyFeedTableViewCell: UITableViewCell { // kkh
         }
         
         dateLabel.snp.makeConstraints {
-            $0.top.equalToSuperview().offset(10)
-            $0.trailing.equalToSuperview().offset(0)
+            $0.top.equalToSuperview().offset(20)
+            $0.leading.equalToSuperview().offset(20)
             $0.width.equalTo(100)
         }
         
         descriptionLabel.snp.makeConstraints {
-            $0.top.equalTo(dateLabel)
-            $0.leading.equalToSuperview().offset(10)
-            $0.trailing.equalTo(dateLabel.snp.leading).offset(-10)
-            $0.bottom.equalToSuperview().offset(-10)
-            $0.height.lessThanOrEqualTo(80)
-                
+            $0.top.equalTo(dateLabel.snp.bottom).offset(10)
+            $0.leading.trailing.equalToSuperview().inset(20)
+            $0.bottom.equalToSuperview().offset(-20)
         }
     }
     
@@ -52,7 +56,7 @@ class MyFeedTableViewCell: UITableViewCell { // kkh
         descriptionLabel.text = feed.content
         
         let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy/MM/dd"
+        dateFormatter.dateFormat = "yyyy.MM.dd."
         dateLabel.text = dateFormatter.string(from: feed.time)
     }
 }
