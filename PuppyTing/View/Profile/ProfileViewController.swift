@@ -22,7 +22,7 @@ class ProfileViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        print("userid: \(userid ?? "nil")")
         view.backgroundColor = UIColor.white.withAlphaComponent(0.8) // 배경 투명도 설정
         
         view.addSubview(profileCell)
@@ -43,12 +43,11 @@ class ProfileViewController: UIViewController {
                 self?.member = member
                 self?.profileCell.parentViewController = self
                 self?.profileCell.configure(with: member)
-                self?.profileCell.memberId = member.uuid
-                self?.profileCell.viewModel = ProfileViewModel()
+                self?.profileCell.memberId = member.uuid // memberId 설정
+                self?.profileCell.viewModel = ProfileViewModel() // ViewModel 초기화
+                self?.profileCell.viewModel?.fetchPetsForUser(userId: member.uuid) // 강아지 정보 가져오기
             }, onFailure: { error in
                 print("멤버 찾기 실패: \(error)")
             }).disposed(by: disposeBag)
     }
 }
-
-
