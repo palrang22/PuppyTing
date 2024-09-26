@@ -33,7 +33,7 @@ class ChatViewController: UIViewController {
     
     let messageInputView: UIView = {
         let view = UIView()
-        view.backgroundColor = .white
+        view.backgroundColor = .systemGray6
         return view
     }()
     

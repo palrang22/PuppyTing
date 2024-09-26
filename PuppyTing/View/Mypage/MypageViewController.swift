@@ -45,7 +45,7 @@ class MypageViewController: UIViewController {
     private let stackView: UIStackView = {
         let stackView = UIStackView()
         stackView.axis = .vertical
-        stackView.spacing = 10
+        stackView.spacing = 20
         stackView.distribution = .fill
         return stackView
     }()
@@ -54,9 +54,9 @@ class MypageViewController: UIViewController {
         let view = UIView()
         view.layer.cornerRadius = 15
         view.layer.borderWidth = 1.0
-        view.layer.borderColor = UIColor.puppyPurple.withAlphaComponent(0.1).cgColor
+        view.layer.borderColor = UIColor.puppyPurple.cgColor
         view.layer.masksToBounds = true
-        view.backgroundColor = UIColor.puppyPurple.withAlphaComponent(0.1)
+        view.backgroundColor = UIColor.white
         return view
     }()
     
@@ -148,33 +148,39 @@ class MypageViewController: UIViewController {
     private let customerSupportButton: UIButton = {
         let button = UIButton()
         button.setTitle("고객지원", for: .normal)
+        button.setTitleColor(.darkPuppyPurple, for: .normal)
         button.titleLabel?.font = UIFont.systemFont(ofSize: 16)
         button.layer.cornerRadius = 10
         button.layer.masksToBounds = true
-        button.setTitleColor(.white, for: .normal)
-        button.backgroundColor = .puppyPurple
+        button.layer.borderWidth = 1
+        button.layer.borderColor = UIColor.puppyPurple.cgColor
+        button.backgroundColor = .white
         return button
     }()
     
     private let faqButton: UIButton = {
         let button = UIButton()
         button.setTitle("FAQ", for: .normal)
+        button.setTitleColor(.darkPuppyPurple, for: .normal)
         button.titleLabel?.font = UIFont.systemFont(ofSize: 16)
         button.layer.cornerRadius = 10
         button.layer.masksToBounds = true
-        button.setTitleColor(.white, for: .normal)
-        button.backgroundColor = .puppyPurple
+        button.layer.borderWidth = 1
+        button.layer.borderColor = UIColor.puppyPurple.cgColor
+        button.backgroundColor = .white
         return button
     }()
     
     private let noticeButton: UIButton = {
         let button = UIButton()
         button.setTitle("공지사항", for: .normal)
+        button.setTitleColor(.darkPuppyPurple, for: .normal)
         button.titleLabel?.font = UIFont.systemFont(ofSize: 16)
         button.layer.cornerRadius = 10
         button.layer.masksToBounds = true
-        button.setTitleColor(.white, for: .normal)
-        button.backgroundColor = .puppyPurple
+        button.layer.borderWidth = 1
+        button.layer.borderColor = UIColor.puppyPurple.cgColor
+        button.backgroundColor = .white
         return button
     }()
     
@@ -222,6 +228,7 @@ class MypageViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        self.navigationController?.navigationBar.tintColor = UIColor.puppyPurple
         loadUserInfo()
         loadPuppyInfo()
     }
@@ -605,22 +612,23 @@ class MypageViewController: UIViewController {
         }
 
         profileContainerView.snp.makeConstraints {
-            $0.height.equalTo(150)
+            $0.leading.trailing.equalTo(view.safeAreaLayoutGuide).inset(20)
+            $0.height.equalTo(140)
         }
 
         profileImageView.snp.makeConstraints {
-            $0.top.equalToSuperview().offset(10)
-            $0.left.equalToSuperview().offset(10)
+            $0.top.equalToSuperview().offset(20)
+            $0.left.equalToSuperview().offset(20)
             $0.width.height.equalTo(60)
         }
 
         nickNameLabel.snp.makeConstraints {
-            $0.left.equalTo(profileImageView.snp.right).offset(10)
+            $0.left.equalTo(profileImageView.snp.right).offset(20)
             $0.centerY.equalTo(profileImageView.snp.centerY)
         }
 
         profileEditButton.snp.makeConstraints {
-            $0.top.equalToSuperview().offset(20)
+            $0.centerY.equalTo(profileImageView)
             $0.right.equalToSuperview().offset(-20)
             $0.width.equalTo(70)
             $0.height.equalTo(44)
@@ -628,17 +636,16 @@ class MypageViewController: UIViewController {
 
         myFootLabel.snp.makeConstraints {
             $0.centerX.equalToSuperview()
-            $0.top.equalTo(nickNameLabel.snp.bottom).offset(30)
-            $0.height.equalTo(44)
+            $0.top.equalTo(nickNameLabel.snp.bottom).offset(20)
         }
 
         puppyCollectionView.snp.makeConstraints {
             $0.height.equalTo(0)
-            $0.left.right.equalToSuperview()
+            $0.left.right.equalTo(view.safeAreaLayoutGuide).inset(20)
         }
 
         pageControl.snp.makeConstraints {
-            $0.height.equalTo(20)
+            $0.height.equalTo(10)
         }
 
         addPuppyButton.snp.makeConstraints {
