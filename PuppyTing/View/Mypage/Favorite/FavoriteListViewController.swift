@@ -25,12 +25,12 @@ class FavoriteListViewController: UIViewController {
         viewModel.fetchFavorites()
     }
     
-    // 화면 돌아갔을 때 탭바히든 재호출
+    // 화면 돌아갔을 때 탭바히든 재호출 - jgh
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         self.tabBarController?.tabBar.isHidden = true
     }
-    
+        
     private func setupView() {
         view.backgroundColor = .white
         navigationItem.title = "즐겨찾는 친구"
