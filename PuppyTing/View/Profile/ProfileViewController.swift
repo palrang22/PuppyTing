@@ -213,17 +213,15 @@ class ProfileViewController: UIViewController {
     private func blockButtonTapped() {
         guard let userId = userId else { return }
         
-        // 차단 얼럿 띄우기 위한 코드 추가 - jgh
-        guard let parentVC = parent as? ProfileViewController else { return }
-        // 차단 확인 얼럿 띄우기
-        parentVC.okAlertWithCancel(
+        // 차단 확인 얼럿 띄우기, 현재화면에서 바로 띄워지는거라 parentVC삭제 - jgh
+        okAlertWithCancel(
             title: "사용자 차단",
             message: "사용자를 차단하시겠습니까? 차단 이후 사용자의 게시물이 보이지 않습니다.",
             okActionTitle: "차단",
             cancelActionTitle: "취소",
             okActionHandler: { [weak self] (action: UIAlertAction) in
                 self?.viewModel.blockedUser(uuid: userId)
-                parentVC.okAlert(
+                self?.okAlert(
                     title: "차단 완료",
                     message: "사용자가 성공적으로 차단되었습니다.",
                     okActionTitle: "확인",
