@@ -281,6 +281,24 @@ class FireStoreDatabaseManager {
         }
     }
     
+    // 즐겨찾기 목록 가져오는 메서드 - jgh
+    func fetchUserBookmarks(forUserId userId: String) -> Single<[String]> {
+        return Single.create { [weak self] single in
+            let ref = self?.db.collection("member").document(userId)
+            ref?.getDocument { document, error in
+                if let error = error {
+                    single(.failure(error))
+                } else if let document = document, document.exists, let data = document.data() {
+                    let bookmarks = data["bookMarkUsers"] as? [String] ?? []
+                    single(.success(bookmarks))
+                } else {
+                    single(.success([]))
+                }
+            }
+            return Disposables.create()
+        }
+    }
+    
     //MARK: Read
     
     func checkUserData(user: User, completion: @escaping (Bool) -> Void) {

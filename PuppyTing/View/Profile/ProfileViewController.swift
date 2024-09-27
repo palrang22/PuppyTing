@@ -61,14 +61,19 @@ class ProfileViewController: UIViewController {
         return button
     }()
     
+    // jgh
     private let favoriteButton: UIButton = {
         let button = UIButton(type: .system)
-        button.setTitle("★", for: .normal)
+        let starImage = UIImage(systemName: "star")
+        button.setImage(starImage, for: .normal)
+        button.tintColor = .white
         button.backgroundColor = UIColor.puppyPurple
         button.layer.cornerRadius = 20
-        button.setTitleColor(.white, for: .normal)
         return button
     }()
+    
+    // 즐겨찾기 상태를 저장하는 변수 (true: 즐겨찾기됨, false: 즐겨찾기 안됨) - jgh
+    private var isBookmarked = false
     
     private let buttonStack: UIStackView = {
         let stack = UIStackView()
@@ -130,6 +135,22 @@ class ProfileViewController: UIViewController {
         bindCollectionView()
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        guard let userId = userId else { return }
+        viewModel.checkIfBookmarked(userId: userId)
+            .subscribe(onSuccess: { [weak self] isBookmarked in
+                guard let self = self else { return }
+                self.isBookmarked = isBookmarked
+                let imageName = isBookmarked ? "star.fill" : "star"
+                self.favoriteButton.setImage(UIImage(systemName: imageName), for: .normal)
+            }, onError: { error in
+                print("즐겨찾기 상태 확인 실패: \(error.localizedDescription)")
+            })
+            .disposed(by: disposeBag)
+    }
+    
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         
@@ -160,14 +181,31 @@ class ProfileViewController: UIViewController {
     }
     
     // 즐겨찾기 버튼 , 얼럿추가 - jgh
+    // 즐겨찾기 해제 추가 - jgh
     @objc private func favoriteButtonTapped() {
-        print(1)
         guard let bookmarkId = userId else { return }
-        print(2)
-        viewModel.addBookmark(bookmarkId: bookmarkId)
-        guard let parentVC = parent as? ProfileViewController else { return }
-        print(3)
-        parentVC.autoDismissAlertWithTimer(title: "알림", message: "즐겨찾기에 추가되었습니다.", duration: 1.0) // 시간 변경 가능
+        
+        if isBookmarked {
+            viewModel.removeBookmark(bookmarkId: bookmarkId)
+                .subscribe(onSuccess: { [weak self] in
+                    guard let self = self else { return }
+                    self.favoriteButton.setImage(UIImage(systemName: "star"), for: .normal)
+                    self.isBookmarked = false
+                    self.autoDismissAlertWithTimer(title: "알림", message: "즐겨찾기가 해제되었습니다.", duration: 1.0)
+                }, onError: { error in
+                    print("즐겨찾기 삭제 실패: \(error.localizedDescription)")
+                })
+                .disposed(by: disposeBag)
+        } else {
+            // 즐겨찾기 추가
+            viewModel.addBookmark(bookmarkId: bookmarkId)
+            favoriteButton.setImage(UIImage(systemName: "star.fill"), for: .normal)
+            isBookmarked = true
+            self.autoDismissAlertWithTimer(title: "알림", message: "즐겨찾기에 추가되었습니다.", duration: 1.0)
+        }
+//        guard let bookmarkId = userId else { return }
+//        viewModel.addBookmark(bookmarkId: bookmarkId)
+//        self.autoDismissAlertWithTimer(title: "알림", message: "즐겨찾기에 추가되었습니다.", duration: 1.0) // 시간 변경 가능
     }
     
     // 유저 차단 버튼 - psh

@@ -24,6 +24,16 @@ class ProfileViewModel {
     let footPrintSuccess = PublishSubject<Void>()
     let footPrintError = PublishSubject<Error>()
     
+    // 즐겨찾기 삭제 - jgh
+    func removeBookmark(bookmarkId: String) -> Single<Void> {
+        guard let userId = Auth.auth().currentUser?.uid else {
+            return Single.error(NSError(domain: "", code: 0, userInfo: [NSLocalizedDescriptionKey: "현재 사용자 정보가 없습니다."]))
+        }
+        
+        return FireStoreDatabaseManager.shared.removeBookmark(forUserId: userId, bookmarkId: bookmarkId)
+            .observe(on: MainScheduler.instance)
+    }
+    
     // 즐겨찾기 추가 메서드
     func addBookmark(bookmarkId: String) {
         FireStoreDatabaseManager.shared.addBookmark(forUserId: Auth.auth().currentUser?.uid ?? "", bookmarkId: bookmarkId)
@@ -33,6 +43,19 @@ class ProfileViewModel {
             }, onFailure: { [weak self] error in
                 self?.bookmarkError.onNext(error)
             }).disposed(by: disposeBag)
+    }
+    
+    // 즐겨찾기 상태확인 메서드 - jgh
+    func checkIfBookmarked(userId: String) -> Single<Bool> {
+        guard let currentUserId = Auth.auth().currentUser?.uid else {
+            return Single.error(NSError(domain: "", code: -1, userInfo: [NSLocalizedDescriptionKey: "사용자 인증 실패"]))
+        }
+
+        return FireStoreDatabaseManager.shared.fetchUserBookmarks(forUserId: currentUserId)
+            .map { bookmarks in
+                return bookmarks.contains(userId)
+            }
+            .observe(on: MainScheduler.instance)
     }
     
     // 사용자 차단 메서드
