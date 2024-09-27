@@ -19,16 +19,16 @@ class FavoriteListViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.tabBarController?.tabBar.isHidden = true
         setupView()
         setupTableView()
         bindViewModel()
         viewModel.fetchFavorites()
     }
     
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-        self.tabBarController?.tabBar.isHidden = false
+    // 화면 돌아갔을 때 탭바히든 재호출
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        self.tabBarController?.tabBar.isHidden = true
     }
     
     private func setupView() {
