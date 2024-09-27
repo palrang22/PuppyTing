@@ -61,14 +61,19 @@ class ProfileViewController: UIViewController {
         return button
     }()
     
+    // jgh
     private let favoriteButton: UIButton = {
         let button = UIButton(type: .system)
-        button.setTitle("★", for: .normal)
+        let starImage = UIImage(systemName: "star")
+        button.setImage(starImage, for: .normal)
+        button.tintColor = .white
         button.backgroundColor = UIColor.puppyPurple
         button.layer.cornerRadius = 20
-        button.setTitleColor(.white, for: .normal)
         return button
     }()
+    
+    // 즐겨찾기 상태를 저장하는 변수 (true: 즐겨찾기됨, false: 즐겨찾기 안됨) - jgh
+    private var isBookmarked = false
     
     private let buttonStack: UIStackView = {
         let stack = UIStackView()
@@ -130,6 +135,23 @@ class ProfileViewController: UIViewController {
         bindCollectionView()
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        guard let userId = userId else { return }
+        viewModel.checkIfBookmarked(userId: userId)
+            .subscribe(onSuccess: { [weak self] isBookmarked in
+                guard let self = self else { return }
+                self.isBookmarked = isBookmarked
+                let imageName = isBookmarked ? "star.fill" : "star"
+                self.favoriteButton.setImage(UIImage(systemName: imageName), for: .normal)
+                favoriteButton.tintColor = .yellow // 노란색으로 설정
+            }, onError: { error in
+                print("즐겨찾기 상태 확인 실패: \(error.localizedDescription)")
+            })
+            .disposed(by: disposeBag)
+    }
+    
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         
@@ -160,14 +182,29 @@ class ProfileViewController: UIViewController {
     }
     
     // 즐겨찾기 버튼 , 얼럿추가 - jgh
+    // 즐겨찾기 해제 추가 - jgh
     @objc private func favoriteButtonTapped() {
-        print(1)
         guard let bookmarkId = userId else { return }
-        print(2)
-        viewModel.addBookmark(bookmarkId: bookmarkId)
-        guard let parentVC = parent as? ProfileViewController else { return }
-        print(3)
-        parentVC.autoDismissAlertWithTimer(title: "알림", message: "즐겨찾기에 추가되었습니다.", duration: 1.0) // 시간 변경 가능
+        
+        if isBookmarked {
+            viewModel.removeBookmark(bookmarkId: bookmarkId)
+                .subscribe(onSuccess: { [weak self] in
+                    guard let self = self else { return }
+                    self.favoriteButton.setImage(UIImage(systemName: "star"), for: .normal)
+                    self.isBookmarked = false
+                    self.autoDismissAlertWithTimer(title: "알림", message: "즐겨찾기가 해제되었습니다.", duration: 1.0)
+                }, onError: { error in
+                    print("즐겨찾기 삭제 실패: \(error.localizedDescription)")
+                })
+                .disposed(by: disposeBag)
+        } else {
+            // 즐겨찾기 추가
+            viewModel.addBookmark(bookmarkId: bookmarkId)
+            favoriteButton.setImage(UIImage(systemName: "star.fill"), for: .normal)
+            favoriteButton.tintColor = .yellow // 노란색으로 설정
+            isBookmarked = true
+            self.autoDismissAlertWithTimer(title: "알림", message: "즐겨찾기에 추가되었습니다.", duration: 1.0)
+        }
     }
     
     // 유저 차단 버튼 - psh
@@ -175,17 +212,15 @@ class ProfileViewController: UIViewController {
     private func blockButtonTapped() {
         guard let userId = userId else { return }
         
-        // 차단 얼럿 띄우기 위한 코드 추가 - jgh
-        guard let parentVC = parent as? ProfileViewController else { return }
-        // 차단 확인 얼럿 띄우기
-        parentVC.okAlertWithCancel(
+        // 차단 확인 얼럿 띄우기, 현재화면에서 바로 띄워지는거라 parentVC삭제 - jgh
+        okAlertWithCancel(
             title: "사용자 차단",
             message: "사용자를 차단하시겠습니까? 차단 이후 사용자의 게시물이 보이지 않습니다.",
             okActionTitle: "차단",
             cancelActionTitle: "취소",
             okActionHandler: { [weak self] (action: UIAlertAction) in
                 self?.viewModel.blockedUser(uuid: userId)
-                parentVC.okAlert(
+                self?.okAlert(
                     title: "차단 완료",
                     message: "사용자가 성공적으로 차단되었습니다.",
                     okActionTitle: "확인",
@@ -309,16 +344,15 @@ class ProfileViewController: UIViewController {
         }
         
         profilePuppyCollectionView.snp.makeConstraints {
-            $0.top.equalTo(profileImageView.snp.bottom).offset(40)
+            $0.top.equalTo(profileImageView.snp.bottom).offset(15)
             $0.leading.trailing.equalToSuperview().inset(20)
             $0.height.equalTo(200)
         }
         
         blockButton.snp.makeConstraints {
-            $0.top.equalTo(profilePuppyCollectionView.snp.bottom).offset(20)
+            $0.bottom.equalTo(view.safeAreaLayoutGuide) // 안전 영역에 대해 고정
             $0.trailing.equalTo(profilePuppyCollectionView.snp.trailing)
-            $0.width.equalTo(80)
-            $0.height.equalTo(30)
+            $0.height.equalTo(44)
         }
         
         noDataLabel.snp.makeConstraints {

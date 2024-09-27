@@ -231,6 +231,7 @@ class MypageViewController: UIViewController {
         self.navigationController?.navigationBar.tintColor = UIColor.puppyPurple
         loadUserInfo()
         loadPuppyInfo()
+        self.tabBarController?.tabBar.isHidden = false
     }
     
     //MARK: Gesture

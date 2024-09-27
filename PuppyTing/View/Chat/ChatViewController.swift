@@ -68,6 +68,9 @@ class ChatViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        // 탭바 가리기 - jgh
+        self.tabBarController?.tabBar.isHidden = true
+        
         // Large Title 해제
         navigationItem.largeTitleDisplayMode = .never
         
@@ -91,6 +94,12 @@ class ChatViewController: UIViewController {
         setupConstraints()
         setupBindings()
         
+    }
+    
+    // 탭바 보여주기 - jgh
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        self.tabBarController?.tabBar.isHidden = false
     }
     
     // 키보드가 나타날 때 호출되는 메서드
