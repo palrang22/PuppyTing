@@ -18,8 +18,8 @@
 		2369F3AD2C97FDC1006040B3 /* FirebaseDynamicLinks in Frameworks */ = {isa = PBXBuildFile; productRef = 2369F3AC2C97FDC1006040B3 /* FirebaseDynamicLinks */; };
 		2369F3AF2C980222006040B3 /* KingFisherManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2369F3AE2C980222006040B3 /* KingFisherManager.swift */; };
 		2369F3B52C99AB1A006040B3 /* FirebaseMessaging in Frameworks */ = {isa = PBXBuildFile; productRef = 2369F3B42C99AB1A006040B3 /* FirebaseMessaging */; };
+		2399E8B12CA555A600295691 /* ProfilePuppyCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2399E8B02CA555A600295691 /* ProfilePuppyCollectionViewCell.swift */; };
 		5602B05E2C8A82E50060F03B /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5602B05D2C8A82E50060F03B /* ProfileViewController.swift */; };
-		5602B0692C8AEA340060F03B /* ProfileCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5602B0682C8AEA340060F03B /* ProfileCell.swift */; };
 		5602B0862C8E0C6F0060F03B /* ProfileViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5602B0852C8E0C6F0060F03B /* ProfileViewModel.swift */; };
 		5602B08A2C8E91B30060F03B /* FavoriteListTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5602B0892C8E91B20060F03B /* FavoriteListTableViewCell.swift */; };
 		5602B08C2C8E9AD90060F03B /* FavoriteListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5602B08B2C8E9AD90060F03B /* FavoriteListViewController.swift */; };
@@ -107,8 +107,8 @@
 		2369F3AA2C97FC93006040B3 /* Report.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Report.swift; sourceTree = "<group>"; };
 		2369F3AE2C980222006040B3 /* KingFisherManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KingFisherManager.swift; sourceTree = "<group>"; };
 		2399E8A82CA3D32700295691 /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
+		2399E8B02CA555A600295691 /* ProfilePuppyCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfilePuppyCollectionViewCell.swift; sourceTree = "<group>"; };
 		5602B05D2C8A82E50060F03B /* ProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
-		5602B0682C8AEA340060F03B /* ProfileCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileCell.swift; sourceTree = "<group>"; };
 		5602B0852C8E0C6F0060F03B /* ProfileViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewModel.swift; sourceTree = "<group>"; };
 		5602B0892C8E91B20060F03B /* FavoriteListTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteListTableViewCell.swift; sourceTree = "<group>"; };
 		5602B08B2C8E9AD90060F03B /* FavoriteListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteListViewController.swift; sourceTree = "<group>"; };
@@ -212,6 +212,52 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		2399E8A92CA5486B00295691 /* Puppy */ = {
+			isa = PBXGroup;
+			children = (
+				C29FCF652C7DB37E00F8951D /* PuppyCollectionViewCell.swift */,
+				C29FCF672C7DBA4F00F8951D /* PuppyRegistrationViewController.swift */,
+			);
+			path = Puppy;
+			sourceTree = "<group>";
+		};
+		2399E8AA2CA5487C00295691 /* MyInfo */ = {
+			isa = PBXGroup;
+			children = (
+				C29FCF762C8171FA00F8951D /* MyInfoEditViewController.swift */,
+			);
+			path = MyInfo;
+			sourceTree = "<group>";
+		};
+		2399E8AB2CA5488700295691 /* MyFeed */ = {
+			isa = PBXGroup;
+			children = (
+				C29FCFC02C88566000F8951D /* MyFeedManageViewController.swift */,
+				C29FCFC22C88610600F8951D /* MyFeedTableViCell.swift */,
+			);
+			path = MyFeed;
+			sourceTree = "<group>";
+		};
+		2399E8AC2CA5488F00295691 /* Favorite */ = {
+			isa = PBXGroup;
+			children = (
+				5602B08B2C8E9AD90060F03B /* FavoriteListViewController.swift */,
+				5602B0892C8E91B20060F03B /* FavoriteListTableViewCell.swift */,
+				56A640772CA17AE100950B0B /* FeedListViewController.swift */,
+				56A6407B2CA17BCB00950B0B /* FeedTableViewCell.swift */,
+			);
+			path = Favorite;
+			sourceTree = "<group>";
+		};
+		2399E8AD2CA5489500295691 /* Block */ = {
+			isa = PBXGroup;
+			children = (
+				C29FD01C2C9BFEA900F8951D /* MyBlockListViewController.swift */,
+				C29FD01A2C9BFE5F00F8951D /* MyBlockListTableViewCell.swift */,
+			);
+			path = Block;
+			sourceTree = "<group>";
+		};
 		23DC0A862C9C717B000B97EB /* Network */ = {
 			isa = PBXGroup;
 			children = (
@@ -241,7 +287,7 @@
 			isa = PBXGroup;
 			children = (
 				5602B05D2C8A82E50060F03B /* ProfileViewController.swift */,
-				5602B0682C8AEA340060F03B /* ProfileCell.swift */,
+				2399E8B02CA555A600295691 /* ProfilePuppyCollectionViewCell.swift */,
 			);
 			path = Profile;
 			sourceTree = "<group>";
@@ -441,17 +487,11 @@
 			isa = PBXGroup;
 			children = (
 				E738FB9D2C7C668D004696BD /* MypageViewController.swift */,
-				C29FCF652C7DB37E00F8951D /* PuppyCollectionViewCell.swift */,
-				C29FCF672C7DBA4F00F8951D /* PuppyRegistrationViewController.swift */,
-				C29FCF762C8171FA00F8951D /* MyInfoEditViewController.swift */,
-				C29FCFC02C88566000F8951D /* MyFeedManageViewController.swift */,
-				C29FCFC22C88610600F8951D /* MyFeedTableViCell.swift */,
-				5602B08B2C8E9AD90060F03B /* FavoriteListViewController.swift */,
-				5602B0892C8E91B20060F03B /* FavoriteListTableViewCell.swift */,
-				C29FD01A2C9BFE5F00F8951D /* MyBlockListTableViewCell.swift */,
-				C29FD01C2C9BFEA900F8951D /* MyBlockListViewController.swift */,
-				56A640772CA17AE100950B0B /* FeedListViewController.swift */,
-				56A6407B2CA17BCB00950B0B /* FeedTableViewCell.swift */,
+				2399E8A92CA5486B00295691 /* Puppy */,
+				2399E8AA2CA5487C00295691 /* MyInfo */,
+				2399E8AB2CA5488700295691 /* MyFeed */,
+				2399E8AC2CA5488F00295691 /* Favorite */,
+				2399E8AD2CA5489500295691 /* Block */,
 			);
 			path = Mypage;
 			sourceTree = "<group>";
@@ -625,6 +665,7 @@
 				A2085DD12C8059F400698923 /* FireStoreDatabaseManager.swift in Sources */,
 				E738FB772C7C62EE004696BD /* AppDelegate.swift in Sources */,
 				E738FBC52C7DB85A004696BD /* TingFeedModel.swift in Sources */,
+				2399E8B12CA555A600295691 /* ProfilePuppyCollectionViewCell.swift in Sources */,
 				A2F9FE6C2C8DAF18004D7FF6 /* Pet.swift in Sources */,
 				A2F9FE592C8C2193004D7FF6 /* MyInfoEditVIewModel.swift in Sources */,
 				23607C022C8A930100A23716 /* UIButton.swift in Sources */,
@@ -666,7 +707,6 @@
 				A2F9FE4D2C896EE0004D7FF6 /* AppController.swift in Sources */,
 				C29FD01D2C9BFEA900F8951D /* MyBlockListViewController.swift in Sources */,
 				E738FB792C7C62EE004696BD /* SceneDelegate.swift in Sources */,
-				5602B0692C8AEA340060F03B /* ProfileCell.swift in Sources */,
 				C29FCFC92C8DF25300F8951D /* DetailTingViewModel.swift in Sources */,
 				C29FD01F2C9BFEDC00F8951D /* BlockListViewModel.swift in Sources */,
 				E70DB34D2C8067B50073B3F8 /* SearchAddressViewController.swift in Sources */,

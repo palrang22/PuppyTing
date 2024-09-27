@@ -69,7 +69,7 @@ class PuppyRegistrationViewController: UIViewController {
     
     private let tagLabel: UILabel = {
         let label = UILabel()
-        label.text = "특징"
+        label.text = "태그"
         label.font = UIFont.systemFont(ofSize: 16)
         label.textColor = .black
         return label
@@ -191,25 +191,25 @@ class PuppyRegistrationViewController: UIViewController {
             $0.height.equalTo(40)
         }
         
-        tagTextField.snp.makeConstraints {
-            $0.top.equalTo(tagLabel.snp.bottom).offset(5)
-            $0.left.right.height.equalTo(ageTextField)
-        }
-        
-        tagScrollView.snp.makeConstraints {
-            $0.top.equalTo(tagTextField.snp.bottom).offset(20)
-            $0.leading.equalToSuperview().offset(20)
-            $0.trailing.equalToSuperview().offset(-20)
-            $0.height.equalTo(50)
-        }
-        
         tagStack.snp.makeConstraints {
             $0.edges.equalToSuperview()
             $0.height.equalToSuperview()
         }
         
+        tagScrollView.snp.makeConstraints {
+            $0.top.equalTo(tagLabel.snp.bottom).offset(10)
+            $0.leading.equalToSuperview().offset(20)
+            $0.trailing.equalToSuperview().offset(-20)
+            $0.height.equalTo(50)
+        }
+        
+        tagTextField.snp.makeConstraints {
+            $0.top.equalTo(tagScrollView.snp.bottom).offset(5)
+            $0.left.right.height.equalTo(ageTextField)
+        }
+
         separationButton.snp.makeConstraints {
-            $0.top.equalTo(tagScrollView.snp.bottom).offset(20)
+            $0.top.equalTo(tagTextField.snp.bottom).offset(20)
             $0.centerX.equalToSuperview()
             $0.bottom.equalToSuperview().offset(-20) // 마지막 요소를 기준으로 contentView의 높이 설정
             $0.height.equalTo(44)

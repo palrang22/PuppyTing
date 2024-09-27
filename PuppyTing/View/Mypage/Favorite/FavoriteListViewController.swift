@@ -19,10 +19,16 @@ class FavoriteListViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.tabBarController?.tabBar.isHidden = true
         setupView()
         setupTableView()
         bindViewModel()
         viewModel.fetchFavorites()
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        self.tabBarController?.tabBar.isHidden = false
     }
     
     private func setupView() {
@@ -132,7 +138,7 @@ extension FavoriteListViewController: UITableViewDataSource, UITableViewDelegate
         let profileVC = ProfileViewController()
         
         profileVC.modalPresentationStyle = .pageSheet
-        profileVC.userid = selectedFavorite.uuid
+        profileVC.userId = selectedFavorite.uuid
         
         if let sheet = profileVC.sheetPresentationController {
             sheet.detents = [.medium()]

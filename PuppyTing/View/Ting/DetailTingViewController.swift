@@ -169,7 +169,7 @@ class DetailTingViewController: UIViewController {
         
         // 선택된 사용자의 uuid 전달
         if let userid = tingFeedModels?.userid {
-            profileVC.userid = userid
+            profileVC.userId = userid
         }
         
         // 하프모달로 띄우기
@@ -345,7 +345,9 @@ class DetailTingViewController: UIViewController {
                         // 차단 버튼을 눌렀을 때 차단 로직을 실행
                         self?.fireStoreDatabase.blockUser(userId: userid)
                             .subscribe(onSuccess: { [weak self] in
-                                self?.okAlert(title: "차단 완료", message: "사용자가 성공적으로 차단되었습니다.")
+                                self?.okAlert(title: "차단 완료", message: "사용자가 성공적으로 차단되었습니다.", okActionHandler: { _ in
+                                    self?.navigationController?.popViewController(animated: true)
+                                })
                             }, onFailure: { error in
                                 print("차단 실패")
                                 self?.okAlert(title: "차단 실패", message: "사용자 차단에 실패했습니다. 다시 시도해주세요.")

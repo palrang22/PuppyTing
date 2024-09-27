@@ -35,11 +35,17 @@ class MyFeedManageViewController: UIViewController { // kkh
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
+        self.tabBarController?.tabBar.isHidden = true
         
         setupNavigationBar()
         setupTableView()
         bindViewModel()
         viewModel.fetchFeeds()
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        self.tabBarController?.tabBar.isHidden = false
     }
 
     private func bindViewModel() {
@@ -55,7 +61,25 @@ class MyFeedManageViewController: UIViewController { // kkh
     }
 }
 
-extension MyFeedManageViewController: UITableViewDataSource, UITableViewDelegate {
+extension MyFeedManageViewController: UITableViewDelegate {
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true) // 셀선택 배경 사라지게 - jgh
+        let selectedFeed = feeds[indexPath.row]
+       
+        let detailVC = DetailTingViewController()
+        detailVC.tingFeedModels = selectedFeed
+        detailVC.delegate = self // Delegate 설정
+        
+        navigationController?.pushViewController(detailVC, animated: true)
+    }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 100
+    }
+}
+
+extension MyFeedManageViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return feeds.count
@@ -69,17 +93,6 @@ extension MyFeedManageViewController: UITableViewDataSource, UITableViewDelegate
         let feed = feeds[indexPath.row]
         cell.configure(with: feed)
         return cell
-    }
-    
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        tableView.deselectRow(at: indexPath, animated: true) // 셀선택 배경 사라지게 - jgh
-        let selectedFeed = feeds[indexPath.row]
-       
-        let detailVC = DetailTingViewController()
-        detailVC.tingFeedModels = selectedFeed
-        detailVC.delegate = self // Delegate 설정
-        
-        navigationController?.pushViewController(detailVC, animated: true)
     }
 }
 

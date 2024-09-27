@@ -35,7 +35,7 @@ class ChatViewController: UIViewController {
     
     let messageInputView: UIView = {
         let view = UIView()
-        view.backgroundColor = .white
+        view.backgroundColor = .systemGray6
         return view
     }()
     
@@ -182,7 +182,7 @@ class ChatViewController: UIViewController {
     private func presentProfileViewController(senderId: String) {
         let profileVC = ProfileViewController()
         profileVC.modalPresentationStyle = .pageSheet
-        profileVC.userid = senderId
+        profileVC.userId = senderId
         if let sheet = profileVC.sheetPresentationController {
             sheet.detents = [.medium()]
             sheet.prefersGrabberVisible = true

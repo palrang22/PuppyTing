@@ -15,11 +15,11 @@ class MyBlockListTableViewCell: UITableViewCell {
     
     private let profileImageView: UIImageView = {
         let profileImage = UIImageView()
+        profileImage.image = UIImage(named: "defaultProfileImage")
         profileImage.contentMode = .scaleAspectFill
         profileImage.clipsToBounds = true
         profileImage.backgroundColor = .clear
         profileImage.tintColor = .black
-        profileImage.image = UIImage(systemName: "person.crop.circle")
         profileImage.layer.cornerRadius = 30
         profileImage.layer.masksToBounds = true
         return profileImage
@@ -27,7 +27,7 @@ class MyBlockListTableViewCell: UITableViewCell {
     
     private let nameLabel: UILabel = {
         let label = UILabel()
-        label.font = UIFont.boldSystemFont(ofSize: 20)
+        label.font = UIFont.boldSystemFont(ofSize: 16)
         label.textColor = .black
         return label
     }()
@@ -52,19 +52,19 @@ class MyBlockListTableViewCell: UITableViewCell {
         
         profileImageView.snp.makeConstraints {
             $0.top.equalToSuperview().offset(10)
-            $0.leading.equalToSuperview().offset(10)
+            $0.leading.equalToSuperview().offset(20)
             $0.centerY.equalToSuperview()
             $0.width.height.equalTo(60)
             $0.bottom.equalToSuperview().offset(-10)
         }
         
         nameLabel.snp.makeConstraints {
-            $0.leading.equalTo(profileImageView.snp.trailing).offset(10)
+            $0.leading.equalTo(profileImageView.snp.trailing).offset(20)
             $0.centerY.equalTo(profileImageView.snp.centerY)
         }
         
         unblockButton.snp.makeConstraints {
-            $0.trailing.equalToSuperview().offset(-10)
+            $0.trailing.equalToSuperview().offset(-20)
             $0.centerY.equalToSuperview()
             $0.width.equalTo(80)
             $0.height.equalTo(44)
@@ -100,7 +100,6 @@ class MyBlockListTableViewCell: UITableViewCell {
             
             guard let data = data, let image = UIImage(data: data) else { return }
             
-            // UI는 메인 스레드에서 업데이트
             DispatchQueue.main.async {
                 self?.profileImageView.image = image
             }
