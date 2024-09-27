@@ -145,6 +145,7 @@ class ProfileViewController: UIViewController {
                 self.isBookmarked = isBookmarked
                 let imageName = isBookmarked ? "star.fill" : "star"
                 self.favoriteButton.setImage(UIImage(systemName: imageName), for: .normal)
+                favoriteButton.tintColor = .yellow // 노란색으로 설정
             }, onError: { error in
                 print("즐겨찾기 상태 확인 실패: \(error.localizedDescription)")
             })
@@ -200,12 +201,10 @@ class ProfileViewController: UIViewController {
             // 즐겨찾기 추가
             viewModel.addBookmark(bookmarkId: bookmarkId)
             favoriteButton.setImage(UIImage(systemName: "star.fill"), for: .normal)
+            favoriteButton.tintColor = .yellow // 노란색으로 설정
             isBookmarked = true
             self.autoDismissAlertWithTimer(title: "알림", message: "즐겨찾기에 추가되었습니다.", duration: 1.0)
         }
-//        guard let bookmarkId = userId else { return }
-//        viewModel.addBookmark(bookmarkId: bookmarkId)
-//        self.autoDismissAlertWithTimer(title: "알림", message: "즐겨찾기에 추가되었습니다.", duration: 1.0) // 시간 변경 가능
     }
     
     // 유저 차단 버튼 - psh
@@ -345,16 +344,15 @@ class ProfileViewController: UIViewController {
         }
         
         profilePuppyCollectionView.snp.makeConstraints {
-            $0.top.equalTo(profileImageView.snp.bottom).offset(40)
+            $0.top.equalTo(profileImageView.snp.bottom).offset(15)
             $0.leading.trailing.equalToSuperview().inset(20)
             $0.height.equalTo(200)
         }
         
         blockButton.snp.makeConstraints {
-            $0.top.equalTo(profilePuppyCollectionView.snp.bottom).offset(20)
+            $0.bottom.equalTo(view.safeAreaLayoutGuide) // 안전 영역에 대해 고정
             $0.trailing.equalTo(profilePuppyCollectionView.snp.trailing)
-            $0.width.equalTo(80)
-            $0.height.equalTo(30)
+            $0.height.equalTo(44)
         }
         
         noDataLabel.snp.makeConstraints {
