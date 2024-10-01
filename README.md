@@ -10,7 +10,16 @@
 - 사용자는 퍼피팅을 통해 반려견과의 즐겁고 건강한 산책 경험을 이웃과 함께 공유할 수 있습니다.
 
 ## 팀원 구성
-<table style="width: 100%; text-align: center; vertical-align: middle;">
+
+| **김승희** | **박승환** | **전가혜** | **김광현** |
+|:---:|:---:|:---:|:---:|
+| <img src="https://avatars.githubusercontent.com/u/92323612?v=4" height=150 width=150> | <img src="https://avatars.githubusercontent.com/u/107488193?v=4" height=150 width=150> | <img src="https://avatars.githubusercontent.com/u/170915534?v=4" height=150 width=150> | <img src="https://avatars.githubusercontent.com/u/168413396?v=4" height=150 width=150> |
+| [@palrang22](https://github.com/palrang22) | [@sh990920](https://github.com/sh990920) | [gahyejeon](https://github.com/gahyejeon) | [Leedoseo](https://github.com/Leedoseo) |
+| [<img src="https://img.shields.io/badge/palrang22.log-20C997?style=flat&logo=velog&logoColor=white">](https://velog.io/@palrang22/posts) | [<img src="https://img.shields.io/badge/개발공부-FB413A?style=flat&logo=tistory&logoColor=white">](https://shpark0920.tistory.com/) | [<img src="https://img.shields.io/badge/개발공부하는블로구-FB413A?style=flat&logo=tistory&logoColor=white">](https://gghh0408.tistory.com/) | [<img src="https://img.shields.io/badge/Ios Developer-FB413A?style=flat&logo=tistory&logoColor=white">](https://leedoseo.tistory.com/) |
+| iOS | iOS | iOS | iOS |
+
+
+<!-- <table style="width: 100%; text-align: center; vertical-align: middle;">
     <thead>
         <tr style="font-weight: bold;">
             <td style="text-align: center;">김승희</td>
@@ -73,7 +82,7 @@
         <td style="text-align: center;">iOS</td>
         <td style="text-align: center;">iOS</td>
     </tr>
-</table>
+</table> -->
 
 
 ## 기술 스택
