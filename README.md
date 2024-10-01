@@ -12,31 +12,31 @@
 ## 팀원 구성
 <table style="width: 100%; text-align: center; vertical-align: middle;">
     <tr style="font-weight: bold;">
-        <td>김승희</td>
-        <td>박승환</td>
-        <td>전가혜</td>
-        <td>김광현</td>
+        <td style="text-align: center;">김승희</td>
+        <td style="text-align: center;">박승환</td>
+        <td style="text-align: center;">전가혜</td>
+        <td style="text-align: center;">김광현</td>
     </tr>
     <tr>
-        <td>
+        <td style="text-align: center;">
             <a href="https://github.com/palrang22">
                 <img src="https://avatars.githubusercontent.com/u/92323612?v=4" height=150 width=150><br>
                 @palrang22
             </a>
         </td>
-        <td>
+        <td style="text-align: center;">
             <a href="https://github.com/sh990920">
                 <img src="https://avatars.githubusercontent.com/u/107488193?v=4" height=150 width=150><br>
                 @sh990920
             </a>
         </td>
-        <td>
+        <td style="text-align: center;">
             <a href="https://github.com/gahyejeon">
                 <img src="https://avatars.githubusercontent.com/u/170915534?v=4" height=150 width=150><br>
                 @gahyejeon
             </a>
         </td>
-        <td>
+        <td style="text-align: center;">
             <a href="https://github.com/Leedoseo">
                 <img src="https://avatars.githubusercontent.com/u/168413396?v=4" height=150 width=150><br>
                 @Leedoseo
@@ -44,32 +44,32 @@
         </td>
     </tr>
     <tr>
-        <td>
+        <td style="text-align: center; vertical-align: middle;">
             <a href="https://velog.io/@palrang22/posts">
                 <img src="https://img.shields.io/badge/palrang22.log-20C997?style=flat&logo=velog&logoColor=white" style="vertical-align: middle;">
             </a>
         </td>
-        <td>
+        <td style="text-align: center; vertical-align: middle;">
             <a href="https://shpark0920.tistory.com/">
                 <img src="https://img.shields.io/badge/개발공부-FB413A?style=flat&logo=tistory&logoColor=white" style="vertical-align: middle;">
             </a>
         </td>
-        <td>
+        <td style="text-align: center; vertical-align: middle;">
             <a href="https://gghh0408.tistory.com/">
                 <img src="https://img.shields.io/badge/개발공부하는블로구-FB413A?style=flat&logo=tistory&logoColor=white" style="vertical-align: middle;">
             </a>
         </td>
-        <td>
+        <td style="text-align: center; vertical-align: middle;">
             <a href="https://leedoseo.tistory.com/">
                 <img src="https://img.shields.io/badge/Ios Developer-FB413A?style=flat&logo=tistory&logoColor=white" style="vertical-align: middle;">
             </a>
         </td>
     </tr>
     <tr>
-        <td>iOS</td>
-        <td>iOS</td>
-        <td>iOS</td>
-        <td>iOS</td>
+        <td style="text-align: center;">iOS</td>
+        <td style="text-align: center;">iOS</td>
+        <td style="text-align: center;">iOS</td>
+        <td style="text-align: center;">iOS</td>
     </tr>
 </table>
 
