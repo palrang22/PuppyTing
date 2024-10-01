@@ -11,12 +11,14 @@
 
 ## 팀원 구성
 <table style="width: 100%; text-align: center; vertical-align: middle;">
-    <tr style="font-weight: bold;">
-        <td style="text-align: center;">김승희</td>
-        <td style="text-align: center;">박승환</td>
-        <td style="text-align: center;">전가혜</td>
-        <td style="text-align: center;">김광현</td>
-    </tr>
+    <thead>
+        <tr style="font-weight: bold;">
+            <td style="text-align: center;">김승희</td>
+            <td style="text-align: center;">박승환</td>
+            <td style="text-align: center;">전가혜</td>
+            <td style="text-align: center;">김광현</td>
+        </tr>
+    </thead>
     <tr>
         <td style="text-align: center;">
             <a href="https://github.com/palrang22">
