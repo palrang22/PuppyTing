@@ -1,5 +1,5 @@
 # PuppyTing
-<img src="image/logo.png" alt="로고" width="500"/>
+<img src="image/logo.png" alt="로고" width="100%"/>
 
 ## 앱스토어
 <a href="https://apps.apple.com/kr/app/%ED%8D%BC%ED%94%BC%ED%8C%85/id6670602342"><img src="image/icon.png" width="150"/></a><br>
@@ -10,12 +10,73 @@
 - 사용자는 퍼피팅을 통해 반려견과의 즐겁고 건강한 산책 경험을 이웃과 함께 공유할 수 있습니다.
 
 ## 팀원 구성
-| **김승희** | **박승환** | **전가혜** | **김광현** |
-|:---:|:---:|:---:|:---:|
-| [<img src="https://avatars.githubusercontent.com/u/92323612?v=4" height=150 width=150> <br/> @palrang22](https://github.com/palrang22) | [<img src="https://avatars.githubusercontent.com/u/107488193?v=4" height=150 width=150> <br/> @sh990920](https://github.com/sh990920) | [<img src="https://avatars.githubusercontent.com/u/170915534?v=4" height=150 width=150> <br/> @gahyejeon](https://github.com/gahyejeon) | [<img src="https://avatars.githubusercontent.com/u/168413396?v=4" height=150 width=150> <br/> @Leedoseo](https://github.com/Leedoseo) |
-|iOS|iOS|iOS|iOS|
+<table style="width: 100%; text-align: center; vertical-align: middle;">
+    <tr style="font-weight: bold;">
+        <td>김승희</td>
+        <td>박승환</td>
+        <td>전가혜</td>
+        <td>김광현</td>
+    </tr>
+    <tr>
+        <td>
+            <a href="https://github.com/palrang22">
+                <img src="https://avatars.githubusercontent.com/u/92323612?v=4" height=150 width=150><br>
+                @palrang22
+            </a>
+        </td>
+        <td>
+            <a href="https://github.com/sh990920">
+                <img src="https://avatars.githubusercontent.com/u/107488193?v=4" height=150 width=150><br>
+                @sh990920
+            </a>
+        </td>
+        <td>
+            <a href="https://github.com/gahyejeon">
+                <img src="https://avatars.githubusercontent.com/u/170915534?v=4" height=150 width=150><br>
+                @gahyejeon
+            </a>
+        </td>
+        <td>
+            <a href="https://github.com/Leedoseo">
+                <img src="https://avatars.githubusercontent.com/u/168413396?v=4" height=150 width=150><br>
+                @Leedoseo
+            </a>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <a href="https://velog.io/@palrang22/posts">
+                <img src="https://img.shields.io/badge/palrang22.log-20C997?style=flat&logo=velog&logoColor=white" style="vertical-align: middle;">
+            </a>
+        </td>
+        <td>
+            <a href="https://shpark0920.tistory.com/">
+                <img src="https://img.shields.io/badge/개발공부-FB413A?style=flat&logo=tistory&logoColor=white" style="vertical-align: middle;">
+            </a>
+        </td>
+        <td>
+            <a href="https://gghh0408.tistory.com/">
+                <img src="https://img.shields.io/badge/개발공부하는블로구-FB413A?style=flat&logo=tistory&logoColor=white" style="vertical-align: middle;">
+            </a>
+        </td>
+        <td>
+            <a href="https://leedoseo.tistory.com/">
+                <img src="https://img.shields.io/badge/Ios Developer-FB413A?style=flat&logo=tistory&logoColor=white" style="vertical-align: middle;">
+            </a>
+        </td>
+    </tr>
+    <tr>
+        <td>iOS</td>
+        <td>iOS</td>
+        <td>iOS</td>
+        <td>iOS</td>
+    </tr>
+</table>
+
 
 ## 기술 스택
+<img src="image/puppytingStack.png">
+
 - 의존성 관리 도구 : SPM
 - 형상 관리 도구 : GitHub, Git
 - 아키텍처 : MVVM
@@ -27,7 +88,14 @@
 - 지도 : KakaoMapsSDK 2.10.5
 - 이미지 처리 : Kingfisher 7.12.0
 - 코드 스타일 : StyleShare - Swift Style Guide, SwiftAPI
-- 네트워킹 : Alamofire, RESTful API
+- 네트워킹 : RESTful API
+
+## 프로젝트 구조
+### MVVM 아키텍처
+<img src="image/puppytingDataFlow.png">
+
+## 이미지
+<img src="image/puppytingVIewImage.png">
 
 ## 주요 기능
 ### 🚶🏻‍♀️ 반려견 산책 메이트 찾기
