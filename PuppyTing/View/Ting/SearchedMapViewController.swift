@@ -46,22 +46,16 @@ class SearchedMapViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+
+        addChild(kakaoMapViewController)
         view.addSubview(kakaoMapViewController.view)
+        kakaoMapViewController.didMove(toParent: self)
+        
         setConstraints()
-        configMapInfo()
         bind()
+        configMapInfo()
     }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        kakaoMapViewController.activateEngine()
-    }
-    
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-        kakaoMapViewController.pauseEngine()
-    }
-    
+
     func configMapInfo() {
         if let placeName = placeName, let roadAddressName = roadAddressName {
             (addressView as? AddressView)?.config(placeName: placeName, roadAddressName: roadAddressName)
@@ -69,10 +63,13 @@ class SearchedMapViewController: UIViewController {
 
         if let coordinate = coordinate {
             kakaoMapViewController.setCoordinate(coordinate)
-            kakaoMapViewController.addPoi(at: coordinate)
+            kakaoMapViewController.activateEngine()
+        } else {
+            print("좌표가 아직 설정되지 않았습니다.")
         }
     }
-    
+
+
     func bind() {
         closeButton.rx.tap
             .bind { [weak self] in
@@ -90,7 +87,7 @@ class SearchedMapViewController: UIViewController {
     }
     
     private func setConstraints() {
-        [kakaoMapViewController.view, closeButton, addressView, selectButton].forEach { view.addSubview($0) }
+        [closeButton, addressView, selectButton].forEach { view.addSubview($0) }
         
         closeButton.snp.makeConstraints {
             $0.leading.equalTo(view.safeAreaLayoutGuide).offset(20)
@@ -110,7 +107,9 @@ class SearchedMapViewController: UIViewController {
         }
         
         kakaoMapViewController.view.snp.makeConstraints {
-            $0.edges.equalToSuperview()
+            $0.top.equalToSuperview()
+            $0.leading.trailing.equalToSuperview()
+            $0.bottom.equalTo(view.safeAreaLayoutGuide)
         }
     }
 }
