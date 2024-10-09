@@ -13,7 +13,7 @@ import RxSwift
 
 //MARK: 로직 수정예정
 class TingViewModel {
-    private let apiKey = Bundle.main.infoDictionary?["KAKAO_SEARCH_API"] as? String
+    private let apiKey = Bundle.main.infoDictionary?["KAKAO_REST_KEY"] as? String
     private let networkManager = NetworkManager.shared
     private let disposeBag = DisposeBag()
     private var currentLocation: CLLocation?
@@ -68,7 +68,10 @@ class TingViewModel {
             URLQueryItem(name: "radius", value: "\(radius)")
         ]
         
-        guard let url = components?.url, let apiKey = apiKey else { return nil }
+        guard let url = components?.url, let apiKey = apiKey else {
+            print("api 키 오류")
+            return nil
+        }
         var request = URLRequest(url: url)
         request.addValue("KakaoAK \(apiKey)", forHTTPHeaderField: "Authorization")
         return request
