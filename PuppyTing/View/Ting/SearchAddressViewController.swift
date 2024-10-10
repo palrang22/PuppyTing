@@ -29,7 +29,7 @@ class SearchAddressViewController: UIViewController {
     
     private let findLabel: UILabel = {
         let label = UILabel()
-        label.text = "2자 이상의 단어로 장소를 찾아보세요!\n예) 스타벅스 당산대로점"
+        label.text = "2자 이상의 단어로 반경 1km 이내의 장소를 찾아보세요!\n예) 스타벅스 당산대로점"
         label.numberOfLines = 0
         label.font = .systemFont(ofSize: 16, weight: .medium)
         label.textAlignment = .center
