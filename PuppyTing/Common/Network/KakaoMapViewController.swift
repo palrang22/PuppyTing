@@ -101,7 +101,7 @@ class KakaoMapViewController: UIViewController, MapControllerDelegate {
         }
         print("Creating label layer")
         let manager = view.getLabelManager()
-        let layerOption = LabelLayerOptions(layerID: "PoiLayer", competitionType: .none, competitionUnit: .symbolFirst, orderType: .rank, zOrder: 100)
+        let layerOption = LabelLayerOptions(layerID: "PoiLayer", competitionType: .none, competitionUnit: .symbolFirst, orderType: .rank, zOrder: 10000)
         _ = manager.addLabelLayer(option: layerOption)
     }
     
@@ -119,7 +119,7 @@ class KakaoMapViewController: UIViewController, MapControllerDelegate {
         }
         
         let iconStyle = PoiIconStyle(symbol: iconImage, anchorPoint: CGPoint(x: 0.0, y: 0.5))
-        let poiStyle = PoiStyle(styleID: "DefaultStyle", styles: [PerLevelPoiStyle(iconStyle: iconStyle, level: 5)])
+        let poiStyle = PoiStyle(styleID: "DefaultStyle", styles: [PerLevelPoiStyle(iconStyle: iconStyle, level: 0)])
         manager.addPoiStyle(poiStyle)
         print("POI style added")
     }
