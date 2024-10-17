@@ -115,6 +115,7 @@
 		56A640772CA17AE100950B0B /* FeedListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedListViewController.swift; sourceTree = "<group>"; };
 		56A6407B2CA17BCB00950B0B /* FeedTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedTableViewCell.swift; sourceTree = "<group>"; };
 		56A6407F2CA17ECE00950B0B /* FeedListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedListViewModel.swift; sourceTree = "<group>"; };
+		56BC8D3D2CC11E6C00CB1B82 /* AppStoreCheck.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppStoreCheck.swift; sourceTree = "<group>"; };
 		56D686C42C7DA88500B00880 /* SignupViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignupViewController.swift; sourceTree = "<group>"; };
 		56D686C72C7DB09600B00880 /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 		56D686CB2C7DC88600B00880 /* PptLoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PptLoginViewController.swift; sourceTree = "<group>"; };
@@ -476,7 +477,7 @@
 		E738FB932C7C6496004696BD /* App */ = {
 			isa = PBXGroup;
 			children = (
-				56BC8D3B2CBF9F9600CB1B82 /* AppStoreCheck.swift */,
+				56BC8D3D2CC11E6C00CB1B82 /* AppStoreCheck.swift */,
 				E738FB762C7C62EE004696BD /* AppDelegate.swift */,
 				E738FB782C7C62EE004696BD /* SceneDelegate.swift */,
 				A2F9FE762C8DF3CB004D7FF6 /* Config.xcconfig */,
@@ -671,7 +672,6 @@
 				A2F9FE592C8C2193004D7FF6 /* MyInfoEditVIewModel.swift in Sources */,
 				23607C022C8A930100A23716 /* UIButton.swift in Sources */,
 				A2085DC82C7EB4BA00698923 /* ChatTableViewCell.swift in Sources */,
-				56BC8D3C2CBF9F9600CB1B82 /* AppStoreCheck.swift in Sources */,
 				E738FBAD2C7C6D2E004696BD /* TabBarController.swift in Sources */,
 				C29FD01B2C9BFE5F00F8951D /* MyBlockListTableViewCell.swift in Sources */,
 				E7F598322C8475CC00FE8900 /* NetworkManager.swift in Sources */,
