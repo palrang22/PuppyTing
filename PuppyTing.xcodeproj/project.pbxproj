@@ -14,6 +14,7 @@
 		5602B0712C8AF4EF0060F03B /* PuppyHeaderCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5602B0702C8AF4EF0060F03B /* PuppyHeaderCell.swift */; };
 		5602B0862C8E0C6F0060F03B /* ProfileViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5602B0852C8E0C6F0060F03B /* ProfileViewModel.swift */; };
 		5602B0882C8E10D50060F03B /* Config.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 5602B0872C8E10D50060F03B /* Config.xcconfig */; };
+		56BC8D3C2CBF9F9600CB1B82 /* AppStoreCheck.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56BC8D3B2CBF9F9600CB1B82 /* AppStoreCheck.swift */; };
 		56D686C52C7DA88500B00880 /* SignupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56D686C42C7DA88500B00880 /* SignupViewController.swift */; };
 		56D686C82C7DB09600B00880 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56D686C72C7DB09600B00880 /* LoginViewController.swift */; };
 		56D686CC2C7DC88700B00880 /* PptLoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56D686CB2C7DC88600B00880 /* PptLoginViewController.swift */; };
@@ -95,6 +96,7 @@
 		5602B0702C8AF4EF0060F03B /* PuppyHeaderCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PuppyHeaderCell.swift; sourceTree = "<group>"; };
 		5602B0852C8E0C6F0060F03B /* ProfileViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewModel.swift; sourceTree = "<group>"; };
 		5602B0872C8E10D50060F03B /* Config.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Config.xcconfig; sourceTree = "<group>"; };
+		56BC8D3B2CBF9F9600CB1B82 /* AppStoreCheck.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppStoreCheck.swift; sourceTree = "<group>"; };
 		56D686C42C7DA88500B00880 /* SignupViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignupViewController.swift; sourceTree = "<group>"; };
 		56D686C72C7DB09600B00880 /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 		56D686CB2C7DC88600B00880 /* PptLoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PptLoginViewController.swift; sourceTree = "<group>"; };
@@ -377,6 +379,7 @@
 		E738FB932C7C6496004696BD /* App */ = {
 			isa = PBXGroup;
 			children = (
+				56BC8D3B2CBF9F9600CB1B82 /* AppStoreCheck.swift */,
 				E738FB762C7C62EE004696BD /* AppDelegate.swift */,
 				E738FB782C7C62EE004696BD /* SceneDelegate.swift */,
 				5602B0872C8E10D50060F03B /* Config.xcconfig */,
@@ -562,6 +565,7 @@
 				A2F9FE592C8C2193004D7FF6 /* MyInfoEditVIewModel.swift in Sources */,
 				23607C022C8A930100A23716 /* UIButton.swift in Sources */,
 				A2085DC82C7EB4BA00698923 /* ChatTableViewCell.swift in Sources */,
+				56BC8D3C2CBF9F9600CB1B82 /* AppStoreCheck.swift in Sources */,
 				E738FBAD2C7C6D2E004696BD /* TabBarController.swift in Sources */,
 				E7F598322C8475CC00FE8900 /* NetworkManager.swift in Sources */,
 				A2085DC62C7EB37400698923 /* ChatListViewController.swift in Sources */,
@@ -616,7 +620,6 @@
 /* Begin XCBuildConfiguration section */
 		E738FB852C7C62F0004696BD /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 5602B0872C8E10D50060F03B /* Config.xcconfig */;
 			baseConfigurationReference = A2F9FE762C8DF3CB004D7FF6 /* Config.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -681,7 +684,6 @@
 		};
 		E738FB862C7C62F0004696BD /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 5602B0872C8E10D50060F03B /* Config.xcconfig */;
 			baseConfigurationReference = A2F9FE762C8DF3CB004D7FF6 /* Config.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -745,7 +747,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 4AW33HG75T;
+				DEVELOPMENT_TEAM = SS444RV4LU;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = PuppyTing/Info.plist;
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "현재 위치를 기반으로 근처 만남의 장소를 검색하기 위해 위치 정보가 필요합니다.";
@@ -759,7 +761,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.0.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.sh.PuppyTing;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -777,7 +779,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 4AW33HG75T;
+				DEVELOPMENT_TEAM = SS444RV4LU;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = PuppyTing/Info.plist;
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "현재 위치를 기반으로 근처 만남의 장소를 검색하기 위해 위치 정보가 필요합니다.";
@@ -791,7 +793,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.0.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.sh.PuppyTing;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
