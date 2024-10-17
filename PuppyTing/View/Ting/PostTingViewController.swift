@@ -41,7 +41,7 @@ class PostTingViewController: UIViewController {
     
     private lazy var textView: UITextView = {
         let textView = UITextView()
-        textView.text = "언제, 어디서 산책하실 건가요? 산책 일정을 공유하는 퍼피팅 친구를 만나보세요!"
+        textView.text = "언제, 어디서 산책하실 건가요? 산책 일정을 공유하는 퍼피팅 친구를 만나보세요!\n\n부적절하거나 불쾌감을 줄 수 있는 컨텐츠 작성 시 이용이 제한될 수 있습니다."
         textView.textColor = .gray
         textView.font = .systemFont(ofSize: 16, weight: .medium)
         textView.delegate = self
@@ -79,7 +79,7 @@ class PostTingViewController: UIViewController {
             return
         }
         
-        if textView.text.isEmpty || textView.text == "언제, 어디서 산책하실 건가요? 산책 일정을 공유하는 퍼피팅 친구를 만나보세요!" {
+        if textView.text.isEmpty || textView.text == "언제, 어디서 산책하실 건가요? 산책 일정을 공유하는 퍼피팅 친구를 만나보세요!\n\n부적절하거나 불쾌감을 줄 수 있는 컨텐츠 작성 시 이용이 제한될 수 있습니다." {
             let alert = UIAlertController(title: "경고", message: "내용을 작성해주세요!", preferredStyle: .alert)
             alert.addAction(UIAlertAction(title: "확인", style: .default))
             present(alert, animated: true)
@@ -187,13 +187,16 @@ class PostTingViewController: UIViewController {
 
 extension PostTingViewController: UITextViewDelegate {
     func textViewDidBeginEditing(_ textView: UITextView) {
-        textView.text = nil
-        textView.textColor = .gray
+        if textView.textColor == .gray {
+            textView.text = nil
+            textView.textColor = .black
+            
+        }
     }
     
     func textViewDidEndEditing(_ textView: UITextView) {
         if textView.text.isEmpty {
-            textView.text = "언제, 어디서 산책하실 건가요? 산책 일정을 공유하는 퍼피팅 친구를 만나보세요!"
+            textView.text = "언제, 어디서 산책하실 건가요? 산책 일정을 공유하는 퍼피팅 친구를 만나보세요!\n\n부적절하거나 불쾌감을 줄 수 있는 컨텐츠 작성 시 이용이 제한될 수 있습니다."
             textView.textColor = .gray
         }
     }

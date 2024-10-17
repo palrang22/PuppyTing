@@ -106,18 +106,9 @@ class ChattingTableViewCell: UITableViewCell {
     }
     
     func config(image: String, message: String, time: String, nickname: String) {
-        fetchImage(image: image)
         messageBox.text = message
         date.text = time
         name.text = nickname
+        KingFisherManager.shared.loadProfileImage(urlString: image, into: profileImage)
     }
-    
-    private func fetchImage(image: String) {
-        NetworkManager.shared.fetchImage(url: image) { image in
-            DispatchQueue.main.async {
-                self.profileImage.image = image
-            }
-        }
-    }
-
 }

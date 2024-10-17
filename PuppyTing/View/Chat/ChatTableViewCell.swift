@@ -30,7 +30,7 @@ class ChatTableViewCell: UITableViewCell {
         let label = UILabel()
         label.text = "채팅방 이름"
         label.textColor = .black
-        label.font = UIFont.systemFont(ofSize: 20, weight: .bold)
+        label.font = UIFont.systemFont(ofSize: 18, weight: .bold)
         return label
     }()
     
@@ -41,6 +41,13 @@ class ChatTableViewCell: UITableViewCell {
         label.textColor = .black
         label.font = UIFont.systemFont(ofSize: 14, weight: .medium)
         return label
+    }()
+    
+    private let messageStack: UIStackView = {
+        let stack = UIStackView()
+        stack.axis = .vertical
+        stack.spacing = 10
+        return stack
     }()
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -54,7 +61,11 @@ class ChatTableViewCell: UITableViewCell {
     }
     
     private func setupUI() {
-        [outerStackView, chatRoomLabel, chatingLogLabel].forEach {
+        [chatRoomLabel, chatingLogLabel].forEach {
+            messageStack.addArrangedSubview($0)
+        }
+        
+        [outerStackView, messageStack].forEach {
             contentView.addSubview($0)
         }
         
@@ -65,14 +76,10 @@ class ChatTableViewCell: UITableViewCell {
             $0.leading.equalToSuperview().offset(10)
         }
         
-        chatRoomLabel.snp.makeConstraints {
-            $0.top.equalToSuperview().offset(20)
-            $0.leading.equalTo(outerStackView.snp.trailing).offset(10)
-        }
-        
-        chatingLogLabel.snp.makeConstraints {
-            $0.top.equalTo(chatRoomLabel.snp.bottom).offset(10)
-            $0.leading.equalTo(outerStackView.snp.trailing).offset(10)
+        messageStack.snp.makeConstraints {
+            $0.centerY.equalTo(outerStackView)
+            $0.leading.equalTo(outerStackView.snp.trailing).offset(20)
+            $0.trailing.equalToSuperview().offset(20)
         }
         
     }
@@ -84,108 +91,17 @@ class ChatTableViewCell: UITableViewCell {
         fetchImage(image: image)
     }
     
-    func configure(with images: [UIImage], title: String, content: String) {
-        // 이미지 컨테이너 초기화
-        outerStackView.arrangedSubviews.forEach { $0.removeFromSuperview() }
-        
-        chatRoomLabel.text = title
-        chatingLogLabel.text = content
-        
-        switch images.count {
-        case 1:
-            let imageView = createImageView(with: images[0])
-            outerStackView.addArrangedSubview(imageView)
-            
-        case 2:
-            // 이미지가 2개일 때 대각선 배치
-            let imageView1 = createImageView(with: images[0])
-            let imageView2 = createImageView(with: images[1])
-            
-            let topStackView = UIStackView(arrangedSubviews: [imageView1, UIView()])
-            topStackView.axis = .horizontal
-            topStackView.alignment = .center
-            topStackView.distribution = .fillEqually
-            topStackView.spacing = 2
-            
-            let bottomStackView = UIStackView(arrangedSubviews: [UIView(), imageView2])
-            bottomStackView.axis = .horizontal
-            bottomStackView.alignment = .center
-            bottomStackView.distribution = .fillEqually
-            bottomStackView.spacing = 2
-            
-            outerStackView.addArrangedSubview(topStackView)
-            outerStackView.addArrangedSubview(bottomStackView)
-            
-        case 3:
-            // 이미지가 3개일 때 중앙에 하나, 아래에 두 개 배치
-            let imageView1 = createImageView(with: images[0])
-            let imageView2 = createImageView(with: images[1])
-            let imageView3 = createImageView(with: images[2])
-            
-            let topStackView = UIStackView(arrangedSubviews: [UIView(), imageView1, UIView()])
-            topStackView.axis = .horizontal
-            topStackView.alignment = .center
-            topStackView.distribution = .equalSpacing
-            
-            let bottomStackView = UIStackView(arrangedSubviews: [imageView2, imageView3])
-            bottomStackView.axis = .horizontal
-            bottomStackView.alignment = .center
-            bottomStackView.distribution = .fillEqually
-            bottomStackView.spacing = 2
-            
-            outerStackView.addArrangedSubview(topStackView)
-            outerStackView.addArrangedSubview(bottomStackView)
-            
-        default:
-            // 이미지가 4개 이상일 때 2x2 그리드 배치
-            let imageView1 = createImageView(with: images[0])
-            let imageView2 = createImageView(with: images[1])
-            let imageView3 = createImageView(with: images[2])
-            let imageView4 = createImageView(with: images[3])
-            
-            let topStackView = UIStackView(arrangedSubviews: [imageView1, imageView2])
-            topStackView.axis = .horizontal
-            topStackView.alignment = .center
-            topStackView.distribution = .fillEqually
-            topStackView.spacing = 2
-            
-            let bottomStackView = UIStackView(arrangedSubviews: [imageView3, imageView4])
-            bottomStackView.axis = .horizontal
-            bottomStackView.alignment = .center
-            bottomStackView.distribution = .fillEqually
-            bottomStackView.spacing = 2
-            
-            outerStackView.addArrangedSubview(topStackView)
-            outerStackView.addArrangedSubview(bottomStackView)
-        }
-    }
-    
     private func fetchImage(image: String) {
+        outerStackView.arrangedSubviews.forEach { $0.removeFromSuperview() }
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFill
         imageView.clipsToBounds = true
-        imageView.layer.cornerRadius = 8 // 각진 모서리
+        imageView.layer.cornerRadius = 30 // 각진 모서리
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.heightAnchor.constraint(equalToConstant: 28).isActive = true
         imageView.widthAnchor.constraint(equalToConstant: 28).isActive = true
-        NetworkManager.shared.fetchImage(url: image) { image in
-            DispatchQueue.main.async {
-                imageView.image = image
-                self.outerStackView.addArrangedSubview(imageView)
-            }
-        }
+        KingFisherManager.shared.loadProfileImage(urlString: image, into: imageView)
+        outerStackView.addArrangedSubview(imageView)
     }
-    
-    private func createImageView(with image: UIImage) -> UIImageView {
-        let imageView = UIImageView(image: image)
-        imageView.contentMode = .scaleAspectFill
-        imageView.clipsToBounds = true
-        imageView.layer.cornerRadius = 8 // 각진 모서리
-        imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.heightAnchor.constraint(equalToConstant: 28).isActive = true
-        imageView.widthAnchor.constraint(equalToConstant: 28).isActive = true
-        return imageView
-    }
-    
     
 }

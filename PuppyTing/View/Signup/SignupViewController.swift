@@ -20,13 +20,31 @@ class SignupViewController: UIViewController {
     let pwRegex = "^(?=.*[A-Za-z])(?=.*[0-9])(?=.*[!@#$%^&*()_+=-]).{8,50}" // 8자리 ~ 50자리 영어+숫자+특수문자
     
     let signUpViewModel = SignUpViewModel()
+    
+    private let scrollView: UIScrollView = {
+        let scroll = UIScrollView()
+        scroll.showsVerticalScrollIndicator = false
+        return scroll
+    }()
+    
+    private let contentView: UIView = {
+        let view = UIView()
+        return view
+    }()
 
+    // 버튼 이미지로 변경 - jgh
     let cancleButton: UIButton = {
         let button = UIButton(type: .system)
-        button.setTitle("✕", for: .normal)
-        button.titleLabel?.font = .systemFont(ofSize: 20)
-        button.setTitleColor(.black, for: .normal)
+        button.setImage(UIImage(named: "closeButton")?.withRenderingMode(.alwaysOriginal), for: .normal)
         return button
+    }()
+    
+    // 회원가입 타이틀 - jgh
+    let signTitle: UILabel = {
+        let label = UILabel()
+        label.text = "회원가입"
+        label.font = UIFont.boldSystemFont(ofSize: 25)
+        return label
     }()
     
     let emailLabel: UILabel = {
@@ -50,6 +68,7 @@ class SignupViewController: UIViewController {
         textField.layer.borderColor = UIColor.darkGray.cgColor
         textField.layer.borderWidth = 1.0
         textField.layer.cornerRadius = 5
+        textField.placeholder = "example@mail.com"
         return textField
     }()
     
@@ -75,6 +94,7 @@ class SignupViewController: UIViewController {
         textField.layer.borderWidth = 1.0
         textField.layer.cornerRadius = 5
         textField.isSecureTextEntry = true // 비밀번호 입력 숨기기
+        textField.placeholder = "examplepw1@"
         return textField
     }()
     
@@ -138,6 +158,7 @@ class SignupViewController: UIViewController {
         textField.layer.borderWidth = 1.0
         textField.layer.cornerRadius = 5
         textField.isSecureTextEntry = true // 비밀번호 입력 숨기기
+        textField.placeholder = "examplepw1@"
         return textField
     }()
     
@@ -213,21 +234,40 @@ class SignupViewController: UIViewController {
         
         // 키보드 포커싱 해제 메서드 호출
         setupKeyboardDismissRecognizer()
+        
+        // 키보드 높이 조절 메서드 호출
+        setupKeyboardObservers()
     }
     
     private func configureUI() {
-        [cancleButton, emailLabel, emailCheck, emailTextField, pwLabel, pwCheck, pwTextField, guideLine, eTrueLable, eFalseLable, pTrueLable, pFalseLable, confirmLabel, confirmCheck, confirmPwTextField, cTrueLable, cFalseLable, nickLabel, nickCheck, nickTextField, nTrueLable, nFalseLable, signUpButton].forEach {
-            view.addSubview($0)
+        view.addSubview(scrollView)
+        scrollView.addSubview(contentView)
+        
+        scrollView.snp.makeConstraints {
+            $0.edges.equalTo(view.safeAreaLayoutGuide)
+        }
+        contentView.snp.makeConstraints {
+            $0.edges.equalToSuperview()
+            $0.width.equalToSuperview()
+        }
+        
+        [cancleButton, signTitle, emailLabel, emailCheck, emailTextField, pwLabel, pwCheck, pwTextField, guideLine, eTrueLable, eFalseLable, pTrueLable, pFalseLable, confirmLabel, confirmCheck, confirmPwTextField, cTrueLable, cFalseLable, nickLabel, nickCheck, nickTextField, nTrueLable, nFalseLable, signUpButton].forEach {
+            contentView.addSubview($0)
         }
         
         cancleButton.snp.makeConstraints {
-            $0.top.equalTo(view.safeAreaLayoutGuide)
-            $0.leading.equalTo(view.safeAreaLayoutGuide).offset(10)
+            $0.top.equalToSuperview()
+            $0.leading.equalToSuperview().offset(10)
             $0.height.width.equalTo(44)
         }
         
+        signTitle.snp.makeConstraints {
+            $0.top.equalTo(cancleButton.snp.bottom).offset(10)
+            $0.leading.equalTo(emailLabel.snp.leading)
+        }
+        
         emailLabel.snp.makeConstraints {
-            $0.bottom.equalTo(emailTextField.snp.top).offset(-7)
+            $0.top.equalTo(signTitle.snp.bottom).offset(40)
             $0.leading.equalTo(emailTextField.snp.leading)
         }
         
@@ -237,15 +277,15 @@ class SignupViewController: UIViewController {
         }
         
         emailTextField.snp.makeConstraints {
-            $0.bottom.equalTo(pwTextField.snp.top).offset(-60)
-            $0.leading.equalTo(view.safeAreaLayoutGuide).offset(20)
-            $0.trailing.equalTo(view.safeAreaLayoutGuide).offset(-20)
+            $0.top.equalTo(emailLabel.snp.bottom).offset(5)
+            $0.leading.equalToSuperview().offset(20)
+            $0.trailing.equalToSuperview().offset(-20)
             $0.height.equalTo(40)
         }
         
         pwLabel.snp.makeConstraints {
-            $0.bottom.equalTo(pwTextField.snp.top).offset(-7)
-            $0.leading.equalTo(pwTextField)
+            $0.top.equalTo(emailTextField.snp.bottom).offset(20)
+            $0.leading.equalTo(emailTextField.snp.leading)
         }
         
         pwCheck.snp.makeConstraints {
@@ -254,11 +294,10 @@ class SignupViewController: UIViewController {
         }
         
         pwTextField.snp.makeConstraints {
-            $0.bottom.equalTo(confirmPwTextField.snp.top).offset(-90)
+            $0.top.equalTo(pwLabel.snp.bottom).offset(5)
             $0.leading.equalTo(emailTextField.snp.leading)
-            $0.height.equalTo(40)
-            $0.centerX.equalToSuperview()
             $0.trailing.equalTo(emailTextField.snp.trailing)
+            $0.height.equalTo(40)
         }
         
         guideLine.snp.makeConstraints {
@@ -291,8 +330,8 @@ class SignupViewController: UIViewController {
         }
         
         confirmLabel.snp.makeConstraints {
-            $0.bottom.equalTo(confirmPwTextField.snp.top).offset(-7)
-            $0.leading.equalTo(pwTextField)
+            $0.top.equalTo(guideLine.snp.bottom).offset(20)
+             $0.leading.equalTo(pwTextField.snp.leading)
         }
         
         confirmCheck.snp.makeConstraints {
@@ -301,11 +340,10 @@ class SignupViewController: UIViewController {
         }
         
         confirmPwTextField.snp.makeConstraints {
-            $0.bottom.equalTo(nickTextField.snp.top).offset(-60)
+            $0.top.equalTo(confirmLabel.snp.bottom).offset(5)
             $0.leading.equalTo(emailTextField.snp.leading)
-            $0.height.equalTo(40)
-            $0.centerX.equalToSuperview()
             $0.trailing.equalTo(emailTextField.snp.trailing)
+            $0.height.equalTo(40)
         }
         
         cTrueLable.snp.makeConstraints {
@@ -321,8 +359,8 @@ class SignupViewController: UIViewController {
         }
         
         nickLabel.snp.makeConstraints {
-            $0.bottom.equalTo(nickTextField.snp.top).offset(-7)
-            $0.leading.equalTo(pwTextField)
+            $0.top.equalTo(confirmPwTextField.snp.bottom).offset(20)
+            $0.leading.equalTo(pwTextField.snp.leading)
         }
         
         nickCheck.snp.makeConstraints {
@@ -331,11 +369,10 @@ class SignupViewController: UIViewController {
         }
         
         nickTextField.snp.makeConstraints {
-            $0.bottom.equalTo(signUpButton.snp.top).offset(-70)
+            $0.top.equalTo(nickLabel.snp.bottom).offset(5)
             $0.leading.equalTo(emailTextField.snp.leading)
-            $0.height.equalTo(40)
-            $0.centerX.equalToSuperview()
             $0.trailing.equalTo(emailTextField.snp.trailing)
+            $0.height.equalTo(40)
         }
         
         nTrueLable.snp.makeConstraints {
@@ -351,10 +388,10 @@ class SignupViewController: UIViewController {
         }
         
         signUpButton.snp.makeConstraints {
-            $0.bottom.equalTo(view.safeAreaLayoutGuide).offset(-130)
-            $0.centerX.equalTo(view.safeAreaLayoutGuide)
-            $0.leading.equalTo(view.safeAreaLayoutGuide).offset(20)
-            $0.trailing.equalTo(view.safeAreaLayoutGuide).offset(-20)
+            $0.top.equalTo(nickTextField.snp.bottom).offset(70)
+            $0.bottom.equalToSuperview().offset(-30)
+            $0.leading.equalToSuperview().offset(20)
+            $0.trailing.equalToSuperview().offset(-20)
             $0.height.equalTo(44)
         }
     }
@@ -480,7 +517,7 @@ class SignupViewController: UIViewController {
     }
     
     private func endSignUp() {
-        okAlert(title: "회원가입 완료", message: "회원가입이 완료되었습니다.\n이메일 인증을 하고 로그인을 진행해주세요!") { [weak self] _ in
+        okAlert(title: SignUpMessage().signUpSuccess, message: SignUpMessage().signUpSuccessMessage) { [weak self] _ in
             self?.dismiss(animated: true)
         }
     }
@@ -489,14 +526,14 @@ class SignupViewController: UIViewController {
         if let error = error as? AuthError {
             switch error {
             case .CreateFailError:
-                okAlert(title: "회원가입 실패", message: "회원가입에 실패했습니다.", okActionTitle: "ok")
+                okAlert(title: SignUpFailMessage().signUpFail, message: SignUpFailMessage().createFailMessage)
             case .SendEmailFailError:
-                okAlert(title: "회원가입 실패", message: "이메일 전송에 실패했습니다.", okActionTitle: "ok")
+                okAlert(title: SignUpFailMessage().signUpFail, message: SignUpFailMessage().sendEmailFailMessage)
             default:
-                okAlert(title: "회원가입 실패", message: "알 수 없는 이유로 회원가입에 실패했습니다.", okActionTitle: "ok")
+                okAlert(title: SignUpFailMessage().signUpFail, message: SignUpFailMessage().otherFailMessage)
             }
         } else {
-            okAlert(title: "회원가입 실패", message: "알 수 없는 이유로 회원가입에 실패했습니다.", okActionTitle: "ok")
+            okAlert(title: SignUpFailMessage().signUpFail, message: SignUpFailMessage().otherFailMessage)
         }
     }
 }

@@ -7,6 +7,10 @@
 
 import UIKit
 
+import FirebaseAuth
+import FirebaseDynamicLinks
+import GoogleSignIn
+
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     
     var window: UIWindow?
@@ -17,6 +21,56 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         self.window = window
         AppController.shared.show(in: window)
     }
+    
+    func scene(_ scene: UIScene, continue userActivity: NSUserActivity) {
+        // NSUserActivity에서 webpageURL을 가져와서 Google Sign-In에 전달
+        if let incomingURL = userActivity.webpageURL {
+            if GIDSignIn.sharedInstance.handle(incomingURL) {
+                return
+            }
+        }
+    }
+
+    
+    // 딥링크 관련 코드 아직 사용 안함
+    // AppDelegate 에서 처리를 할 필요가 없는건가..?
+//    func scene(_ scene: UIScene, continue userActivity: NSUserActivity) {
+//        guard let incomingURL = userActivity.webpageURL else {
+//            return
+//        }
+//        handleDeepLink(deepLinkURL: incomingURL)
+//    }
+
+//   func handleDeepLink(deepLinkURL: URL) {
+//        // Deep Link URL에서 쿼리 파라미터 추출
+//        guard let deepLinkComponents = URLComponents(url: deepLinkURL, resolvingAgainstBaseURL: false),
+//              let deepLinkQueryItems = deepLinkComponents.queryItems else {
+//            print("No query items in deep link URL")
+//            return
+//        }
+//        
+//        // 'oobCode'와 'mode' 파라미터를 추출
+//        if let oobCode = deepLinkQueryItems.first(where: { $0.name == "oobCode" })?.value,
+//           let mode = deepLinkQueryItems.first(where: { $0.name == "mode" })?.value {
+//            
+//            print("Mode: \(mode), oobCode: \(oobCode)") // 추출된 파라미터 출력
+//
+//            // 이메일 인증 처리
+//            if mode == "verifyEmail" {
+//                Auth.auth().applyActionCode(oobCode) { error in
+//                    if let error = error {
+//                        print("Error verifying email: \(error.localizedDescription)")
+//                    } else {
+//                        print("이메일 인증 완료")
+//                        print("Email verified successfully.")
+//                    }
+//                }
+//            }
+//        } else {
+//            print("Required query parameters (oobCode, mode) not found.")
+//        }
+//    }
+
     
     func sceneDidDisconnect(_ scene: UIScene) {
         // Called as the scene is being released by the system.

@@ -71,5 +71,4 @@ class MyChattingTableViewCell: UITableViewCell {
         messageBox.text = message
         date.text = time
     }
-
 }
