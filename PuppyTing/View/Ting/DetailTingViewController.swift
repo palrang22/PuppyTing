@@ -137,6 +137,7 @@ class DetailTingViewController: UIViewController {
         super.viewDidLoad()
         setUI()
         setConstraints()
+        showLoadingIndicator()
         setData()
         bind()
         
@@ -156,7 +157,6 @@ class DetailTingViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         kakaoMapViewController.activateEngine()
-        showLoadingIndicator()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
