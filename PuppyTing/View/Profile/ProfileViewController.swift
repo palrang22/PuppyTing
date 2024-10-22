@@ -146,7 +146,7 @@ class ProfileViewController: UIViewController {
                 let imageName = isBookmarked ? "star.fill" : "star"
                 self.favoriteButton.setImage(UIImage(systemName: imageName), for: .normal)
                 favoriteButton.tintColor = .yellow // 노란색으로 설정
-            }, onError: { error in
+            }, onFailure: { error in
                 print("즐겨찾기 상태 확인 실패: \(error.localizedDescription)")
             })
             .disposed(by: disposeBag)
@@ -193,7 +193,7 @@ class ProfileViewController: UIViewController {
                     self.favoriteButton.setImage(UIImage(systemName: "star"), for: .normal)
                     self.isBookmarked = false
                     self.autoDismissAlertWithTimer(title: "알림", message: "즐겨찾기가 해제되었습니다.", duration: 1.0)
-                }, onError: { error in
+                }, onFailure: { error in
                     print("즐겨찾기 삭제 실패: \(error.localizedDescription)")
                 })
                 .disposed(by: disposeBag)

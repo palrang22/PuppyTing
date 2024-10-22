@@ -66,6 +66,7 @@ class TingViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        showLoadingIndicator()
         refreshFeed()
     }
 
@@ -103,8 +104,9 @@ class TingViewController: UIViewController {
                     self.tingFeedModels.append(contentsOf: newFeeds)
 
                     // 컬렉션뷰 데이터 다시 로드
-                    DispatchQueue.main.async {
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) {
                         self.feedCollectionView.reloadData()
+                        self.hideLoadingIndicator()
                     }
 
                     // 다음 데이터를 더 불러올 수 있는지 여부 확인
