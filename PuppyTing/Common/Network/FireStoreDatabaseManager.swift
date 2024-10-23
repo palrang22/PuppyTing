@@ -424,7 +424,7 @@ class FireStoreDatabaseManager {
         deleteDocument(from: "tingFeeds", documentId: feedId)
             .subscribe(onSuccess: {
                 completion(nil) // 삭제 성공 시 nil 반환
-            }, onError: { error in
+            }, onFailure: { error in
                 completion(error)
             })
             .disposed(by: disposeBag)
