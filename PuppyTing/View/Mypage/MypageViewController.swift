@@ -121,6 +121,7 @@ class MypageViewController: UIViewController {
         pageControl.pageIndicatorTintColor = .lightGray
         pageControl.currentPageIndicatorTintColor = .black
         pageControl.isHidden = true // 초기에는 숨김
+        pageControl.isUserInteractionEnabled = false // kkh - 페이지 인디케이터 터치 비활성화
         return pageControl
     }()
     
