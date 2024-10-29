@@ -67,5 +67,5 @@ Tuist/Dependencies
 
 ### XCConfig ###
 # Xcode configuration files
-# *.xcconfig
+*.xcconfig
 
