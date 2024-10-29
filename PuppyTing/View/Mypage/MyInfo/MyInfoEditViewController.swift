@@ -63,7 +63,6 @@ class MyInfoEditViewController: UIViewController {
         button.layer.masksToBounds = true
         button.layer.borderColor = UIColor.puppyPurple.cgColor
         button.layer.borderWidth = 1
-        button.imageView?.contentMode = .scaleAspectFill
         return button
     }()
     
@@ -225,16 +224,7 @@ class MyInfoEditViewController: UIViewController {
     
     private func updateMember(nickname: String, image: String) {
         guard let member = member else { return }
-        let updateMember = Member(uuid: member.uuid,
-                                  email: member.email,
-                                  password: member.password,
-                                  nickname: nickname, profileImage: image,
-                                  footPrint: member.footPrint,
-                                  isSocial: member.isSocial,
-                                  blockedUsers: member.blockedUsers,
-                                  bookMarkUsers: member.bookMarkUsers,
-                                  puppies: member.puppies
-        )
+        let updateMember = Member(uuid: member.uuid, email: member.email, password: member.password, nickname: nickname, profileImage: image, footPrint: member.footPrint, isSocial: member.isSocial, blockedUsers: member.blockedUsers, bookMarkUsers: member.bookMarkUsers, puppies: member.puppies)
         myInfoEditViewModel.updateMember(member: updateMember)
     }
     
@@ -295,66 +285,49 @@ class MyInfoEditViewController: UIViewController {
     //MARK: bind
     
     private func bindData() {
-        myInfoEditViewModel.updateSubject
-            .observe(on: MainScheduler.instance)
-            .subscribe(onNext: { [weak self] isUpdate in
-                self?.hideLoadingIndicator()
-                if isUpdate {
-                    self?.okAlert(title: "정보 수정", message: "정보 수정이 완료되었습니다.") { _ in
-                        self?.navigationController?.popViewController(animated: true)
-                    }
-                } else {
-                    self?.okAlert(title: "정보 수정", message: "정보 수정에 실패했습니다. 관리자에게 문의하세요.")
+        myInfoEditViewModel.updateSubject.observe(on: MainScheduler.instance).subscribe(onNext: { [weak self] isUpdate in
+            if isUpdate {
+                self?.okAlert(title: "정보 수정", message: "완료", okActionTitle: "ok") { _ in
+                    self?.navigationController?.popViewController(animated: true)
                 }
-            }).disposed(by: disposeBag)
-        
-        myInfoEditViewModel.passwordSubject
-            .observe(on: MainScheduler.instance)
-            .subscribe(onNext: { [weak self] isUpdate in
-                if isUpdate {
-                    self?.updateFireStorePassword()
-                } else {
-                    self?.okAlert(title: "비밀번호 변경 실패", message: "비밀번호 변경에 실패했습니다. 관리자에게 문의하세요.")
-                    self?.passwordTextField.text = ""
-                    self?.passwordCheckTextField.text = ""
+            } else {
+                self?.okAlert(title: "정보 수정", message: "실패")
+            }
+        }).disposed(by: disposeBag)
+        myInfoEditViewModel.passwordSubject.observe(on: MainScheduler.instance).subscribe(onNext: { [weak self] isUpdate in
+            if isUpdate {
+                // 멤버 변경 해야댐
+                self?.updateFireStorePassword()
+            } else {
+                self?.okAlert(title: "비밀번호 변경 실패", message: "몰?루?")
+                self?.passwordTextField.text = ""
+                self?.passwordCheckTextField.text = ""
+            }
+        }).disposed(by: disposeBag)
+        myInfoEditViewModel.fireStorePasswordSubject.observe(on: MainScheduler.instance).subscribe(onNext: { [weak self] isUpdate in
+            if isUpdate {
+                self?.okAlert(title: "비밀번호 변경 완료", message: "비밀번호를 변경했습니다.", okActionTitle: "ok")
+                self?.passwordTextField.text = ""
+                self?.passwordCheckTextField.text = ""
+                if let member = self?.member {
+                    self?.myInfoEditViewModel.findMember(uuid: member.uuid)
                 }
-            }).disposed(by: disposeBag)
-        
-        myInfoEditViewModel.fireStorePasswordSubject
-            .observe(on: MainScheduler.instance)
-            .subscribe(onNext: { [weak self] isUpdate in
-                if isUpdate {
-                    self?.okAlert(title: "비밀번호 변경 완료", message: "비밀번호를 성공적으로 변경했습니다.")
-                    self?.passwordTextField.text = ""
-                    self?.passwordCheckTextField.text = ""
-                    if let member = self?.member {
-                        self?.myInfoEditViewModel.findMember(uuid: member.uuid)
-                    }
-                } else {
-                    self?.okAlert(title: "비밀번호 변경 실패", message: "비밀번호 변경에 실패했습니다. 관리자에게 문의하세요.")
-                    self?.passwordTextField.text = ""
-                    self?.passwordCheckTextField.text = ""
-                }
-            }).disposed(by: disposeBag)
-        
-        myInfoEditViewModel.memberSubject
-            .observe(on: MainScheduler.instance)
-            .subscribe(onNext: { [weak self] member in
-                self?.member = member
-            }).disposed(by: disposeBag)
-        
-        myInfoEditViewModel.imageSubject
-            .observe(on: MainScheduler.instance)
-            .subscribe(onNext: { [weak self] imageUrl in
-                guard let nickname = self?.nickNameTextField.text else { return }
-                self?.updateMember(nickname: nickname, image: imageUrl)
-            }).disposed(by: disposeBag)
-        
-        myInfoEditViewModel.realImageSubject
-            .observe(on: MainScheduler.instance)
-            .subscribe(onNext: { [weak self] image in
-                self?.realImage = image
-            }).disposed(by: disposeBag)
+            } else {
+                self?.okAlert(title: "비밀번호 변경 실패", message: "몰?루?")
+                self?.passwordTextField.text = ""
+                self?.passwordCheckTextField.text = ""
+            }
+        }).disposed(by: disposeBag)
+        myInfoEditViewModel.memberSubject.observe(on: MainScheduler.instance).subscribe(onNext: { [weak self] member in
+            self?.member = member
+        }).disposed(by: disposeBag)
+        myInfoEditViewModel.imageSubject.observe(on: MainScheduler.instance).subscribe(onNext: { [weak self] imageUrl in
+            guard let nickname = self?.nickNameTextField.text else { return }
+            self?.updateMember(nickname: nickname, image: imageUrl)
+        }).disposed(by: disposeBag)
+        myInfoEditViewModel.realImageSubject.observe(on: MainScheduler.instance).subscribe(onNext: { [weak self] image in
+            self?.realImage = image
+        }).disposed(by: disposeBag)
     }
     
     //MARK: 버튼 클릭 메서드 모음
@@ -375,9 +348,7 @@ class MyInfoEditViewController: UIViewController {
     }
     
     @objc private func handleEditButtonTapped() {
-        showLoadingIndicatorWithoutBackground()
         let updatedNickname = nickNameTextField.text ?? ""
-        
         if let image = realImage {
             print("이미지 업로드 시작")
             myInfoEditViewModel.updateImage(image: image)  // 이미지 업로드 호출
@@ -385,6 +356,7 @@ class MyInfoEditViewController: UIViewController {
             print("realImage가 nil임")
             updateMemberProfile(nickname: updatedNickname, imageUrl: "defaultProfileImage")
         }
+        print("updatesubject.onnext 호출됨")
         updateSubject.onNext(true)
     }
     

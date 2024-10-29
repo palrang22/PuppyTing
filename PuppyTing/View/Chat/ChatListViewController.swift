@@ -28,8 +28,8 @@ class ChatListViewController: UIViewController, UITableViewDelegate, UISearchBar
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         setupUI()
-        showLoadingIndicator()
         bindTableView()
         bindData()
         
@@ -93,10 +93,6 @@ class ChatListViewController: UIViewController, UITableViewDelegate, UISearchBar
                 }
             }
             .disposed(by: disposeBag)
-        
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-            self.hideLoadingIndicator()
-        }
         
         tableView.rx.setDelegate(self)
             .disposed(by: disposeBag)
