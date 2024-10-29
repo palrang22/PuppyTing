@@ -1,0 +1,12 @@
+//
+//  Config.xcconfig
+//  PuppyTing
+//
+//  Created by 김승희 on 9/1/24.
+//
+
+// Configuration settings file format documentation can be found at:
+// https://help.apple.com/xcode/#/dev745c5c974
+
+KAKAO_SEARCH_API = e2720e6e3a7481084c964c6c1e7fa6d0
+KAKAO_APP_API = 2be397d1ad8fcbf7a9d93e68c3f268b1
