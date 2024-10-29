@@ -20,12 +20,19 @@ import RxSwift
 class AppDelegate: UIResponder, UIApplicationDelegate {
     
     private var disposeBag = DisposeBag()
+    private let apiKey = Bundle.main.infoDictionary?["KAKAO_APP_KEY"] as? String
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        //kakao
-        SDKInitializer.InitSDK(appKey: "2be397d1ad8fcbf7a9d93e68c3f268b1")
         
+        //firebase
         FirebaseApp.configure()
+        
+        //kakao
+        guard let apiKey = apiKey else {
+            print("api key 오류")
+            return false
+        }
+        SDKInitializer.InitSDK(appKey: apiKey)
         
 //        //알림 메서드 - ksh
 //        UNUserNotificationCenter.current().delegate = self

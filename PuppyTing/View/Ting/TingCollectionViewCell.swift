@@ -145,16 +145,15 @@ class TingCollectionViewCell: UICollectionViewCell {
         
         FireStoreDatabaseManager.shared.findMemeber(uuid: model.userid)
             .subscribe(onSuccess: { [weak self] member in
+                guard let self else { return }
                 
-                self?.nameLabel.text = member.nickname
-                self?.footPrintLabel.text = "발도장 \(member.footPrint)개 🐾"
+                self.nameLabel.text = member.nickname
+                self.footPrintLabel.text = "발도장 \(member.footPrint)개 🐾"
                 
                 if member.profileImage == "defaultProfileImage" {
-                            self?.profilePic.image = UIImage(named: "defaultProfileImage")
+                            self.profilePic.image = UIImage(named: "defaultProfileImage")
                 } else {
-                    if let profilePic = self?.profilePic {
-                        KingFisherManager.shared.loadProfileImage(urlString: member.profileImage, into: profilePic, placeholder: UIImage(named: "defaultProfileImage"))
-                    }
+                    KingFisherManager.shared.loadProfileImage(urlString: member.profileImage, into: profilePic, placeholder: UIImage(named: "defaultProfileImage"))
                 }
             }, onFailure: { error in
                 print("멤버 찾기 실패: \(error)")

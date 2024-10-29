@@ -34,50 +34,52 @@ class PuppyRegistrationViewController: UIViewController {
         button.layer.masksToBounds = true
         button.layer.borderColor = UIColor.puppyPurple.cgColor
         button.layer.borderWidth = 1
+        button.imageView?.contentMode = .scaleAspectFill
         return button
     }()
     
     private let nameLabel: UILabel = {
         let label = UILabel()
-        label.text = "이름"
+        label.text = "강아지 이름을 입력해주세요."
         label.font = UIFont.systemFont(ofSize: 16)
-        label.textColor = .black
+        label.textColor = .darkGray
         return label
     }()
     
     private let nameTextField: UITextField = {
         let textField = UITextField()
-        textField.placeholder = "강아지 이름"
+        textField.placeholder = "ex) 퍼피"
         textField.borderStyle = .roundedRect
         return textField
     }()
     
     private let ageLabel: UILabel = {
         let label = UILabel()
-        label.text = "나이"
+        label.text = "강아지 나이를 정수로 입력해주세요."
         label.font = UIFont.systemFont(ofSize: 16)
-        label.textColor = .black
+        label.textColor = .darkGray
         return label
     }()
     
     private let ageTextField: UITextField = {
         let textField = UITextField()
-        textField.placeholder = "강아지 나이를 정수로 입력해주세요."
+        textField.placeholder = "ex) 4"
         textField.borderStyle = .roundedRect
         return textField
     }()
     
     private let tagLabel: UILabel = {
         let label = UILabel()
-        label.text = "태그"
+        label.numberOfLines = 0
+        label.text = "강아지 특징을 추가해보세요.\n(스페이스바 또는 쉼표로 구분)"
         label.font = UIFont.systemFont(ofSize: 16)
-        label.textColor = .black
+        label.textColor = .darkGray
         return label
     }()
     
     private let tagTextField: UITextField = {
         let textField = UITextField()
-        textField.placeholder = "스페이스바 또는 쉼표로 구분하여 태그를 추가해보세요!"
+        textField.placeholder = "ex) 귀여움, 소심함, 활기참"
         textField.borderStyle = .roundedRect
         return textField
     }()
@@ -120,7 +122,7 @@ class PuppyRegistrationViewController: UIViewController {
         view.backgroundColor = .white
         setupKeyboardObservers()
         setupKeyboardDismissRecognizer()
-        setupUI()
+        setupConstraints()
         configureNavigationBar()
         setupBindings()
         bind()
@@ -131,94 +133,7 @@ class PuppyRegistrationViewController: UIViewController {
         removeKeyboardObservers()
     }
 
-    // MARK: - Setup UI
-
-    private func setupUI() {
-        view.addSubview(scrollView)
-        scrollView.addSubview(contentView)
-        
-        scrollView.snp.makeConstraints {
-            $0.edges.equalTo(view.safeAreaLayoutGuide)
-        }
-        
-        contentView.snp.makeConstraints {
-            $0.edges.equalToSuperview()
-            $0.width.equalToSuperview()
-        }
-        
-        // views 배열에 있는 모든 요소를 contentView에 추가
-        let views = [/*puppyImageView, */puppyImageChangeButton, nameLabel, nameTextField, ageLabel, ageTextField, tagLabel, tagTextField, tagScrollView, separationButton]
-        views.forEach { contentView.addSubview($0) }
-        
-        tagScrollView.addSubview(tagStack)
-        
-        puppyImageChangeButton.snp.makeConstraints {
-            $0.top.equalToSuperview().offset(40)
-            $0.centerX.equalToSuperview()
-            $0.width.height.equalTo(150)
-        }
-        
-        nameLabel.snp.makeConstraints {
-            $0.top.equalTo(puppyImageChangeButton.snp.bottom).offset(30)
-            $0.left.equalToSuperview().offset(20)
-            $0.right.equalToSuperview().offset(-20)
-            $0.height.equalTo(40)
-        }
-        
-        nameTextField.snp.makeConstraints {
-            $0.top.equalTo(nameLabel.snp.bottom).offset(5)
-            $0.left.equalToSuperview().offset(20)
-            $0.right.equalToSuperview().offset(-20)
-            $0.height.equalTo(40)
-        }
-        
-        ageLabel.snp.makeConstraints {
-            $0.top.equalTo(nameTextField.snp.bottom).offset(30)
-            $0.left.equalToSuperview().offset(20)
-            $0.right.equalToSuperview().offset(-20)
-            $0.height.equalTo(40)
-        }
-        
-        ageTextField.snp.makeConstraints {
-            $0.top.equalTo(ageLabel.snp.bottom).offset(5)
-            $0.left.right.height.equalTo(nameTextField)
-        }
-        
-        tagLabel.snp.makeConstraints {
-            $0.top.equalTo(ageTextField.snp.bottom).offset(30)
-            $0.left.equalToSuperview().offset(20)
-            $0.right.equalToSuperview().offset(-20)
-            $0.height.equalTo(40)
-        }
-        
-        tagStack.snp.makeConstraints {
-            $0.edges.equalToSuperview()
-            $0.height.equalToSuperview()
-        }
-        
-        tagScrollView.snp.makeConstraints {
-            $0.top.equalTo(tagLabel.snp.bottom).offset(10)
-            $0.leading.equalToSuperview().offset(20)
-            $0.trailing.equalToSuperview().offset(-20)
-            $0.height.equalTo(50)
-        }
-        
-        tagTextField.snp.makeConstraints {
-            $0.top.equalTo(tagScrollView.snp.bottom).offset(5)
-            $0.left.right.height.equalTo(ageTextField)
-        }
-
-        separationButton.snp.makeConstraints {
-            $0.top.equalTo(tagTextField.snp.bottom).offset(20)
-            $0.centerX.equalToSuperview()
-            $0.bottom.equalToSuperview().offset(-20) // 마지막 요소를 기준으로 contentView의 높이 설정
-            $0.height.equalTo(44)
-        }
-        
-//         수정 모드에서만 이별하기 버튼 보이도록 설정
-        separationButton.isHidden = !isEditMode
-    }
-
+    //MARK: 메서드
     
     private func findUserId() -> String {
         guard let user = Auth.auth().currentUser else { return "" }
@@ -243,7 +158,7 @@ class PuppyRegistrationViewController: UIViewController {
 
     private func configureNavigationBar() {
         // 네비게이션 바의 오른쪽 버튼을 등록 또는 수정으로 설정
-        let rightBarButtonTitle = isEditMode ? "수정 완료" : "등록"
+        let rightBarButtonTitle = isEditMode ? "수정" : "등록"
         let rightBarButton = UIBarButtonItem(title: rightBarButtonTitle, style: .plain, target: self, action: isEditMode ? #selector(handleEditButtonTapped) : #selector(handleSubmitButtonTapped))
         
         navigationItem.rightBarButtonItem = rightBarButton
@@ -340,31 +255,41 @@ class PuppyRegistrationViewController: UIViewController {
             return
         }
         
+        showLoadingIndicatorWithoutBackground()
+        
         FirebaseStorageManager.shared.uploadImage(image: image)
             .flatMap { imageUrl in
-                return self.puppyRegistrationViewModel.createPuppy(userId: userId, name: name, age: age, petImage: imageUrl, tag: tagArr)
+                return self.puppyRegistrationViewModel.createPuppy(userId: userId,
+                                                                   name: name,
+                                                                   age: age,
+                                                                   petImage: imageUrl,
+                                                                   tag: tagArr)
             }
             .observe(on: MainScheduler.instance)
             .subscribe(onSuccess: { pet in
-                self.puppyRegisteredSubject.onNext((name, "\(age)", pet.petImage)) // 이벤트 방출
+                self.hideLoadingIndicator()
+                self.puppyRegisteredSubject.onNext((name, "\(age)", pet.petImage))
                 self.navigationController?.popViewController(animated: true)
+                self.okAlert(title: "성공", message: "강아지를 성공적으로 등록했습니다.")
             }, onFailure: { error in
+                self.hideLoadingIndicator()
+                self.okAlert(title: "실패", message: "강아지 등록에 실패했습니다. 관리자에게 문의해주세요.")
                 print("강아지 등록 실패: \(error)")
             })
             .disposed(by: disposeBag)
-        
     }
 
-    @objc private func handleEditButtonTapped() {
-        print("petId: \(pet?.id ?? "nil")")
-        print("name: \(nameTextField.text ?? "nil")")
-        print("age: \(ageTextField.text ?? "nil")")
+    @objc
+    private func handleEditButtonTapped() {
         
+        showLoadingIndicatorWithoutBackground()
+        
+        //에러처리 필요
         guard let petId = pet?.id,
-              let name = nameTextField.text, !name.isEmpty,  // 이름 필드 검사
-              let strAge = ageTextField.text, !strAge.isEmpty, // 나이 필드 검사
-              let age = Int(strAge) else {  // 나이 필드를 Int로 변환
-            okAlert(title: "오류", message: "1. 모든 필드를 채워주세요.")
+              let name = nameTextField.text, !name.isEmpty,
+              let strAge = ageTextField.text, !strAge.isEmpty,
+              let age = Int(strAge) else {
+            okAlert(title: "오류", message: "모든 필드를 형식에 맞게 채워주세요!")
             return
         }
 
@@ -377,19 +302,28 @@ class PuppyRegistrationViewController: UIViewController {
         }
 
         guard let image = puppyImageChangeButton.imageView?.image else {
-            okAlert(title: "오류", message: "이미지를 선택해주세요.")
+            okAlert(title: "오류", message: "나의 강아지 프로필 사진을 올려보세요!")
             return
         }
 
         FirebaseStorageManager.shared.uploadImage(image: image)
             .flatMap { imageUrl in
-                self.puppyRegistrationViewModel.updatePuppy(petId: petId, userId: userId, name: name, age: age, petImage: imageUrl, tag: tagArr)
+                self.puppyRegistrationViewModel.updatePuppy(petId: petId,
+                                                            userId: userId,
+                                                            name: name,
+                                                            age: age,
+                                                            petImage:imageUrl,
+                                                            tag: tagArr)
             }
             .observe(on: MainScheduler.instance)
             .subscribe(onSuccess: { pet in
+                self.hideLoadingIndicator()
                 self.navigationController?.popViewController(animated: true)
+                self.okAlert(title: "성공", message: "강아지 정보를 성공적으로 수정했습니다.")
             }, onFailure: { error in
-                print("강아지 수정 실패: \(error)")
+                self.hideLoadingIndicator()
+                print("이미지 업로드 실패: \(error)")
+                self.okAlert(title: "실패", message: "이미지 업로드에 실패했습니다. 관리자에게 문의해주세요.")
             })
             .disposed(by: disposeBag)
     }
@@ -470,6 +404,102 @@ class PuppyRegistrationViewController: UIViewController {
         picker.delegate = self
         picker.sourceType = .camera
         present(picker, animated: true, completion: nil)
+    }
+    
+    // MARK: - Layout 및 Constraints
+
+    private func setupConstraints() {
+        view.addSubview(scrollView)
+        scrollView.addSubview(contentView)
+        
+        scrollView.snp.makeConstraints {
+            $0.edges.equalTo(view.safeAreaLayoutGuide)
+        }
+        
+        contentView.snp.makeConstraints {
+            $0.edges.equalToSuperview()
+            $0.width.equalToSuperview()
+        }
+        
+        let views = [puppyImageChangeButton,
+                     nameLabel,
+                     nameTextField,
+                     ageLabel,
+                     ageTextField,
+                     tagLabel,
+                     tagTextField,
+                     tagScrollView,
+                     separationButton]
+        
+        views.forEach { contentView.addSubview($0) }
+        
+        tagScrollView.addSubview(tagStack)
+        
+        puppyImageChangeButton.snp.makeConstraints {
+            $0.top.equalToSuperview().offset(40)
+            $0.centerX.equalToSuperview()
+            $0.width.height.equalTo(150)
+        }
+        
+        nameLabel.snp.makeConstraints {
+            $0.top.equalTo(puppyImageChangeButton.snp.bottom).offset(30)
+            $0.left.equalToSuperview().offset(20)
+            $0.right.equalToSuperview().offset(-20)
+            $0.height.equalTo(40)
+        }
+        
+        nameTextField.snp.makeConstraints {
+            $0.top.equalTo(nameLabel.snp.bottom).offset(5)
+            $0.left.equalToSuperview().offset(20)
+            $0.right.equalToSuperview().offset(-20)
+            $0.height.equalTo(40)
+        }
+        
+        ageLabel.snp.makeConstraints {
+            $0.top.equalTo(nameTextField.snp.bottom).offset(30)
+            $0.left.equalToSuperview().offset(20)
+            $0.right.equalToSuperview().offset(-20)
+            $0.height.equalTo(40)
+        }
+        
+        ageTextField.snp.makeConstraints {
+            $0.top.equalTo(ageLabel.snp.bottom).offset(5)
+            $0.left.right.height.equalTo(nameTextField)
+        }
+        
+        tagLabel.snp.makeConstraints {
+            $0.top.equalTo(ageTextField.snp.bottom).offset(30)
+            $0.left.equalToSuperview().offset(20)
+            $0.right.equalToSuperview().offset(-20)
+            $0.height.equalTo(40)
+        }
+        
+        tagStack.snp.makeConstraints {
+            $0.edges.equalToSuperview()
+            $0.height.equalToSuperview()
+        }
+        
+        tagScrollView.snp.makeConstraints {
+            $0.top.equalTo(tagLabel.snp.bottom).offset(10)
+            $0.leading.equalToSuperview().offset(20)
+            $0.trailing.equalToSuperview().offset(-20)
+            $0.height.equalTo(50)
+        }
+        
+        tagTextField.snp.makeConstraints {
+            $0.top.equalTo(tagScrollView.snp.bottom).offset(5)
+            $0.left.right.height.equalTo(ageTextField)
+        }
+
+        separationButton.snp.makeConstraints {
+            $0.top.equalTo(tagTextField.snp.bottom).offset(20)
+            $0.centerX.equalToSuperview()
+            $0.bottom.equalToSuperview().offset(-20) // 마지막 요소를 기준으로 contentView의 높이 설정
+            $0.height.equalTo(44)
+        }
+        
+    //         수정 모드에서만 이별하기 버튼 보이도록 설정
+        separationButton.isHidden = !isEditMode
     }
 }
 

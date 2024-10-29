@@ -18,11 +18,11 @@
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
 	<key>KAKAO_APP_KEY</key>
-	<string>2be397d1ad8fcbf7a9d93e68c3f268b1</string>
+	<string>$(KAKAO_APP_KEY)</string>
 	<key>KAKAO_PHASE</key>
 	<string>aplha</string>
-	<key>KAKAO_SEARCH_API</key>
-	<string>$(KAKAO_SEARCH_API)</string>
+	<key>KAKAO_REST_KEY</key>
+	<string>$(KAKAO_REST_KEY)</string>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>
