@@ -149,7 +149,7 @@ class PptLoginViewController: UIViewController {
         }
     }
     
-    private func bind() { // kkh 수정부분 : 로그인버튼 상시 활성화 되있지만, 빈칸이 있을 시 로그인이 안되고 Alert창이 뜸
+    private func bind() {
         let emailValid = emailfield.rx.text.orEmpty
             .map { [weak self] email in
                 return self?.checkEmailValid(email) ?? false
@@ -162,7 +162,12 @@ class PptLoginViewController: UIViewController {
             }
             .share(replay: 1, scope: .whileConnected)
         
-        // 유효성 검사를 위한 observable은 유지하지만, 버튼 활성화 로직은 삭제함
+        Observable.combineLatest(emailValid, pwValid) { $0 && $1 }
+            .subscribe(onNext: { [weak self] isValid in
+                self?.loginButton.isEnabled = isValid
+            })
+            .disposed(by: disposeBag)
+
     }
     
     private func bindData() {
@@ -215,24 +220,6 @@ class PptLoginViewController: UIViewController {
     @objc
     private func didTapLoginButton() {
         guard let email = emailfield.text, let pw = pwfield.text else { return }
-        
-        // 유효성 체크 및 Alert 표시
-        if email.isEmpty || pw.isEmpty {
-            okAlert(title: "입력 오류", message: "모든 필드를 채워주세요.")
-            return
-        }
-        
-        if !checkEmailValid(email) {
-            okAlert(title: "입력 오류", message: "이메일 형식이 잘못되었습니다.")
-            return
-        }
-        
-        if !checkPasswordValid(pw) {
-            okAlert(title: "입력 오류", message: "비밀번호 형식이 잘못되었습니다.")
-            return
-        }
-
-        // 모든 조건을 통과하면 ViewModel 호출
         pptLoginViewModel.emailSignIn(email: email, pw: pw)
     }
     

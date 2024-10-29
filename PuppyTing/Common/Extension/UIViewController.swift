@@ -7,7 +7,6 @@
 
 import UIKit
 
-import Lottie
 import RxCocoa
 import RxSwift
 
@@ -81,49 +80,7 @@ extension UIViewController {
             alert.dismiss(animated: true, completion: nil)
         })
     }
-    
-    // 로딩 인디케이터 관련 메서드 - ksh
-    func showLoadingIndicator() {
-        
-        let backgroundView = UIView(frame: self.view.bounds)
-        backgroundView.backgroundColor = UIColor.white
-        backgroundView.alpha = 1.0
-        backgroundView.tag = 998
-        
-        let animationView = LottieAnimationView(name: "PuppytingLoading")
-        animationView.frame = CGRect(x: 0, y: 0, width: 300, height: 300)
-        animationView.center = self.view.center
-        animationView.contentMode = .scaleAspectFit
-        animationView.loopMode = .loop
-        animationView.play()
-        animationView.tag = 999
-        
-        self.view.addSubview(backgroundView)
-        self.view.addSubview(animationView)
-    }
-    
-    func showLoadingIndicatorWithoutBackground() {
 
-        let animationView = LottieAnimationView(name: "PuppytingLoading")
-        animationView.frame = CGRect(x: 0, y: 0, width: 300, height: 300)
-        animationView.center = self.view.center
-        animationView.contentMode = .scaleAspectFit
-        animationView.loopMode = .loop
-        animationView.play()
-        animationView.tag = 999
-        
-        self.view.addSubview(animationView)
-    }
-        
-    func hideLoadingIndicator() {
-        if let animationView = self.view.viewWithTag(999) as? LottieAnimationView {
-            animationView.stop()
-            animationView.removeFromSuperview()
-        }
-        if let backgroundView = self.view.viewWithTag(998) {
-            backgroundView.removeFromSuperview()
-        }
-    }
 }
 
 extension UIView {
