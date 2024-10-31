@@ -41,8 +41,6 @@ class ProfileViewController: UIViewController {
     
     private let footStampLabel: UILabel = {
         let label = UILabel()
-        label.font = UIFont.boldSystemFont(ofSize: 14)
-        label.textColor = .gray
         label.text = "🐾 받은 발도장 0개"
         return label
     }()
@@ -57,10 +55,8 @@ class ProfileViewController: UIViewController {
     private let footButton: UIButton = {
         let button = UIButton(type: .system)
         button.setTitle("🐾", for: .normal)
-        button.backgroundColor = UIColor.clear
+        button.backgroundColor = UIColor.puppyPurple
         button.layer.cornerRadius = 20
-        button.layer.borderWidth = 1
-        button.layer.borderColor = UIColor.puppyPurple.cgColor
         button.setTitleColor(.white, for: .normal)
         return button
     }()
@@ -70,10 +66,8 @@ class ProfileViewController: UIViewController {
         let button = UIButton(type: .system)
         let starImage = UIImage(systemName: "star")
         button.setImage(starImage, for: .normal)
-        button.backgroundColor = UIColor.clear
-        button.layer.cornerRadius = 20
-        button.layer.borderWidth = 1
-        button.layer.borderColor = UIColor.puppyPurple.cgColor
+        button.tintColor = .white
+        button.backgroundColor = UIColor.puppyPurple
         button.layer.cornerRadius = 20
         return button
     }()
@@ -112,7 +106,7 @@ class ProfileViewController: UIViewController {
         collectionView.layer.cornerRadius = 10
         collectionView.layer.borderWidth = 1.0
         collectionView.layer.masksToBounds = false
-        collectionView.backgroundColor = UIColor.lightPuppyPurple.withAlphaComponent(0.3)
+        collectionView.backgroundColor = UIColor.lightPuppyPurple
         collectionView.isPagingEnabled = true
         return collectionView
     }()
@@ -134,7 +128,7 @@ class ProfileViewController: UIViewController {
     //MARK: View 생애주기 - ksh
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = UIColor.white.withAlphaComponent(0.9) // 배경 투명도 설정
+        view.backgroundColor = UIColor.white.withAlphaComponent(0.8) // 배경 투명도 설정
         // loadData()
         setConstraints()
         loadData()
@@ -151,8 +145,8 @@ class ProfileViewController: UIViewController {
                 self.isBookmarked = isBookmarked
                 let imageName = isBookmarked ? "star.fill" : "star"
                 self.favoriteButton.setImage(UIImage(systemName: imageName), for: .normal)
-                favoriteButton.tintColor = .puppyPurple
-            }, onFailure: { error in
+                favoriteButton.tintColor = .yellow // 노란색으로 설정
+            }, onError: { error in
                 print("즐겨찾기 상태 확인 실패: \(error.localizedDescription)")
             })
             .disposed(by: disposeBag)
@@ -199,7 +193,7 @@ class ProfileViewController: UIViewController {
                     self.favoriteButton.setImage(UIImage(systemName: "star"), for: .normal)
                     self.isBookmarked = false
                     self.autoDismissAlertWithTimer(title: "알림", message: "즐겨찾기가 해제되었습니다.", duration: 1.0)
-                }, onFailure: { error in
+                }, onError: { error in
                     print("즐겨찾기 삭제 실패: \(error.localizedDescription)")
                 })
                 .disposed(by: disposeBag)
@@ -207,7 +201,7 @@ class ProfileViewController: UIViewController {
             // 즐겨찾기 추가
             viewModel.addBookmark(bookmarkId: bookmarkId)
             favoriteButton.setImage(UIImage(systemName: "star.fill"), for: .normal)
-            favoriteButton.tintColor = .puppyPurple
+            favoriteButton.tintColor = .yellow // 노란색으로 설정
             isBookmarked = true
             self.autoDismissAlertWithTimer(title: "알림", message: "즐겨찾기에 추가되었습니다.", duration: 1.0)
         }
@@ -333,7 +327,7 @@ class ProfileViewController: UIViewController {
         
         myInfoStack.snp.makeConstraints {
             $0.centerY.equalTo(profileImageView)
-            $0.leading.equalTo(profileImageView.snp.trailing).offset(20)
+            $0.leading.equalTo(profileImageView.snp.trailing).offset(10)
         }
         
         footButton.snp.makeConstraints {
