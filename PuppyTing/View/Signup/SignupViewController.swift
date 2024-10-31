@@ -331,7 +331,7 @@ class SignupViewController: UIViewController {
         
         confirmLabel.snp.makeConstraints {
             $0.top.equalTo(guideLine.snp.bottom).offset(20)
-            $0.leading.equalTo(pwTextField.snp.leading)
+             $0.leading.equalTo(pwTextField.snp.leading)
         }
         
         confirmCheck.snp.makeConstraints {
@@ -396,7 +396,7 @@ class SignupViewController: UIViewController {
         }
     }
     
-    private func bindUI() { // -kkh 수정부분 : 버튼이 활성화 되게하고 빈칸이 있을 시 Alert창이 뜨도록 변경
+    private func bindUI() {
         emailTextField.rx.text.orEmpty
             .map { [weak self] email in
                 let isValid = self?.checkEmailValid(email) ?? false
@@ -442,6 +442,22 @@ class SignupViewController: UIViewController {
                 self.nTrueLable.isHidden = !isValid || isEmpty
             })
             .disposed(by: disposeBag)
+        
+        Observable.combineLatest(
+            emailTextField.rx.text.orEmpty.map(checkEmailValid),
+            pwTextField.rx.text.orEmpty.map(checkPasswordValid),
+            confirmPwTextField.rx.text.orEmpty.map { confirmPw in
+                return confirmPw == self.pwTextField.text
+            },
+            nickTextField.rx.text.orEmpty.map(checNickNameValid)
+        )
+        .map { emailValid, passwordValid, confirmPasswordValid, nickNameValid in
+            return emailValid && passwordValid && confirmPasswordValid && nickNameValid
+        }
+        .subscribe(onNext: { isValid in
+            self.signUpButton.isEnabled = isValid
+        })
+        .disposed(by: disposeBag)
     }
     
     private func bindData() {
@@ -462,6 +478,23 @@ class SignupViewController: UIViewController {
         }).disposed(by: disposeBag)
     }
     
+    // 이메일 유효성 검사
+    private func checkEmailValid(_ email: String) -> Bool {
+        let predicate = NSPredicate(format: "SELF MATCHES %@", regex)
+        return predicate.evaluate(with: email)
+    }
+    
+    // 비밀번호 유효성 검사
+    private func checkPasswordValid(_ password: String) -> Bool {
+        let predicate = NSPredicate(format: "SELF MATCHES %@", pwRegex)
+        return predicate.evaluate(with: password)
+    }
+    
+    // 닉네임 유효성 검사
+    private func checNickNameValid(_ nickName: String) -> Bool {
+        return nickName.count > 1 && nickName.count < 11
+    }
+    
     private func setButtonAction() {
         cancleButton.addTarget(self, action: #selector(didTapCloseButton), for: .touchUpInside)
         signUpButton.addTarget(self, action: #selector(didTapSignUpButton), for: .touchUpInside)
@@ -474,37 +507,7 @@ class SignupViewController: UIViewController {
     
     @objc
     private func didTapSignUpButton() {
-        // 유효성 검사 추가 및 Alert 표시
-        guard let email = emailTextField.text, let pw = pwTextField.text, let confirmPw = confirmPwTextField.text, let nickname = nickTextField.text else {
-            return
-        }
-        
-        if email.isEmpty || pw.isEmpty || confirmPw.isEmpty || nickname.isEmpty {
-            okAlert(title: "입력 오류", message: "모든 필드를 채워주세요.")
-            return
-        }
-        
-        if !checkEmailValid(email) {
-            okAlert(title: "입력 오류", message: "이메일 형식이 잘못되었습니다.")
-            return
-        }
-        
-        if !checkPasswordValid(pw) {
-            okAlert(title: "입력 오류", message: "비밀번호 형식이 잘못되었습니다.")
-            return
-        }
-        
-        if confirmPw != pw {
-            okAlert(title: "입력 오류", message: "비밀번호가 일치하지 않습니다.")
-            return
-        }
-        
-        if !checNickNameValid(nickname) {
-            okAlert(title: "입력 오류", message: "닉네임은 2~10자 사이여야 합니다.")
-            return
-        }
-
-        // 모든 조건을 통과하면 ViewModel 호출
+        guard let email = emailTextField.text, let pw = pwTextField.text else { return }
         signUpViewModel.authentication(email: email, pw: pw)
     }
     
@@ -533,21 +536,5 @@ class SignupViewController: UIViewController {
             okAlert(title: SignUpFailMessage().signUpFail, message: SignUpFailMessage().otherFailMessage)
         }
     }
-    
-    // 이메일 유효성 검사
-    private func checkEmailValid(_ email: String) -> Bool {
-        let predicate = NSPredicate(format: "SELF MATCHES %@", regex)
-        return predicate.evaluate(with: email)
-    }
-    
-    // 비밀번호 유효성 검사
-    private func checkPasswordValid(_ password: String) -> Bool {
-        let predicate = NSPredicate(format: "SELF MATCHES %@", pwRegex)
-        return predicate.evaluate(with: password)
-    }
-    
-    // 닉네임 유효성 검사
-    private func checNickNameValid(_ nickName: String) -> Bool {
-        return nickName.count > 1 && nickName.count < 11
-    }
 }
+
