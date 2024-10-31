@@ -112,6 +112,7 @@ class MypageViewController: UIViewController {
         collectionView.layer.cornerRadius = 15
         collectionView.isPagingEnabled = true // 페이징 가능하도록 설정
         collectionView.isHidden = true // 초기에는 숨김
+        collectionView.showsHorizontalScrollIndicator = false
         return collectionView
     }()
     

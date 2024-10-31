@@ -20,7 +20,6 @@
 		2369F3B52C99AB1A006040B3 /* FirebaseMessaging in Frameworks */ = {isa = PBXBuildFile; productRef = 2369F3B42C99AB1A006040B3 /* FirebaseMessaging */; };
 		2399E8B12CA555A600295691 /* ProfilePuppyCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2399E8B02CA555A600295691 /* ProfilePuppyCollectionViewCell.swift */; };
 		239BC9232CC7FCD00029C749 /* Lottie in Frameworks */ = {isa = PBXBuildFile; productRef = 239BC9222CC7FCD00029C749 /* Lottie */; };
-		239BC9252CC7FD9A0029C749 /* PuppytingLoading.json in Resources */ = {isa = PBXBuildFile; fileRef = 239BC9242CC7FD9A0029C749 /* PuppytingLoading.json */; };
 		239BC9262CC800450029C749 /* AppStoreCheck.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56BC8D3D2CC11E6C00CB1B82 /* AppStoreCheck.swift */; };
 		5602B05E2C8A82E50060F03B /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5602B05D2C8A82E50060F03B /* ProfileViewController.swift */; };
 		5602B0862C8E0C6F0060F03B /* ProfileViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5602B0852C8E0C6F0060F03B /* ProfileViewModel.swift */; };
@@ -102,6 +101,7 @@
 		E7F598372C849E1300FE8900 /* KakaoMapsSDK-SPM in Frameworks */ = {isa = PBXBuildFile; productRef = E7F598362C849E1300FE8900 /* KakaoMapsSDK-SPM */; };
 		E7F598392C885D5300FE8900 /* KakaoMapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7F598382C885D5300FE8900 /* KakaoMapViewController.swift */; };
 		E7F5983B2C8866CE00FE8900 /* AddressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7F5983A2C8866CE00FE8900 /* AddressView.swift */; };
+		EFED4A8D2CCF9C2B00D71440 /* PuppytingLoading.json in Resources */ = {isa = PBXBuildFile; fileRef = EFED4A8C2CCF9C2B00D71440 /* PuppytingLoading.json */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -111,7 +111,6 @@
 		2369F3AE2C980222006040B3 /* KingFisherManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KingFisherManager.swift; sourceTree = "<group>"; };
 		2399E8A82CA3D32700295691 /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
 		2399E8B02CA555A600295691 /* ProfilePuppyCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfilePuppyCollectionViewCell.swift; sourceTree = "<group>"; };
-		239BC9242CC7FD9A0029C749 /* PuppytingLoading.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = PuppytingLoading.json; path = ../../../../../Downloads/PuppytingLoading.json; sourceTree = "<group>"; };
 		5602B05D2C8A82E50060F03B /* ProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
 		5602B0852C8E0C6F0060F03B /* ProfileViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewModel.swift; sourceTree = "<group>"; };
 		5602B0892C8E91B20060F03B /* FavoriteListTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteListTableViewCell.swift; sourceTree = "<group>"; };
@@ -190,6 +189,7 @@
 		E7F598332C847A7800FE8900 /* Place.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Place.swift; sourceTree = "<group>"; };
 		E7F598382C885D5300FE8900 /* KakaoMapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KakaoMapViewController.swift; sourceTree = "<group>"; };
 		E7F5983A2C8866CE00FE8900 /* AddressView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddressView.swift; sourceTree = "<group>"; };
+		EFED4A8C2CCF9C2B00D71440 /* PuppytingLoading.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = PuppytingLoading.json; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -534,7 +534,7 @@
 		E738FBA72C7C696C004696BD /* Assets */ = {
 			isa = PBXGroup;
 			children = (
-				239BC9242CC7FD9A0029C749 /* PuppytingLoading.json */,
+				EFED4A8C2CCF9C2B00D71440 /* PuppytingLoading.json */,
 				E738FB7F2C7C62F0004696BD /* Assets.xcassets */,
 			);
 			path = Assets;
@@ -638,7 +638,7 @@
 				A2024BBE2CA148FC0049DD8A /* GoogleService-Info.plist in Resources */,
 				E738FBAA2C7C6BB3004696BD /* .gitignore in Resources */,
 				E738FB832C7C62F0004696BD /* Base in Resources */,
-				239BC9252CC7FD9A0029C749 /* PuppytingLoading.json in Resources */,
+				EFED4A8D2CCF9C2B00D71440 /* PuppytingLoading.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
