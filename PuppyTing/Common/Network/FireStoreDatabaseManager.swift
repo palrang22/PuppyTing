@@ -208,13 +208,14 @@ class FireStoreDatabaseManager {
                         
                         snapshot?.documents.forEach { document in
                             let data = document.data()
-                            if let content = data["content"] as? String,
+                            if let geoPoint = data["location"] as? GeoPoint, // geoPoint를 가져오기 - jgh
+                               let content = data["content"] as? String,
                                let timestamp = data["timestamp"] as? Timestamp {
                                 
                                 let feed = TingFeedModel(
                                     userid: userId,
                                     postid: document.documentID,
-                                    location: CLLocationCoordinate2D(latitude: 0, longitude: 0),
+                                    location: CLLocationCoordinate2D(latitude: geoPoint.latitude, longitude: geoPoint.longitude), // jgh
                                     content: content,
                                     time: timestamp.dateValue()
                                 )
