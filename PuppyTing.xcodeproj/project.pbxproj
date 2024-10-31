@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		23607BFA2C8978E600A23716 /* PostingViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23607BF92C8978E600A23716 /* PostingViewModel.swift */; };
 		23607C022C8A930100A23716 /* UIButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23607C012C8A930100A23716 /* UIButton.swift */; };
+
+		23607C022C8A930100A23716 /* UIButton+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23607C012C8A930100A23716 /* UIButton+Extension.swift */; };
 		2369F3A02C97F829006040B3 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 2369F39F2C97F829006040B3 /* FirebaseAuth */; };
 		2369F3A22C97F829006040B3 /* FirebaseDatabase in Frameworks */ = {isa = PBXBuildFile; productRef = 2369F3A12C97F829006040B3 /* FirebaseDatabase */; };
 		2369F3A42C97F829006040B3 /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = 2369F3A32C97F829006040B3 /* FirebaseFirestore */; };
@@ -19,6 +21,8 @@
 		2369F3AF2C980222006040B3 /* KingFisherManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2369F3AE2C980222006040B3 /* KingFisherManager.swift */; };
 		2369F3B52C99AB1A006040B3 /* FirebaseMessaging in Frameworks */ = {isa = PBXBuildFile; productRef = 2369F3B42C99AB1A006040B3 /* FirebaseMessaging */; };
 		2399E8B12CA555A600295691 /* ProfilePuppyCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2399E8B02CA555A600295691 /* ProfilePuppyCollectionViewCell.swift */; };
+		239BC9232CC7FCD00029C749 /* Lottie in Frameworks */ = {isa = PBXBuildFile; productRef = 239BC9222CC7FCD00029C749 /* Lottie */; };
+		239BC9262CC800450029C749 /* AppStoreCheck.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56BC8D3D2CC11E6C00CB1B82 /* AppStoreCheck.swift */; };
 		5602B05E2C8A82E50060F03B /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5602B05D2C8A82E50060F03B /* ProfileViewController.swift */; };
 		5602B0862C8E0C6F0060F03B /* ProfileViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5602B0852C8E0C6F0060F03B /* ProfileViewModel.swift */; };
 		5602B08A2C8E91B30060F03B /* FavoriteListTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5602B0892C8E91B20060F03B /* FavoriteListTableViewCell.swift */; };
@@ -47,6 +51,8 @@
 		A2085DD12C8059F400698923 /* FireStoreDatabaseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2085DD02C8059F400698923 /* FireStoreDatabaseManager.swift */; };
 		A2085DD42C80622B00698923 /* PptLoginViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2085DD32C80622B00698923 /* PptLoginViewModel.swift */; };
 		A2085DD62C806A4D00698923 /* LoginViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2085DD52C806A4D00698923 /* LoginViewModel.swift */; };
+		A266EFAB2CD2064100A315BE /* PuppytingLoading.json in Resources */ = {isa = PBXBuildFile; fileRef = A266EFAA2CD2064100A315BE /* PuppytingLoading.json */; };
+		A2BAC9412CD35B0E00CDD5E5 /* Config.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = A2BAC9402CD35B0E00CDD5E5 /* Config.xcconfig */; };
 		A2F9FE1D2C859E54004D7FF6 /* FindingPasswordViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2F9FE1C2C859E54004D7FF6 /* FindingPasswordViewModel.swift */; };
 		A2F9FE4D2C896EE0004D7FF6 /* AppController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2F9FE4C2C896EE0004D7FF6 /* AppController.swift */; };
 		A2F9FE512C89D561004D7FF6 /* ChatModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2F9FE502C89D561004D7FF6 /* ChatModel.swift */; };
@@ -59,6 +65,8 @@
 		A2F9FE772C8DF3CB004D7FF6 /* Config.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = A2F9FE762C8DF3CB004D7FF6 /* Config.xcconfig */; };
 		A2F9FE7A2C8E6BBB004D7FF6 /* ChatDateTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2F9FE792C8E6BBB004D7FF6 /* ChatDateTableViewCell.swift */; };
 		A2F9FE7C2C8E6BF7004D7FF6 /* Date.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2F9FE7B2C8E6BF7004D7FF6 /* Date.swift */; };
+		A2F9FE7A2C8E6BBB004D7FF6 /* ChatDateTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2F9FE792C8E6BBB004D7FF6 /* ChatDateTableViewCell.swift */; };
+		A2F9FE7C2C8E6BF7004D7FF6 /* Date+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2F9FE7B2C8E6BF7004D7FF6 /* Date+Extension.swift */; };
 		C29FCF662C7DB37E00F8951D /* PuppyCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C29FCF652C7DB37E00F8951D /* PuppyCollectionViewCell.swift */; };
 		C29FCF682C7DBA4F00F8951D /* PuppyRegistrationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C29FCF672C7DBA4F00F8951D /* PuppyRegistrationViewController.swift */; };
 		C29FCF772C8171FA00F8951D /* MyInfoEditViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C29FCF762C8171FA00F8951D /* MyInfoEditViewController.swift */; };
@@ -72,6 +80,7 @@
 		E70DB3452C7F0CB60073B3F8 /* PostTingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E70DB3442C7F0CB60073B3F8 /* PostTingViewController.swift */; };
 		E70DB3472C7F0CD00073B3F8 /* DetailTingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E70DB3462C7F0CD00073B3F8 /* DetailTingViewController.swift */; };
 		E70DB3492C7F3F060073B3F8 /* UIViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E70DB3482C7F3F060073B3F8 /* UIViewController.swift */; };
+		E70DB3492C7F3F060073B3F8 /* UIViewController+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = E70DB3482C7F3F060073B3F8 /* UIViewController+Extension.swift */; };
 		E70DB34D2C8067B50073B3F8 /* SearchAddressViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E70DB34C2C8067B50073B3F8 /* SearchAddressViewController.swift */; };
 		E70DB34F2C8068190073B3F8 /* SearchedAddressTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E70DB34E2C8068190073B3F8 /* SearchedAddressTableViewCell.swift */; };
 		E70DB3512C8068460073B3F8 /* SearchedMapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E70DB3502C8068460073B3F8 /* SearchedMapViewController.swift */; };
@@ -80,6 +89,7 @@
 		E738FB802C7C62F0004696BD /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E738FB7F2C7C62F0004696BD /* Assets.xcassets */; };
 		E738FB832C7C62F0004696BD /* Base in Resources */ = {isa = PBXBuildFile; fileRef = E738FB822C7C62F0004696BD /* Base */; };
 		E738FB952C7C64BA004696BD /* UIColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = E738FB942C7C64BA004696BD /* UIColor.swift */; };
+		E738FB952C7C64BA004696BD /* UIColor+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = E738FB942C7C64BA004696BD /* UIColor+Extension.swift */; };
 		E738FB9A2C7C6532004696BD /* TingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E738FB992C7C6532004696BD /* TingViewController.swift */; };
 		E738FB9C2C7C653C004696BD /* ChatViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E738FB9B2C7C653C004696BD /* ChatViewController.swift */; };
 		E738FB9E2C7C668D004696BD /* MypageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E738FB9D2C7C668D004696BD /* MypageViewController.swift */; };
@@ -104,6 +114,7 @@
 /* Begin PBXFileReference section */
 		23607BF92C8978E600A23716 /* PostingViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostingViewModel.swift; sourceTree = "<group>"; };
 		23607C012C8A930100A23716 /* UIButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIButton.swift; sourceTree = "<group>"; };
+		23607C012C8A930100A23716 /* UIButton+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIButton+Extension.swift"; sourceTree = "<group>"; };
 		2369F3AA2C97FC93006040B3 /* Report.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Report.swift; sourceTree = "<group>"; };
 		2369F3AE2C980222006040B3 /* KingFisherManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KingFisherManager.swift; sourceTree = "<group>"; };
 		2399E8A82CA3D32700295691 /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
@@ -115,6 +126,7 @@
 		56A640772CA17AE100950B0B /* FeedListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedListViewController.swift; sourceTree = "<group>"; };
 		56A6407B2CA17BCB00950B0B /* FeedTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedTableViewCell.swift; sourceTree = "<group>"; };
 		56A6407F2CA17ECE00950B0B /* FeedListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedListViewModel.swift; sourceTree = "<group>"; };
+		56BC8D3D2CC11E6C00CB1B82 /* AppStoreCheck.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppStoreCheck.swift; sourceTree = "<group>"; };
 		56D686C42C7DA88500B00880 /* SignupViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignupViewController.swift; sourceTree = "<group>"; };
 		56D686C72C7DB09600B00880 /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 		56D686CB2C7DC88600B00880 /* PptLoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PptLoginViewController.swift; sourceTree = "<group>"; };
@@ -135,6 +147,8 @@
 		A2085DD02C8059F400698923 /* FireStoreDatabaseManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FireStoreDatabaseManager.swift; sourceTree = "<group>"; };
 		A2085DD32C80622B00698923 /* PptLoginViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PptLoginViewModel.swift; sourceTree = "<group>"; };
 		A2085DD52C806A4D00698923 /* LoginViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewModel.swift; sourceTree = "<group>"; };
+		A266EFAA2CD2064100A315BE /* PuppytingLoading.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = PuppytingLoading.json; path = ../../../../Downloads/PuppytingLoading.json; sourceTree = "<group>"; };
+		A2BAC9402CD35B0E00CDD5E5 /* Config.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Config.xcconfig; sourceTree = "<group>"; };
 		A2F9FE1C2C859E54004D7FF6 /* FindingPasswordViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FindingPasswordViewModel.swift; sourceTree = "<group>"; };
 		A2F9FE4C2C896EE0004D7FF6 /* AppController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppController.swift; sourceTree = "<group>"; };
 		A2F9FE502C89D561004D7FF6 /* ChatModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatModel.swift; sourceTree = "<group>"; };
@@ -147,6 +161,8 @@
 		A2F9FE762C8DF3CB004D7FF6 /* Config.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Config.xcconfig; sourceTree = "<group>"; };
 		A2F9FE792C8E6BBB004D7FF6 /* ChatDateTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatDateTableViewCell.swift; sourceTree = "<group>"; };
 		A2F9FE7B2C8E6BF7004D7FF6 /* Date.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Date.swift; sourceTree = "<group>"; };
+		A2F9FE792C8E6BBB004D7FF6 /* ChatDateTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatDateTableViewCell.swift; sourceTree = "<group>"; };
+		A2F9FE7B2C8E6BF7004D7FF6 /* Date+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+Extension.swift"; sourceTree = "<group>"; };
 		C29FCF652C7DB37E00F8951D /* PuppyCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PuppyCollectionViewCell.swift; sourceTree = "<group>"; };
 		C29FCF672C7DBA4F00F8951D /* PuppyRegistrationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PuppyRegistrationViewController.swift; sourceTree = "<group>"; };
 		C29FCF762C8171FA00F8951D /* MyInfoEditViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyInfoEditViewController.swift; sourceTree = "<group>"; };
@@ -160,6 +176,7 @@
 		E70DB3442C7F0CB60073B3F8 /* PostTingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostTingViewController.swift; sourceTree = "<group>"; };
 		E70DB3462C7F0CD00073B3F8 /* DetailTingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailTingViewController.swift; sourceTree = "<group>"; };
 		E70DB3482C7F3F060073B3F8 /* UIViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIViewController.swift; sourceTree = "<group>"; };
+		E70DB3482C7F3F060073B3F8 /* UIViewController+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Extension.swift"; sourceTree = "<group>"; };
 		E70DB34C2C8067B50073B3F8 /* SearchAddressViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchAddressViewController.swift; sourceTree = "<group>"; };
 		E70DB34E2C8068190073B3F8 /* SearchedAddressTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchedAddressTableViewCell.swift; sourceTree = "<group>"; };
 		E70DB3502C8068460073B3F8 /* SearchedMapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchedMapViewController.swift; sourceTree = "<group>"; };
@@ -171,6 +188,7 @@
 		E738FB842C7C62F0004696BD /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		E738FB8A2C7C637D004696BD /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		E738FB942C7C64BA004696BD /* UIColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIColor.swift; sourceTree = "<group>"; };
+		E738FB942C7C64BA004696BD /* UIColor+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+Extension.swift"; sourceTree = "<group>"; };
 		E738FB992C7C6532004696BD /* TingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TingViewController.swift; sourceTree = "<group>"; };
 		E738FB9B2C7C653C004696BD /* ChatViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatViewController.swift; sourceTree = "<group>"; };
 		E738FB9D2C7C668D004696BD /* MypageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MypageViewController.swift; sourceTree = "<group>"; };
@@ -197,6 +215,7 @@
 				2369F3B52C99AB1A006040B3 /* FirebaseMessaging in Frameworks */,
 				A2085DA32C7D678400698923 /* GoogleSignIn in Frameworks */,
 				E738FBB42C7C7074004696BD /* RxSwift in Frameworks */,
+				239BC9232CC7FCD00029C749 /* Lottie in Frameworks */,
 				2369F3A42C97F829006040B3 /* FirebaseFirestore in Frameworks */,
 				E738FBB72C7C7215004696BD /* SnapKit in Frameworks */,
 				E738FBB22C7C7074004696BD /* RxRelay in Frameworks */,
@@ -279,6 +298,10 @@
 				E70DB3482C7F3F060073B3F8 /* UIViewController.swift */,
 				23607C012C8A930100A23716 /* UIButton.swift */,
 				A2F9FE7B2C8E6BF7004D7FF6 /* Date.swift */,
+				E738FB942C7C64BA004696BD /* UIColor+Extension.swift */,
+				E70DB3482C7F3F060073B3F8 /* UIViewController+Extension.swift */,
+				23607C012C8A930100A23716 /* UIButton+Extension.swift */,
+				A2F9FE7B2C8E6BF7004D7FF6 /* Date+Extension.swift */,
 			);
 			path = Extension;
 			sourceTree = "<group>";
@@ -479,6 +502,10 @@
 				E738FB762C7C62EE004696BD /* AppDelegate.swift */,
 				E738FB782C7C62EE004696BD /* SceneDelegate.swift */,
 				A2F9FE762C8DF3CB004D7FF6 /* Config.xcconfig */,
+				56BC8D3D2CC11E6C00CB1B82 /* AppStoreCheck.swift */,
+				E738FB762C7C62EE004696BD /* AppDelegate.swift */,
+				E738FB782C7C62EE004696BD /* SceneDelegate.swift */,
+				A2BAC9402CD35B0E00CDD5E5 /* Config.xcconfig */,
 			);
 			path = App;
 			sourceTree = "<group>";
@@ -489,6 +516,8 @@
 				E738FB9D2C7C668D004696BD /* MypageViewController.swift */,
 				2399E8A92CA5486B00295691 /* Puppy */,
 				2399E8AA2CA5487C00295691 /* MyInfo */,
+				2399E8AA2CA5487C00295691 /* MyInfo */,
+				2399E8A92CA5486B00295691 /* Puppy */,
 				2399E8AB2CA5488700295691 /* MyFeed */,
 				2399E8AC2CA5488F00295691 /* Favorite */,
 				2399E8AD2CA5489500295691 /* Block */,
@@ -527,6 +556,7 @@
 		E738FBA72C7C696C004696BD /* Assets */ = {
 			isa = PBXGroup;
 			children = (
+				A266EFAA2CD2064100A315BE /* PuppytingLoading.json */,
 				E738FB7F2C7C62F0004696BD /* Assets.xcassets */,
 			);
 			path = Assets;
@@ -571,6 +601,7 @@
 				2369F3A82C97F889006040B3 /* Kingfisher */,
 				2369F3AC2C97FDC1006040B3 /* FirebaseDynamicLinks */,
 				2369F3B42C99AB1A006040B3 /* FirebaseMessaging */,
+				239BC9222CC7FCD00029C749 /* Lottie */,
 			);
 			productName = PuppyTing;
 			productReference = E738FB732C7C62EE004696BD /* PuppyTing.app */;
@@ -608,6 +639,7 @@
 				E7F598352C849E1300FE8900 /* XCRemoteSwiftPackageReference "KakaoMapsSDK-SPM" */,
 				2369F39E2C97F829006040B3 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
 				2369F3A72C97F889006040B3 /* XCRemoteSwiftPackageReference "Kingfisher" */,
+				239BC9212CC7FCD00029C749 /* XCRemoteSwiftPackageReference "lottie-ios" */,
 			);
 			productRefGroup = E738FB742C7C62EE004696BD /* Products */;
 			projectDirPath = "";
@@ -628,6 +660,11 @@
 				A2024BBE2CA148FC0049DD8A /* GoogleService-Info.plist in Resources */,
 				E738FBAA2C7C6BB3004696BD /* .gitignore in Resources */,
 				E738FB832C7C62F0004696BD /* Base in Resources */,
+				A2024BBE2CA148FC0049DD8A /* GoogleService-Info.plist in Resources */,
+				E738FBAA2C7C6BB3004696BD /* .gitignore in Resources */,
+				E738FB832C7C62F0004696BD /* Base in Resources */,
+				A2BAC9412CD35B0E00CDD5E5 /* Config.xcconfig in Resources */,
+				A266EFAB2CD2064100A315BE /* PuppytingLoading.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -669,6 +706,7 @@
 				A2F9FE6C2C8DAF18004D7FF6 /* Pet.swift in Sources */,
 				A2F9FE592C8C2193004D7FF6 /* MyInfoEditVIewModel.swift in Sources */,
 				23607C022C8A930100A23716 /* UIButton.swift in Sources */,
+				23607C022C8A930100A23716 /* UIButton+Extension.swift in Sources */,
 				A2085DC82C7EB4BA00698923 /* ChatTableViewCell.swift in Sources */,
 				E738FBAD2C7C6D2E004696BD /* TabBarController.swift in Sources */,
 				C29FD01B2C9BFE5F00F8951D /* MyBlockListTableViewCell.swift in Sources */,
@@ -679,6 +717,12 @@
 				C29FCF682C7DBA4F00F8951D /* PuppyRegistrationViewController.swift in Sources */,
 				A2F9FE7C2C8E6BF7004D7FF6 /* Date.swift in Sources */,
 				E738FB952C7C64BA004696BD /* UIColor.swift in Sources */,
+				239BC9262CC800450029C749 /* AppStoreCheck.swift in Sources */,
+				56EF72422C94315C00CC919F /* FavoriteListViewModel.swift in Sources */,
+				E7F598342C847A7800FE8900 /* Place.swift in Sources */,
+				C29FCF682C7DBA4F00F8951D /* PuppyRegistrationViewController.swift in Sources */,
+				A2F9FE7C2C8E6BF7004D7FF6 /* Date+Extension.swift in Sources */,
+				E738FB952C7C64BA004696BD /* UIColor+Extension.swift in Sources */,
 				C29FCF772C8171FA00F8951D /* MyInfoEditViewController.swift in Sources */,
 				E738FB9E2C7C668D004696BD /* MypageViewController.swift in Sources */,
 				C29FD0212C9C408400F8951D /* MyFeedManageViewModel.swift in Sources */,
@@ -695,6 +739,7 @@
 				56FD04912C80172B00EBCDCD /* ChattingTableViewCell.swift in Sources */,
 				A2085DD62C806A4D00698923 /* LoginViewModel.swift in Sources */,
 				E70DB3492C7F3F060073B3F8 /* UIViewController.swift in Sources */,
+				E70DB3492C7F3F060073B3F8 /* UIViewController+Extension.swift in Sources */,
 				E738FBA42C7C66BA004696BD /* ChatViewModel.swift in Sources */,
 				A2F9FE7A2C8E6BBB004D7FF6 /* ChatDateTableViewCell.swift in Sources */,
 				E70DB3472C7F0CD00073B3F8 /* DetailTingViewController.swift in Sources */,
@@ -732,6 +777,7 @@
 		E738FB852C7C62F0004696BD /* Debug */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = A2F9FE762C8DF3CB004D7FF6 /* Config.xcconfig */;
+			baseConfigurationReference = A2BAC9402CD35B0E00CDD5E5 /* Config.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
@@ -797,6 +843,7 @@
 		E738FB862C7C62F0004696BD /* Release */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = A2F9FE762C8DF3CB004D7FF6 /* Config.xcconfig */;
+			baseConfigurationReference = A2BAC9402CD35B0E00CDD5E5 /* Config.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
@@ -854,6 +901,7 @@
 		};
 		E738FB882C7C62F0004696BD /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = A2BAC9402CD35B0E00CDD5E5 /* Config.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -874,11 +922,13 @@
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UIUserInterfaceStyle = Light;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.sh.PuppyTing;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -893,6 +943,7 @@
 		};
 		E738FB892C7C62F0004696BD /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = A2BAC9402CD35B0E00CDD5E5 /* Config.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -913,11 +964,13 @@
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UIUserInterfaceStyle = Light;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.sh.PuppyTing;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -968,6 +1021,14 @@
 			requirement = {
 				kind = upToNextMajorVersion;
 				minimumVersion = 7.12.0;
+			};
+		};
+		239BC9212CC7FCD00029C749 /* XCRemoteSwiftPackageReference "lottie-ios" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/airbnb/lottie-ios";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 4.5.0;
 			};
 		};
 		A2085DA12C7D678400698923 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */ = {
@@ -1039,6 +1100,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 2369F39E2C97F829006040B3 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
 			productName = FirebaseMessaging;
+		};
+		239BC9222CC7FCD00029C749 /* Lottie */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 239BC9212CC7FCD00029C749 /* XCRemoteSwiftPackageReference "lottie-ios" */;
+			productName = Lottie;
 		};
 		A2085DA22C7D678400698923 /* GoogleSignIn */ = {
 			isa = XCSwiftPackageProductDependency;
