@@ -59,7 +59,6 @@ class PostTingViewController: UIViewController {
     //MARK: View 생명주기
     override func viewDidLoad() {
         super.viewDidLoad()
-        print("viewDidLoad called")
         setUI()
         setConstraints()
         setupKeyboardDismissRecognizer()
@@ -67,7 +66,6 @@ class PostTingViewController: UIViewController {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        print("viewDidAppear called")
         textView.becomeFirstResponder()
     }
     
@@ -75,7 +73,6 @@ class PostTingViewController: UIViewController {
     @objc
     private func addButtonTapped() {
         guard let userID = Auth.auth().currentUser?.uid else {
-            print("유저 정보가 없습니다.")
             return
         }
         
@@ -112,9 +109,7 @@ class PostTingViewController: UIViewController {
                 self.coordinate = coordinate
                 
                 print("받은 데이터: \(placeName ?? "없음"), \(roadAddressName ?? "없음"), 좌표: \(coordinate?.latitude ?? 0), \(coordinate?.longitude ?? 0)")
-                
-                // self.updateMapView()
-                
+
                 if self.coordinate != nil {
                     self.addMapButton.setTitle("다시 설정", for: .normal)
                 }
@@ -122,33 +117,6 @@ class PostTingViewController: UIViewController {
         
         self.navigationController?.pushViewController(searchAddressVC, animated: true)
     }
-
-//    // UI 업데이트 함수 추가
-//    private func updateMapView() {
-//        mapViewContainer.isHidden = false
-//        
-//        if kakaoMapViewController.parent == nil {
-//            addChild(kakaoMapViewController)
-//            mapViewContainer.addSubview(kakaoMapViewController.view)
-//            
-//            kakaoMapViewController.view.snp.makeConstraints { make in
-//                make.edges.equalToSuperview()
-//            }
-//            
-//            kakaoMapViewController.didMove(toParent: self)
-//            
-//            print("KakaoMapViewController가 성공적으로 추가되었습니다.")
-//        }
-//        
-//        // 좌표 설정 및 POI 추가
-//        if let coordinate = coordinate {
-//            kakaoMapViewController.setCoordinate(coordinate)
-//            kakaoMapViewController.addPoi(at: coordinate)
-//            print("좌표 설정 및 POI 추가 완료: \(coordinate.latitude), \(coordinate.longitude)")
-//        } else {
-//            print("좌표가 설정되지 않았습니다.")
-//        }
-//    }
 
     //MARK: UI 설정 및 제약조건 등
     private func setUI() {

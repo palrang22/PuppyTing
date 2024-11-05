@@ -20,13 +20,11 @@ class KakaoMapViewController: UIViewController, MapControllerDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        print("viewDidLoad called")
         setupMapView()
         setConstraints()
     }
     
     deinit {
-        print("deinit called")
         mapController?.pauseEngine()
         mapController?.resetEngine()
         mapContainer?.removeFromSuperview()
@@ -34,36 +32,28 @@ class KakaoMapViewController: UIViewController, MapControllerDelegate {
     }
     
     private func setupMapView() {
-        print("setupMapView called")
         mapContainer = KMViewContainer(frame: self.view.bounds)
         
         // KMController 생성 및 초기화
         mapController = KMController(viewContainer: mapContainer!)
         mapController?.delegate = self
         
-        print("mapController initialized")
-        
         // 엔진 준비
         mapController?.prepareEngine()
-        print("Engine prepared")
         
         // 좌표가 이미 설정된 경우 지도를 생성
         if coordinate != nil {
-            print("Coordinate available: \(coordinate!)")
             addViews()
         }
     }
     
     func addViews() {
-        print("addViews called")
         let defaultPosition: MapPoint
         
         if let coordinate = coordinate {
             defaultPosition = MapPoint(longitude: coordinate.longitude, latitude: coordinate.latitude)
-            print("Using coordinate for map center: \(coordinate.latitude), \(coordinate.longitude)")
         } else {
             defaultPosition = MapPoint(longitude: 127.108678, latitude: 37.402001)
-            print("Using default map center")
         }
         
         let mapviewInfo = MapviewInfo(viewName: "mapview", viewInfoName: "map", defaultPosition: defaultPosition, defaultLevel: 17)
@@ -89,39 +79,36 @@ class KakaoMapViewController: UIViewController, MapControllerDelegate {
         print("Coordinate set: \(coordinate.latitude), \(coordinate.longitude)")
         
         if mapController?.isEngineActive == true {
-            print("Engine active, adding views")
             addViews()
         }
     }
     
     func createLabelLayer() {
         guard let view = mapController?.getView("mapview") as? KakaoMap else {
-            print("Failed to get KakaoMap view")
             return
         }
-        print("Creating label layer")
         let manager = view.getLabelManager()
-        let layerOption = LabelLayerOptions(layerID: "PoiLayer", competitionType: .none, competitionUnit: .symbolFirst, orderType: .rank, zOrder: 10000)
+        let layerOption = LabelLayerOptions(layerID: "PoiLayer",
+                                            competitionType: .none,
+                                            competitionUnit: .symbolFirst,
+                                            orderType: .rank,
+                                            zOrder: 10000)
         _ = manager.addLabelLayer(option: layerOption)
     }
     
     func createPoiStyle() {
         guard let view = mapController?.getView("mapview") as? KakaoMap else {
-            print("Failed to get KakaoMap view")
             return
         }
-        print("Creating POI style")
         let manager = view.getLabelManager()
         
         guard let iconImage = UIImage(named: "poiMarker") else {
-            print("poiMarker image not found")
             return
         }
         
         let iconStyle = PoiIconStyle(symbol: iconImage, anchorPoint: CGPoint(x: 0.0, y: 0.5))
         let poiStyle = PoiStyle(styleID: "DefaultStyle", styles: [PerLevelPoiStyle(iconStyle: iconStyle, level: 0)])
         manager.addPoiStyle(poiStyle)
-        print("POI style added")
     }
     
     func addPoi(at coordinate: CLLocationCoordinate2D) {
@@ -132,13 +119,10 @@ class KakaoMapViewController: UIViewController, MapControllerDelegate {
     
     func addSelectedLocationPoi(at mapPoint: MapPoint) {
         guard let view = mapController?.getView("mapview") as? KakaoMap else {
-            print("Failed to get KakaoMap view")
             return
         }
-        print("Adding selected location POI")
         let manager = view.getLabelManager()
         guard let layer = manager.getLabelLayer(layerID: "PoiLayer") else {
-            print("POI Layer not found")
             return
         }
         
@@ -146,7 +130,6 @@ class KakaoMapViewController: UIViewController, MapControllerDelegate {
         poiOption.rank = 0
         if let poi = layer.addPoi(option: poiOption, at: mapPoint) {
             poi.show()
-            print("POI added successfully")
         } else {
             print("Failed to add POI")
         }

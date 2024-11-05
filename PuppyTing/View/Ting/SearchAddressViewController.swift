@@ -114,13 +114,8 @@ class SearchAddressViewController: UIViewController {
                         
                         // 받아온 데이터로 처리
                         if let coordinate = coordinate {
-                            print("선택된 장소: \(placeName ?? "")")
-                            print("선택된 도로명 주소: \(roadAddressName ?? "")")
-                            print("선택된 좌표: \(coordinate.latitude), \(coordinate.longitude)")
-                            
                             // 선택된 데이터를 상위 컨트롤러의 mapDataSubject로 방출
                             self.mapDataSubject.onNext((placeName, roadAddressName, coordinate))
-                            
                             // 화면 이동
                             self.navigationController?.popViewController(animated: true)
                         }

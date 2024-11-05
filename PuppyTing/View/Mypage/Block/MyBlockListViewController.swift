@@ -105,8 +105,6 @@ extension MyBlockListViewController: MyBlockListTableViewCellDelegate {
         // Firestore에서 차단 해제
         FireStoreDatabaseManager.shared.unblockUser(userId: member.uuid)
             .subscribe(onSuccess: {
-                print("\(member.nickname) 차단 해제 성공")
-                
                 // 차단 목록에서 해당 사용자 제거
                 self.blockedUsers.removeAll { $0.uuid == member.uuid }
                 

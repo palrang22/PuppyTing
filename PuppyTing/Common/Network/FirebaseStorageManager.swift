@@ -36,16 +36,13 @@ class FirebaseStorageManager {
             // 4. Firebase Storage에 이미지 업로드
             let uploadTask = imageRef.putData(imageData, metadata: nil) { metadata, error in
                 if let error = error {
-                    print("Firebase 이미지 업로드 실패: \(error.localizedDescription)")
                     single(.failure(error)) // 업로드 실패
                 } else {
                     // 5. 업로드 성공 시, 다운로드 URL 가져오기
                     imageRef.downloadURL { url, error in
                         if let error = error {
-                            print("Firebase 이미지 URL 가져오기 실패: \(error.localizedDescription)")
                             single(.failure(error))
                         } else if let downloadURL = url {
-                            print("Firebase 이미지 업로드 성공, URL: \(downloadURL.absoluteString)")
                             single(.success(downloadURL.absoluteString))
                         }
                     }
