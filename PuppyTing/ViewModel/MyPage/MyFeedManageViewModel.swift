@@ -14,9 +14,8 @@ class MyFeedManageViewModel { // kkh
 
         FireStoreDatabaseManager.shared.fetchFeeds(forUserId: currentUserId)
             .subscribe(onSuccess: { [weak self] feeds in
-                print("Fetched feeds for user \(currentUserId): \(feeds)")
                 self?.feedsSubject.onNext(feeds)
-            }, onError: { error in
+            }, onFailure: { error in
                 print("Error fetching feeds: \(error)")
             })
             .disposed(by: disposeBag)

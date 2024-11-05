@@ -15,7 +15,6 @@ class BlockListViewModel {
     func fetchBlockedUsers() {
         databaseManager.getBlockedUsers()
             .subscribe(onSuccess: { [weak self] members in
-                print("차단된 사용자 목록 가져오기 성공: \(members)")
                 self?._blockedUsers.onNext(members)
             }, onFailure: { error in
                 print("차단된 사용자 목록 가져오기 실패: \(error)")
