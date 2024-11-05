@@ -115,7 +115,6 @@ class TingViewController: UIViewController {
                     self.isLoading = false
                 },
                 onError: { [weak self] error in
-                    print("데이터 로드 실패: \(error.localizedDescription)")
                     self?.isLoading = false
                 }
             ).disposed(by: disposeBag)
@@ -129,7 +128,6 @@ class TingViewController: UIViewController {
         let height = scrollView.frame.size.height
         
         if offsetY > contentHeight - height {
-            print("스크롤됨")
             loadMoreData()
         }
     }
@@ -208,7 +206,6 @@ extension TingViewController: UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard indexPath.row < tingFeedModels.count else {
-            print("Error: Index out of range. row: \(indexPath.row), count: \(tingFeedModels.count)")
             return UICollectionViewCell() // 빈 셀 반환
         }
         
