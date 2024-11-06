@@ -324,11 +324,11 @@ class PuppyRegistrationViewController: UIViewController {
             .disposed(by: disposeBag)
     }
     
-    // 이별 알림창
-    private func showSeparationAlert() { // kkh
-        let alert = UIAlertController(title: "정말 이별하시겠습니까?", message: "떠나보내시면 되돌릴 수 없습니다.", preferredStyle: .alert)
+    // 삭제 알림창 - jgh 수정
+    private func showSeparationAlert() { // kkh - Jgh
+        let alert = UIAlertController(title: "삭제하시겠습니까?", message: "삭제하면 되돌릴 수 없습니다.", preferredStyle: .alert)
             alert.addAction(UIAlertAction(title: "취소", style: .cancel, handler: nil))
-            alert.addAction(UIAlertAction(title: "이별하기", style: .destructive, handler: { [weak self] _ in
+            alert.addAction(UIAlertAction(title: "삭제", style: .destructive, handler: { [weak self] _ in
                 self?.deletePuppy()
         }))
         present(alert, animated: true, completion: nil)
