@@ -322,7 +322,6 @@ class DetailTingViewController: UIViewController {
                                     }
                                 )
                             }, onFailure: { error in
-                                print("삭제 실패: \(error)")
                                 self?.okAlert(
                                     title: "삭제 실패",
                                     message: "게시물 삭제에 실패했습니다. 다시 시도해주세요."
@@ -349,7 +348,6 @@ class DetailTingViewController: UIViewController {
                                     self?.navigationController?.popViewController(animated: true)
                                 })
                             }, onFailure: { error in
-                                print("차단 실패")
                                 self?.okAlert(title: "차단 실패", message: "사용자 차단에 실패했습니다. 다시 시도해주세요.")
                             }).disposed(by: self!.disposeBag)
                     })
@@ -380,7 +378,6 @@ class DetailTingViewController: UIViewController {
                                     self?.navigationController?.popViewController(animated: true)
                                 })
                             }, onFailure: { error in
-                                print("신고 실패")
                                 self?.okAlert(title: "신고 실패", message: "게시글 신고에 실패했습니다. 다시 시도해주세요.")
                             }).disposed(by: self!.disposeBag)
                     }

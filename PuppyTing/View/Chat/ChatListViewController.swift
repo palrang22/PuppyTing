@@ -169,8 +169,6 @@ class ChatListViewController: UIViewController, UITableViewDelegate, UISearchBar
     // 검색 버튼 클릭 시 호출되는 메소드
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         guard let searchText = searchBar.text else { return }
-        print("검색어: \(searchText)")
-
         // 검색 완료 후 Search Bar 숨기기
         hideSearchBar()
     }

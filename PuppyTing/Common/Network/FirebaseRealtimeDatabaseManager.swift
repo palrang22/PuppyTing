@@ -30,10 +30,8 @@ class FirebaseRealtimeDatabaseManager {
             ]
             roomRef.setValue(roomData) { error, _ in
                 if let error = error {
-                    print("실패")
                     single(.failure(error))
                 } else {
-                    print("성공")
                     single(.success(roomId))
                 }
             }
