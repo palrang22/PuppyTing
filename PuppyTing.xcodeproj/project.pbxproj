@@ -20,7 +20,6 @@
 		2369F3B52C99AB1A006040B3 /* FirebaseMessaging in Frameworks */ = {isa = PBXBuildFile; productRef = 2369F3B42C99AB1A006040B3 /* FirebaseMessaging */; };
 		2399E8B12CA555A600295691 /* ProfilePuppyCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2399E8B02CA555A600295691 /* ProfilePuppyCollectionViewCell.swift */; };
 		239BC9232CC7FCD00029C749 /* Lottie in Frameworks */ = {isa = PBXBuildFile; productRef = 239BC9222CC7FCD00029C749 /* Lottie */; };
-		239BC9252CC7FD9A0029C749 /* PuppytingLoading.json in Resources */ = {isa = PBXBuildFile; fileRef = 239BC9242CC7FD9A0029C749 /* PuppytingLoading.json */; };
 		239BC9262CC800450029C749 /* AppStoreCheck.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56BC8D3D2CC11E6C00CB1B82 /* AppStoreCheck.swift */; };
 		5602B05E2C8A82E50060F03B /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5602B05D2C8A82E50060F03B /* ProfileViewController.swift */; };
 		5602B0862C8E0C6F0060F03B /* ProfileViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5602B0852C8E0C6F0060F03B /* ProfileViewModel.swift */; };
@@ -50,6 +49,7 @@
 		A2085DD12C8059F400698923 /* FireStoreDatabaseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2085DD02C8059F400698923 /* FireStoreDatabaseManager.swift */; };
 		A2085DD42C80622B00698923 /* PptLoginViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2085DD32C80622B00698923 /* PptLoginViewModel.swift */; };
 		A2085DD62C806A4D00698923 /* LoginViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2085DD52C806A4D00698923 /* LoginViewModel.swift */; };
+		A2BAC9412CD35B0E00CDD5E5 /* Config.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = A2BAC9402CD35B0E00CDD5E5 /* Config.xcconfig */; };
 		A2F9FE1D2C859E54004D7FF6 /* FindingPasswordViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2F9FE1C2C859E54004D7FF6 /* FindingPasswordViewModel.swift */; };
 		A2F9FE4D2C896EE0004D7FF6 /* AppController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2F9FE4C2C896EE0004D7FF6 /* AppController.swift */; };
 		A2F9FE512C89D561004D7FF6 /* ChatModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2F9FE502C89D561004D7FF6 /* ChatModel.swift */; };
@@ -59,7 +59,6 @@
 		A2F9FE602C8C4DC8004D7FF6 /* FirebaseStorageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2F9FE5F2C8C4DC8004D7FF6 /* FirebaseStorageManager.swift */; };
 		A2F9FE6C2C8DAF18004D7FF6 /* Pet.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2F9FE6B2C8DAF18004D7FF6 /* Pet.swift */; };
 		A2F9FE6E2C8DAFD8004D7FF6 /* PuppyRegistrationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2F9FE6D2C8DAFD8004D7FF6 /* PuppyRegistrationViewModel.swift */; };
-		A2F9FE772C8DF3CB004D7FF6 /* Config.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = A2F9FE762C8DF3CB004D7FF6 /* Config.xcconfig */; };
 		A2F9FE7A2C8E6BBB004D7FF6 /* ChatDateTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2F9FE792C8E6BBB004D7FF6 /* ChatDateTableViewCell.swift */; };
 		A2F9FE7C2C8E6BF7004D7FF6 /* Date+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2F9FE7B2C8E6BF7004D7FF6 /* Date+Extension.swift */; };
 		C29FCF662C7DB37E00F8951D /* PuppyCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C29FCF652C7DB37E00F8951D /* PuppyCollectionViewCell.swift */; };
@@ -72,6 +71,7 @@
 		C29FD01D2C9BFEA900F8951D /* MyBlockListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C29FD01C2C9BFEA900F8951D /* MyBlockListViewController.swift */; };
 		C29FD01F2C9BFEDC00F8951D /* BlockListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C29FD01E2C9BFEDC00F8951D /* BlockListViewModel.swift */; };
 		C29FD0212C9C408400F8951D /* MyFeedManageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C29FD0202C9C408400F8951D /* MyFeedManageViewModel.swift */; };
+		CCA856AC2CDA35BA003368CD /* PuppytingLoading.json in Resources */ = {isa = PBXBuildFile; fileRef = CCA856AB2CDA35BA003368CD /* PuppytingLoading.json */; };
 		E70DB3452C7F0CB60073B3F8 /* PostTingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E70DB3442C7F0CB60073B3F8 /* PostTingViewController.swift */; };
 		E70DB3472C7F0CD00073B3F8 /* DetailTingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E70DB3462C7F0CD00073B3F8 /* DetailTingViewController.swift */; };
 		E70DB3492C7F3F060073B3F8 /* UIViewController+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = E70DB3482C7F3F060073B3F8 /* UIViewController+Extension.swift */; };
@@ -111,7 +111,6 @@
 		2369F3AE2C980222006040B3 /* KingFisherManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KingFisherManager.swift; sourceTree = "<group>"; };
 		2399E8A82CA3D32700295691 /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
 		2399E8B02CA555A600295691 /* ProfilePuppyCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfilePuppyCollectionViewCell.swift; sourceTree = "<group>"; };
-		239BC9242CC7FD9A0029C749 /* PuppytingLoading.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = PuppytingLoading.json; path = ../../../../../Downloads/PuppytingLoading.json; sourceTree = "<group>"; };
 		5602B05D2C8A82E50060F03B /* ProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
 		5602B0852C8E0C6F0060F03B /* ProfileViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewModel.swift; sourceTree = "<group>"; };
 		5602B0892C8E91B20060F03B /* FavoriteListTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteListTableViewCell.swift; sourceTree = "<group>"; };
@@ -140,6 +139,7 @@
 		A2085DD02C8059F400698923 /* FireStoreDatabaseManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FireStoreDatabaseManager.swift; sourceTree = "<group>"; };
 		A2085DD32C80622B00698923 /* PptLoginViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PptLoginViewModel.swift; sourceTree = "<group>"; };
 		A2085DD52C806A4D00698923 /* LoginViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewModel.swift; sourceTree = "<group>"; };
+		A2BAC9402CD35B0E00CDD5E5 /* Config.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Config.xcconfig; sourceTree = "<group>"; };
 		A2F9FE1C2C859E54004D7FF6 /* FindingPasswordViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FindingPasswordViewModel.swift; sourceTree = "<group>"; };
 		A2F9FE4C2C896EE0004D7FF6 /* AppController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppController.swift; sourceTree = "<group>"; };
 		A2F9FE502C89D561004D7FF6 /* ChatModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatModel.swift; sourceTree = "<group>"; };
@@ -149,7 +149,6 @@
 		A2F9FE5F2C8C4DC8004D7FF6 /* FirebaseStorageManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseStorageManager.swift; sourceTree = "<group>"; };
 		A2F9FE6B2C8DAF18004D7FF6 /* Pet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Pet.swift; sourceTree = "<group>"; };
 		A2F9FE6D2C8DAFD8004D7FF6 /* PuppyRegistrationViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PuppyRegistrationViewModel.swift; sourceTree = "<group>"; };
-		A2F9FE762C8DF3CB004D7FF6 /* Config.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Config.xcconfig; sourceTree = "<group>"; };
 		A2F9FE792C8E6BBB004D7FF6 /* ChatDateTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatDateTableViewCell.swift; sourceTree = "<group>"; };
 		A2F9FE7B2C8E6BF7004D7FF6 /* Date+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+Extension.swift"; sourceTree = "<group>"; };
 		C29FCF652C7DB37E00F8951D /* PuppyCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PuppyCollectionViewCell.swift; sourceTree = "<group>"; };
@@ -162,6 +161,7 @@
 		C29FD01C2C9BFEA900F8951D /* MyBlockListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyBlockListViewController.swift; sourceTree = "<group>"; };
 		C29FD01E2C9BFEDC00F8951D /* BlockListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlockListViewModel.swift; sourceTree = "<group>"; };
 		C29FD0202C9C408400F8951D /* MyFeedManageViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyFeedManageViewModel.swift; sourceTree = "<group>"; };
+		CCA856AB2CDA35BA003368CD /* PuppytingLoading.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = PuppytingLoading.json; sourceTree = "<group>"; };
 		E70DB3442C7F0CB60073B3F8 /* PostTingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostTingViewController.swift; sourceTree = "<group>"; };
 		E70DB3462C7F0CD00073B3F8 /* DetailTingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailTingViewController.swift; sourceTree = "<group>"; };
 		E70DB3482C7F3F060073B3F8 /* UIViewController+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Extension.swift"; sourceTree = "<group>"; };
@@ -386,7 +386,7 @@
 				E738FB912C7C6485004696BD /* Model */,
 				E738FB902C7C6460004696BD /* View */,
 				E738FB8F2C7C6455004696BD /* ViewModel */,
-				E738FBA72C7C696C004696BD /* Assets */,
+				E738FBA72C7C696C004696BD /* Resources */,
 				E738FB812C7C62F0004696BD /* LaunchScreen.storyboard */,
 				E738FB842C7C62F0004696BD /* Info.plist */,
 				A2024BBD2CA148FC0049DD8A /* GoogleService-Info.plist */,
@@ -485,7 +485,7 @@
 				56BC8D3D2CC11E6C00CB1B82 /* AppStoreCheck.swift */,
 				E738FB762C7C62EE004696BD /* AppDelegate.swift */,
 				E738FB782C7C62EE004696BD /* SceneDelegate.swift */,
-				A2F9FE762C8DF3CB004D7FF6 /* Config.xcconfig */,
+				A2BAC9402CD35B0E00CDD5E5 /* Config.xcconfig */,
 			);
 			path = App;
 			sourceTree = "<group>";
@@ -531,13 +531,13 @@
 			path = Ting;
 			sourceTree = "<group>";
 		};
-		E738FBA72C7C696C004696BD /* Assets */ = {
+		E738FBA72C7C696C004696BD /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				239BC9242CC7FD9A0029C749 /* PuppytingLoading.json */,
 				E738FB7F2C7C62F0004696BD /* Assets.xcassets */,
+				CCA856AB2CDA35BA003368CD /* PuppytingLoading.json */,
 			);
-			path = Assets;
+			path = Resources;
 			sourceTree = "<group>";
 		};
 		E738FBAB2C7C6CFB004696BD /* Tabbar */ = {
@@ -634,11 +634,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				E738FB802C7C62F0004696BD /* Assets.xcassets in Resources */,
-				A2F9FE772C8DF3CB004D7FF6 /* Config.xcconfig in Resources */,
 				A2024BBE2CA148FC0049DD8A /* GoogleService-Info.plist in Resources */,
 				E738FBAA2C7C6BB3004696BD /* .gitignore in Resources */,
 				E738FB832C7C62F0004696BD /* Base in Resources */,
-				239BC9252CC7FD9A0029C749 /* PuppytingLoading.json in Resources */,
+				A2BAC9412CD35B0E00CDD5E5 /* Config.xcconfig in Resources */,
+				CCA856AC2CDA35BA003368CD /* PuppytingLoading.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -743,7 +743,7 @@
 /* Begin XCBuildConfiguration section */
 		E738FB852C7C62F0004696BD /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = A2F9FE762C8DF3CB004D7FF6 /* Config.xcconfig */;
+			baseConfigurationReference = A2BAC9402CD35B0E00CDD5E5 /* Config.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
@@ -808,7 +808,7 @@
 		};
 		E738FB862C7C62F0004696BD /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = A2F9FE762C8DF3CB004D7FF6 /* Config.xcconfig */;
+			baseConfigurationReference = A2BAC9402CD35B0E00CDD5E5 /* Config.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
@@ -866,6 +866,7 @@
 		};
 		E738FB882C7C62F0004696BD /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = A2BAC9402CD35B0E00CDD5E5 /* Config.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -905,6 +906,7 @@
 		};
 		E738FB892C7C62F0004696BD /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = A2BAC9402CD35B0E00CDD5E5 /* Config.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;

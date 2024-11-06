@@ -81,7 +81,6 @@ class MyPageViewModel {
             let docRef = self.db.collection("member").document(memberId)
             docRef.getDocument { (document, error) in
                 if let document = document, document.exists, let data = document.data(), let puppies = data["puppies"] as? [String] {
-                    print("불러온 강아지 ID 리스트: \(puppies)")
                     self.getPetsInfo(petIds: puppies)
                         .subscribe(onSuccess: { petsInfo in
                             single(.success(petsInfo))
@@ -108,7 +107,6 @@ class MyPageViewModel {
                 dispatchGroup.enter()
                 self.db.collection("pet").document(petId).getDocument { (document, error) in
                     if let document = document, document.exists, let data = document.data() {
-                        print("불러온 강아지 데이터: \(data)")
                         if let id = data["id"] as? String,
                            let age = data["age"] as? Int,
                            let name = data["name"] as? String,

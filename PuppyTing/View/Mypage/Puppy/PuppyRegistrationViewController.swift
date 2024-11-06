@@ -168,7 +168,6 @@ class PuppyRegistrationViewController: UIViewController {
 
     private func setupBindings() {
         guard let rightBarButtonItem = navigationItem.rightBarButtonItem else {
-            print("rightBarButtonItem is nil")
             return
         }
         
@@ -225,7 +224,6 @@ class PuppyRegistrationViewController: UIViewController {
     // 태그 클릭시 삭제되는 메서드 - sh
     @objc
     private func tagTapped(sender: UIButton) {
-        print("tapped")
         tagStack.removeArrangedSubview(sender)
         sender.removeFromSuperview()
         tagStack.layoutIfNeeded()
@@ -274,7 +272,6 @@ class PuppyRegistrationViewController: UIViewController {
             }, onFailure: { error in
                 self.hideLoadingIndicator()
                 self.okAlert(title: "실패", message: "강아지 등록에 실패했습니다. 관리자에게 문의해주세요.")
-                print("강아지 등록 실패: \(error)")
             })
             .disposed(by: disposeBag)
     }
@@ -322,7 +319,6 @@ class PuppyRegistrationViewController: UIViewController {
                 self.okAlert(title: "성공", message: "강아지 정보를 성공적으로 수정했습니다.")
             }, onFailure: { error in
                 self.hideLoadingIndicator()
-                print("이미지 업로드 실패: \(error)")
                 self.okAlert(title: "실패", message: "이미지 업로드에 실패했습니다. 관리자에게 문의해주세요.")
             })
             .disposed(by: disposeBag)

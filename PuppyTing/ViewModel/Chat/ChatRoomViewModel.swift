@@ -58,10 +58,8 @@ class ChatRoomViewModel {
             }
             .subscribe(onSuccess: { [weak self] updatedRooms in
                 self?.chatRoomsSubject.onNext(updatedRooms) // 목록 업데이트
-                print("채팅방 삭제 완료: \(chatRoom.id)")
                 self?.deleteRoomSubject.onNext(true)
             }, onFailure: { error in
-                print("채팅방 삭제 중 오류 발생: \(error.localizedDescription)")
                 self.deleteRoomSubject.onNext(false)
             })
             .disposed(by: disposeBag)

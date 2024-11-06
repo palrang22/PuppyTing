@@ -53,7 +53,6 @@ class MyInfoEditVIewModel {
             .uploadImage(image: image)
             .observe(on: MainScheduler.instance)
             .subscribe(onSuccess: { [weak self] imageUrl in
-                print("업로드된 이미지 URL: \(imageUrl)")  // 업로드된 이미지 URL 로그
                 self?.imageSubject.onNext(imageUrl)
             }, onFailure: { error in
                 // 에러 발생 시 로그 출력
