@@ -101,7 +101,8 @@ class ProfilePuppyCollectionViewCell: UICollectionViewCell {
         [puppyImageView,
         puppyNameLabel,
         puppyAgeLabel,
-        puppyTagLabel].forEach{ contentView.addSubview($0) }
+        puppyTagLabel
+        ].forEach{ contentView.addSubview($0) }
         
         puppyImageView.snp.makeConstraints {
             $0.top.equalToSuperview().offset(20)
