@@ -117,13 +117,13 @@ class TingViewModel {
                                    !blockedUsers.contains(userid),
                                    let geoPoint = data["location"] as? GeoPoint,
                                    let content = data["content"] as? String,
-                                   let timestamp = data["timestamp"] as? Timestamp {
+                                   let timestamp = data["timestamp"] as? Timestamp,
+                                   let photoUrl = data["photoUrl"] as? [String] {
                                     
                                     let location = CLLocationCoordinate2D(latitude: geoPoint.latitude, longitude: geoPoint.longitude)
                                     let time = timestamp.dateValue()
                                     let postid = document.documentID
-                                    
-                                    let tingFeed = TingFeedModel(userid: userid, postid: postid, location: location, content: content, time: time)
+                                    let tingFeed = TingFeedModel(userid: userid, postid: postid, location: location, content: content, time: time, photoUrl: photoUrl)
                                     dataList.append(tingFeed)
                                 }
                             }

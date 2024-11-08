@@ -210,14 +210,16 @@ class FireStoreDatabaseManager {
                             let data = document.data()
                             if let geoPoint = data["location"] as? GeoPoint, // geoPoint를 가져오기 - jgh
                                let content = data["content"] as? String,
-                               let timestamp = data["timestamp"] as? Timestamp {
+                               let timestamp = data["timestamp"] as? Timestamp,
+                               let photoUrl = data["photoUrl"] as? [String] {
                                 
                                 let feed = TingFeedModel(
                                     userid: userId,
                                     postid: document.documentID,
                                     location: CLLocationCoordinate2D(latitude: geoPoint.latitude, longitude: geoPoint.longitude), // jgh
                                     content: content,
-                                    time: timestamp.dateValue()
+                                    time: timestamp.dateValue(),
+                                    photoUrl: photoUrl
                                 )
                                 
                                 feeds.append(feed)

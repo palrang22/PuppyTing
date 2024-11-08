@@ -85,11 +85,13 @@ class PostTingViewController: UIViewController {
         
         let coordinate = self.coordinate ?? CLLocationCoordinate2D(latitude: 0.0, longitude: 0.0)
         let content = textView.text ?? "내용 없음"
+        let photoUrl = 여기처리필요
         let model = TingFeedModel(userid: userID,
                                   postid: "",
                                   location: coordinate,
                                   content: content,
-                                  time: Date())
+                                  time: Date(),
+                                  photoUrl: photoUrl)
         let viewModel = PostingViewModel()
         viewModel.create(collection: "tingFeeds", model: model)
         
