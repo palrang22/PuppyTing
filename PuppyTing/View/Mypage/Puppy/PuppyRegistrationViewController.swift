@@ -253,7 +253,7 @@ class PuppyRegistrationViewController: UIViewController {
             return
         }
         
-        showLoadingIndicatorWithoutBackground()
+        showLoadingIndicatorWithShade()
         
         FirebaseStorageManager.shared.uploadImage(image: image)
             .flatMap { imageUrl in
@@ -279,7 +279,7 @@ class PuppyRegistrationViewController: UIViewController {
     @objc
     private func handleEditButtonTapped() {
         
-        showLoadingIndicatorWithoutBackground()
+        showLoadingIndicatorWithShade()
         
         //에러처리 필요
         guard let petId = pet?.id,

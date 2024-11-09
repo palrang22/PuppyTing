@@ -114,6 +114,8 @@ class PostTingViewController: UIViewController {
             return
         }
         
+        showLoadingIndicatorWithShade()
+        
         let coordinate = self.coordinate ?? CLLocationCoordinate2D(latitude: 0.0, longitude: 0.0)
         let content = textView.text ?? "내용 없음"
         
@@ -129,6 +131,7 @@ class PostTingViewController: UIViewController {
                 return self.viewModel.create(collection: "tingFeeds", model: model)
             }
             .subscribe(onCompleted: { [weak self] in
+                self?.hideLoadingIndicator()
                 self?.navigationController?.popViewController(animated: true)},
                        onError: { [weak self] error in
                 self?.okAlert(title: "에러", message: "게시물 추가에 실패했습니다. 관리자에게 문의해주세요.")
