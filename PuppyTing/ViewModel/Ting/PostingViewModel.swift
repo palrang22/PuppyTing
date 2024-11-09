@@ -23,7 +23,7 @@ class PostingViewModel {
                 "location": GeoPoint(latitude: model.location.latitude, longitude: model.location.longitude),
                 "content": model.content,
                 "timestamp": Timestamp(),
-                "photoUrls": model.photoUrl
+                "photoUrl": model.photoUrl
             ]
             
             self.db.collection("tingFeeds").addDocument(data: data) { error in
@@ -39,7 +39,7 @@ class PostingViewModel {
     
     func uploadImages(images: [UIImage]) -> Single<[String]> {
         return Single.create { single in
-            var photoUrls = [String]()
+            var photoUrl = [String]()
             let dispatchGroup = DispatchGroup()
             
             for image in images {
@@ -55,14 +55,14 @@ class PostingViewModel {
                     }
                     storageRef.downloadURL { url, error in
                         if let url = url {
-                            photoUrls.append(url.absoluteString)
+                            photoUrl.append(url.absoluteString)
                         }
                         dispatchGroup.leave()
                     }
                 }
             }
             dispatchGroup.notify(queue: .main) {
-                single(.success(photoUrls))
+                single(.success(photoUrl))
             }
             return Disposables.create()
         }

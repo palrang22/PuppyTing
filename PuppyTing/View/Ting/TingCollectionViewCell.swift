@@ -110,6 +110,22 @@ class TingCollectionViewCell: UICollectionViewCell {
         return label
     }()
     
+    private let imageStackScrollView: UIScrollView = {
+        let scroll = UIScrollView()
+        scroll.showsHorizontalScrollIndicator = false
+        return scroll
+    }()
+    
+    private let imageStack: UIStackView = {
+        let stack = UIStackView()
+        stack.axis = .horizontal
+        stack.alignment = .leading
+        stack.distribution = .fill
+        stack.layer.cornerRadius = 5
+        stack.spacing = 10
+        return stack
+    }()
+    
     private let messageSendButton: UIButton = {
         let button = UIButton(type: .system)
         button.setTitle("퍼피팅 메시지 보내기 🐾", for: .normal)
@@ -147,17 +163,38 @@ class TingCollectionViewCell: UICollectionViewCell {
     
     //MARK: config 메서드
     func configure(with model: TingFeedModel, currentUserID: String) {
+        // 디폴트 설정
         self.nameLabel.text = "알 수 없는 사용자"
         self.profilePic.image = UIImage(named: "defaultProfileImage")
-        self.content.text = model.content
         self.footPrintLabel.text = "발도장 0개"
-        messageSendButton.isHidden = model.userid == currentUserID
         
+        // 들어가는 내용 설정
         changeDateFormat(time: model.time)
-        
+        self.content.text = model.content
         self.footPrintLabel.text = "발도장 \(model.postid)개 🐾"
-        mapStack.isHidden = (model.location.latitude == 0.0 && model.location.longitude == 0.0)
         
+        // hidable 요소들 속성 설정
+        messageSendButton.isHidden = model.userid == currentUserID
+        mapStack.isHidden = (model.location.latitude == 0.0 && model.location.longitude == 0.0)
+        imageStackScrollView.isHidden = model.photoUrl.isEmpty
+        
+        // 이미지 설정
+        if !model.photoUrl.isEmpty {
+            imageStack.arrangedSubviews.forEach { $0.removeFromSuperview() }
+            model.photoUrl.forEach { urlString in
+                guard URL(string: urlString) != nil else { return }
+                let imageView = UIImageView()
+                imageView.contentMode = .scaleAspectFill
+                imageView.clipsToBounds = true
+                imageView.layer.cornerRadius = 5
+                imageView.snp.makeConstraints { $0.size.equalTo(CGSize(width: 100, height: 100)) }
+                
+                KingFisherManager.shared.loadAnyImage(urlString: urlString, into: imageView)
+                imageStack.addArrangedSubview(imageView)
+            }
+        }
+        
+        // 사용자 정보 설정
         FireStoreDatabaseManager.shared.findMemeber(uuid: model.userid)
             .subscribe(onSuccess: { [weak self] member in
                 guard let self else { return }
@@ -258,9 +295,16 @@ class TingCollectionViewCell: UICollectionViewCell {
          timeLabel,
          footPrintLabel].forEach { infoStack.addArrangedSubview($0) }
         [content,
+         imageStackScrollView,
          messageSendButton].forEach { hidableStack.addArrangedSubview($0) }
         [mapExistIcon,
          mapExistLabel].forEach { mapStack.addArrangedSubview($0) }
+        
+        imageStackScrollView.addSubview(imageStack)
+        imageStack.snp.makeConstraints {
+            $0.edges.equalToSuperview()
+            $0.height.equalToSuperview()
+        }
         
         contentView.addSubview(shadowContainerView)
         [profilePic,

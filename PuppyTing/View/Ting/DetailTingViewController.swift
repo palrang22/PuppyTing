@@ -10,6 +10,7 @@ import UIKit
 import FirebaseAuth
 import RxCocoa
 import RxSwift
+import Kingfisher
 
 protocol DetailTingViewControllerDelegate: AnyObject {
     func didDeleteFeed()
@@ -93,15 +94,23 @@ class DetailTingViewController: UIViewController {
         layout.scrollDirection = .horizontal
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collectionView.register(ImageCollectionViewCell.self, forCellWithReuseIdentifier: ImageCollectionViewCell.id)
-        collectionView.backgroundColor = .gray
-        collectionView.isHidden = true
+        // collectionView.isHidden = true
         return collectionView
+    }()
+    
+    private let mapContainerView: UIView = {
+        let view = UIView()
+        view.isHidden = true
+        view.clipsToBounds = true
+        view.layer.borderWidth = 1
+        view.layer.borderColor = UIColor.lightGray.cgColor
+        return view
     }()
     
     private let hidableStack: UIStackView = {
         let stackView = UIStackView()
-        stackView.axis = .horizontal
-        stackView.spacing = 10
+        stackView.axis = .vertical
+        stackView.spacing = 20
         return stackView
     }()
     
@@ -191,8 +200,8 @@ class DetailTingViewController: UIViewController {
         
         // 하프모달로 띄우기
         if let sheet = profileVC.sheetPresentationController {
-            sheet.detents = [.medium()] // 모달크기 설정
-            sheet.prefersGrabberVisible = true // 위에 바 나오게 하기
+            sheet.detents = [.medium()]
+            sheet.prefersGrabberVisible = true
         }
         
         present(profileVC, animated: true)
@@ -214,8 +223,11 @@ class DetailTingViewController: UIViewController {
             timeLabel.text = dateFormatter.string(from: model.time)
             
             let coordinate = model.location
-            if coordinate.latitude != 0.0, coordinate.longitude != 0.0 {
+            if coordinate.latitude != 0.0 || coordinate.longitude != 0.0 {
                 configMap(with: coordinate)
+                mapContainerView.isHidden = false
+            } else {
+                mapContainerView.isHidden = true
             }
             
             self.images = model.photoUrl
@@ -398,21 +410,15 @@ class DetailTingViewController: UIViewController {
     //MARK: 카카오맵 메서드
     private func configMap(with coordinate: CLLocationCoordinate2D) {
         addChild(kakaoMapViewController)
-        view.addSubview(kakaoMapViewController.view)
-        
-        kakaoMapViewController.view.snp.makeConstraints {
-            $0.top.equalTo(content.snp.bottom).offset(20)
-            $0.leading.trailing.equalToSuperview().inset(20)
-            $0.height.equalTo(150)
-        }
-        
-        view.layoutIfNeeded()
-        
-        mapTrueConstraints()
-        
+        mapContainerView.addSubview(kakaoMapViewController.view)
         kakaoMapViewController.didMove(toParent: self)
         kakaoMapViewController.setCoordinate(coordinate)
         kakaoMapViewController.addPoi(at: coordinate)
+        
+        kakaoMapViewController.view.snp.makeConstraints {
+            $0.edges.equalToSuperview()
+        }
+        view.layoutIfNeeded()
     }
     
     private func setButton(model: TingFeedModel) {
@@ -451,7 +457,7 @@ class DetailTingViewController: UIViewController {
             .forEach { infoStack.addArrangedSubview($0) }
         [deleteButton, blockButton, reportButton]
             .forEach { buttonStack.addArrangedSubview($0) }
-        [content, imageCollectionView]
+        [content, imageCollectionView, mapContainerView]
             .forEach { hidableStack.addArrangedSubview($0) }
         [profilePic,
          infoStack,
@@ -477,6 +483,14 @@ class DetailTingViewController: UIViewController {
             $0.centerY.equalTo(profilePic)
         }
         
+        imageCollectionView.snp.makeConstraints {
+            $0.height.equalTo(view.frame.width - 70)
+        }
+        
+        mapContainerView.snp.makeConstraints {
+            $0.height.equalTo(120)
+        }
+        
         hidableStack.snp.makeConstraints {
             $0.top.equalTo(profilePic.snp.bottom).offset(40)
             $0.leading.trailing.equalTo(view.safeAreaLayoutGuide).inset(30)
@@ -495,12 +509,12 @@ class DetailTingViewController: UIViewController {
         }
     }
     
-    private func mapTrueConstraints() {
-        buttonStack.snp.makeConstraints {
-            $0.top.equalTo(kakaoMapViewController.view.snp.bottom).offset(20)
-            $0.trailing.equalToSuperview().offset(-20)
-        }
-    }
+//    private func mapTrueConstraints() {
+//        buttonStack.snp.makeConstraints {
+//            $0.top.equalTo(kakaoMapViewController.view.snp.bottom).offset(20)
+//            $0.trailing.equalToSuperview().offset(-20)
+//        }
+//    }
 }
 
 //MARK: Extension
@@ -508,7 +522,37 @@ extension DetailTingViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView,
                         layout collectionViewLayout: UICollectionViewLayout,
                         sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: 100, height: 100)
+        let imageSize = view.frame.width - 80
+        return CGSize(width: imageSize, height: imageSize)
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let imageUrl = images[indexPath.item]
+        showImageFullscreen(imageUrl: imageUrl)
+    }
+    
+    // 이미지 선택시 전체화면 - 사진 클릭시 닫힘
+    // 관련 설명 추가 또는 닫히는 로직 변경예정
+    private func showImageFullscreen(imageUrl: String) {
+        let fullScreenImageView = UIImageView()
+        fullScreenImageView.contentMode = .scaleAspectFit
+        fullScreenImageView.backgroundColor = .black
+        fullScreenImageView.isUserInteractionEnabled = true
+        
+        KingFisherManager.shared.loadAnyImage(urlString: imageUrl, into: fullScreenImageView)
+        
+        navigationController?.setNavigationBarHidden(true, animated: false)
+        
+        view.addSubview(fullScreenImageView)
+        fullScreenImageView.snp.makeConstraints { $0.edges.equalToSuperview() }
+        
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissFullscreenImage))
+        fullScreenImageView.addGestureRecognizer(tapGesture)
+    }
+
+    @objc private func dismissFullscreenImage(_ sender: UITapGestureRecognizer) {
+        sender.view?.removeFromSuperview()
+        navigationController?.setNavigationBarHidden(false, animated: false)
     }
 }
 
@@ -519,6 +563,9 @@ extension DetailTingViewController: UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ImageCollectionViewCell.id, for: indexPath) as? ImageCollectionViewCell else { return UICollectionViewCell() }
+        
+        let imageUrl = images[indexPath.item]
+        cell.configure(with: imageUrl)
         return cell
     }
     

@@ -70,7 +70,7 @@ class TingViewController: UIViewController {
     
     //MARK: delegate
     private func setDelegate() {
-        feedCollectionView.delegate = self
+        feedCollectionView.rx.setDelegate(self).disposed(by: disposeBag)
         feedCollectionView.dataSource = self
         feedCollectionView.refreshControl = refreshControl
     }
