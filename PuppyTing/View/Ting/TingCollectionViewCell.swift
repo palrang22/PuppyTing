@@ -43,7 +43,7 @@ class TingCollectionViewCell: UICollectionViewCell {
     
     private let nameLabel: UILabel = {
         let label = UILabel()
-        label.text = "알 수 없는 사용자"
+        label.text = "사용자"
         label.textColor = .black
         label.font = .systemFont(ofSize: 16, weight: .medium)
         return label
@@ -51,7 +51,7 @@ class TingCollectionViewCell: UICollectionViewCell {
     
     private let timeLabel: UILabel = {
         let label = UILabel()
-        label.text = "n분 전"
+        label.text = "1분 전"
         label.textColor = .puppyPurple
         label.font = .systemFont(ofSize: 14, weight: .medium)
         return label
@@ -59,7 +59,7 @@ class TingCollectionViewCell: UICollectionViewCell {
     
     private let footPrintLabel: UILabel = {
         let label = UILabel()
-        label.text = "알 수 없음"
+        label.text = "발도장 0개"
         label.textColor = .gray
         label.font = .systemFont(ofSize: 13, weight: .medium)
         return label
@@ -69,6 +69,28 @@ class TingCollectionViewCell: UICollectionViewCell {
         let stack = UIStackView()
         stack.axis = .vertical
         stack.spacing = 5
+        return stack
+    }()
+    
+    private let mapExistIcon: UIImageView = {
+        let image = UIImageView()
+        image.image = UIImage(named: "locationExists")
+        return image
+    }()
+    
+    private let mapExistLabel: UILabel = {
+        let label = UILabel()
+        label.text = "지도"
+        label.textColor = .gray
+        label.font = .systemFont(ofSize: 13)
+        return label
+    }()
+    
+    private let mapStack: UIStackView = {
+        let stack = UIStackView()
+        stack.axis = .horizontal
+        stack.spacing = 2
+        stack.isHidden = true
         return stack
     }()
     
@@ -85,16 +107,8 @@ class TingCollectionViewCell: UICollectionViewCell {
         label.numberOfLines = 3
         label.textAlignment = .left
         label.lineBreakMode = .byTruncatingTail
-//        label.setContentCompressionResistancePriority(.required, for: .vertical)
-//        label.setContentHuggingPriority(.required, for: .vertical)
         return label
     }()
-    
-//    private let mapView: UIImageView = {
-//        let map = UIImageView()
-//        map.image = UIImage(named: "mapPhoto")
-//        return map
-//    }()
     
     private let messageSendButton: UIButton = {
         let button = UIButton(type: .system)
@@ -136,12 +150,13 @@ class TingCollectionViewCell: UICollectionViewCell {
         self.nameLabel.text = "알 수 없는 사용자"
         self.profilePic.image = UIImage(named: "defaultProfileImage")
         self.content.text = model.content
-        self.footPrintLabel.text = "알 수 없음"
+        self.footPrintLabel.text = "발도장 0개"
         messageSendButton.isHidden = model.userid == currentUserID
         
         changeDateFormat(time: model.time)
         
         self.footPrintLabel.text = "발도장 \(model.postid)개 🐾"
+        mapStack.isHidden = (model.location.latitude == 0.0 && model.location.longitude == 0.0)
         
         FireStoreDatabaseManager.shared.findMemeber(uuid: model.userid)
             .subscribe(onSuccess: { [weak self] member in
@@ -241,17 +256,20 @@ class TingCollectionViewCell: UICollectionViewCell {
     private func setConstraints() {
         [nameLabel,
          timeLabel,
-        footPrintLabel].forEach { infoStack.addArrangedSubview($0) }
-        
+         footPrintLabel].forEach { infoStack.addArrangedSubview($0) }
         [content,
          messageSendButton].forEach { hidableStack.addArrangedSubview($0) }
+        [mapExistIcon,
+         mapExistLabel].forEach { mapStack.addArrangedSubview($0) }
         
-        [shadowContainerView, profilePic,
+        contentView.addSubview(shadowContainerView)
+        [profilePic,
          infoStack,
-         hidableStack].forEach { contentView.addSubview($0) }
+         mapStack,
+         hidableStack].forEach { shadowContainerView.addSubview($0) }
         
         shadowContainerView.snp.makeConstraints {
-            $0.edges.equalToSuperview().inset(5)
+            $0.edges.equalTo(contentView).inset(5)
         }
         
         profilePic.snp.makeConstraints {
@@ -262,27 +280,24 @@ class TingCollectionViewCell: UICollectionViewCell {
         
         infoStack.snp.makeConstraints {
             $0.leading.equalTo(profilePic.snp.trailing).offset(20)
+            $0.trailing.lessThanOrEqualTo(mapStack.snp.leading).offset(-10)
             $0.centerY.equalTo(profilePic)
         }
         
-//        footPrintLabel.snp.makeConstraints {
-//            $0.trailing.equalToSuperview().offset(-20)
-//            $0.centerY.equalTo(profilePic)
-//        }
+        mapStack.snp.makeConstraints {
+            $0.top.equalToSuperview().offset(20)
+            $0.trailing.equalToSuperview().inset(20).priority(.required)
+        }
         
         hidableStack.snp.makeConstraints {
             $0.top.equalTo(infoStack.snp.bottom).offset(20)
-            $0.leading.trailing.equalToSuperview().inset(20)
-            $0.bottom.equalToSuperview().offset(-20)
+            $0.leading.trailing.equalTo(shadowContainerView).inset(20)
+            $0.bottom.equalTo(shadowContainerView).offset(-20)
         }
         
-//        content.snp.makeConstraints {
-//            $0.leading.trailing.equalToSuperview().inset(20)
-//        }
-        
         messageSendButton.snp.makeConstraints {
-            // $0.leading.trailing.equalToSuperview().inset(20)
             $0.height.equalTo(44)
         }
     }
+
 }
