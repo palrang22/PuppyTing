@@ -206,7 +206,7 @@ class PuppyRegistrationViewController: UIViewController {
             .disposed(by: disposeBag)
     }
     
-    // UIButton Extension 사용하여 버튼 생성 메서드 - sh
+    // UIButton Extension 사용하여 버튼 생성 메서드 - ksh
     private func addTag(word: String) {
         let button = UIButton()
         button.makeTag(word: word, target: self, action: #selector(tagTapped))
