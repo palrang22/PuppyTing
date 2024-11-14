@@ -22,15 +22,12 @@ class TingViewController: UIViewController {
     var hasMoreData = false
     
     //MARK: Component 선언
-    private lazy var feedCollectionView: UICollectionView = {
+    private let feedCollectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .vertical
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collectionView.register(TingCollectionViewCell.self,
                                 forCellWithReuseIdentifier: TingCollectionViewCell.id)
-        collectionView.delegate = self
-        collectionView.dataSource = self
-        collectionView.refreshControl = refreshControl
         return collectionView
     }()
     
@@ -61,6 +58,7 @@ class TingViewController: UIViewController {
         setUI()
         setLayout()
         bind()
+        setDelegate()
         loadInitialData()
     }
     
@@ -69,7 +67,15 @@ class TingViewController: UIViewController {
         showLoadingIndicator()
         refreshFeed()
     }
-
+    
+    //MARK: delegate
+    private func setDelegate() {
+        feedCollectionView.rx.setDelegate(self).disposed(by: disposeBag)
+        feedCollectionView.dataSource = self
+        feedCollectionView.refreshControl = refreshControl
+    }
+    
+    //MARK: 피드 게시물 로드 메서드
     private func loadInitialData() {
         loadFeedData(limit: 10)
     }
@@ -119,9 +125,8 @@ class TingViewController: UIViewController {
                 }
             ).disposed(by: disposeBag)
     }
-
-
     
+    //MARK: 스크롤뷰 메서드
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         let offsetY = scrollView.contentOffset.y
         let contentHeight = scrollView.contentSize.height
@@ -132,7 +137,7 @@ class TingViewController: UIViewController {
         }
     }
     
-    //MARK: Rx
+    //MARK: bind
     private func bind() {
         feedCollectionView.rx.itemSelected
             .subscribe(onNext: { [weak self] indexPath in
@@ -178,7 +183,7 @@ class TingViewController: UIViewController {
 }
 
 
-//MARK: CollectionView
+//MARK: Extension
 extension TingViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         let width = collectionView.frame.width

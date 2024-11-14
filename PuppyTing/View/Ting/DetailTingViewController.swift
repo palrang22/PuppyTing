@@ -10,6 +10,7 @@ import UIKit
 import FirebaseAuth
 import RxCocoa
 import RxSwift
+import Kingfisher
 
 protocol DetailTingViewControllerDelegate: AnyObject {
     func didDeleteFeed()
@@ -20,6 +21,12 @@ class DetailTingViewController: UIViewController {
     var tingFeedModels: TingFeedModel?
     weak var delegate: DetailTingViewControllerDelegate? // Delegate 프로퍼티
     let fireStoreDatabase = FireStoreDatabaseManager.shared
+    
+    var writerId: String? = nil
+    let userid = Auth.auth().currentUser?.uid
+    var users: [String] = []
+    var images: [String] = []
+    
     private let disposeBag = DisposeBag()
     
     private let kakaoMapViewController = KakaoMapViewController()
@@ -82,6 +89,31 @@ class DetailTingViewController: UIViewController {
         return label
     }()
     
+    private let imageCollectionView: UICollectionView = {
+        let layout = UICollectionViewFlowLayout()
+        layout.scrollDirection = .horizontal
+        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        collectionView.register(ImageCollectionViewCell.self, forCellWithReuseIdentifier: ImageCollectionViewCell.id)
+        // collectionView.isHidden = true
+        return collectionView
+    }()
+    
+    private let mapContainerView: UIView = {
+        let view = UIView()
+        view.isHidden = true
+        view.clipsToBounds = true
+        view.layer.borderWidth = 1
+        view.layer.borderColor = UIColor.lightGray.cgColor
+        return view
+    }()
+    
+    private let hidableStack: UIStackView = {
+        let stackView = UIStackView()
+        stackView.axis = .vertical
+        stackView.spacing = 20
+        return stackView
+    }()
+    
     private lazy var blockButton: UIButton = {
         let button = UIButton()
         button.setTitle("차단하기", for: .normal)
@@ -140,17 +172,8 @@ class DetailTingViewController: UIViewController {
         showLoadingIndicator()
         setData()
         bind()
-        
-        // profilePic에 탭 추가 -> ProfileViewController 연결
-        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapProfile))
-        profilePic.isUserInteractionEnabled = true
-        profilePic.addGestureRecognizer(tapGesture)
-        
-        // 닉네임에도 탭 추가
-        let nameTapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapProfile))
-        nameLabel.isUserInteractionEnabled = true
-        nameLabel.addGestureRecognizer(nameTapGesture)
-        
+        tapProfile()
+        setDelegate()
         addButtonAction()
     }
     
@@ -164,6 +187,8 @@ class DetailTingViewController: UIViewController {
         kakaoMapViewController.pauseEngine()
     }
     
+    //MARK: @objc 메서드
+    
     @objc private func didTapProfile() {
         let profileVC = ProfileViewController()
         profileVC.modalPresentationStyle = .pageSheet
@@ -175,11 +200,17 @@ class DetailTingViewController: UIViewController {
         
         // 하프모달로 띄우기
         if let sheet = profileVC.sheetPresentationController {
-            sheet.detents = [.medium()] // 모달크기 설정
-            sheet.prefersGrabberVisible = true // 위에 바 나오게 하기
+            sheet.detents = [.medium()]
+            sheet.prefersGrabberVisible = true
         }
         
         present(profileVC, animated: true)
+    }
+    
+    @objc
+    private func createRoom() {
+        guard let name = nameLabel.text else { return }
+        createChatRoom(chatRoomName: name, users: users)
     }
     
     // MARK: bind
@@ -192,9 +223,16 @@ class DetailTingViewController: UIViewController {
             timeLabel.text = dateFormatter.string(from: model.time)
             
             let coordinate = model.location
-            if coordinate.latitude != 0.0, coordinate.longitude != 0.0 {
+            if coordinate.latitude != 0.0 || coordinate.longitude != 0.0 {
                 configMap(with: coordinate)
+                mapContainerView.isHidden = false
+            } else {
+                mapContainerView.isHidden = true
             }
+            
+            self.images = model.photoUrl
+            self.imageCollectionView.isHidden = images.isEmpty
+            self.imageCollectionView.reloadData()
             
             FireStoreDatabaseManager.shared.findMemeber(uuid: model.userid)
                 .subscribe(onSuccess: { [weak self] member in
@@ -214,90 +252,6 @@ class DetailTingViewController: UIViewController {
             writerId = model.userid
             settingData()
             setButton(model: model)
-        }
-    }
-    
-    var writerId: String? = nil
-    let userid = Auth.auth().currentUser?.uid
-    var users:[String] = []
-    private func settingData() {
-        guard let writerId = writerId, let userId = userid else { return }
-        users = [userId, writerId]
-    }
-    
-    private func findUserId() -> String {
-        guard let user = Auth.auth().currentUser else { return "" }
-        return user.uid
-    }
-    
-    private func createChatRoom(chatRoomName: String, users: [String]) {
-        FirebaseRealtimeDatabaseManager.shared.checkIfChatRoomExists(userIds: users) { exists, chatId in
-            if exists {
-                if let roomId = chatId {
-                    self.moveChatRoom(roomId: roomId, users: users)
-                }
-            } else {
-                FirebaseRealtimeDatabaseManager.shared.createChatRoom(name: chatRoomName, users: users)
-                    .observe(on: MainScheduler.instance).subscribe(onSuccess: { [weak self] roomId in
-                    self?.moveChatRoom(roomId: roomId, users: users)
-                }).disposed(by: self.disposeBag)
-            }
-        }
-    }
-    
-    private func moveChatRoom(roomId: String, users: [String]) {
-        let chatVC = ChatViewController()
-        chatVC.roomId = roomId
-        let userId = findUserId()
-        let otherUser = users.first == userId ? users.last : users.first
-        if let otherUser = otherUser {
-            FireStoreDatabaseManager.shared.findMemberNickname(uuid: otherUser) { nickname in
-                chatVC.titleText = nickname
-                self.navigationController?.pushViewController(chatVC, animated: true)
-            }
-        }
-    }
-    
-    private func addButtonAction() {
-        messageSendButton.addTarget(self, action: #selector(createRoom), for: .touchUpInside)
-    }
-    
-    @objc
-    private func createRoom() {
-        guard let name = nameLabel.text else { return }
-        createChatRoom(chatRoomName: name, users: users)
-    }
-    
-    private func configMap(with coordinate: CLLocationCoordinate2D) {
-        addChild(kakaoMapViewController)
-        view.addSubview(kakaoMapViewController.view)
-        
-        kakaoMapViewController.view.snp.makeConstraints {
-            $0.top.equalTo(content.snp.bottom).offset(20)
-            $0.leading.trailing.equalToSuperview().inset(20)
-            $0.height.equalTo(150)
-        }
-        
-        view.layoutIfNeeded()
-        
-        mapTrueConstraints()
-        
-        kakaoMapViewController.didMove(toParent: self)
-        kakaoMapViewController.setCoordinate(coordinate)
-        kakaoMapViewController.addPoi(at: coordinate)
-    }
-    
-    private func setButton(model: TingFeedModel) {
-        if Auth.auth().currentUser?.uid == model.userid {
-            self.messageSendButton.isHidden = true
-            self.deleteButton.isHidden = false
-            self.blockButton.isHidden = true
-            self.reportButton.isHidden = true
-        } else {
-            self.messageSendButton.isHidden = false
-            self.deleteButton.isHidden = true
-            self.blockButton.isHidden = false
-            self.reportButton.isHidden = false
         }
     }
     
@@ -390,6 +344,97 @@ class DetailTingViewController: UIViewController {
             }).disposed(by: disposeBag)
     }
     
+    //MARK: 프로필 메서드 - jgh
+    // profilePic에 탭 Gesture 추가 -> ProfileViewController 연결
+    private func tapProfile() {
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapProfile))
+        profilePic.isUserInteractionEnabled = true
+        profilePic.addGestureRecognizer(tapGesture)
+        
+        // 닉네임에도 탭 추가
+        let nameTapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapProfile))
+        nameLabel.isUserInteractionEnabled = true
+        nameLabel.addGestureRecognizer(nameTapGesture)
+    }
+    
+    //MARK: Delegate 설정
+    private func setDelegate() {
+        imageCollectionView.delegate = self
+        imageCollectionView.dataSource = self
+    }
+    
+    //MARK: 채팅방 메서드
+
+    private func settingData() {
+        guard let writerId = writerId, let userId = userid else { return }
+        users = [userId, writerId]
+    }
+    
+    private func findUserId() -> String {
+        guard let user = Auth.auth().currentUser else { return "" }
+        return user.uid
+    }
+    
+    private func createChatRoom(chatRoomName: String, users: [String]) {
+        FirebaseRealtimeDatabaseManager.shared.checkIfChatRoomExists(userIds: users) { exists, chatId in
+            if exists {
+                if let roomId = chatId {
+                    self.moveChatRoom(roomId: roomId, users: users)
+                }
+            } else {
+                FirebaseRealtimeDatabaseManager.shared.createChatRoom(name: chatRoomName, users: users)
+                    .observe(on: MainScheduler.instance).subscribe(onSuccess: { [weak self] roomId in
+                    self?.moveChatRoom(roomId: roomId, users: users)
+                }).disposed(by: self.disposeBag)
+            }
+        }
+    }
+    
+    private func moveChatRoom(roomId: String, users: [String]) {
+        let chatVC = ChatViewController()
+        chatVC.roomId = roomId
+        let userId = findUserId()
+        let otherUser = users.first == userId ? users.last : users.first
+        if let otherUser = otherUser {
+            FireStoreDatabaseManager.shared.findMemberNickname(uuid: otherUser) { nickname in
+                chatVC.titleText = nickname
+                self.navigationController?.pushViewController(chatVC, animated: true)
+            }
+        }
+    }
+    
+    private func addButtonAction() {
+        messageSendButton.addTarget(self, action: #selector(createRoom), for: .touchUpInside)
+    }
+    
+    //MARK: 카카오맵 메서드
+    private func configMap(with coordinate: CLLocationCoordinate2D) {
+        addChild(kakaoMapViewController)
+        mapContainerView.addSubview(kakaoMapViewController.view)
+        kakaoMapViewController.didMove(toParent: self)
+        kakaoMapViewController.setCoordinate(coordinate)
+        kakaoMapViewController.addPoi(at: coordinate)
+        
+        kakaoMapViewController.view.snp.makeConstraints {
+            $0.edges.equalToSuperview()
+        }
+        view.layoutIfNeeded()
+    }
+    
+    private func setButton(model: TingFeedModel) {
+        if Auth.auth().currentUser?.uid == model.userid {
+            self.messageSendButton.isHidden = true
+            self.deleteButton.isHidden = false
+            self.blockButton.isHidden = true
+            self.reportButton.isHidden = true
+        } else {
+            self.messageSendButton.isHidden = false
+            self.deleteButton.isHidden = true
+            self.blockButton.isHidden = false
+            self.reportButton.isHidden = false
+        }
+    }
+    
     // MARK: UI 설정 및 제약조건 등
     private func setUI() {
         view.backgroundColor = .white
@@ -412,12 +457,15 @@ class DetailTingViewController: UIViewController {
             .forEach { infoStack.addArrangedSubview($0) }
         [deleteButton, blockButton, reportButton]
             .forEach { buttonStack.addArrangedSubview($0) }
+        [content, imageCollectionView, mapContainerView]
+            .forEach { hidableStack.addArrangedSubview($0) }
         [profilePic,
          infoStack,
          footPrintLabel,
-         content,
+         hidableStack,
          buttonStack,
-         messageSendButton].forEach { contentView.addSubview($0) }
+         messageSendButton]
+            .forEach { contentView.addSubview($0) }
         
         profilePic.snp.makeConstraints {
             $0.top.equalToSuperview().offset(30)
@@ -435,13 +483,21 @@ class DetailTingViewController: UIViewController {
             $0.centerY.equalTo(profilePic)
         }
         
-        content.snp.makeConstraints {
+        imageCollectionView.snp.makeConstraints {
+            $0.height.equalTo(view.frame.width - 70)
+        }
+        
+        mapContainerView.snp.makeConstraints {
+            $0.height.equalTo(120)
+        }
+        
+        hidableStack.snp.makeConstraints {
             $0.top.equalTo(profilePic.snp.bottom).offset(40)
             $0.leading.trailing.equalTo(view.safeAreaLayoutGuide).inset(30)
         }
         
         buttonStack.snp.makeConstraints {
-            $0.top.equalTo(content.snp.bottom).offset(20)
+            $0.top.equalTo(hidableStack.snp.bottom).offset(20)
             $0.trailing.equalToSuperview().offset(-20)
         }
         
@@ -453,10 +509,64 @@ class DetailTingViewController: UIViewController {
         }
     }
     
-    private func mapTrueConstraints() {
-        buttonStack.snp.makeConstraints {
-            $0.top.equalTo(kakaoMapViewController.view.snp.bottom).offset(20)
-            $0.trailing.equalToSuperview().offset(-20)
-        }
+//    private func mapTrueConstraints() {
+//        buttonStack.snp.makeConstraints {
+//            $0.top.equalTo(kakaoMapViewController.view.snp.bottom).offset(20)
+//            $0.trailing.equalToSuperview().offset(-20)
+//        }
+//    }
+}
+
+//MARK: Extension
+extension DetailTingViewController: UICollectionViewDelegateFlowLayout {
+    func collectionView(_ collectionView: UICollectionView,
+                        layout collectionViewLayout: UICollectionViewLayout,
+                        sizeForItemAt indexPath: IndexPath) -> CGSize {
+        let imageSize = view.frame.width - 80
+        return CGSize(width: imageSize, height: imageSize)
     }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let imageUrl = images[indexPath.item]
+        showImageFullscreen(imageUrl: imageUrl)
+    }
+    
+    // 이미지 선택시 전체화면 - 사진 클릭시 닫힘
+    // 관련 설명 추가 또는 닫히는 로직 변경예정
+    private func showImageFullscreen(imageUrl: String) {
+        let fullScreenImageView = UIImageView()
+        fullScreenImageView.contentMode = .scaleAspectFit
+        fullScreenImageView.backgroundColor = .black
+        fullScreenImageView.isUserInteractionEnabled = true
+        
+        KingFisherManager.shared.loadAnyImage(urlString: imageUrl, into: fullScreenImageView)
+        
+        navigationController?.setNavigationBarHidden(true, animated: false)
+        
+        view.addSubview(fullScreenImageView)
+        fullScreenImageView.snp.makeConstraints { $0.edges.equalToSuperview() }
+        
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissFullscreenImage))
+        fullScreenImageView.addGestureRecognizer(tapGesture)
+    }
+
+    @objc private func dismissFullscreenImage(_ sender: UITapGestureRecognizer) {
+        sender.view?.removeFromSuperview()
+        navigationController?.setNavigationBarHidden(false, animated: false)
+    }
+}
+
+extension DetailTingViewController: UICollectionViewDataSource {
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return images.count
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ImageCollectionViewCell.id, for: indexPath) as? ImageCollectionViewCell else { return UICollectionViewCell() }
+        
+        let imageUrl = images[indexPath.item]
+        cell.configure(with: imageUrl)
+        return cell
+    }
+    
 }

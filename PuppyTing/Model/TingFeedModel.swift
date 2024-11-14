@@ -14,4 +14,5 @@ struct TingFeedModel {
     let location: CLLocationCoordinate2D
     let content: String
     let time: Date
+    let photoUrl: [String]
 }

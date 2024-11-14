@@ -102,7 +102,12 @@ extension UIViewController {
         self.view.addSubview(animationView)
     }
     
-    func showLoadingIndicatorWithoutBackground() {
+    func showLoadingIndicatorWithShade() {
+        
+        let backgroundView = UIView(frame: self.view.bounds)
+        backgroundView.backgroundColor = UIColor.white
+        backgroundView.alpha = 0.3
+        backgroundView.tag = 998
 
         let animationView = LottieAnimationView(name: "PuppytingLoading")
         animationView.frame = CGRect(x: 0, y: 0, width: 300, height: 300)
@@ -112,6 +117,7 @@ extension UIViewController {
         animationView.play()
         animationView.tag = 999
         
+        self.view.addSubview(backgroundView)
         self.view.addSubview(animationView)
     }
         

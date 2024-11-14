@@ -206,7 +206,7 @@ class PuppyRegistrationViewController: UIViewController {
             .disposed(by: disposeBag)
     }
     
-    // UIButton Extension 사용하여 버튼 생성 메서드 - sh
+    // UIButton Extension 사용하여 버튼 생성 메서드 - ksh
     private func addTag(word: String) {
         let button = UIButton()
         button.makeTag(word: word, target: self, action: #selector(tagTapped))
@@ -253,7 +253,7 @@ class PuppyRegistrationViewController: UIViewController {
             return
         }
         
-        showLoadingIndicatorWithoutBackground()
+        showLoadingIndicatorWithShade()
         
         FirebaseStorageManager.shared.uploadImage(image: image)
             .flatMap { imageUrl in
@@ -279,7 +279,7 @@ class PuppyRegistrationViewController: UIViewController {
     @objc
     private func handleEditButtonTapped() {
         
-        showLoadingIndicatorWithoutBackground()
+        showLoadingIndicatorWithShade()
         
         //에러처리 필요
         guard let petId = pet?.id,

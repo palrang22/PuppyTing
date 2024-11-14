@@ -375,7 +375,7 @@ class MyInfoEditViewController: UIViewController {
     }
     
     @objc private func handleEditButtonTapped() {
-        showLoadingIndicatorWithoutBackground()
+        showLoadingIndicatorWithShade()
         let updatedNickname = nickNameTextField.text ?? ""
         
         if let image = realImage {
