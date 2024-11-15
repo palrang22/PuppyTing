@@ -1,0 +1,12 @@
+//
+//  Config.xcconfig
+//  PuppyTing
+//
+//  Created by 김승희 on 9/1/24.
+//
+
+// Configuration settings file format documentation can be found at:
+// https://help.apple.com/xcode/#/dev745c5c974
+
+KAKAO_REST_KEY = 18524537c6bd790d31bb5d3caf89a377
+KAKAO_APP_KEY = 1971341e9fce2b08d968ea0fa0364d1c

@@ -43,7 +43,7 @@ class TingCollectionViewCell: UICollectionViewCell {
     
     private let nameLabel: UILabel = {
         let label = UILabel()
-        label.text = "알 수 없는 사용자"
+        label.text = "사용자"
         label.textColor = .black
         label.font = .systemFont(ofSize: 16, weight: .medium)
         return label
@@ -51,7 +51,7 @@ class TingCollectionViewCell: UICollectionViewCell {
     
     private let timeLabel: UILabel = {
         let label = UILabel()
-        label.text = "n분 전"
+        label.text = "1분 전"
         label.textColor = .puppyPurple
         label.font = .systemFont(ofSize: 14, weight: .medium)
         return label
@@ -59,7 +59,7 @@ class TingCollectionViewCell: UICollectionViewCell {
     
     private let footPrintLabel: UILabel = {
         let label = UILabel()
-        label.text = "알 수 없음"
+        label.text = "발도장 0개"
         label.textColor = .gray
         label.font = .systemFont(ofSize: 13, weight: .medium)
         return label
@@ -69,6 +69,28 @@ class TingCollectionViewCell: UICollectionViewCell {
         let stack = UIStackView()
         stack.axis = .vertical
         stack.spacing = 5
+        return stack
+    }()
+    
+    private let mapExistIcon: UIImageView = {
+        let image = UIImageView()
+        image.image = UIImage(named: "locationExists")
+        return image
+    }()
+    
+    private let mapExistLabel: UILabel = {
+        let label = UILabel()
+        label.text = "지도"
+        label.textColor = .gray
+        label.font = .systemFont(ofSize: 13)
+        return label
+    }()
+    
+    private let mapStack: UIStackView = {
+        let stack = UIStackView()
+        stack.axis = .horizontal
+        stack.spacing = 2
+        stack.isHidden = true
         return stack
     }()
     
@@ -85,16 +107,24 @@ class TingCollectionViewCell: UICollectionViewCell {
         label.numberOfLines = 3
         label.textAlignment = .left
         label.lineBreakMode = .byTruncatingTail
-//        label.setContentCompressionResistancePriority(.required, for: .vertical)
-//        label.setContentHuggingPriority(.required, for: .vertical)
         return label
     }()
     
-//    private let mapView: UIImageView = {
-//        let map = UIImageView()
-//        map.image = UIImage(named: "mapPhoto")
-//        return map
-//    }()
+    private let imageStackScrollView: UIScrollView = {
+        let scroll = UIScrollView()
+        scroll.showsHorizontalScrollIndicator = false
+        return scroll
+    }()
+    
+    private let imageStack: UIStackView = {
+        let stack = UIStackView()
+        stack.axis = .horizontal
+        stack.alignment = .leading
+        stack.distribution = .fill
+        stack.layer.cornerRadius = 5
+        stack.spacing = 10
+        return stack
+    }()
     
     private let messageSendButton: UIButton = {
         let button = UIButton(type: .system)
@@ -133,16 +163,38 @@ class TingCollectionViewCell: UICollectionViewCell {
     
     //MARK: config 메서드
     func configure(with model: TingFeedModel, currentUserID: String) {
+        // 디폴트 설정
         self.nameLabel.text = "알 수 없는 사용자"
         self.profilePic.image = UIImage(named: "defaultProfileImage")
-        self.content.text = model.content
-        self.footPrintLabel.text = "알 수 없음"
-        messageSendButton.isHidden = model.userid == currentUserID
+        self.footPrintLabel.text = "발도장 0개"
         
+        // 들어가는 내용 설정
         changeDateFormat(time: model.time)
-        
+        self.content.text = model.content
         self.footPrintLabel.text = "발도장 \(model.postid)개 🐾"
         
+        // hidable 요소들 속성 설정
+        messageSendButton.isHidden = model.userid == currentUserID
+        mapStack.isHidden = (model.location.latitude == 0.0 && model.location.longitude == 0.0)
+        imageStackScrollView.isHidden = model.photoUrl.isEmpty
+        
+        // 이미지 설정
+        if !model.photoUrl.isEmpty {
+            imageStack.arrangedSubviews.forEach { $0.removeFromSuperview() }
+            model.photoUrl.forEach { urlString in
+                guard URL(string: urlString) != nil else { return }
+                let imageView = UIImageView()
+                imageView.contentMode = .scaleAspectFill
+                imageView.clipsToBounds = true
+                imageView.layer.cornerRadius = 5
+                imageView.snp.makeConstraints { $0.size.equalTo(CGSize(width: 100, height: 100)) }
+                
+                KingFisherManager.shared.loadAnyImage(urlString: urlString, into: imageView)
+                imageStack.addArrangedSubview(imageView)
+            }
+        }
+        
+        // 사용자 정보 설정
         FireStoreDatabaseManager.shared.findMemeber(uuid: model.userid)
             .subscribe(onSuccess: { [weak self] member in
                 guard let self else { return }
@@ -241,17 +293,27 @@ class TingCollectionViewCell: UICollectionViewCell {
     private func setConstraints() {
         [nameLabel,
          timeLabel,
-        footPrintLabel].forEach { infoStack.addArrangedSubview($0) }
-        
+         footPrintLabel].forEach { infoStack.addArrangedSubview($0) }
         [content,
+         imageStackScrollView,
          messageSendButton].forEach { hidableStack.addArrangedSubview($0) }
+        [mapExistIcon,
+         mapExistLabel].forEach { mapStack.addArrangedSubview($0) }
         
-        [shadowContainerView, profilePic,
+        imageStackScrollView.addSubview(imageStack)
+        imageStack.snp.makeConstraints {
+            $0.edges.equalToSuperview()
+            $0.height.equalToSuperview()
+        }
+        
+        contentView.addSubview(shadowContainerView)
+        [profilePic,
          infoStack,
-         hidableStack].forEach { contentView.addSubview($0) }
+         mapStack,
+         hidableStack].forEach { shadowContainerView.addSubview($0) }
         
         shadowContainerView.snp.makeConstraints {
-            $0.edges.equalToSuperview().inset(5)
+            $0.edges.equalTo(contentView).inset(5)
         }
         
         profilePic.snp.makeConstraints {
@@ -262,27 +324,24 @@ class TingCollectionViewCell: UICollectionViewCell {
         
         infoStack.snp.makeConstraints {
             $0.leading.equalTo(profilePic.snp.trailing).offset(20)
+            $0.trailing.lessThanOrEqualTo(mapStack.snp.leading).offset(-10)
             $0.centerY.equalTo(profilePic)
         }
         
-//        footPrintLabel.snp.makeConstraints {
-//            $0.trailing.equalToSuperview().offset(-20)
-//            $0.centerY.equalTo(profilePic)
-//        }
+        mapStack.snp.makeConstraints {
+            $0.top.equalToSuperview().offset(20)
+            $0.trailing.equalToSuperview().inset(20).priority(.required)
+        }
         
         hidableStack.snp.makeConstraints {
             $0.top.equalTo(infoStack.snp.bottom).offset(20)
-            $0.leading.trailing.equalToSuperview().inset(20)
-            $0.bottom.equalToSuperview().offset(-20)
+            $0.leading.trailing.equalTo(shadowContainerView).inset(20)
+            $0.bottom.equalTo(shadowContainerView).offset(-20)
         }
         
-//        content.snp.makeConstraints {
-//            $0.leading.trailing.equalToSuperview().inset(20)
-//        }
-        
         messageSendButton.snp.makeConstraints {
-            // $0.leading.trailing.equalToSuperview().inset(20)
             $0.height.equalTo(44)
         }
     }
+
 }

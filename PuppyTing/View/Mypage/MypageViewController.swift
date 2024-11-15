@@ -112,6 +112,7 @@ class MypageViewController: UIViewController {
         collectionView.layer.cornerRadius = 15
         collectionView.isPagingEnabled = true // 페이징 가능하도록 설정
         collectionView.isHidden = true // 초기에는 숨김
+        collectionView.showsHorizontalScrollIndicator = false
         return collectionView
     }()
     
@@ -121,6 +122,7 @@ class MypageViewController: UIViewController {
         pageControl.pageIndicatorTintColor = .lightGray
         pageControl.currentPageIndicatorTintColor = .black
         pageControl.isHidden = true // 초기에는 숨김
+        pageControl.isUserInteractionEnabled = false // kkh - 페이지 인디케이터 터치 비활성화
         return pageControl
     }()
     
@@ -262,7 +264,6 @@ class MypageViewController: UIViewController {
         
         puppyCollectionView.rx.itemSelected
             .subscribe(onNext: { [weak self] indexPath in
-                print("셀 선택됨: \(indexPath.row)")  // 선택된 셀의 인덱스를 출력
                 self?.navigateToPuppyEdit(at: indexPath)
             }).disposed(by: disposeBag)
         
@@ -348,8 +349,6 @@ class MypageViewController: UIViewController {
     
     private func loadPuppyInfo() {
         let userId = findUserId()
-        print("현재 로그인된 사용자 UUID: \(userId)")
-
         viewModel.fetchMemberPets(memberId: userId)
             .observe(on: MainScheduler.instance)
             .subscribe(onSuccess: { [weak self] petList in
@@ -380,10 +379,8 @@ class MypageViewController: UIViewController {
         myInfoEditVC.updateSubject
             .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] isUpdated in
-                print("updatesubject호출됨, \(isUpdated)")
                 guard let self = self else { return }
                 if isUpdated {
-                    print("loaduserinfo 처리됨")
                     self.loadUserInfo()
                 }
             })
@@ -397,7 +394,6 @@ class MypageViewController: UIViewController {
     }
     
     private func loadUserInfo() {
-        print("loaduserinfo 호출됨")
         fetchMemberInfo()
         
         viewModel.memberSubject
@@ -474,16 +470,13 @@ class MypageViewController: UIViewController {
     
     private func leaveMember() {
         viewModel.resultSubject.observe(on: MainScheduler.instance).subscribe(onNext: { _ in
-            print("회원탈퇴 완료")
             self.okAlert(title: "회원 탈퇴", message: "회원 탈퇴가 완료되었습니다.\n지금까지 퍼피팅을 이용해주셔서 감사합니다.", okActionHandler: { _ in
                 AppController.shared.logOut()
             })
         }, onError: { error in
-            print("회원 탈퇴 실패 \(error)")
             self.okAlert(title: "회원 탈퇴", message: "알 수 없는 이유로 회원 탈퇴에 실패했습니다.\n다시 한번 진행해주세요.")
         }).disposed(by: disposeBag)
         viewModel.errorSubject.observe(on: MainScheduler.instance).subscribe(onNext: { error in
-            print("회원 탈퇴 실패 \(error)")
             self.okAlert(title: "회원 탈퇴", message: "알 수 없는 이유로 회원 탈퇴에 실패했습니다.\n다시 한번 진행해주세요.")
         })
         guard let user = Auth.auth().currentUser else { return }

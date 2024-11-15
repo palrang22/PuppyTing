@@ -375,14 +375,12 @@ class MyInfoEditViewController: UIViewController {
     }
     
     @objc private func handleEditButtonTapped() {
-        showLoadingIndicatorWithoutBackground()
+        showLoadingIndicatorWithShade()
         let updatedNickname = nickNameTextField.text ?? ""
         
         if let image = realImage {
-            print("이미지 업로드 시작")
             myInfoEditViewModel.updateImage(image: image)  // 이미지 업로드 호출
         } else {
-            print("realImage가 nil임")
             updateMemberProfile(nickname: updatedNickname, imageUrl: "defaultProfileImage")
         }
         updateSubject.onNext(true)

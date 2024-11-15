@@ -24,6 +24,12 @@ class SearchedMapViewController: UIViewController {
     
     private let kakaoMapViewController = KakaoMapViewController()
     
+    private let mapContainerView: UIView = {
+        let view = UIView()
+        view.clipsToBounds = true
+        return view
+    }()
+    
     private lazy var closeButton: UIButton = {
         let button = UIButton()
         button.setImage(UIImage(named: "closeButton"), for: .normal)
@@ -52,19 +58,25 @@ class SearchedMapViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        addChild(kakaoMapViewController)
-        view.addSubview(kakaoMapViewController.view)
-        kakaoMapViewController.didMove(toParent: self)
-        
         setConstraints()
         bind()
+        configMap()
         configMapInfo()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         kakaoMapViewController.pauseEngine()
+    }
+    
+    private func configMap() {
+        addChild(kakaoMapViewController)
+        mapContainerView.addSubview(kakaoMapViewController.view)
+        kakaoMapViewController.didMove(toParent: self)
+        kakaoMapViewController.view.snp.makeConstraints {
+            $0.edges.equalToSuperview()
+        }
+        view.layoutIfNeeded()
     }
 
     func configMapInfo() {
@@ -98,7 +110,11 @@ class SearchedMapViewController: UIViewController {
     }
     
     private func setConstraints() {
-        [closeButton, addressView, selectButton].forEach { view.addSubview($0) }
+        [mapContainerView, closeButton, addressView, selectButton].forEach { view.addSubview($0) }
+        
+        mapContainerView.snp.makeConstraints {
+            $0.edges.equalTo(view.safeAreaLayoutGuide)
+        }
         
         closeButton.snp.makeConstraints {
             $0.leading.equalTo(view.safeAreaLayoutGuide).offset(20)
@@ -115,10 +131,6 @@ class SearchedMapViewController: UIViewController {
             $0.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom).offset(-20)
             $0.height.equalTo(44)
             $0.leading.trailing.equalToSuperview().inset(20)
-        }
-        
-        kakaoMapViewController.view.snp.makeConstraints {
-            $0.edges.equalTo(view.safeAreaLayoutGuide)
         }
     }
 }

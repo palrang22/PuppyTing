@@ -168,7 +168,6 @@ class PuppyRegistrationViewController: UIViewController {
 
     private func setupBindings() {
         guard let rightBarButtonItem = navigationItem.rightBarButtonItem else {
-            print("rightBarButtonItem is nil")
             return
         }
         
@@ -207,7 +206,7 @@ class PuppyRegistrationViewController: UIViewController {
             .disposed(by: disposeBag)
     }
     
-    // UIButton Extension 사용하여 버튼 생성 메서드 - sh
+    // UIButton Extension 사용하여 버튼 생성 메서드 - ksh
     private func addTag(word: String) {
         let button = UIButton()
         button.makeTag(word: word, target: self, action: #selector(tagTapped))
@@ -225,7 +224,6 @@ class PuppyRegistrationViewController: UIViewController {
     // 태그 클릭시 삭제되는 메서드 - sh
     @objc
     private func tagTapped(sender: UIButton) {
-        print("tapped")
         tagStack.removeArrangedSubview(sender)
         sender.removeFromSuperview()
         tagStack.layoutIfNeeded()
@@ -255,7 +253,7 @@ class PuppyRegistrationViewController: UIViewController {
             return
         }
         
-        showLoadingIndicatorWithoutBackground()
+        showLoadingIndicatorWithShade()
         
         FirebaseStorageManager.shared.uploadImage(image: image)
             .flatMap { imageUrl in
@@ -274,7 +272,6 @@ class PuppyRegistrationViewController: UIViewController {
             }, onFailure: { error in
                 self.hideLoadingIndicator()
                 self.okAlert(title: "실패", message: "강아지 등록에 실패했습니다. 관리자에게 문의해주세요.")
-                print("강아지 등록 실패: \(error)")
             })
             .disposed(by: disposeBag)
     }
@@ -282,7 +279,7 @@ class PuppyRegistrationViewController: UIViewController {
     @objc
     private func handleEditButtonTapped() {
         
-        showLoadingIndicatorWithoutBackground()
+        showLoadingIndicatorWithShade()
         
         //에러처리 필요
         guard let petId = pet?.id,
@@ -322,17 +319,16 @@ class PuppyRegistrationViewController: UIViewController {
                 self.okAlert(title: "성공", message: "강아지 정보를 성공적으로 수정했습니다.")
             }, onFailure: { error in
                 self.hideLoadingIndicator()
-                print("이미지 업로드 실패: \(error)")
                 self.okAlert(title: "실패", message: "이미지 업로드에 실패했습니다. 관리자에게 문의해주세요.")
             })
             .disposed(by: disposeBag)
     }
     
-    // 이별 알림창
-    private func showSeparationAlert() { // kkh
-        let alert = UIAlertController(title: "정말 이별하시겠습니까?", message: "떠나보내시면 되돌릴 수 없습니다.", preferredStyle: .alert)
+    // 삭제 알림창 - jgh 수정
+    private func showSeparationAlert() { // kkh - Jgh
+        let alert = UIAlertController(title: "삭제하시겠습니까?", message: "삭제하면 되돌릴 수 없습니다.", preferredStyle: .alert)
             alert.addAction(UIAlertAction(title: "취소", style: .cancel, handler: nil))
-            alert.addAction(UIAlertAction(title: "이별하기", style: .destructive, handler: { [weak self] _ in
+            alert.addAction(UIAlertAction(title: "삭제", style: .destructive, handler: { [weak self] _ in
                 self?.deletePuppy()
         }))
         present(alert, animated: true, completion: nil)

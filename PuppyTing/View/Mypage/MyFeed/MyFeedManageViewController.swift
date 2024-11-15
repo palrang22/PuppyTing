@@ -51,7 +51,6 @@ class MyFeedManageViewController: UIViewController { // kkh
     private func bindViewModel() {
         viewModel.feedsSubject
             .subscribe(onNext: { [weak self] feeds in
-                print("Received feeds: \(feeds)")
                 self?.feeds = feeds
                 self?.tableView.reloadData()
             }, onError: { error in

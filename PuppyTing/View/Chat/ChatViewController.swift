@@ -39,6 +39,14 @@ class ChatViewController: UIViewController {
         return view
     }()
     
+    // 플레이스홀더 생성 - jgh
+    let placeholderText = "메세지 입력"
+    let placeholderLabel: UILabel = {
+        let label = UILabel()
+        label.textColor = .lightGray
+        return label
+    }()
+    
     let messageTextView: UITextView = {
         let textView = UITextView()
         textView.isScrollEnabled = false // 기본적으로 스크롤 비활성화
@@ -88,7 +96,20 @@ class ChatViewController: UIViewController {
             messageInputView.addSubview($0)
         }
         
+        // 플레이스홀더 레이블 추가 - jgh
+        placeholderLabel.text = placeholderText // 초기 텍스트 설정
+        messageInputView.addSubview(placeholderLabel)
+        
+        // 플레이스홀더 레이블 제약조건
+        placeholderLabel.snp.makeConstraints {
+            $0.leading.equalTo(messageTextView).offset(8)
+            $0.centerY.equalTo(messageTextView)
+        }
+        
         messageTextView.delegate = self
+        
+        // 플레이스홀더 초기 상태
+        updatePlacehoderVisibility()
         
         setupKeyboardDismissRecognizer()
         setupConstraints()
@@ -176,6 +197,7 @@ class ChatViewController: UIViewController {
         output.messageSent
             .subscribe(onNext: { [weak self] in
                 self?.messageTextView.text = ""
+                self?.updatePlacehoderVisibility() // 메세지 전송 후 플레스홀더 업데이트 - jgh
             }).disposed(by: disposeBag)
         
         // 메세지 추가 후 테이블뷰 맨 아래로 스크롤
@@ -264,10 +286,18 @@ class ChatViewController: UIViewController {
         return dateString
     }
     
+    // 플레이스홀더 업데이트 메서드
+    private func updatePlacehoderVisibility() {
+        placeholderLabel.isHidden = !messageTextView.text.isEmpty
+    }
+    
 }
 
 extension ChatViewController: UITextViewDelegate {
     func textViewDidChange(_ textView: UITextView) {
+        // 텍스트뷰 변화에 따라 플레이스홀더 업데이트
+        updatePlacehoderVisibility()
+        
         let size = CGSize(width: textView.frame.width, height: .infinity)
         let estimatedSize = textView.sizeThatFits(size)
         

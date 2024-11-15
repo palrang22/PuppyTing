@@ -30,12 +30,10 @@ class TingViewModel {
     
     func searchPlaces(keyword: String) {
         guard let location = currentLocation else {
-            print("현재위치 없음")
             return
         }
         
         guard let request = createSearchUrl(keyword: keyword, location: location) else {
-            print("URL 오류")
             return
         }
         
@@ -50,7 +48,6 @@ class TingViewModel {
                 },
                 onFailure: { [weak self] fetchError in
                     self?.error.accept(fetchError.localizedDescription)
-                    print("데이터 가져오기 실패: \(fetchError.localizedDescription)")
                 }
             ).disposed(by: disposeBag)
     }
@@ -69,7 +66,6 @@ class TingViewModel {
         ]
         
         guard let url = components?.url, let apiKey = apiKey else {
-            print("api 키 오류")
             return nil
         }
         var request = URLRequest(url: url)
@@ -121,13 +117,13 @@ class TingViewModel {
                                    !blockedUsers.contains(userid),
                                    let geoPoint = data["location"] as? GeoPoint,
                                    let content = data["content"] as? String,
-                                   let timestamp = data["timestamp"] as? Timestamp {
+                                   let timestamp = data["timestamp"] as? Timestamp,
+                                   let photoUrl = data["photoUrl"] as? [String] {
                                     
                                     let location = CLLocationCoordinate2D(latitude: geoPoint.latitude, longitude: geoPoint.longitude)
                                     let time = timestamp.dateValue()
                                     let postid = document.documentID
-                                    
-                                    let tingFeed = TingFeedModel(userid: userid, postid: postid, location: location, content: content, time: time)
+                                    let tingFeed = TingFeedModel(userid: userid, postid: postid, location: location, content: content, time: time, photoUrl: photoUrl)
                                     dataList.append(tingFeed)
                                 }
                             }
