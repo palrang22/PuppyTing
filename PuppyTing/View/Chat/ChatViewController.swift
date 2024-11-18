@@ -68,6 +68,16 @@ class ChatViewController: UIViewController {
         return button
     }()
     
+    // 사진 추가 초기 버튼 구상 - jgh /플로팅-회전애니메이션(+돌아가서 x로 변하게 만들기)
+    let plusButton: UIButton = {
+        let button = UIButton(type: .system)
+        let configuration = UIImage.SymbolConfiguration(pointSize: 20, weight: .medium)
+        let image = UIImage(systemName: "plus", withConfiguration: configuration)
+        button.setImage(image, for: .normal)
+        button.tintColor = UIColor.puppyPurple
+        return button
+    }()
+    
     // messageTextView 기본 높이
     let messageTextViewDefaultHeight: CGFloat = 35.0
     
@@ -92,7 +102,7 @@ class ChatViewController: UIViewController {
             view.addSubview($0)
         }
         
-        [messageTextView, sendButton].forEach {
+        [messageTextView, sendButton, plusButton].forEach {
             messageInputView.addSubview($0)
         }
         
@@ -243,8 +253,16 @@ class ChatViewController: UIViewController {
             messageInputViewBottomConstraint = $0.bottom.equalTo(view.safeAreaLayoutGuide).constraint
         }
         
+        // + 버튼 - jgh
+        plusButton.snp.makeConstraints {
+            $0.leading.equalToSuperview().offset(6)
+            $0.centerY.equalToSuperview()
+            $0.width.height.equalTo(44)
+        }
+        
         messageTextView.snp.makeConstraints {
-            $0.leading.equalToSuperview().offset(16)
+//            $0.leading.equalToSuperview().offset(45)
+            $0.leading.equalTo(plusButton.snp.trailing).offset(3)
             $0.trailing.equalTo(sendButton.snp.leading).offset(-8)
             $0.centerY.equalToSuperview()
             $0.bottom.equalToSuperview().inset(8)
@@ -304,7 +322,7 @@ extension ChatViewController: UITextViewDelegate {
         // 텍스트뷰의 높이가 100pt를 넘으면 스크롤을 활성화하고 크기를 유지
         textView.isScrollEnabled = estimatedSize.height > 100
         textView.snp.remakeConstraints {
-            $0.leading.equalToSuperview().offset(16)
+            $0.leading.equalTo(plusButton.snp.trailing).offset(3)
             $0.trailing.equalTo(sendButton.snp.leading).offset(-8)
             $0.centerY.equalToSuperview()
             $0.bottom.equalToSuperview().inset(8)
