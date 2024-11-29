@@ -55,7 +55,7 @@ class TingViewModel {
     func createSearchUrl(keyword: String, location: CLLocation) -> URLRequest? {
         let latitude = location.coordinate.latitude
         let longitude = location.coordinate.longitude
-        let radius = 1000
+        let radius = 10000
         
         var components = URLComponents(string: "https://dapi.kakao.com/v2/local/search/keyword.json")
         components?.queryItems = [
