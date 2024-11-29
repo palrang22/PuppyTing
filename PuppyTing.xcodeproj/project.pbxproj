@@ -193,7 +193,6 @@
 		E7F598332C847A7800FE8900 /* PlaceModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaceModel.swift; sourceTree = "<group>"; };
 		E7F598382C885D5300FE8900 /* KakaoMapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KakaoMapViewController.swift; sourceTree = "<group>"; };
 		E7F5983A2C8866CE00FE8900 /* AddressView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddressView.swift; sourceTree = "<group>"; };
-		EFED4A8C2CCF9C2B00D71440 /* PuppytingLoading.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = PuppytingLoading.json; sourceTree = "<group>"; };
 		EFED4A942CDB59E300D71440 /* Config.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Config.xcconfig; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -589,7 +588,6 @@
 		E738FBA72C7C696C004696BD /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				EFED4A8C2CCF9C2B00D71440 /* PuppytingLoading.json */,
 				E738FB7F2C7C62F0004696BD /* Assets.xcassets */,
 				CCA856AB2CDA35BA003368CD /* PuppytingLoading.json */,
 			);

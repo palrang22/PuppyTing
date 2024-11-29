@@ -164,9 +164,9 @@ class TingCollectionViewCell: UICollectionViewCell {
     //MARK: config 메서드
     func configure(with model: TingFeedModel, currentUserID: String) {
         // 디폴트 설정
-        self.nameLabel.text = "알 수 없는 사용자"
+        self.nameLabel.text = "-"
         self.profilePic.image = UIImage(named: "defaultProfileImage")
-        self.footPrintLabel.text = "발도장 0개"
+        self.footPrintLabel.text = "-"
         
         // 들어가는 내용 설정
         changeDateFormat(time: model.time)

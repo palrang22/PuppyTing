@@ -7,5 +7,5 @@
 
 enum PostMode {
     case create
-    case edit(TingFeedModel)
+    case edit(documentId: String, model: TingFeedModel)
 }
