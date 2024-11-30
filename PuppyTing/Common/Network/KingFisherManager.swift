@@ -33,7 +33,19 @@ class KingFisherManager {
             .cacheOriginalImage
         ])
     }
-
+    
+    func retrieveImage(urlString: String, completion: @escaping (Result<UIImage, Error>) -> Void) {
+        guard let url = URL(string: urlString) else { return }
+        KingfisherManager.shared.retrieveImage(with: url) { result in
+            switch result {
+            case .success(let value):
+                completion(.success(value.image))
+            case .failure(let error):
+                completion(.failure(error))
+            }
+        }
+    }
+    
     func clearCache() {
         ImageCache.default.clearMemoryCache()
         ImageCache.default.clearDiskCache()

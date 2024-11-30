@@ -101,6 +101,8 @@ class TingViewController: UIViewController {
             .subscribe(
                 onNext: { [weak self] (data, lastDocument, hasMore) in
                     guard let self = self else { return }
+                    
+                    let previousCount = self.tingFeedModels.count
 
                     // 새로운 데이터 추가 시 중복 제거
                     let newFeeds = data.filter { newFeed in
@@ -109,19 +111,23 @@ class TingViewController: UIViewController {
 
                     self.tingFeedModels.append(contentsOf: newFeeds)
 
-                    // 컬렉션뷰 데이터 다시 로드
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) {
-                        self.feedCollectionView.reloadData()
+                    let newIndexPaths = (previousCount..<self.tingFeedModels.count).map {
+                        IndexPath(item: $0, section: 0)
+                    }
+                    
+                    //performBatchUpdates: 컴플리션 사용 가능함
+                    self.feedCollectionView.performBatchUpdates {
+                        self.feedCollectionView.insertItems(at: newIndexPaths)
+                    } completion: { _ in
+                        self.isLoading = false
+                        self.hasMoreData = hasMore
+                        self.viewModel.lastDocuments = lastDocument
                         self.hideLoadingIndicator()
                     }
-
-                    // 다음 데이터를 더 불러올 수 있는지 여부 확인
-                    self.hasMoreData = hasMore
-                    self.viewModel.lastDocuments = lastDocument
-                    self.isLoading = false
                 },
                 onError: { [weak self] error in
                     self?.isLoading = false
+                    self?.hideLoadingIndicator()
                 }
             ).disposed(by: disposeBag)
     }

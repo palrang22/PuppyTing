@@ -37,6 +37,27 @@ class PostingViewModel {
         }
     }
     
+    func edit(collection: String, documentId: String, model: TingFeedModel) -> Completable {
+        return Completable.create { completable in
+            let data: [String: Any] = [
+                "userid": model.userid,
+                "location": GeoPoint(latitude: model.location.latitude, longitude: model.location.longitude),
+                "content": model.content,
+                "timestamp": Timestamp(),
+                "photoUrl": model.photoUrl
+            ]
+            
+            self.db.collection("tingFeeds").document(documentId).updateData(data) { error in
+                if let error = error {
+                    completable(.error(error))
+                } else {
+                    completable(.completed)
+                }
+            }
+            return Disposables.create()
+        }
+    }
+    
     func uploadImages(images: [UIImage]) -> Single<[String]> {
         return Single.create { single in
             var photoUrl = [String]()

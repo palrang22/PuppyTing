@@ -21,6 +21,7 @@ class DetailTingViewController: UIViewController {
     var tingFeedModels: TingFeedModel?
     weak var delegate: DetailTingViewControllerDelegate? // Delegate 프로퍼티
     let fireStoreDatabase = FireStoreDatabaseManager.shared
+    let updateSubject = PublishSubject<TingFeedModel>()
     
     var writerId: String? = nil
     let userid = Auth.auth().currentUser?.uid
@@ -62,7 +63,7 @@ class DetailTingViewController: UIViewController {
     
     private let timeLabel: UILabel = {
         let label = UILabel()
-        label.text = "알 수 없음"
+        label.text = "-"
         label.textColor = .puppyPurple
         label.font = .systemFont(ofSize: 14, weight: .medium)
         return label
@@ -70,7 +71,7 @@ class DetailTingViewController: UIViewController {
     
     private let footPrintLabel: UILabel = {
         let label = UILabel()
-        label.text = "알 수 없음"
+        label.text = "-"
         label.font = .systemFont(ofSize: 16, weight: .semibold)
         return label
     }()
@@ -141,6 +142,15 @@ class DetailTingViewController: UIViewController {
         return button
     }()
     
+    private lazy var editButton: UIButton = {
+        let button = UIButton()
+        button.setTitle("수정하기", for: .normal)
+        button.setTitleColor(.darkGray, for: .normal)
+        button.titleLabel?.font = .systemFont(ofSize: 14, weight: .semibold)
+        button.backgroundColor = .white
+        return button
+    }()
+    
     private let buttonStack: UIStackView = {
         let stack = UIStackView()
         stack.axis = .horizontal
@@ -175,6 +185,7 @@ class DetailTingViewController: UIViewController {
         tapProfile()
         setDelegate()
         addButtonAction()
+        observeData()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -214,6 +225,14 @@ class DetailTingViewController: UIViewController {
     }
     
     // MARK: bind
+    
+    private func observeData() {
+        updateSubject
+            .subscribe(onNext: { [weak self] updatedModel in
+                self?.tingFeedModels = updatedModel
+                self?.setData()
+            }).disposed(by: disposeBag)
+    }
     
     private func setData() {
         if let model = tingFeedModels {
@@ -342,6 +361,15 @@ class DetailTingViewController: UIViewController {
                 
                 self!.present(reportAlert, animated: true, completion: nil)
             }).disposed(by: disposeBag)
+        
+        editButton.rx.tap
+            .subscribe(onNext: { [weak self] in
+                guard let self, let tingFeedModel = self.tingFeedModels else { return }
+                let postTingVC = PostTingViewController()
+                postTingVC.mode = .edit(documentId: tingFeedModel.postid, model: tingFeedModel)
+                postTingVC.updateSubject = self.updateSubject
+                self.navigationController?.pushViewController(postTingVC, animated: true)
+            }).disposed(by: disposeBag)
     }
     
     //MARK: 프로필 메서드 - jgh
@@ -424,11 +452,13 @@ class DetailTingViewController: UIViewController {
     private func setButton(model: TingFeedModel) {
         if Auth.auth().currentUser?.uid == model.userid {
             self.messageSendButton.isHidden = true
+            self.editButton.isHidden = false
             self.deleteButton.isHidden = false
             self.blockButton.isHidden = true
             self.reportButton.isHidden = true
         } else {
             self.messageSendButton.isHidden = false
+            self.editButton.isHidden = true
             self.deleteButton.isHidden = true
             self.blockButton.isHidden = false
             self.reportButton.isHidden = false
@@ -455,7 +485,7 @@ class DetailTingViewController: UIViewController {
         // 나머지 뷰 설정
         [nameLabel, timeLabel]
             .forEach { infoStack.addArrangedSubview($0) }
-        [deleteButton, blockButton, reportButton]
+        [editButton, deleteButton, reportButton, blockButton]
             .forEach { buttonStack.addArrangedSubview($0) }
         [content, imageCollectionView, mapContainerView]
             .forEach { hidableStack.addArrangedSubview($0) }
@@ -508,13 +538,7 @@ class DetailTingViewController: UIViewController {
             $0.bottom.equalToSuperview().offset(-30)
         }
     }
-    
-//    private func mapTrueConstraints() {
-//        buttonStack.snp.makeConstraints {
-//            $0.top.equalTo(kakaoMapViewController.view.snp.bottom).offset(20)
-//            $0.trailing.equalToSuperview().offset(-20)
-//        }
-//    }
+
 }
 
 //MARK: Extension

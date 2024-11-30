@@ -9,6 +9,7 @@ import CoreLocation
 import UIKit
 
 import FirebaseAuth
+import Kingfisher
 import PhotosUI
 import RxCocoa
 import RxSwift
@@ -16,12 +17,17 @@ import SnapKit
 
 class PostTingViewController: UIViewController {
     
+    var mode: PostMode = .create
+    private var documentId: String?
+    private var tingFeedModel: TingFeedModel?
+    
     var placeName: String?
     var roadAddressName: String?
     var coordinate: CLLocationCoordinate2D?
     var selectedImages = [UIImage]()
     
     var addressSubject = PublishSubject<(String?, String?, CLLocationCoordinate2D?)>()
+    var updateSubject: PublishSubject<TingFeedModel>?
     
     private let viewModel = PostingViewModel.shared
     private let kakaoMapViewController = KakaoMapViewController()
@@ -84,13 +90,14 @@ class PostTingViewController: UIViewController {
         scroll.showsHorizontalScrollIndicator = false
         return scroll
     }()
-
+    
     //MARK: View 생명주기
     override func viewDidLoad() {
         super.viewDidLoad()
         setUI()
         setConstraints()
         setupKeyboardDismissRecognizer()
+        configureMode()
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -98,10 +105,44 @@ class PostTingViewController: UIViewController {
         textView.becomeFirstResponder()
     }
     
-    //MARK: 메서드
+    //MARK: 모드 설정
+    private func configureMode() {
+        switch mode {
+        case .create:
+            navigationItem.title = "퍼피팅 찾기"
+        case .edit(let documentId, let model):
+            navigationItem.title = "퍼피팅 게시글 수정"
+            textView.text = model.content
+            self.documentId = documentId
+            self.tingFeedModel = model
+            loadDataForEdit(model: model)
+        }
+    }
+    
+    private func loadDataForEdit(model: TingFeedModel) {
+        textView.text = model.content
+        textView.textColor = .black
+        
+        self.coordinate = CLLocationCoordinate2D(latitude: model.location.latitude, longitude: model.location.longitude)
+        
+        model.photoUrl.forEach { urlString in
+            KingFisherManager.shared.retrieveImage(urlString: urlString) { [weak self] result in
+                guard let self else { return }
+                switch result {
+                case .success(let image):
+                    self.addImageToStackView(image: image)
+                    self.selectedImages.append(image)
+                case .failure(_):
+                    print("PostingVC - 이미지 로드 실패")
+                }
+            }
+        }
+    }
+    
+    //MARK: 버튼 메서드
     @objc
     private func addButtonTapped() {
-        guard let userID = Auth.auth().currentUser?.uid else {
+        guard let userId = Auth.auth().currentUser?.uid else {
             return
         }
         
@@ -118,19 +159,29 @@ class PostTingViewController: UIViewController {
         viewModel.uploadImages(images: selectedImages)
             .flatMapCompletable { [weak self] photoUrls in
                 guard let self else { return .empty() }
-                let model = TingFeedModel(userid: userID,
+                
+                let model = TingFeedModel(userid: userId,
                                           postid: UUID().uuidString,
                                           location: coordinate,
                                           content: content,
                                           time: Date(),
                                           photoUrl: photoUrls)
-                return self.viewModel.create(collection: "tingFeeds", model: model)
+                switch self.mode {
+                case .create:
+                    return self.viewModel.create(collection: "tingFeeds", model: model)
+                case .edit(let documentId, _):
+                    self.updateSubject?.onNext(model)
+                    return self.viewModel.edit(collection: "tingFeeds", documentId: documentId, model: model)
+                }
+                
             }
+            .observe(on: MainScheduler.instance)
             .subscribe(onCompleted: { [weak self] in
                 self?.hideLoadingIndicator()
                 self?.navigationController?.popViewController(animated: true)},
                        onError: { [weak self] error in
-                self?.okAlert(title: "에러", message: "게시물 추가에 실패했습니다. 관리자에게 문의해주세요.")
+                self?.hideLoadingIndicator()
+                self?.okAlert(title: "에러", message: "게시물 추가에 실패했습니다. 다시 시도하시거나 관리자에게 문의해주세요.")
             })
             .disposed(by: disposeBag)
     }
