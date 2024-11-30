@@ -16,27 +16,6 @@ class ChatViewModel {
     
     private let disposeBag = DisposeBag()
     
-    // 하이퍼링크 변환 메서드 - jgh
-    func convertToHyperlink(from text: String) -> NSAttributedString {
-        let attributedString = NSMutableAttributedString(string: text)
-        
-        // URL 패턴을 찾기 위한 정규식
-        let pattern = "((?:https?|ftp)://[\\w/\\-?=%.]+\\.[\\w/\\-&?=%.]+)"
-        let regex = try? NSRegularExpression(pattern: pattern, options: [])
-        
-        if let regex = regex {
-            let matches = regex.matches(in: text, options: [], range: NSRange(location: 0, length: text.utf16.count))
-            
-            for match in matches {
-                if let range = Range(match.range, in: text) {
-                    attributedString.addAttribute(.link, value: text[range], range: match.range)
-                }
-            }
-        }
-        
-        return attributedString
-    }
-    
     // ViewModel의 Input 구조체
     struct Input {
         let roomId: String // 채팅방 ID
@@ -86,9 +65,6 @@ class ChatViewModel {
                             )
                             messages.append(dateMessage)
                         }
-                        
-                        // 메세지 하이퍼링크 변환 - jgh
-                        let convertedMessage = self.convertToHyperlink(from: newMessage.text)
                         
                         messages.append(newMessage)
                         return messages
