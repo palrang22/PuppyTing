@@ -8,7 +8,6 @@
 import UIKit
 
 import FirebaseAuth
-import PhotosUI
 import RxCocoa
 import RxSwift
 import SnapKit
@@ -69,49 +68,6 @@ class ChatViewController: UIViewController {
         return button
     }()
     
-    // 사진 추가 초기 버튼 구상 - jgh /플로팅-회전애니메이션(+돌아가서 x로 변하게 만들기)
-    let plusButton: UIButton = {
-        let button = UIButton(type: .system)
-        let configuration = UIImage.SymbolConfiguration(pointSize: 20, weight: .medium)
-        let image = UIImage(systemName: "plus", withConfiguration: configuration)
-        button.setImage(image, for: .normal)
-        button.tintColor = UIColor.puppyPurple
-        button.addTarget(self, action: #selector(plusButtonTapped), for: .touchUpInside)
-        return button
-    }()
-    
-    // 팝업 버튼 컨테이너 뷰
-    private let popupButtonContainer: UIView = {
-        let view = UIView()
-        view.backgroundColor = .white
-        view.layer.cornerRadius = 10
-        view.layer.shadowColor = UIColor.black.cgColor
-        view.layer.shadowOpacity = 0.3
-        view.layer.shadowOffset = CGSize(width: 0, height: 4)
-        view.layer.shadowRadius = 4
-        view.isHidden = true // 초기 상태에서는 숨김
-        return view
-    }()
-    
-    // 팝업 버튼들
-    private let photoButton: UIButton = {
-        let button = UIButton(type: .system)
-        button.setTitle("사진 찍기", for: .normal)
-        button.tintColor = .systemBlue
-        button.addTarget(self, action: #selector(photoButtonTapped), for: .touchUpInside)
-        return button
-    }()
-    
-    private let albumButton: UIButton = {
-        let button = UIButton(type: .system)
-        button.setTitle("앨범에서 선택", for: .normal)
-        button.tintColor = .systemBlue
-        button.addTarget(self, action: #selector(albumButtonTapped), for: .touchUpInside)
-        return button
-    }()
-    
-    var isAdditionalViewVisible = false
-    
     // messageTextView 기본 높이
     let messageTextViewDefaultHeight: CGFloat = 35.0
     
@@ -136,7 +92,7 @@ class ChatViewController: UIViewController {
             view.addSubview($0)
         }
         
-        [messageTextView, sendButton, plusButton].forEach {
+        [messageTextView, sendButton].forEach {
             messageInputView.addSubview($0)
         }
         
@@ -159,57 +115,6 @@ class ChatViewController: UIViewController {
         setupConstraints()
         setupBindings()
         
-        // 팝업 버튼 컨테이너와 내부 버튼 추가
-        view.addSubview(popupButtonContainer)
-        popupButtonContainer.addSubview(photoButton)
-        popupButtonContainer.addSubview(albumButton)
-        
-        setupPopupButtonConstraints() // 제약조건 설정
-        
-    }
-    
-    private func setupPopupButtonConstraints() {
-        // 팝업 버튼 컨테이너 위치 설정
-        popupButtonContainer.snp.makeConstraints {
-            $0.leading.equalTo(plusButton.snp.leading)
-            $0.bottom.equalTo(messageInputView.snp.top).offset(-10)
-            $0.width.equalTo(150)
-        }
-        
-        // 내부 버튼 배치
-        photoButton.snp.makeConstraints {
-            $0.top.leading.trailing.equalToSuperview().inset(8)
-        }
-        
-        albumButton.snp.makeConstraints {
-            $0.top.equalTo(photoButton.snp.bottom).offset(8)
-            $0.leading.trailing.bottom.equalToSuperview().inset(8)
-        }
-    }
-    
-    // plusButton - jgh
-    @objc func plusButtonTapped() {
-        isAdditionalViewVisible.toggle()
-        
-        UIView.animate(withDuration: 0.3, animations: {
-            self.plusButton.transform = self.isAdditionalViewVisible ? CGAffineTransform(rotationAngle: .pi / 4) : .identity
-            self.popupButtonContainer.isHidden = !self.isAdditionalViewVisible
-        })
-    }
-    
-    @objc func photoButtonTapped() {
-        let picker = UIImagePickerController()
-        picker.sourceType = .camera
-        picker.delegate = self
-        present(picker, animated: true, completion: nil)
-    }
-    
-    @objc func albumButtonTapped() {
-        var configuration = PHPickerConfiguration()
-        configuration.selectionLimit = 2
-        let picker = PHPickerViewController(configuration: configuration)
-        picker.delegate = self
-        present(picker, animated: true, completion: nil)
     }
     
     // 탭바 보여주기 - jgh
@@ -293,6 +198,7 @@ class ChatViewController: UIViewController {
             .subscribe(onNext: { [weak self] in
                 self?.messageTextView.text = ""
                 self?.updatePlacehoderVisibility() // 메세지 전송 후 플레스홀더 업데이트 - jgh
+                self?.resetMessageTextViewHeight() // 높이 초기와
             }).disposed(by: disposeBag)
         
         // 메세지 추가 후 테이블뷰 맨 아래로 스크롤
@@ -338,16 +244,8 @@ class ChatViewController: UIViewController {
             messageInputViewBottomConstraint = $0.bottom.equalTo(view.safeAreaLayoutGuide).constraint
         }
         
-        // + 버튼 - jgh
-        plusButton.snp.makeConstraints {
-            $0.leading.equalToSuperview().offset(6)
-            $0.centerY.equalToSuperview()
-            $0.width.height.equalTo(44)
-        }
-        
         messageTextView.snp.makeConstraints {
-//            $0.leading.equalToSuperview().offset(45)
-            $0.leading.equalTo(plusButton.snp.trailing).offset(3)
+            $0.leading.equalToSuperview().offset(16)
             $0.trailing.equalTo(sendButton.snp.leading).offset(-8)
             $0.centerY.equalToSuperview()
             $0.bottom.equalToSuperview().inset(8)
@@ -375,7 +273,11 @@ class ChatViewController: UIViewController {
     
     // 메세지 전송 후 텍스트뷰 높이 초기화
     func resetMessageTextViewHeight() {
-        messageTextView.snp.updateConstraints {
+        messageTextView.snp.remakeConstraints {
+            $0.leading.equalToSuperview().offset(16)
+            $0.trailing.equalTo(sendButton.snp.leading).offset(-8)
+            $0.centerY.equalToSuperview()
+            $0.bottom.equalToSuperview().inset(8)
             $0.height.equalTo(messageTextViewDefaultHeight)
         }
     }
@@ -407,7 +309,7 @@ extension ChatViewController: UITextViewDelegate {
         // 텍스트뷰의 높이가 100pt를 넘으면 스크롤을 활성화하고 크기를 유지
         textView.isScrollEnabled = estimatedSize.height > 100
         textView.snp.remakeConstraints {
-            $0.leading.equalTo(plusButton.snp.trailing).offset(3)
+            $0.leading.equalToSuperview().offset(16)
             $0.trailing.equalTo(sendButton.snp.leading).offset(-8)
             $0.centerY.equalToSuperview()
             $0.bottom.equalToSuperview().inset(8)
@@ -415,31 +317,3 @@ extension ChatViewController: UITextViewDelegate {
         }
     }
 }
-
-extension ChatViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
-    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
-        if let selectedImage = info[.originalImage] as? UIImage {
-            print("사진 촬영 완료: \(selectedImage)")
-        }
-        picker.dismiss(animated: true, completion: nil)
-    }
-}
-
-extension ChatViewController: PHPickerViewControllerDelegate {
-    func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {
-        picker.dismiss(animated: true, completion: nil)
-        
-        guard let result = results.first else { return }
-        
-        result.itemProvider.loadObject(ofClass: UIImage.self) { (object, error) in
-            if let error = error {
-                print("사진 선택 오류: \(error)")
-            } else if let image = object as? UIImage {
-                DispatchQueue.main.sync {
-                    print("앨범에서 선택된 사진: \(image)")
-                }
-            }
-        }
-    }
-}
-
