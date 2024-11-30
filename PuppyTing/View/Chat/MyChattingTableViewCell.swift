@@ -17,6 +17,8 @@ class MyChattingTableViewCell: UITableViewCell {
         let textView = UITextView()
         textView.isScrollEnabled = false
         textView.isEditable = false
+        textView.isSelectable = true // 클릭가능하도록 - jgh
+        textView.dataDetectorTypes = .link // 자동으로 링크를 감지하도록 설정 - jgh
         textView.backgroundColor = UIColor.puppyPurple
         textView.textContainerInset = UIEdgeInsets(top: 5, left: 5, bottom: 5, right: 5)
         textView.layer.cornerRadius = 10

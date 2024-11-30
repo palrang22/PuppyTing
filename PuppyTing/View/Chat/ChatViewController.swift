@@ -198,6 +198,7 @@ class ChatViewController: UIViewController {
             .subscribe(onNext: { [weak self] in
                 self?.messageTextView.text = ""
                 self?.updatePlacehoderVisibility() // 메세지 전송 후 플레스홀더 업데이트 - jgh
+                self?.resetMessageTextViewHeight() // 높이 초기와
             }).disposed(by: disposeBag)
         
         // 메세지 추가 후 테이블뷰 맨 아래로 스크롤
@@ -272,7 +273,11 @@ class ChatViewController: UIViewController {
     
     // 메세지 전송 후 텍스트뷰 높이 초기화
     func resetMessageTextViewHeight() {
-        messageTextView.snp.updateConstraints {
+        messageTextView.snp.remakeConstraints {
+            $0.leading.equalToSuperview().offset(16)
+            $0.trailing.equalTo(sendButton.snp.leading).offset(-8)
+            $0.centerY.equalToSuperview()
+            $0.bottom.equalToSuperview().inset(8)
             $0.height.equalTo(messageTextViewDefaultHeight)
         }
     }
@@ -312,4 +317,3 @@ extension ChatViewController: UITextViewDelegate {
         }
     }
 }
-
