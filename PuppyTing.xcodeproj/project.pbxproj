@@ -26,7 +26,6 @@
 		5602B08A2C8E91B30060F03B /* FavoriteListTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5602B0892C8E91B20060F03B /* FavoriteListTableViewCell.swift */; };
 		5602B08C2C8E9AD90060F03B /* FavoriteListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5602B08B2C8E9AD90060F03B /* FavoriteListViewController.swift */; };
 		5676E5972CE74DC400BD3302 /* Config.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 5676E5962CE74DC400BD3302 /* Config.xcconfig */; };
-		5676E5992CE74DD200BD3302 /* Config.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 5676E5982CE74DD200BD3302 /* Config.xcconfig */; };
 		56A640782CA17AE100950B0B /* FeedListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56A640772CA17AE100950B0B /* FeedListViewController.swift */; };
 		56A6407C2CA17BCB00950B0B /* FeedTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56A6407B2CA17BCB00950B0B /* FeedTableViewCell.swift */; };
 		56A640802CA17ECE00950B0B /* FeedListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56A6407F2CA17ECE00950B0B /* FeedListViewModel.swift */; };
@@ -119,7 +118,6 @@
 		5602B0892C8E91B20060F03B /* FavoriteListTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteListTableViewCell.swift; sourceTree = "<group>"; };
 		5602B08B2C8E9AD90060F03B /* FavoriteListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteListViewController.swift; sourceTree = "<group>"; };
 		5676E5962CE74DC400BD3302 /* Config.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Config.xcconfig; sourceTree = "<group>"; };
-		5676E5982CE74DD200BD3302 /* Config.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Config.xcconfig; sourceTree = "<group>"; };
 		56A640772CA17AE100950B0B /* FeedListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedListViewController.swift; sourceTree = "<group>"; };
 		56A6407B2CA17BCB00950B0B /* FeedTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedTableViewCell.swift; sourceTree = "<group>"; };
 		56A6407F2CA17ECE00950B0B /* FeedListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedListViewModel.swift; sourceTree = "<group>"; };
@@ -196,7 +194,6 @@
 		E7F598332C847A7800FE8900 /* PlaceModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaceModel.swift; sourceTree = "<group>"; };
 		E7F598382C885D5300FE8900 /* KakaoMapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KakaoMapViewController.swift; sourceTree = "<group>"; };
 		E7F5983A2C8866CE00FE8900 /* AddressView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddressView.swift; sourceTree = "<group>"; };
-		EFED4A8C2CCF9C2B00D71440 /* PuppytingLoading.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = PuppytingLoading.json; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -544,7 +541,6 @@
 			isa = PBXGroup;
 			children = (
 				5676E5962CE74DC400BD3302 /* Config.xcconfig */,
-				5676E5982CE74DD200BD3302 /* Config.xcconfig */,
 				56BC8D3D2CC11E6C00CB1B82 /* AppStoreCheck.swift */,
 				E738FB762C7C62EE004696BD /* AppDelegate.swift */,
 				E738FB782C7C62EE004696BD /* SceneDelegate.swift */,
@@ -696,7 +692,6 @@
 				E738FBAA2C7C6BB3004696BD /* .gitignore in Resources */,
 				E738FB832C7C62F0004696BD /* Base in Resources */,
 				5676E5972CE74DC400BD3302 /* Config.xcconfig in Resources */,
-				5676E5992CE74DD200BD3302 /* Config.xcconfig in Resources */,
 				CCA856AC2CDA35BA003368CD /* PuppytingLoading.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -927,7 +922,6 @@
 		};
 		E738FB882C7C62F0004696BD /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 5676E5982CE74DD200BD3302 /* Config.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -967,7 +961,6 @@
 		};
 		E738FB892C7C62F0004696BD /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 5676E5982CE74DD200BD3302 /* Config.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
