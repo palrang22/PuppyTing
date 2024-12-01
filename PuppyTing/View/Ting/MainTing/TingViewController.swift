@@ -60,11 +60,11 @@ class TingViewController: UIViewController {
         bind()
         setDelegate()
         loadInitialData()
+        showLoadingIndicator()
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        showLoadingIndicator()
         refreshFeed()
     }
     
