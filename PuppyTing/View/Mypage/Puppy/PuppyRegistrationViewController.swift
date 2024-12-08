@@ -144,10 +144,23 @@ class PuppyRegistrationViewController: UIViewController {
         puppyRegistrationViewModel.updateImage(image: image)
     }
     
+    func resetTagTextField() {
+        tagTextField.text = ""
+        tagStack.arrangedSubviews.forEach { view in
+            view.removeFromSuperview()
+        }
+    }
+    
     private func bind() {
         guard let pet = pet else { return }
         nameTextField.text = pet.name
         ageTextField.text = "\(pet.age)"
+        
+        if isEditMode {
+                resetTagTextField()
+                pet.tag.forEach { addTag(word: $0) }
+            }
+        
         pet.tag.forEach { addTag(word: $0) }
         // Kingfisher로 이미지 로딩 후, 버튼에 이미지 설정 - jgh
         let url = URL(string: pet.petImage)
@@ -266,6 +279,7 @@ class PuppyRegistrationViewController: UIViewController {
             .observe(on: MainScheduler.instance)
             .subscribe(onSuccess: { pet in
                 self.hideLoadingIndicator()
+                self.resetTagTextField()
                 self.puppyRegisteredSubject.onNext((name, "\(age)", pet.petImage))
                 self.navigationController?.popViewController(animated: true)
                 self.okAlert(title: "성공", message: "강아지를 성공적으로 등록했습니다.")
@@ -315,6 +329,7 @@ class PuppyRegistrationViewController: UIViewController {
             .observe(on: MainScheduler.instance)
             .subscribe(onSuccess: { pet in
                 self.hideLoadingIndicator()
+                self.resetTagTextField()
                 self.navigationController?.popViewController(animated: true)
                 self.okAlert(title: "성공", message: "강아지 정보를 성공적으로 수정했습니다.")
             }, onFailure: { error in

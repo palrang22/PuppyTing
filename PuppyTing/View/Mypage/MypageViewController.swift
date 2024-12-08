@@ -12,6 +12,8 @@ class MypageViewController: UIViewController {
     private let disposeBag = DisposeBag()
     private let scrollView = UIScrollView()
     private let contentView = UIView()
+    private var hasLoadedPets = false // 강아지 한번만 불러오기
+    private var cachedPets: [Pet] = [] // 이전에 로드된 캐시 데이터
     private let puppys = BehaviorRelay<[Pet]>(value: [])
     private var petList: [Pet] = [] {
         didSet {
@@ -232,6 +234,7 @@ class MypageViewController: UIViewController {
         super.viewWillAppear(animated)
         self.navigationController?.navigationBar.tintColor = UIColor.puppyPurple
         loadUserInfo()
+        loadPetsIfNeeded()
         loadPuppyInfo()
         self.tabBarController?.tabBar.isHidden = false
     }
@@ -356,6 +359,51 @@ class MypageViewController: UIViewController {
             }, onFailure: { error in
                 print("Error fetching pets: \(error.localizedDescription)")
             }).disposed(by: disposeBag)
+    }
+    
+    // 강아지 데이터 로드 메서드
+    private func loadPetsIfNeeded() {
+        guard !hasLoadedPets else { return } // 이미 로드된 경우 반환
+
+        viewModel.fetchMemberPets(memberId: findUserId())
+            .observe(on: MainScheduler.instance)
+            .subscribe(
+                onSuccess: { [weak self] newPets in
+                    guard let self = self else { return }
+                    
+                    if !self.arePetsEqual(self.cachedPets, newPets) { // 비교 로직
+                        self.cachedPets = newPets
+                        self.petList = newPets
+                        self.puppyCollectionView.reloadData()
+                    }
+                    self.hasLoadedPets = true
+                },
+                onFailure: { error in
+                    print("Error fetching pets: \(error.localizedDescription)")
+                }
+            ).disposed(by: disposeBag)
+    }
+
+
+    // 두 배열의 Pet을 비교하는 메서드
+    private func arePetsEqual(_ oldPets: [Pet], _ newPets: [Pet]) -> Bool {
+        guard oldPets.count == newPets.count else { return false }
+        for (index, pet) in oldPets.enumerated() {
+            if !self.isPetEqual(pet, newPets[index]) {
+                return false
+            }
+        }
+        return true
+    }
+
+    // 두 Pet 객체를 비교하는 메서드
+    private func isPetEqual(_ pet1: Pet, _ pet2: Pet) -> Bool {
+        return pet1.id == pet2.id &&
+               pet1.userId == pet2.userId &&
+               pet1.name == pet2.name &&
+               pet1.age == pet2.age &&
+               pet1.petImage == pet2.petImage &&
+               pet1.tag == pet2.tag
     }
     
     private func handlePetList(_ petList: [Pet]) {
