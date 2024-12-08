@@ -96,7 +96,7 @@ class MyPageViewModel {
             return Disposables.create()
         }
     }
-
+    
     // pet 컬렉션 중 가져온 petId 와 맞는 정보 탐색
     func getPetsInfo(petIds: [String]) -> Single<[Pet]> {
         return Single.create { single in
@@ -113,7 +113,6 @@ class MyPageViewModel {
                            let petImage = data["petImage"] as? String,
                            let tag = data["tag"] as? [String],
                            let userId = data["userId"] as? String {
-                            
                             let pet = Pet(id: id, userId: userId, name: name, age: age, petImage: petImage, tag: tag)
                             pets.append(pet)
                         }
